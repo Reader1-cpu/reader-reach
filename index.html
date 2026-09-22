@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reader Reach | Every Book Has Its Readers</title>
+<style>
+:root{--brown:#3b241b;--brown2:#5a3829;--cream:#fffdf8;--soft:#f7efe4;--butter:#ead79b;--text:#34251f;--muted:#76665d;--line:#e7dbcf}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--text);font-family:Georgia,serif;line-height:1.65}
+a{text-decoration:none;color:inherit}
+button,input,textarea{font:inherit}
+.wrap{width:min(1160px,92%);margin:auto}
+.top{background:var(--brown);color:#fff;padding:9px 0;font:12px Arial}
+.top .wrap{display:flex;justify-content:space-between}
+nav{position:sticky;top:0;z-index:10;background:#fffdf8ee;backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{height:78px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:25px;font-weight:bold;color:var(--brown)}
+.logo small{display:block;font:10px Arial;letter-spacing:2px;text-transform:uppercase;color:#76513e}
+.links{display:flex;gap:22px;font:13px Arial;color:#594940}
+.links a:hover{color:var(--brown)}
+.btn{display:inline-block;border:1px solid var(--brown);border-radius:999px;padding:12px 19px;font:bold 13px Arial;cursor:pointer;background:transparent;color:var(--brown)}
+.btn.primary{background:var(--brown);color:#fff}
+.btn.primary:hover{background:#4d2e22}
+.hero{min-height:680px;color:#fff;position:relative;isolation:isolate;display:flex;align-items:center;overflow:hidden}.hero::before{content:"";position:absolute;inset:0;background:url("https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1800&q=85") center/cover no-repeat;z-index:-2}.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#3b241bf2,#3b241bb8,#3b241b35);z-index:-1}
+.hero .content{max-width:730px;padding:105px 0 80px}
+.eyebrow,.kicker{font:700 11px Arial;letter-spacing:2.5px;text-transform:uppercase;color:#76513e}
+.hero .eyebrow{color:#f5e8bb}
+.hero h1{font-size:clamp(48px,7vw,84px);line-height:1.02;margin:18px 0}
+.hero p{font-size:20px;max-width:650px;color:#f7eee8}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.hero .primary{background:var(--butter);color:var(--brown);border-color:var(--butter)}
+.hero .outline{color:#fff;border-color:#fff}
+section{padding:90px 0}
+.soft{background:var(--soft)}
+.head{max-width:720px;margin-bottom:38px}
+.head h2{font-size:clamp(34px,5vw,54px);line-height:1.1;color:var(--brown);margin:8px 0 14px}
+.head p,.card p,.feature p,.book p{color:var(--muted)}
+.grid3,.books,.features,.access{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card,.book,.feature,.accessCard{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:0 14px 40px #3b241b12}
+.num{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#f5e8bb;color:var(--brown);font-weight:bold}
+.card h3,.book h3,.feature h3,.accessCard h3{color:var(--brown);font-size:22px;margin:15px 0 7px}
+.book{padding:0;overflow:hidden}
+.cover{height:290px;display:grid;place-items:center;background:linear-gradient(145deg,#eadcc7,#79553f);padding:25px}
+.coverInner{height:84%;width:78%;border:1px solid #ffffffaa;color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.coverInner strong{font-size:28px;margin:12px}
+.coverInner small{font:10px Arial;letter-spacing:2px;text-transform:uppercase}
+.bookInfo{padding:22px}
+.tag{display:inline-block;background:var(--soft);border-radius:999px;padding:5px 9px;font:10px Arial;color:var(--brown)}
+.bookInfo p{font-size:14px}
+.flipper{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.reader{background:var(--brown);padding:24px;border-radius:26px}
+.page{background:#fff;border-radius:15px;padding:38px;min-height:350px}
+.page small{font:700 10px Arial;letter-spacing:2px;color:#76513e}
+.page h3{font-size:31px;color:var(--brown)}
+.page p{color:var(--muted)}
+.controls{display:flex;justify-content:space-between;align-items:center}
+.controls button{border:0;border-radius:50%;width:38px;height:38px;background:var(--butter);color:var(--brown);font-weight:bold}
+.features{grid-template-columns:repeat(2,1fr)}
+.feature{display:flex;gap:16px}
+.icon{width:44px;height:44px;flex:none;border-radius:13px;background:#f5e8bb;display:grid;place-items:center;font-weight:bold;color:var(--brown)}
+.accessSection{background:var(--brown);color:#fff}
+.accessSection h2{color:#fff}
+.accessSection .head p{color:#e9ddd6}
+.access{grid-template-columns:1fr 1fr}
+.accessCard h3{font-size:27px}
+.accessCard p{color:var(--muted)}
+.formShell{background:var(--soft);border:1px solid var(--line);border-radius:28px;padding:32px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+.field{display:flex;flex-direction:column;gap:7px}
+.full{grid-column:1/-1}
+label{font:700 11px Arial;color:var(--brown)}
+input,textarea{border:1px solid #d9cabc;border-radius:11px;padding:12px;background:#fff;outline:none}
+textarea{min-height:110px;resize:vertical}
+.discussions{display:grid;grid-template-columns:1.2fr .8fr;gap:22px}
+.discussion{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px}
+.row{padding:17px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}
+.badge{font:700 9px Arial;background:#f5e8bb;border-radius:999px;padding:5px 8px}
+.row p{color:var(--muted)}
+.event{min-height:220px;border:1px dashed #cbb9a9;border-radius:22px;background:#fff;display:grid;place-items:center;text-align:center;padding:30px}
+.event strong{display:block;font-size:25px;color:var(--brown)}
+.event span{color:var(--muted)}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+.aboutPanel{background:var(--brown);color:#fff;border-radius:27px;padding:40px;min-height:330px;display:flex;flex-direction:column;justify-content:center}
+.aboutPanel h3{font-size:34px}
+.aboutPanel p{color:#e9ddd6}
+.cta{background:#f5e8bb;text-align:center}
+.cta p{max-width:650px;margin:0 auto 22px;color:var(--muted)}
+footer{background:var(--brown);color:#eee;padding:50px 0 25px}
+.foot{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:30px;padding-bottom:35px}
+.foot h3{font-size:24px}
+.foot h4{font:700 11px Arial;letter-spacing:1px;color:var(--butter)}
+.foot a,.foot p{font:13px Arial;color:#d9ccc5;display:block;margin:7px 0}
+.copy{border-top:1px solid #ffffff22;padding-top:18px;font:11px Arial;color:#bbaaa1}
+.toast{position:fixed;right:20px;bottom:20px;background:var(--brown);color:#fff;padding:14px 17px;border-radius:11px;display:none;font:13px Arial;z-index:30}
+@media(max-width:900px){
+  .links{display:none}
+  .grid3,.books,.flipper,.features,.access,.discussions,.about,.foot{grid-template-columns:1fr}
+  .form{grid-template-columns:1fr}
+  .full{grid-column:auto}
+  .hero{min-height:620px}
+  .hero .content{padding-top:70px}
+  .top .wrap{display:block}
+  .top span+span{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="wrap"><span>Books • Authors • Readers</span><span>A place for meaningful book discovery</span></div></div>
+
+<nav><div class="wrap nav">
+<a class="logo" href="#home">Reader Reach<small>Every Book Has Its Readers</small></a>
+<div class="links">
+<a href="#how">How It Works</a><a href="#books">Books</a><a href="#flipper">Flipper Guide</a><a href="#discussions">Discussions</a><a href="#calendar">Calendar</a><a href="#about">About</a>
+</div>
+<div><a class="btn" href="#access">Sign In</a> <a class="btn primary" href="#submit">For Authors</a></div>
+</div></nav>
+
+<header id="home" class="hero"><div class="wrap"><div class="content">
+<div class="eyebrow">Books • Authors • Readers</div>
+<h1>Every Book Has Its Readers.</h1>
+<p>Reader Reach creates a place where books can be discovered, authors can present their work, and readers can find stories and ideas that speak to them.</p>
+<div class="actions"><a class="btn primary" href="#books">Discover Books →</a><a class="btn outline" href="#submit">For Authors</a></div>
+</div></div></header>
+
+<section id="how"><div class="wrap"><div class="head"><div class="kicker">How It Works</div><h2>A simple path from discovery to discussion.</h2><p>Reader Reach is designed around approved access, thoughtful book presentation, and meaningful conversations.</p></div>
+<div class="grid3">
+<article class="card"><div class="num">01</div><h3>Discover</h3><p>Browse approved books, author profiles, book trailers, Flipper Guides, and scheduled features.</p></article>
+<article class="card"><div class="num">02</div><h3>Explore</h3><p>Learn more about a book before deciding where and how you want to read it.</p></article>
+<article class="card"><div class="num">03</div><h3>Discuss</h3><p>Each approved book can have its own discussion space for readers and authors.</p></article>
+</div></div></section>
+
+<section id="books" class="soft"><div class="wrap"><div class="head"><div class="kicker">Books</div><h2>Books waiting to meet their readers.</h2><p>Only approved book submissions will appear here. Until real submissions are available, neutral placeholders are shown.</p></div>
+<div class="books" id="bookGrid"></div>
+</div></section>
+
+<section id="flipper"><div class="wrap flipper"><div><div class="kicker">Flipper Guide</div><h2>A shorter way to explore a book.</h2><p style="color:var(--muted);font-size:17px">A Flipper Guide is a designed, book-like preview that can help a reader quickly understand and explore a longer book before going deeper.</p><p style="color:var(--muted)">This is clearly demo content. Real approved Flipper Guides will be connected to books and protected by Reader Reach access controls.</p><button class="btn primary" onclick="toast('The protected Flipper Guide reader will be connected to Supabase.')">Explore Demo Guide</button></div>
+<div class="reader"><div class="page"><small>Demo / Example</small><h3 id="ft">Inside a Book</h3><p id="fp">This is a sample Flipper Guide page. Real approved book content will appear here when the guide is connected.</p><div class="controls"><button onclick="flip(-1)">‹</button><span id="pn">Page 1 of 3</span><button onclick="flip(1)">›</button></div></div></div></div></section>
+
+<section class="soft"><div class="wrap"><div class="head"><div class="kicker">The Platform</div><h2>More than a book listing.</h2><p>Reader Reach brings the important parts of a book community together in one place.</p></div>
+<div class="features">
+<article class="feature"><div class="icon">B</div><div><h3>Book Profiles</h3><p>Present a book with its description, audience, availability, cover, trailer, and approved information.</p></div></article>
+<article class="feature"><div class="icon">A</div><div><h3>Author Profiles</h3><p>Give approved authors a dedicated space to introduce themselves and their books.</p></div></article>
+<article class="feature"><div class="icon">F</div><div><h3>Flipper Guides</h3><p>Offer an interactive, protected preview connected to approved books.</p></div></article>
+<article class="feature"><div class="icon">D</div><div><h3>Book Discussions</h3><p>Give every approved book its own discussion area for readers and authors.</p></div></article>
+<article class="feature"><div class="icon">C</div><div><h3>Feature Calendar</h3><p>Approved books can be scheduled by the Reader Reach Moderator.</p></div></article>
+<article class="feature"><div class="icon">N</div><div><h3>Notifications</h3><p>Keep authors and readers informed about access, submissions, approvals, messages, and schedules.</p></div></article>
+</div></div></section>
+
+<section id="access" class="accessSection"><div class="wrap"><div class="head"><div class="kicker" style="color:#ead79b">Access</div><h2>Choose how you want to enter Reader Reach.</h2><p>Reader and Author access are handled separately so each person gets the right experience.</p></div>
+<div class="access">
+<div class="accessCard"><h3>Reader</h3><p>Request Reader access to explore approved books, author profiles, Flipper Guides, discussions, and other Reader Reach areas.</p><button class="btn primary" onclick="toast('Reader access will connect to Supabase Auth and admin approval.')">Continue as Reader</button></div>
+<div class="accessCard"><h3>Author</h3><p>Authors sign in, request access, and wait for Reader Reach approval before submitting a book.</p><a class="btn primary" href="#submit">Continue as Author</a></div>
+</div></div></section>
+
+<section id="submit"><div class="wrap"><div class="head"><div class="kicker">For Authors</div><h2>Tell Us About Your Book.</h2><p>The live version will protect this form so only approved Authors can submit books.</p></div>
+<div class="formShell"><form class="form" onsubmit="event.preventDefault();toast('Demo only: the live form will connect to Supabase after approval.')">
+<div class="field"><label>Author Name *</label><input required placeholder="Author Name"></div>
+<div class="field"><label>Email Address *</label><input type="email" required placeholder="author@example.com"></div>
+<div class="field full"><label>About the Author *</label><textarea required placeholder="Tell readers about the author."></textarea></div>
+<div class="field"><label>Book Title *</label><input required placeholder="Book Title"></div>
+<div class="field"><label>Genre / Topic *</label><input required placeholder="Genre / Topic"></div>
+<div class="field full"><label>Book Description *</label><textarea required placeholder="Book Description"></textarea></div>
+<div class="field full"><label>Who Is the Book For? *</label><textarea required placeholder="Describe the readers this book is intended for."></textarea></div>
+<div class="field full"><label>Where Is the Book Currently Available? *</label><input required placeholder="Availability"></div>
+<div class="field"><label>Book Cover Image</label><input type="file" accept="image/*"></div>
+<div class="field"><label>Book Trailer Video</label><input type="file" accept="video/*"></div>
+<div class="field"><label>Flipper Guide Link *</label><input type="url" required placeholder="https://"></div>
+<div class="field full"><button class="btn primary" type="submit">Submit Book for Review</button></div>
+</form></div></div></section>
+
+<section id="discussions"><div class="wrap"><div class="head"><div class="kicker">Discussions</div><h2>Every book can have a conversation around it.</h2><p>Readers and authors can ask questions, reply, and participate in discussions connected to individual books.</p></div>
+<div class="discussions">
+<div class="discussion"><h3>Book Discussion</h3><p style="color:var(--muted)">Book Title <span class="badge">DEMO</span></p><div class="row"><strong>Question about the book</strong> <span class="badge">READER</span><p>Discussion messages will appear here when readers and authors begin participating.</p></div><div class="row"><strong>Author discussion</strong> <span class="badge">AUTHOR</span><p>Authors can also start questions and respond to readers.</p></div></div>
+<div class="discussion"><h3>Community Rules</h3><p>Keep conversations respectful and connected to the book.</p><p style="color:var(--muted);margin-top:12px">Readers and authors can create discussions, reply, edit their own messages, delete their own messages, and like messages.</p></div>
+</div></div></section>
+
+<section id="calendar" class="soft"><div class="wrap"><div class="head"><div class="kicker">Events & Calendar</div><h2>See what is coming up.</h2><p>Reader Reach events are scheduled by the Moderator after approved books are ready for a feature.</p></div>
+<div class="event"><div><strong>No upcoming events yet</strong><span>When a real Reader Reach event is scheduled, it will appear here.</span></div></div>
+</div></section>
+
+<section id="about"><div class="wrap about"><div><div class="kicker">About Reader Reach</div><h2>A place built around books and the people who read them.</h2><p style="color:var(--muted);font-size:17px">Reader Reach is designed to make book discovery more intentional. Authors can present their work with useful context, while readers can explore books, previews, discussions, and features in one connected space.</p><p style="color:var(--muted);font-size:17px">The platform is built around approved access and real submissions rather than invented public profiles.</p></div>
+<div class="aboutPanel"><h3>Built for real books.</h3><p>Approved authors, approved books, real schedules, real discussions, and protected Flipper Guides will replace these placeholders as Reader Reach grows.</p></div>
+</div></section>
+
+<section class="cta"><div class="wrap"><div class="kicker">Reader Reach</div><h2>Find the books meant for you.</h2><p>Explore approved books, learn about their authors, discover Flipper Guides, and join meaningful book conversations.</p><a class="btn primary" href="#access">Join Reader Reach</a></div></section>
+
+<footer><div class="wrap"><div class="foot"><div><h3>Reader Reach</h3><p>Every Book Has Its Readers.</p></div><div><h4>Explore</h4><a href="#books">Books</a><a href="#flipper">Flipper Guide</a><a href="#discussions">Discussions</a><a href="#calendar">Calendar</a></div><div><h4>For Authors</h4><a href="#submit">Tell Us About Your Book</a><a href="#access">Author Access</a><a href="#about">About Reader Reach</a></div></div><div class="copy">© 2026 Reader Reach. All rights reserved.</div></div></footer>
+
+<div id="toast" class="toast"></div>
+
+<script>
+function toast(m){
+  const e=document.getElementById('toast');
+  e.textContent=m;
+  e.style.display='block';
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>e.style.display='none',3000);
+}
+
+const pages=[
+  ['Inside a Book','This is a sample Flipper Guide page. Real approved book content will appear here when the guide is connected.'],
+  ['Explore the Story','A real Flipper Guide can give readers a shorter, designed way to understand the book before reading further.'],
+  ['Continue Reading','The production reader will use protected access and approved content from Reader Reach.']
+];
+
+let cur=0;
+
+function flip(d){
+  cur=Math.max(0,Math.min(2,cur+d));
+  document.getElementById('ft').textContent=pages[cur][0];
+  document.getElementById('fp').textContent=pages[cur][1];
+  document.getElementById('pn').textContent='Page '+(cur+1)+' of 3';
+}
+
+const bookGrid=document.getElementById('bookGrid');
+
+for(let i=0;i<3;i++){
+  bookGrid.insertAdjacentHTML('beforeend',`
+    <article class="book">
+      <div class="cover">
+        <div class="coverInner">
+          <small>Demo Placeholder</small>
+          <strong>Book Title</strong>
+          <small>Author Name</small>
+        </div>
+      </div>
+      <div class="bookInfo">
+        <span class="tag">Awaiting Submission</span>
+        <h3>Book Title</h3>
+        <p>Book Description</p>
+        <button class="btn" onclick="toast('This book profile will open when an approved book is available.')">View Book</button>
+      </div>
+    </article>
+  `);
+}
+</script>
+</body>
+</html>

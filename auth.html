@@ -1578,4 +1578,52 @@ async function initializeAuth() {
     const session =
       data.session;
 
-   
+    if (session) {
+
+      showAccount(
+        session
+      );
+
+      history.replaceState(
+        {},
+        '',
+        'auth.html?mode=account'
+      );
+
+    } else {
+
+      showAuth();
+
+      showMode(
+        getUrlMode()
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      'Reader Reach authentication initialization failed:',
+      error
+    );
+
+    showAuth();
+
+    showMode(
+      getUrlMode()
+    );
+
+    setStatus(
+      'Unable to load your account session. Please try again.',
+      'error'
+    );
+
+  }
+
+}
+
+initializeAuth();
+</script>
+
+</body>
+</html>

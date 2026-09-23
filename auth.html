@@ -324,6 +324,7 @@ footer .wrap{
 }
 
 @media(max-width:820px){
+
   .layout{
     grid-template-columns:1fr
   }
@@ -350,6 +351,7 @@ footer .wrap{
 
 <nav>
   <div class="wrap nav">
+
     <a class="logo" href="index.html">
       Reader Reach
       <small>Every Book Has Its Readers</small>
@@ -358,10 +360,12 @@ footer .wrap{
     <a class="back" href="index.html">
       ← Back to Reader Reach
     </a>
+
   </div>
 </nav>
 
 <main>
+
   <div class="wrap layout">
 
     <section class="intro">
@@ -769,6 +773,7 @@ footer .wrap{
     </section>
 
   </div>
+
 </main>
 
 <footer>
@@ -790,6 +795,7 @@ footer .wrap{
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+
 const SUPABASE_URL =
   'https://bublmnfhyyrefcdkloak.supabase.co';
 
@@ -799,39 +805,47 @@ const SUPABASE_PUBLISHABLE_KEY =
 const supabaseClient =
   window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
+    SUPABASE_PUBLISHABLE_KEY,
+    {
+      auth:{
+        persistSession:true,
+        autoRefreshToken:true,
+        detectSessionInUrl:true
+      }
+    }
   );
 
 const statusEl =
   document.getElementById('status');
 
 const modePanels = {
-  signin: 'signinPanel',
-  reader: 'readerPanel',
-  author: 'authorPanel',
-  reset: 'resetPanel'
+  signin:'signinPanel',
+  reader:'readerPanel',
+  author:'authorPanel',
+  reset:'resetPanel'
 };
 
-function setStatus(
-  message,
-  type = 'success'
-) {
+function setStatus(message,type='success'){
+
   statusEl.textContent = message;
 
   statusEl.className =
     'status show ' + type;
+
 }
 
-function clearStatus() {
+function clearStatus(){
+
   statusEl.textContent = '';
 
   statusEl.className =
     'status';
+
 }
 
-function showMode(mode) {
+function showMode(mode){
 
-  if (!modePanels[mode]) {
+  if(!modePanels[mode]){
     mode = 'signin';
   }
 
@@ -863,9 +877,10 @@ function showMode(mode) {
     .classList.add('active');
 
   clearStatus();
+
 }
 
-function showAuth() {
+function showAuth(){
 
   document.getElementById(
     'authPanels'
@@ -874,9 +889,10 @@ function showAuth() {
   document
     .getElementById('accountPanel')
     .classList.remove('show');
+
 }
 
-function showAccount(session) {
+function showAccount(session){
 
   document.getElementById(
     'authPanels'
@@ -891,14 +907,42 @@ function showAccount(session) {
   ).textContent =
     session.user.email || '';
 
-  loadAccountProfile(
-    session
-  );
+  loadAccountProfile(session);
+
 }
 
-async function loadAccountProfile(
-  session
-) {
+async function getProfile(session){
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from('profiles')
+      .select(
+        'id,display_name,role'
+      )
+      .eq(
+        'id',
+        session.user.id
+      )
+      .maybeSingle();
+
+  if(error){
+    throw error;
+  }
+
+  if(!data){
+    throw new Error(
+      'No Reader Reach profile was found for this account.'
+    );
+  }
+
+  return data;
+
+}
+
+async function loadAccountProfile(session){
 
   document.getElementById(
     'accountRole'
@@ -910,32 +954,10 @@ async function loadAccountProfile(
   ).textContent =
     'Checking account access...';
 
-  try {
+  try{
 
-    const {
-      data: profile,
-      error
-    } =
-      await supabaseClient
-        .from('profiles')
-        .select(
-          'id,display_name,role'
-        )
-        .eq(
-          'id',
-          session.user.id
-        )
-        .maybeSingle();
-
-    if (error) {
-      throw error;
-    }
-
-    if (!profile) {
-      throw new Error(
-        'No Reader Reach profile was found for this account.'
-      );
-    }
+    const profile =
+      await getProfile(session);
 
     const role =
       profile.role || 'reader';
@@ -946,11 +968,11 @@ async function loadAccountProfile(
       role.charAt(0).toUpperCase() +
       role.slice(1);
 
-    if (role === 'author') {
+    if(role === 'author'){
 
       const {
         data,
-        error: authorError
+        error
       } =
         await supabaseClient
           .from('authors')
@@ -961,26 +983,25 @@ async function loadAccountProfile(
           )
           .maybeSingle();
 
-      if (authorError) {
-        throw authorError;
+      if(error){
+        throw error;
       }
 
       document.getElementById(
         'accountStatus'
       ).textContent =
         data?.status
-          ? 'Author account: ' +
-            data.status
+          ? 'Author account: ' + data.status
           : 'Author account awaiting setup.';
 
-    } else if (role === 'reader') {
+    }else if(role === 'reader'){
 
       document.getElementById(
         'accountStatus'
       ).textContent =
         'Reader access is active.';
 
-    } else {
+    }else{
 
       document.getElementById(
         'accountStatus'
@@ -989,7 +1010,7 @@ async function loadAccountProfile(
 
     }
 
-  } catch (error) {
+  }catch(error){
 
     console.error(
       'Reader Reach profile lookup failed:',
@@ -1005,10 +1026,57 @@ async function loadAccountProfile(
       'accountStatus'
     ).textContent =
       'Your account is signed in, but your account details could not be loaded.';
+
   }
+
 }
 
-function getUrlMode() {
+async function routeAuthenticatedUser(session){
+
+  try{
+
+    const profile =
+      await getProfile(session);
+
+    const role =
+      profile.role || 'reader';
+
+    if(role === 'reader'){
+
+      window.location.href =
+        'reader-dashboard.html';
+
+      return;
+
+    }
+
+    showAccount(session);
+
+    history.replaceState(
+      {},
+      '',
+      'auth.html?mode=account'
+    );
+
+  }catch(error){
+
+    console.error(
+      'Reader Reach account routing failed:',
+      error
+    );
+
+    showAccount(session);
+
+    setStatus(
+      'Your account is signed in, but your account details could not be loaded.',
+      'error'
+    );
+
+  }
+
+}
+
+function getUrlMode(){
 
   const mode =
     new URLSearchParams(
@@ -1016,6 +1084,7 @@ function getUrlMode() {
     ).get('mode');
 
   return mode || 'signin';
+
 }
 
 async function signUpCommon({
@@ -1023,7 +1092,7 @@ async function signUpCommon({
   password,
   name,
   authorRequest = false
-}) {
+}){
 
   const {
     data,
@@ -1032,34 +1101,34 @@ async function signUpCommon({
     await supabaseClient.auth.signUp({
       email,
       password,
-      options: {
-        data: {
-          display_name: name,
-          full_name: name
+      options:{
+        data:{
+          display_name:name,
+          full_name:name
         }
       }
     });
 
-  if (error) {
+  if(error){
     throw error;
   }
 
-  if (!data.user) {
+  if(!data.user){
     throw new Error(
       'The account could not be created.'
     );
   }
 
-  if (authorRequest) {
+  if(authorRequest){
 
     const {
-      error: requestError
+      error:requestError
     } =
       await supabaseClient
         .from('access_requests')
         .insert({
-          profile_id: data.user.id,
-          requested_role: 'author',
+          profile_id:data.user.id,
+          requested_role:'author',
           message:
             document
               .getElementById(
@@ -1069,12 +1138,14 @@ async function signUpCommon({
               .trim() || null
         });
 
-    if (requestError) {
+    if(requestError){
       throw requestError;
     }
+
   }
 
   return data;
+
 }
 
 document
@@ -1128,7 +1199,7 @@ document
 
       button.disabled = true;
 
-      try {
+      try{
 
         const {
           data,
@@ -1154,11 +1225,11 @@ document
 
             });
 
-        if (error) {
+        if(error){
           throw error;
         }
 
-        if (!data.session) {
+        if(!data.session){
           throw new Error(
             'Sign-in completed, but no active session was returned.'
           );
@@ -1169,17 +1240,11 @@ document
           'success'
         );
 
-        showAccount(
+        await routeAuthenticatedUser(
           data.session
         );
 
-        history.replaceState(
-          {},
-          '',
-          'auth.html?mode=account'
-        );
-
-      } catch (error) {
+      }catch(error){
 
         console.error(
           'Reader Reach sign-in failed:',
@@ -1192,7 +1257,7 @@ document
           'error'
         );
 
-      } finally {
+      }finally{
 
         button.disabled = false;
 
@@ -1218,7 +1283,7 @@ document
 
       button.disabled = true;
 
-      try {
+      try{
 
         const data =
           await signUpCommon({
@@ -1248,37 +1313,29 @@ document
 
           });
 
-        if (data.session) {
+        if(data.session){
 
           setStatus(
             'Reader account created and signed in.',
             'success'
           );
 
-          showAccount(
+          await routeAuthenticatedUser(
             data.session
           );
 
-          history.replaceState(
-            {},
-            '',
-            'auth.html?mode=account'
-          );
-
-        } else {
+        }else{
 
           setStatus(
             'Reader account created. You can now sign in.',
             'success'
           );
 
-          showMode(
-            'signin'
-          );
+          showMode('signin');
 
         }
 
-      } catch (error) {
+      }catch(error){
 
         console.error(
           error
@@ -1290,7 +1347,7 @@ document
           'error'
         );
 
-      } finally {
+      }finally{
 
         button.disabled = false;
 
@@ -1316,7 +1373,7 @@ document
 
       button.disabled = true;
 
-      try {
+      try{
 
         const data =
           await signUpCommon({
@@ -1344,11 +1401,11 @@ document
                 .value
                 .trim(),
 
-            authorRequest: true
+            authorRequest:true
 
           });
 
-        if (data.session) {
+        if(data.session){
 
           setStatus(
             'Account created and Author access requested. Admin approval is required.',
@@ -1365,20 +1422,18 @@ document
             'auth.html?mode=account'
           );
 
-        } else {
+        }else{
 
           setStatus(
             'Account created and Author access requested. You can now sign in.',
             'success'
           );
 
-          showMode(
-            'signin'
-          );
+          showMode('signin');
 
         }
 
-      } catch (error) {
+      }catch(error){
 
         console.error(
           error
@@ -1390,7 +1445,7 @@ document
           'error'
         );
 
-      } finally {
+      }finally{
 
         button.disabled = false;
 
@@ -1416,7 +1471,7 @@ document
 
       button.disabled = true;
 
-      try {
+      try{
 
         const email =
           document
@@ -1444,7 +1499,7 @@ document
               }
             );
 
-        if (error) {
+        if(error){
           throw error;
         }
 
@@ -1453,7 +1508,7 @@ document
           'success'
         );
 
-      } catch (error) {
+      }catch(error){
 
         console.error(
           error
@@ -1465,7 +1520,7 @@ document
           'error'
         );
 
-      } finally {
+      }finally{
 
         button.disabled = false;
 
@@ -1486,7 +1541,7 @@ document
         await supabaseClient.auth
           .signOut();
 
-      if (error) {
+      if(error){
 
         setStatus(
           error.message ||
@@ -1495,13 +1550,12 @@ document
         );
 
         return;
+
       }
 
       showAuth();
 
-      showMode(
-        'signin'
-      );
+      showMode('signin');
 
       history.replaceState(
         {},
@@ -1518,36 +1572,26 @@ document
   );
 
 supabaseClient.auth.onAuthStateChange(
-  (event, session) => {
+  async (event,session) => {
 
-    if (
-      (
-        event === 'SIGNED_IN' ||
-        event === 'INITIAL_SESSION'
-      ) &&
+    if(
+      event === 'SIGNED_IN' &&
       session
-    ) {
+    ){
 
-      showAccount(
+      await routeAuthenticatedUser(
         session
       );
 
-      history.replaceState(
-        {},
-        '',
-        'auth.html?mode=account'
-      );
-
       return;
+
     }
 
-    if (event === 'SIGNED_OUT') {
+    if(event === 'SIGNED_OUT'){
 
       showAuth();
 
-      showMode(
-        'signin'
-      );
+      showMode('signin');
 
       history.replaceState(
         {},
@@ -1560,9 +1604,9 @@ supabaseClient.auth.onAuthStateChange(
   }
 );
 
-async function initializeAuth() {
+async function initializeAuth(){
 
-  try {
+  try{
 
     const {
       data,
@@ -1571,26 +1615,20 @@ async function initializeAuth() {
       await supabaseClient.auth
         .getSession();
 
-    if (error) {
+    if(error){
       throw error;
     }
 
     const session =
       data.session;
 
-    if (session) {
+    if(session){
 
-      showAccount(
+      await routeAuthenticatedUser(
         session
       );
 
-      history.replaceState(
-        {},
-        '',
-        'auth.html?mode=account'
-      );
-
-    } else {
+    }else{
 
       showAuth();
 
@@ -1600,7 +1638,7 @@ async function initializeAuth() {
 
     }
 
-  } catch (error) {
+  }catch(error){
 
     console.error(
       'Reader Reach authentication initialization failed:',
@@ -1623,6 +1661,7 @@ async function initializeAuth() {
 }
 
 initializeAuth();
+
 </script>
 
 </body>

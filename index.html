@@ -876,6 +876,45 @@ footer{
   margin-top:22px;
 }
 
+.guideAccessPanel{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:24px;
+  margin-top:22px;
+}
+
+.guideAccessPanel h3{
+  color:var(--brown);
+  margin-top:0;
+}
+
+.guideMeta{
+  display:grid;
+  gap:8px;
+  margin:15px 0;
+}
+
+.guideMeta div{
+  padding:11px 13px;
+  background:var(--soft);
+  border-radius:11px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.guideProtected{
+  border-left:3px solid var(--butter);
+  padding-left:14px;
+  color:var(--muted);
+}
+
+.guideContent{
+  white-space:pre-wrap;
+  line-height:1.75;
+  color:var(--muted);
+}
+
 .loading{
   color:var(--muted);
   text-align:center;
@@ -1066,7 +1105,8 @@ footer{
 
       <button
         class="btn primary"
-        onclick="toast('Flipper Guide access will open when an authorized guide is available.')">
+        type="button"
+        onclick="openFlipperGuides()">
         Explore Flipper Guides
       </button>
 
@@ -1663,6 +1703,30 @@ footer{
 </div>
 
 
+<!-- FLIPPER GUIDE MODAL -->
+
+<div
+  id="flipperModal"
+  class="modal"
+  role="dialog"
+  aria-modal="true">
+
+  <div class="modalBox">
+
+    <button
+      class="modalClose"
+      onclick="closeModal('flipperModal')"
+      aria-label="Close">
+      ×
+    </button>
+
+    <div id="flipperModalContent"></div>
+
+  </div>
+
+</div>
+
+
 <div id="toast" class="toast"></div>
 
 
@@ -1759,6 +1823,341 @@ document.addEventListener('keydown',event => {
 
 
 /* ============================================================
+   PROTECTED FLIPPER GUIDES
+============================================================ */
+
+function guideValue(guide,keys){
+
+  for(const key of keys){
+    if(
+      guide &&
+      guide[key] !== null &&
+      guide[key] !== undefined &&
+      String(guide[key]).trim() !== ''
+    ){
+      return String(guide[key]).trim();
+    }
+  }
+
+  return '';
+
+}
+
+
+async function getCurrentReader(){
+
+  const {
+    data: { user },
+    error
+  } = await supabaseClient.auth.getUser();
+
+  if(error || !user){
+    return null;
+  }
+
+  const {
+    data,
+    error: readerError
+  } = await supabaseClient
+    .from('readers')
+    .select('*')
+    .eq('profile_id',user.id)
+    .maybeSingle();
+
+  if(readerError){
+    console.error('Unable to load reader profile:',readerError);
+    return null;
+  }
+
+  return data || null;
+
+}
+
+
+async function openFlipperGuides(){
+
+  const content =
+    document.getElementById('flipperModalContent');
+
+  if(!content) return;
+
+  content.innerHTML = `
+    <div class="kicker">Protected Flipper Guides</div>
+    <h2>Choose a book.</h2>
+    <p class="guideProtected">
+      Flipper Guide content is protected. Reader Reach checks your signed-in
+      reader account and its authorized guide access before showing guide content.
+    </p>
+  `;
+
+  openModal('flipperModal');
+
+  const reader = await getCurrentReader();
+
+  if(!reader){
+    content.innerHTML += `
+      <div class="guideAccessPanel">
+        <h3>Reader access required.</h3>
+        <p>
+          Sign in with an authorized Reader account to open protected Flipper Guides.
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  const {
+    data: accessRows,
+    error: accessError
+  } = await supabaseClient
+    .from('flipper_guide_access')
+    .select('guide_id,granted_at')
+    .eq('reader_id',reader.id);
+
+  if(accessError){
+    console.error('Unable to load Flipper Guide access:',accessError);
+    content.innerHTML += `
+      <div class="guideAccessPanel">
+        <h3>Guide access is temporarily unavailable.</h3>
+        <p>Please try again shortly.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const guideIds =
+    (accessRows || [])
+      .map(row => row.guide_id)
+      .filter(Boolean);
+
+  if(!guideIds.length){
+    content.innerHTML += `
+      <div class="guideAccessPanel">
+        <h3>No authorized guides yet.</h3>
+        <p>
+          An authorized Flipper Guide will appear here when access has been granted.
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  const {
+    data: guides,
+    error: guideError
+  } = await supabaseClient
+    .from('flipper_guides')
+    .select('*')
+    .in('id',guideIds);
+
+  if(guideError){
+    console.error('Unable to load protected Flipper Guides:',guideError);
+    content.innerHTML += `
+      <div class="guideAccessPanel">
+        <h3>Guide content is temporarily unavailable.</h3>
+        <p>Please try again shortly.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const authorizedGuides = (guides || []).filter(guide =>
+    approvedBooks.some(book => book.id === guide.book_id)
+  );
+
+  if(!authorizedGuides.length){
+    content.innerHTML += `
+      <div class="guideAccessPanel">
+        <h3>No approved book guide is available.</h3>
+        <p>
+          Your authorized guide access will appear here when its connected book is approved.
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  content.innerHTML += `
+    <div class="guideAccessPanel">
+      <h3>Your authorized guides</h3>
+      <div class="bookActions">
+        ${authorizedGuides.map(guide => {
+          const book = approvedBooks.find(item => item.id === guide.book_id);
+          const title = guideValue(guide,['title','name']) ||
+            (book ? book.title : 'Flipper Guide');
+          return `
+            <button
+              class="btn small"
+              type="button"
+              onclick="openProtectedGuide('${guide.id}')">
+              ${escapeHtml(title)}
+            </button>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+
+}
+
+
+async function openProtectedGuide(guideId){
+
+  const content =
+    document.getElementById('flipperModalContent');
+
+  if(!content) return;
+
+  content.innerHTML = `
+    <div class="kicker">Protected Flipper Guide</div>
+    <div class="loading">Checking guide access...</div>
+  `;
+
+  const reader = await getCurrentReader();
+
+  if(!reader){
+    content.innerHTML = `
+      <div class="kicker">Protected Flipper Guide</div>
+      <div class="guideAccessPanel">
+        <h3>Reader access required.</h3>
+        <p>Sign in with an authorized Reader account to open this guide.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const {
+    data: access,
+    error: accessError
+  } = await supabaseClient
+    .from('flipper_guide_access')
+    .select('guide_id,granted_at')
+    .eq('reader_id',reader.id)
+    .eq('guide_id',guideId)
+    .maybeSingle();
+
+  if(accessError || !access){
+    content.innerHTML = `
+      <div class="kicker">Protected Flipper Guide</div>
+      <div class="guideAccessPanel">
+        <h3>Access denied.</h3>
+        <p>
+          This guide is protected and your Reader account does not have access to it.
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  const {
+    data: guide,
+    error: guideError
+  } = await supabaseClient
+    .from('flipper_guides')
+    .select('*')
+    .eq('id',guideId)
+    .maybeSingle();
+
+  if(guideError || !guide){
+    content.innerHTML = `
+      <div class="kicker">Protected Flipper Guide</div>
+      <div class="guideAccessPanel">
+        <h3>Guide unavailable.</h3>
+        <p>Please try again shortly.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const book =
+    approvedBooks.find(item => item.id === guide.book_id);
+
+  if(!book){
+    content.innerHTML = `
+      <div class="kicker">Protected Flipper Guide</div>
+      <div class="guideAccessPanel">
+        <h3>Guide unavailable.</h3>
+        <p>The connected book is not currently available as an approved book.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const title =
+    guideValue(guide,['title','name']) || 'Flipper Guide';
+
+  const description =
+    guideValue(guide,['description','summary']);
+
+  const guideContent =
+    guideValue(guide,['content','guide_content','body','text']);
+
+  const guideLink =
+    guideValue(guide,['guide_link','guide_url','content_url','url','link']);
+
+  currentFlipperGuide = guide;
+
+  content.innerHTML = `
+    <div class="kicker">Protected Flipper Guide</div>
+    <h2>${escapeHtml(title)}</h2>
+
+    <div class="guideMeta">
+      <div><strong>Book:</strong> ${escapeHtml(book.title)}</div>
+      <div><strong>Access:</strong> Authorized Reader access confirmed</div>
+    </div>
+
+    ${
+      description
+      ? `<p>${escapeHtml(description)}</p>`
+      : ''
+    }
+
+    ${
+      guideContent
+      ? `
+        <div class="guideAccessPanel">
+          <h3>Guide Content</h3>
+          <div class="guideContent">${escapeHtml(guideContent)}</div>
+        </div>
+      `
+      : ''
+    }
+
+    ${
+      guideLink
+      ? `
+        <div class="modalActions">
+          <a
+            class="btn primary"
+            href="${escapeHtml(guideLink)}"
+            target="_blank"
+            rel="noopener">
+            Open Authorized Guide
+          </a>
+        </div>
+      `
+      : ''
+    }
+
+    ${
+      !guideContent && !guideLink
+      ? `
+        <div class="guideAccessPanel">
+          <h3>Guide access confirmed.</h3>
+          <p>
+            This guide is authorized for your Reader account, but no guide content
+            or link has been published yet.
+          </p>
+        </div>
+      `
+      : ''
+    }
+  `;
+
+}
+
+
+/* ============================================================
    FLIPPER DEMO
 ============================================================ */
 
@@ -1818,6 +2217,7 @@ let approvedBooks = [];
 let approvedAuthors = [];
 let discussionSessions = [];
 let selectedDiscussionSession = null;
+let currentFlipperGuide = null;
 
 
 function escapeHtml(value){

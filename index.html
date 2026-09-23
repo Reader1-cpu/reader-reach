@@ -632,20 +632,6 @@ textarea{
   gap:15px;
 }
 
-.calendarHeader{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:20px;
-  margin-bottom:20px;
-}
-
-.calendarHeader p{
-  margin:0;
-  color:var(--muted);
-  font:12px Arial;
-}
-
 .eventItem{
   background:#fff;
   border:1px solid var(--line);
@@ -666,25 +652,6 @@ textarea{
 .eventItem span{
   color:var(--muted);
   font:12px Arial;
-}
-
-.eventItem .eventMeta{
-  display:flex;
-  flex-direction:column;
-  gap:3px;
-}
-
-.eventBadge{
-  display:inline-block;
-  width:max-content;
-  margin-bottom:7px;
-  background:var(--soft);
-  color:var(--brown);
-  border-radius:999px;
-  padding:5px 9px;
-  font:10px Arial;
-  text-transform:uppercase;
-  letter-spacing:.5px;
 }
 
 .about{
@@ -967,11 +934,6 @@ footer{
     align-items:flex-start;
     flex-direction:column;
   }
-
-  .calendarHeader{
-    align-items:flex-start;
-    flex-direction:column;
-  }
 }
 </style>
 </head>
@@ -1032,6 +994,9 @@ footer{
   </div>
 </header>
 
+
+<!-- BOOKS -->
+
 <section id="books" class="soft">
 
   <div class="wrap">
@@ -1053,6 +1018,9 @@ footer{
   </div>
 
 </section>
+
+
+<!-- FLIPPER GUIDE -->
 
 <section id="flipper">
 
@@ -1102,6 +1070,9 @@ footer{
   </div>
 
 </section>
+
+
+<!-- PLATFORM -->
 
 <section class="soft">
 
@@ -1154,6 +1125,9 @@ footer{
   </div>
 
 </section>
+
+
+<!-- ACCESS -->
 
 <section id="access" class="accessSection">
 
@@ -1211,6 +1185,9 @@ footer{
   </div>
 
 </section>
+
+
+<!-- AUTHOR SUBMISSION -->
 
 <section id="submit">
 
@@ -1348,6 +1325,9 @@ footer{
 
 </section>
 
+
+<!-- DISCUSSIONS -->
+
 <section id="discussions">
 
   <div class="wrap">
@@ -1422,6 +1402,7 @@ footer{
 
       </div>
 
+
       <div class="discussion">
 
         <h3>Community Rules</h3>
@@ -1469,6 +1450,9 @@ footer{
 
 </section>
 
+
+<!-- CALENDAR -->
+
 <section id="calendar" class="soft">
 
   <div class="wrap">
@@ -1485,26 +1469,13 @@ footer{
 
     </div>
 
-    <div class="calendarHeader">
-      <p id="calendarLastUpdated">
-        Connected to the Reader Reach feature schedule.
-      </p>
-
-      <button
-        class="btn small"
-        id="refreshCalendarBtn"
-        type="button">
-        Refresh Calendar
-      </button>
-    </div>
-
     <div id="calendarList" class="eventList">
 
       <div class="event">
         <div>
-          <strong>Loading upcoming events...</strong>
+          <strong>No upcoming events yet</strong>
           <span>
-            Connecting to the Reader Reach feature calendar.
+            When a real Reader Reach event is scheduled, it will appear here.
           </span>
         </div>
       </div>
@@ -1514,6 +1485,9 @@ footer{
   </div>
 
 </section>
+
+
+<!-- ABOUT -->
 
 <section id="about">
 
@@ -1549,6 +1523,9 @@ footer{
 
 </section>
 
+
+<!-- CTA -->
+
 <section class="cta">
 
   <div class="wrap">
@@ -1569,6 +1546,9 @@ footer{
   </div>
 
 </section>
+
+
+<!-- FOOTER -->
 
 <footer>
 
@@ -1606,6 +1586,9 @@ footer{
 
 </footer>
 
+
+<!-- BOOK MODAL -->
+
 <div
   id="bookModal"
   class="modal"
@@ -1626,6 +1609,9 @@ footer{
   </div>
 
 </div>
+
+
+<!-- AUTHOR MODAL -->
 
 <div
   id="authorModal"
@@ -1648,7 +1634,11 @@ footer{
 
 </div>
 
+
 <div id="toast" class="toast"></div>
+
+
+<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -1844,80 +1834,6 @@ function formatDateTime(dateValue){
       year:'numeric',
       month:'short',
       day:'numeric',
-      hour:'numeric',
-      minute:'2-digit'
-    }
-  );
-
-}
-
-
-function formatScheduleDate(dateValue){
-
-  if(!dateValue) return '';
-
-  const parts =
-    String(dateValue).split('-');
-
-  if(parts.length !== 3){
-    return String(dateValue);
-  }
-
-  const date =
-    new Date(
-      Number(parts[0]),
-      Number(parts[1]) - 1,
-      Number(parts[2])
-    );
-
-  if(Number.isNaN(date.getTime())){
-    return String(dateValue);
-  }
-
-  return date.toLocaleDateString(
-    undefined,
-    {
-      year:'numeric',
-      month:'long',
-      day:'numeric'
-    }
-  );
-
-}
-
-
-function formatScheduleTime(timeValue){
-
-  if(!timeValue) return '';
-
-  const parts =
-    String(timeValue).split(':');
-
-  if(parts.length < 2){
-    return String(timeValue);
-  }
-
-  const hour =
-    Number(parts[0]);
-
-  const minute =
-    Number(parts[1]);
-
-  if(
-    Number.isNaN(hour) ||
-    Number.isNaN(minute)
-  ){
-    return String(timeValue);
-  }
-
-  const date =
-    new Date();
-
-  date.setHours(hour,minute,0,0);
-
-  return date.toLocaleTimeString(
-    undefined,
-    {
       hour:'numeric',
       minute:'2-digit'
     }
@@ -2596,6 +2512,12 @@ async function loadDiscussionMessages(sessionId){
 
   }
 
+  /*
+    Reader-only messages are protected by Supabase RLS.
+    If the visitor is not authenticated as a reader,
+    Supabase will return no unauthorized content.
+  */
+
   const {
     data,
     error
@@ -2788,6 +2710,12 @@ document
 
     }
 
+    /*
+      The actual reader_id must come from the authenticated
+      Reader profile. We deliberately do not invent or
+      expose another person's reader ID here.
+    */
+
     const {
       data: reader,
       error: readerError
@@ -2846,8 +2774,88 @@ document
 
 /* ============================================================
    CALENDAR
-   Connected directly to Admin Dashboard feature_schedules
 ============================================================ */
+
+function formatCalendarDate(dateValue){
+
+  if(!dateValue) return '';
+
+  const parts = String(dateValue).split('-');
+
+  if(parts.length !== 3) return String(dateValue);
+
+  const year = Number(parts[0]);
+  const month = Number(parts[1]);
+  const day = Number(parts[2]);
+
+  if(!year || !month || !day){
+    return String(dateValue);
+  }
+
+  return new Date(year,month - 1,day).toLocaleDateString(
+    undefined,
+    {
+      year:'numeric',
+      month:'long',
+      day:'numeric'
+    }
+  );
+
+}
+
+
+function formatCalendarTime(timeValue){
+
+  if(!timeValue) return '';
+
+  const match =
+    String(timeValue).match(/^(\d{1,2}):(\d{2})/);
+
+  if(!match){
+    return String(timeValue);
+  }
+
+  const hours = Number(match[1]);
+  const minutes = Number(match[2]);
+
+  if(
+    Number.isNaN(hours) ||
+    Number.isNaN(minutes) ||
+    hours > 23 ||
+    minutes > 59
+  ){
+    return String(timeValue);
+  }
+
+  const date = new Date();
+  date.setHours(hours,minutes,0,0);
+
+  return date.toLocaleTimeString(
+    undefined,
+    {
+      hour:'numeric',
+      minute:'2-digit'
+    }
+  );
+
+}
+
+
+function calendarEmptyState(){
+
+  return `
+    <div class="event">
+      <div>
+        <strong>No upcoming events yet</strong>
+        <span>
+          When a real Reader Reach event is scheduled, it will appear here.
+        </span>
+      </div>
+    </div>
+  `;
+
+}
+
 
 async function loadCalendar(){
 
@@ -2856,28 +2864,16 @@ async function loadCalendar(){
       'calendarList'
     );
 
-  const lastUpdated =
-    document.getElementById(
-      'calendarLastUpdated'
-    );
-
-  container.innerHTML = `
-    <div class="event">
-      <div>
-        <strong>Loading upcoming events...</strong>
-        <span>
-          Connecting to the Reader Reach feature calendar.
-        </span>
-      </div>
-    </div>
-  `;
+  if(!container) return;
 
   const {
     data,
     error
   } = await supabaseClient
     .from('feature_schedules')
-    .select('*')
+    .select(
+      'id,book_id,scheduled_date,scheduled_time,status,notes'
+    )
     .eq('status','scheduled')
     .order('scheduled_date',{ascending:true})
     .order('scheduled_time',{ascending:true});
@@ -2889,20 +2885,7 @@ async function loadCalendar(){
       error
     );
 
-    container.innerHTML = `
-      <div class="event">
-        <div>
-          <strong>Calendar temporarily unavailable.</strong>
-          <span>
-            Please refresh the calendar shortly.
-          </span>
-        </div>
-      </div>
-    `;
-
-    lastUpdated.textContent =
-      'The Reader Reach feature calendar could not be loaded.';
-
+    container.innerHTML = calendarEmptyState();
     return;
 
   }
@@ -2912,21 +2895,7 @@ async function loadCalendar(){
 
   if(!schedules.length){
 
-    container.innerHTML = `
-      <div class="event">
-        <div>
-          <strong>No upcoming events yet</strong>
-          <span>
-            When an approved book feature is scheduled by an administrator,
-            it will appear here automatically.
-          </span>
-        </div>
-      </div>
-    `;
-
-    lastUpdated.textContent =
-      'Connected to the Reader Reach feature schedule.';
-
+    container.innerHTML = calendarEmptyState();
     return;
 
   }
@@ -2941,11 +2910,22 @@ async function loadCalendar(){
       );
 
     /*
-      A scheduled feature should only be displayed publicly
-      when its related book is an approved book.
+      A schedule only appears publicly when its book is also
+      an approved public book. This keeps the homepage from
+      exposing a schedule for a rejected or unavailable book.
     */
-
     if(!book) return;
+
+    const dateText =
+      formatCalendarDate(schedule.scheduled_date);
+
+    const timeText =
+      formatCalendarTime(schedule.scheduled_time);
+
+    const notesText =
+      schedule.notes
+      ? String(schedule.notes).trim()
+      : '';
 
     const item =
       document.createElement('div');
@@ -2953,23 +2933,9 @@ async function loadCalendar(){
     item.className =
       'eventItem';
 
-    const dateText =
-      formatScheduleDate(
-        schedule.scheduled_date
-      );
-
-    const timeText =
-      formatScheduleTime(
-        schedule.scheduled_time
-      );
-
     item.innerHTML = `
 
-      <div class="eventMeta">
-
-        <span class="eventBadge">
-          Upcoming Feature
-        </span>
+      <div>
 
         <strong>
           ${escapeHtml(book.title)}
@@ -2980,6 +2946,11 @@ async function loadCalendar(){
           ${
             timeText
             ? ' • ' + escapeHtml(timeText)
+            : ''
+          }
+          ${
+            notesText
+            ? ' • ' + escapeHtml(notesText)
             : ''
           }
         </span>
@@ -3000,65 +2971,11 @@ async function loadCalendar(){
   });
 
   if(!container.children.length){
-
-    container.innerHTML = `
-      <div class="event">
-        <div>
-          <strong>No upcoming events yet</strong>
-          <span>
-            When an approved book feature is scheduled by an administrator,
-            it will appear here automatically.
-          </span>
-        </div>
-      </div>
-    `;
-
+    container.innerHTML = calendarEmptyState();
   }
-
-  lastUpdated.textContent =
-    'Calendar updated ' +
-    new Date().toLocaleTimeString(
-      undefined,
-      {
-        hour:'numeric',
-        minute:'2-digit'
-      }
-    );
 
 }
 
-
-/* Refresh Calendar button */
-
-document
-  .getElementById('refreshCalendarBtn')
-  .addEventListener('click',async () => {
-
-    await loadApprovedAuthors();
-
-    await loadApprovedBooks();
-
-    await loadCalendar();
-
-    toast('Calendar refreshed.');
-
-  });
-
-
-/*
-  Keep the public calendar synchronized with the Admin Dashboard.
-  The homepage checks the shared feature_schedules table periodically.
-*/
-
-setInterval(async () => {
-
-  await loadApprovedAuthors();
-
-  await loadApprovedBooks();
-
-  await loadCalendar();
-
-},60000);
 
 
 /* ============================================================
@@ -3101,6 +3018,28 @@ async function initializeReaderReach(){
 
 
 initializeReaderReach();
+
+
+/*
+  Keep the public homepage calendar connected to the same
+  feature_schedules table used by the Admin Calendar.
+  A refresh when the page becomes visible and a short polling
+  interval let approved schedule changes appear without changing
+  the existing homepage design or database structure.
+*/
+
+document.addEventListener('visibilitychange',() => {
+
+  if(!document.hidden){
+    loadCalendar();
+  }
+
+});
+
+
+window.setInterval(() => {
+  loadCalendar();
+},60000);
 
 </script>
 

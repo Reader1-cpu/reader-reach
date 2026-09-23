@@ -1,27 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Admin Dashboard | Reader Reach</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reader Reach — Admin Dashboard</title>
 
   <style>
-    :root{
-      --cream:#f7f1e8;
-      --paper:#fffdf9;
-      --brown:#3f2a1f;
-      --warm:#7a5138;
-      --gold:#b9985a;
-      --line:#e4d8c9;
-      --muted:#75695f;
-      --green:#416b4c;
-      --red:#9a3d32;
-      --shadow:0 14px 40px rgba(63,42,31,.08);
-    }
-
     *{
       box-sizing:border-box;
       margin:0;
@@ -29,10 +13,10 @@
     }
 
     body{
+      font-family:Georgia, "Times New Roman", serif;
+      background:#f6efe4;
+      color:#3f2a1f;
       min-height:100vh;
-      background:var(--cream);
-      color:var(--brown);
-      font-family:Arial, sans-serif;
     }
 
     button,
@@ -42,354 +26,86 @@
       font:inherit;
     }
 
-    a{
-      color:inherit;
-    }
-
-    .hidden{
-      display:none !important;
-    }
-
-    #loginView{
-      min-height:100vh;
+    .topbar{
+      background:#4b2f24;
+      color:#fff8ef;
+      padding:18px 28px;
       display:flex;
+      justify-content:space-between;
       align-items:center;
-      justify-content:center;
-      padding:24px;
-    }
-
-    .login-wrap{
-      width:100%;
-      max-width:440px;
+      gap:20px;
+      position:sticky;
+      top:0;
+      z-index:20;
+      box-shadow:0 4px 16px rgba(63,42,31,.14);
     }
 
     .brand{
-      text-align:center;
-      margin-bottom:25px;
-      font-family:Georgia, "Times New Roman", serif;
+      font-size:24px;
+      font-weight:700;
+      letter-spacing:.3px;
     }
 
-    .brand h1{
-      font-size:34px;
-      margin-bottom:7px;
-    }
-
-    .brand p{
-      color:var(--muted);
+    .admin-email{
       font-size:14px;
+      opacity:.88;
+    }
+
+    .page{
+      width:min(1180px, calc(100% - 32px));
+      margin:32px auto 60px;
+    }
+
+    .login-card,
+    .card{
+      background:#fffaf3;
+      border:1px solid #eadccc;
+      border-radius:18px;
+      box-shadow:0 10px 30px rgba(80,52,34,.08);
     }
 
     .login-card{
-      background:var(--paper);
-      border:1px solid var(--line);
-      border-radius:20px;
-      padding:32px;
-      box-shadow:var(--shadow);
+      max-width:520px;
+      margin:70px auto;
+      padding:36px;
     }
 
-    .login-card h2{
-      font-family:Georgia, "Times New Roman", serif;
-      font-size:26px;
-      margin-bottom:9px;
+    .login-card h1,
+    .section-title{
+      color:#4b2f24;
     }
 
-    .login-card .intro{
-      color:var(--muted);
-      line-height:1.55;
-      font-size:14px;
-      margin-bottom:24px;
+    .login-card h1{
+      margin-bottom:10px;
+      font-size:30px;
+    }
+
+    .muted{
+      color:#806b5d;
+      line-height:1.6;
+    }
+
+    .field{
+      margin-top:18px;
     }
 
     label{
       display:block;
-      font-size:13px;
-      font-weight:700;
       margin-bottom:7px;
+      font-weight:700;
+      color:#5a3b2c;
     }
 
     input,
     select,
     textarea{
       width:100%;
-      border:1px solid var(--line);
-      background:#fff;
-      color:var(--brown);
+      border:1px solid #dbc8b5;
       border-radius:10px;
+      background:#fffdf9;
+      color:#3f2a1f;
       padding:12px 13px;
       outline:none;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus{
-      border-color:var(--gold);
-      box-shadow:0 0 0 3px rgba(185,152,90,.12);
-    }
-
-    .field{
-      margin-bottom:17px;
-    }
-
-    .btn{
-      border:0;
-      border-radius:10px;
-      padding:12px 17px;
-      background:var(--brown);
-      color:#fff;
-      cursor:pointer;
-      font-weight:700;
-      transition:.2s ease;
-    }
-
-    .btn:hover{
-      background:#2e1d15;
-      transform:translateY(-1px);
-    }
-
-    .btn:disabled{
-      opacity:.6;
-      cursor:not-allowed;
-      transform:none;
-    }
-
-    .btn.secondary{
-      background:#efe5d8;
-      color:var(--brown);
-    }
-
-    .btn.danger{
-      background:#9a3d32;
-    }
-
-    .btn.success{
-      background:#416b4c;
-    }
-
-    .forgot{
-      display:block;
-      text-align:right;
-      margin-top:-7px;
-      margin-bottom:20px;
-      color:var(--warm);
-      text-decoration:none;
-      font-size:13px;
-      font-weight:700;
-    }
-
-    .forgot:hover{
-      text-decoration:underline;
-    }
-
-    .message{
-      display:none;
-      margin-top:16px;
-      border-radius:10px;
-      padding:12px 13px;
-      font-size:13px;
-      line-height:1.5;
-    }
-
-    .message.error{
-      display:block;
-      background:#f8e9e6;
-      color:var(--red);
-      border:1px solid #e7c5bf;
-    }
-
-    .message.success{
-      display:block;
-      background:#eaf3ec;
-      color:var(--green);
-      border:1px solid #c8ddce;
-    }
-
-    #dashboardView{
-      min-height:100vh;
-    }
-
-    .topbar{
-      background:var(--brown);
-      color:#fff;
-      padding:13px 22px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:15px;
-    }
-
-    .topbar-brand{
-      font-family:Georgia, "Times New Roman", serif;
-      font-size:22px;
-    }
-
-    .topbar-right{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      font-size:13px;
-    }
-
-    .logout{
-      border:1px solid rgba(255,255,255,.3);
-      background:transparent;
-      color:#fff;
-      border-radius:8px;
-      padding:8px 12px;
-      cursor:pointer;
-    }
-
-    .logout:hover{
-      background:rgba(255,255,255,.08);
-    }
-
-    .dashboard{
-      max-width:1280px;
-      margin:0 auto;
-      padding:28px 20px 60px;
-    }
-
-    .welcome{
-      margin-bottom:25px;
-    }
-
-    .welcome h1{
-      font-family:Georgia, "Times New Roman", serif;
-      font-size:32px;
-      margin-bottom:6px;
-    }
-
-    .welcome p{
-      color:var(--muted);
-      line-height:1.55;
-    }
-
-    .stats{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:15px;
-      margin-bottom:25px;
-    }
-
-    .stat{
-      background:var(--paper);
-      border:1px solid var(--line);
-      border-radius:15px;
-      padding:18px;
-      box-shadow:var(--shadow);
-    }
-
-    .stat small{
-      display:block;
-      color:var(--muted);
-      margin-bottom:8px;
-      font-size:12px;
-    }
-
-    .stat strong{
-      display:block;
-      font-family:Georgia, "Times New Roman", serif;
-      font-size:28px;
-    }
-
-    .section{
-      background:var(--paper);
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:23px;
-      box-shadow:var(--shadow);
-      margin-bottom:22px;
-    }
-
-    .section-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:15px;
-      margin-bottom:20px;
-    }
-
-    .section-head h2{
-      font-family:Georgia, "Times New Roman", serif;
-      font-size:25px;
-      margin-bottom:5px;
-    }
-
-    .section-head p{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.5;
-    }
-
-    .request-list{
-      display:flex;
-      flex-direction:column;
-      gap:13px;
-    }
-
-    .request-item{
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:17px;
-      background:#fff;
-    }
-
-    .request-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:15px;
-    }
-
-    .request-name{
-      font-family:Georgia, "Times New Roman", serif;
-      font-size:19px;
-      margin-bottom:4px;
-    }
-
-    .request-role{
-      color:var(--muted);
-      font-size:12px;
-    }
-
-    .request-date{
-      color:var(--muted);
-      font-size:12px;
-      white-space:nowrap;
-    }
-
-    .request-message{
-      margin-top:13px;
-      padding-top:13px;
-      border-top:1px solid var(--line);
-      color:#5d5148;
-      font-size:13px;
-      line-height:1.55;
-    }
-
-    .request-actions{
-      margin-top:15px;
-      display:flex;
-      gap:9px;
-      flex-wrap:wrap;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:16px;
-    }
-
-    .schedule-form{
-      border:1px solid var(--line);
-      background:#fffaf3;
-      border-radius:14px;
-      padding:18px;
-    }
-
-    .schedule-form h3{
-      font-family:Georgia, "Times New Roman", serif;
-      font-size:19px;
-      margin-bottom:17px;
     }
 
     textarea{
@@ -397,124 +113,206 @@
       resize:vertical;
     }
 
-    .form-actions{
+    input:focus,
+    select:focus,
+    textarea:focus{
+      border-color:#a67850;
+      box-shadow:0 0 0 3px rgba(166,120,80,.12);
+    }
+
+    .btn{
+      border:0;
+      border-radius:10px;
+      padding:11px 16px;
+      cursor:pointer;
+      background:#ead9c6;
+      color:#4b2f24;
+      font-weight:700;
+      transition:.2s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .btn.primary{
+      background:#6b4634;
+      color:#fffaf3;
+    }
+
+    .btn.danger{
+      background:#ead0ca;
+      color:#7b3024;
+    }
+
+    .btn.small{
+      padding:8px 12px;
+      font-size:13px;
+    }
+
+    .hidden{
+      display:none !important;
+    }
+
+    .dashboard-header{
       display:flex;
-      gap:9px;
-      flex-wrap:wrap;
-      margin-top:5px;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:20px;
+      margin-bottom:24px;
     }
 
-    .schedule-list{
+    .dashboard-header h1{
+      font-size:34px;
+      color:#4b2f24;
+      margin-bottom:7px;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:16px;
+      margin-bottom:26px;
+    }
+
+    .stat{
+      background:#fffaf3;
+      border:1px solid #eadccc;
+      border-radius:16px;
+      padding:20px;
+      box-shadow:0 8px 22px rgba(80,52,34,.06);
+    }
+
+    .stat-label{
+      color:#806b5d;
+      font-size:14px;
+      margin-bottom:9px;
+    }
+
+    .stat-value{
+      font-size:30px;
+      font-weight:700;
+      color:#4b2f24;
+    }
+
+    .section{
+      margin-top:24px;
+    }
+
+    .card{
+      padding:24px;
+    }
+
+    .section-head{
       display:flex;
-      flex-direction:column;
-      gap:12px;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      margin-bottom:18px;
     }
 
-    .schedule-item{
-      border:1px solid var(--line);
-      border-radius:13px;
-      padding:16px;
-      background:#fff;
+    .section-title{
+      font-size:24px;
     }
 
-    .schedule-title{
+    .request-list,
+    .schedule-list,
+    .book-list{
+      display:grid;
+      gap:14px;
+    }
+
+    .request-item,
+    .schedule-item,
+    .book-item{
+      border:1px solid #eadccc;
+      background:#fffdf9;
+      border-radius:14px;
+      padding:18px;
+    }
+
+    .request-top,
+    .schedule-top,
+    .book-top{
       display:flex;
       justify-content:space-between;
       gap:15px;
       align-items:flex-start;
     }
 
-    .schedule-title h3{
-      font-family:Georgia, "Times New Roman", serif;
-      font-size:18px;
-      margin-bottom:4px;
-    }
-
-    .schedule-author{
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .status{
-      display:inline-flex;
-      padding:5px 9px;
-      border-radius:999px;
-      font-size:11px;
+    .item-title{
+      color:#4b2f24;
       font-weight:700;
-      background:#eee5d9;
-      color:var(--brown);
-      text-transform:capitalize;
-      white-space:nowrap;
+      font-size:18px;
     }
 
-    .status.scheduled{
-      background:#eaf3ec;
-      color:var(--green);
+    .item-meta{
+      color:#806b5d;
+      font-size:13px;
+      line-height:1.6;
+      margin-top:5px;
     }
 
-    .status.cancelled{
-      background:#f8e9e6;
-      color:var(--red);
-    }
-
-    .status.completed{
-      background:#eee8f5;
-      color:#684d80;
-    }
-
-    .schedule-meta{
+    .message{
       margin-top:12px;
-      display:grid;
-      gap:6px;
-      color:#5d5148;
-      font-size:13px;
+      padding:12px 14px;
+      border-radius:10px;
+      background:#f7efe4;
+      color:#5d4333;
+      line-height:1.6;
     }
 
-    .schedule-notes{
-      margin-top:11px;
-      padding-top:11px;
-      border-top:1px solid var(--line);
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.5;
-    }
-
-    .schedule-actions{
-      margin-top:14px;
+    .actions{
       display:flex;
-      gap:8px;
       flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
     }
 
     .empty{
-      border:1px dashed var(--line);
-      border-radius:12px;
-      padding:25px;
+      padding:28px;
       text-align:center;
-      color:var(--muted);
-      font-size:13px;
+      color:#806b5d;
+      border:1px dashed #d9c5b0;
+      border-radius:12px;
+      background:#fffdf9;
     }
 
-    .loading{
-      color:var(--muted);
-      font-size:13px;
-      padding:10px 0;
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+
+    .status{
+      display:inline-block;
+      padding:5px 9px;
+      border-radius:999px;
+      background:#eee0cf;
+      color:#624331;
+      font-size:12px;
+      font-weight:700;
     }
 
     .toast{
       position:fixed;
-      right:20px;
-      bottom:20px;
-      z-index:100;
-      background:var(--brown);
-      color:#fff;
-      border-radius:10px;
-      padding:12px 16px;
+      right:22px;
+      bottom:22px;
+      background:#4b2f24;
+      color:#fffaf3;
+      padding:13px 17px;
+      border-radius:11px;
       box-shadow:0 10px 30px rgba(0,0,0,.18);
-      display:none;
-      max-width:360px;
-      font-size:13px;
-      line-height:1.4;
+      opacity:0;
+      transform:translateY(12px);
+      pointer-events:none;
+      transition:.25s ease;
+      z-index:100;
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:translateY(0);
     }
 
     @media(max-width:900px){
@@ -522,40 +320,39 @@
         grid-template-columns:repeat(2,1fr);
       }
 
-      .grid{
+      .grid-2{
         grid-template-columns:1fr;
       }
     }
 
-    @media(max-width:600px){
+    @media(max-width:620px){
       .topbar{
-        align-items:flex-start;
+        padding:16px 18px;
       }
 
-      .topbar-right{
+      .page{
+        width:min(100% - 22px, 1180px);
+        margin-top:22px;
+      }
+
+      .dashboard-header,
+      .request-top,
+      .schedule-top,
+      .book-top{
         flex-direction:column;
-        align-items:flex-end;
+        align-items:flex-start;
       }
 
       .stats{
         grid-template-columns:1fr;
       }
 
-      .dashboard{
-        padding:22px 14px 45px;
+      .card{
+        padding:18px;
       }
 
-      .section{
-        padding:17px;
-      }
-
-      .schedule-title,
-      .request-top{
-        flex-direction:column;
-      }
-
-      .request-date{
-        white-space:normal;
+      .dashboard-header h1{
+        font-size:28px;
       }
     }
   </style>
@@ -563,382 +360,173 @@
 
 <body>
 
-  <section id="loginView">
+  <header class="topbar">
+    <div class="brand">Reader Reach</div>
+    <div id="adminEmail" class="admin-email"></div>
+  </header>
 
-    <div class="login-wrap">
+  <main class="page">
 
-      <div class="brand">
-        <h1>Reader Reach</h1>
-        <p>Administration</p>
-      </div>
+    <section id="loginSection" class="login-card">
+      <h1>Admin Access</h1>
+      <p class="muted">
+        Checking your Reader Reach administrator account...
+      </p>
+    </section>
 
-      <div class="login-card">
+    <section id="dashboardSection" class="hidden">
 
-        <h2>Admin Login</h2>
+      <div class="dashboard-header">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p class="muted">
+            Manage authors, books, featured content and feature scheduling.
+          </p>
+        </div>
 
-        <p class="intro">
-          Sign in to manage Reader Reach.
-        </p>
-
-        <form id="loginForm">
-
-          <div class="field">
-            <label for="loginEmail">Email address</label>
-
-            <input
-              id="loginEmail"
-              type="email"
-              autocomplete="email"
-              required
-            >
-          </div>
-
-          <div class="field">
-            <label for="loginPassword">Password</label>
-
-            <input
-              id="loginPassword"
-              type="password"
-              autocomplete="current-password"
-              required
-            >
-          </div>
-
-          <a
-            class="forgot"
-            href="reset-password.html"
-          >
-            Forgot Password?
-          </a>
-
-          <button
-            id="loginButton"
-            class="btn"
-            type="submit"
-          >
-            Sign In
-          </button>
-
-        </form>
-
-        <div
-          id="loginMessage"
-          class="message"
-        ></div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <section
-    id="dashboardView"
-    class="hidden"
-  >
-
-    <header class="topbar">
-
-      <div class="topbar-brand">
-        Reader Reach
-      </div>
-
-      <div class="topbar-right">
-
-        <span id="adminEmail"></span>
-
-        <button
-          id="logoutButton"
-          class="logout"
-          type="button"
-        >
+        <button id="signOutBtn" class="btn">
           Sign Out
         </button>
-
       </div>
 
-    </header>
-
-
-    <main class="dashboard">
-
-      <div class="welcome">
-
-        <h1>Admin Dashboard</h1>
-
-        <p>
-          Manage Reader Reach's approved content, authors, and feature schedule.
-        </p>
-
-      </div>
-
-
-      <div class="stats">
-
+      <section class="stats">
         <div class="stat">
-          <small>Approved Books</small>
-          <strong id="approvedBooksCount">0</strong>
+          <div class="stat-label">Approved Books</div>
+          <div id="approvedBooksCount" class="stat-value">0</div>
         </div>
 
         <div class="stat">
-          <small>Approved Authors</small>
-          <strong id="approvedAuthorsCount">0</strong>
+          <div class="stat-label">Approved Authors</div>
+          <div id="approvedAuthorsCount" class="stat-value">0</div>
         </div>
 
         <div class="stat">
-          <small>Upcoming Features</small>
-          <strong id="upcomingCount">0</strong>
+          <div class="stat-label">Upcoming Features</div>
+          <div id="upcomingFeaturesCount" class="stat-value">0</div>
         </div>
 
         <div class="stat">
-          <small>Scheduled Features</small>
-          <strong id="scheduledCount">0</strong>
+          <div class="stat-label">Scheduled Features</div>
+          <div id="scheduledFeaturesCount" class="stat-value">0</div>
         </div>
-
-      </div>
-
-
-      <section class="section">
-
-        <div class="section-head">
-
-          <div>
-            <h2>Authors Awaiting Approval</h2>
-
-            <p>
-              Review author access requests before author privileges are granted.
-            </p>
-          </div>
-
-          <button
-            id="refreshAuthorRequestsButton"
-            class="btn secondary"
-            type="button"
-          >
-            Refresh
-          </button>
-
-        </div>
-
-        <div
-          id="authorRequestsLoading"
-          class="loading"
-        >
-          Loading author requests...
-        </div>
-
-        <div
-          id="authorRequestList"
-          class="request-list"
-        ></div>
-
       </section>
 
-
+      <!-- AUTHOR REQUESTS -->
       <section class="section">
-
-        <div class="section-head">
-
-          <div>
-            <h2>Feature Calendar</h2>
-
-            <p>
-              Schedule approved books for upcoming features.
-            </p>
-          </div>
-
-          <button
-            id="refreshButton"
-            class="btn secondary"
-            type="button"
-          >
-            Refresh
-          </button>
-
-        </div>
-
-
-        <div class="grid">
-
-          <div class="schedule-form">
-
-            <h3 id="formTitle">
-              Add Feature Schedule
-            </h3>
-
-            <form id="scheduleForm">
-
-              <input
-                id="editingId"
-                type="hidden"
-              >
-
-              <div class="field">
-
-                <label for="bookSelect">
-                  Approved Book
-                </label>
-
-                <select
-                  id="bookSelect"
-                  required
-                >
-                  <option value="">
-                    Select an approved book
-                  </option>
-                </select>
-
-              </div>
-
-
-              <div class="field">
-
-                <label for="moderatorSelect">
-                  Moderator
-                </label>
-
-                <select id="moderatorSelect">
-
-                  <option value="">
-                    No moderator assigned
-                  </option>
-
-                </select>
-
-              </div>
-
-
-              <div class="field">
-
-                <label for="scheduleDate">
-                  Feature Date
-                </label>
-
-                <input
-                  id="scheduleDate"
-                  type="date"
-                  required
-                >
-
-              </div>
-
-
-              <div class="field">
-
-                <label for="scheduleTime">
-                  Feature Time
-                </label>
-
-                <input
-                  id="scheduleTime"
-                  type="time"
-                  required
-                >
-
-              </div>
-
-
-              <div class="field">
-
-                <label for="scheduleStatus">
-                  Status
-                </label>
-
-                <select
-                  id="scheduleStatus"
-                  required
-                >
-
-                  <option value="scheduled">
-                    Scheduled
-                  </option>
-
-                  <option value="completed">
-                    Completed
-                  </option>
-
-                  <option value="cancelled">
-                    Cancelled
-                  </option>
-
-                </select>
-
-              </div>
-
-
-              <div class="field">
-
-                <label for="scheduleNotes">
-                  Notes
-                </label>
-
-                <textarea
-                  id="scheduleNotes"
-                  placeholder="Optional schedule notes"
-                ></textarea>
-
-              </div>
-
-
-              <div class="form-actions">
-
-                <button
-                  id="saveScheduleButton"
-                  class="btn"
-                  type="submit"
-                >
-                  Save Schedule
-                </button>
-
-                <button
-                  id="cancelEditButton"
-                  class="btn secondary hidden"
-                  type="button"
-                >
-                  Cancel Edit
-                </button>
-
-              </div>
-
-            </form>
-
-          </div>
-
-
-          <div>
-
-            <div
-              id="scheduleLoading"
-              class="loading"
-            >
-              Loading schedules...
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Authors Awaiting Approval</h2>
+              <p class="muted">
+                Review author access requests before granting Author status.
+              </p>
             </div>
 
-            <div
-              id="scheduleList"
-              class="schedule-list"
-            ></div>
-
+            <button id="refreshAuthorRequestsBtn" class="btn small">
+              Refresh
+            </button>
           </div>
 
+          <div id="authorRequestList" class="request-list">
+            <div class="empty">Loading author requests...</div>
+          </div>
         </div>
-
       </section>
 
-    </main>
+      <!-- APPROVED BOOKS -->
+      <section class="section">
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Approved Books</h2>
+              <p class="muted">
+                Books approved for the Reader Reach platform.
+              </p>
+            </div>
+          </div>
 
-  </section>
+          <div id="approvedBookList" class="book-list">
+            <div class="empty">Loading approved books...</div>
+          </div>
+        </div>
+      </section>
 
+      <!-- FEATURE CALENDAR -->
+      <section class="section">
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Feature Calendar</h2>
+              <p class="muted">
+                Schedule approved books for platform features.
+              </p>
+            </div>
+          </div>
 
-  <div
-    id="toast"
-    class="toast"
-  ></div>
+          <div class="grid-2">
 
+            <div>
+              <div class="field">
+                <label for="scheduleBook">Book</label>
+                <select id="scheduleBook">
+                  <option value="">Select an approved book</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="scheduleModerator">Moderator</label>
+                <select id="scheduleModerator">
+                  <option value="">Select a moderator</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="scheduleDate">Date</label>
+                <input id="scheduleDate" type="date" />
+              </div>
+
+              <div class="field">
+                <label for="scheduleTime">Time</label>
+                <input id="scheduleTime" type="time" />
+              </div>
+
+              <div class="field">
+                <label for="scheduleNotes">Notes</label>
+                <textarea
+                  id="scheduleNotes"
+                  placeholder="Optional scheduling notes"
+                ></textarea>
+              </div>
+
+              <div class="actions">
+                <button id="scheduleBtn" class="btn primary">
+                  Schedule Feature
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="item-title" style="margin-bottom:12px;">
+                Scheduled Features
+              </h3>
+
+              <div id="scheduleList" class="schedule-list">
+                <div class="empty">Loading schedules...</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-
     const SUPABASE_URL =
       'https://bublmnfhyyrefcdkloak.supabase.co';
 
@@ -960,274 +548,122 @@
         }
       );
 
+    let currentUser = null;
+    let authorRequests = [];
+    let approvedBooks = [];
+    let moderators = [];
 
-    const loginView =
-      document.getElementById('loginView');
+    const loginSection =
+      document.getElementById('loginSection');
 
-    const dashboardView =
-      document.getElementById('dashboardView');
-
-    const loginForm =
-      document.getElementById('loginForm');
-
-    const loginButton =
-      document.getElementById('loginButton');
-
-    const loginMessage =
-      document.getElementById('loginMessage');
+    const dashboardSection =
+      document.getElementById('dashboardSection');
 
     const adminEmail =
       document.getElementById('adminEmail');
 
-    const logoutButton =
-      document.getElementById('logoutButton');
+    const authorRequestList =
+      document.getElementById('authorRequestList');
 
-    const bookSelect =
-      document.getElementById('bookSelect');
-
-    const moderatorSelect =
-      document.getElementById('moderatorSelect');
-
-    const scheduleForm =
-      document.getElementById('scheduleForm');
-
-    const editingId =
-      document.getElementById('editingId');
-
-    const scheduleDate =
-      document.getElementById('scheduleDate');
-
-    const scheduleTime =
-      document.getElementById('scheduleTime');
-
-    const scheduleStatus =
-      document.getElementById('scheduleStatus');
-
-    const scheduleNotes =
-      document.getElementById('scheduleNotes');
-
-    const saveScheduleButton =
-      document.getElementById('saveScheduleButton');
-
-    const cancelEditButton =
-      document.getElementById('cancelEditButton');
-
-    const formTitle =
-      document.getElementById('formTitle');
+    const approvedBookList =
+      document.getElementById('approvedBookList');
 
     const scheduleList =
       document.getElementById('scheduleList');
 
-    const scheduleLoading =
-      document.getElementById('scheduleLoading');
+    const toast =
+      document.getElementById('toast');
 
-    const refreshButton =
-      document.getElementById('refreshButton');
+    function showToast(message){
+      toast.textContent = message;
+      toast.classList.add('show');
 
-    const authorRequestList =
-      document.getElementById('authorRequestList');
-
-    const authorRequestsLoading =
-      document.getElementById('authorRequestsLoading');
-
-    const refreshAuthorRequestsButton =
-      document.getElementById(
-        'refreshAuthorRequestsButton'
-      );
-
-
-    let currentUser = null;
-    let schedules = [];
-    let approvedBooks = [];
-    let activeModerators = [];
-    let authorRequests = [];
-
-
-    function showLoginMessage(message, type){
-
-      loginMessage.textContent = message;
-
-      loginMessage.className =
-        'message ' + type;
-
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
     }
-
-
-    function clearLoginMessage(){
-
-      loginMessage.textContent = '';
-
-      loginMessage.className =
-        'message';
-
-    }
-
-
-    function toast(message){
-
-      const element =
-        document.getElementById('toast');
-
-      element.textContent =
-        message;
-
-      element.style.display =
-        'block';
-
-      clearTimeout(
-        window.toastTimer
-      );
-
-      window.toastTimer =
-        setTimeout(() => {
-
-          element.style.display =
-            'none';
-
-        }, 3200);
-
-    }
-
 
     function escapeHtml(value){
-
-      if(
-        value === null ||
-        value === undefined
-      ){
-        return '';
-      }
-
-      return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-
+      return String(value ?? '')
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
     }
 
+    function formatDate(value){
+      if(!value) return '—';
 
-    function formatDate(dateValue){
+      const date = new Date(value);
 
-      if(!dateValue){
-        return '';
+      if(Number.isNaN(date.getTime())){
+        return value;
       }
 
-      const date =
-        new Date(
-          dateValue + 'T00:00:00'
-        );
-
-      return date.toLocaleDateString(
-        undefined,
-        {
-          year:'numeric',
-          month:'long',
-          day:'numeric'
-        }
-      );
-
+      return date.toLocaleDateString();
     }
 
-
-    function formatTime(timeValue){
-
-      if(!timeValue){
-        return '';
-      }
-
-      const parts =
-        timeValue.split(':');
-
-      const hour =
-        Number(parts[0]);
-
-      const minute =
-        parts[1];
-
-      const suffix =
-        hour >= 12
-          ? 'PM'
-          : 'AM';
-
-      const displayHour =
-        hour % 12 || 12;
-
-      return `${displayHour}:${minute} ${suffix}`;
-
+    function showDashboard(){
+      loginSection.classList.add('hidden');
+      dashboardSection.classList.remove('hidden');
     }
 
+    function showLogin(message){
+      dashboardSection.classList.add('hidden');
+      loginSection.classList.remove('hidden');
+
+      loginSection.innerHTML = `
+        <h1>Admin Access</h1>
+        <p class="muted">${escapeHtml(message)}</p>
+      `;
+    }
 
     async function checkAdmin(){
 
       const {
-        data:{
-          user
-        }
-      } =
-        await supabaseClient.auth.getUser();
+        data:{ user },
+        error:userError
+      } = await supabaseClient.auth.getUser();
 
-
-      if(!user){
-
-        showLogin();
-
+      if(userError || !user){
+        showLogin('Please sign in with your administrator account.');
         return false;
-
       }
-
 
       const {
         data:profile,
-        error
-      } =
-        await supabaseClient
-          .from('profiles')
-          .select('id, role')
-          .eq('id', user.id)
-          .maybeSingle();
+        error:profileError
+      } = await supabaseClient
+        .from('profiles')
+        .select('id, role')
+        .eq('id', user.id)
+        .maybeSingle();
 
-
-      if(error){
-
-        console.error(error);
-
-        await supabaseClient.auth.signOut();
-
-        showLoginMessage(
-          'Unable to verify your account role.',
-          'error'
+      if(profileError){
+        console.error(
+          'Admin profile error:',
+          profileError
         );
 
-        showLogin();
-
-        return false;
-
-      }
-
-
-      if(
-        !profile ||
-        profile.role !== 'admin'
-      ){
-
-        await supabaseClient.auth.signOut();
-
-        showLoginMessage(
-          'This account does not have administrator access.',
-          'error'
+        showLogin(
+          'Unable to verify administrator access.'
         );
 
-        showLogin();
-
         return false;
-
       }
 
+      if(!profile || profile.role !== 'admin'){
+        await supabaseClient.auth.signOut();
 
-      currentUser =
-        user;
+        showLogin(
+          'This account does not have administrator access.'
+        );
+
+        return false;
+      }
+
+      currentUser = user;
 
       adminEmail.textContent =
         user.email || '';
@@ -1235,1038 +671,678 @@
       showDashboard();
 
       return true;
-
     }
 
+    /*
+      AUTHOR REQUESTS
 
-    function showLogin(){
+      We intentionally load access_requests first
+      and profiles separately.
 
-      loginView.classList.remove(
-        'hidden'
-      );
-
-      dashboardView.classList.add(
-        'hidden'
-      );
-
-    }
-
-
-    function showDashboard(){
-
-      loginView.classList.add(
-        'hidden'
-      );
-
-      dashboardView.classList.remove(
-        'hidden'
-      );
-
-    }
-
-
-    loginForm.addEventListener(
-      'submit',
-      async event => {
-
-        event.preventDefault();
-
-        clearLoginMessage();
-
-        const email =
-          document
-            .getElementById('loginEmail')
-            .value
-            .trim();
-
-        const password =
-          document
-            .getElementById('loginPassword')
-            .value;
-
-        loginButton.disabled =
-          true;
-
-        loginButton.textContent =
-          'Signing in...';
-
-
-        const {
-          error
-        } =
-          await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-          });
-
-
-        loginButton.disabled =
-          false;
-
-        loginButton.textContent =
-          'Sign In';
-
-
-        if(error){
-
-          showLoginMessage(
-            error.message,
-            'error'
-          );
-
-          return;
-
-        }
-
-
-        const isAdmin =
-          await checkAdmin();
-
-        if(isAdmin){
-
-          await loadDashboard();
-
-        }
-
-      }
-    );
-
-
-    logoutButton.addEventListener(
-      'click',
-      async () => {
-
-        await supabaseClient.auth.signOut();
-
-        currentUser =
-          null;
-
-        showLogin();
-
-        document
-          .getElementById('loginPassword')
-          .value = '';
-
-        toast(
-          'You have been signed out.'
-        );
-
-      }
-    );
-
-
-    /* AUTHOR APPROVAL */
-
+      This avoids the ambiguous relationship caused by
+      access_requests having two foreign keys to profiles:
+      - profile_id
+      - reviewed_by
+    */
     async function loadAuthorRequests(){
 
-      authorRequestsLoading.style.display =
-        'block';
-
       authorRequestList.innerHTML =
-        '';
-
-
-      /*
-       * Load the requests first.
-       * We deliberately do not use a nested profiles()
-       * relationship because access_requests has more than
-       * one foreign key pointing to profiles.
-       */
+        '<div class="empty">Loading author requests...</div>';
 
       const {
         data:requests,
-        error:requestError
-      } =
-        await supabaseClient
-          .from('access_requests')
-          .select(
-            'id, profile_id, requested_role, message, status, reviewed_by, created_at'
-          )
-          .eq('requested_role', 'author')
-          .eq('status', 'pending')
-          .order(
-            'created_at',
-            {
-              ascending:true
-            }
-          );
+        error:requestsError
+      } = await supabaseClient
+        .from('access_requests')
+        .select(`
+          id,
+          profile_id,
+          requested_role,
+          message,
+          status,
+          reviewed_by,
+          created_at
+        `)
+        .eq('requested_role','author')
+        .eq('status','pending')
+        .order('created_at',{
+          ascending:true
+        });
 
-
-      if(requestError){
+      if(requestsError){
 
         console.error(
-          'Author request query error:',
-          requestError
+          'Author request error:',
+          requestsError
         );
-
-        authorRequestsLoading.style.display =
-          'none';
 
         authorRequestList.innerHTML =
           '<div class="empty">Unable to load author requests.</div>';
 
-        toast(
-          requestError.message ||
-          'Unable to load author requests.'
+        showToast(
+          'Could not load author requests.'
         );
 
         return;
-
       }
 
+      if(!requests || requests.length === 0){
 
-      const requestRows =
-        requests || [];
+        authorRequests = [];
 
+        authorRequestList.innerHTML = `
+          <div class="empty">
+            No author requests are currently waiting for approval.
+          </div>
+        `;
 
-      /*
-       * Load applicant profiles separately.
-       */
+        return;
+      }
 
       const profileIds =
-        [
-          ...new Set(
-            requestRows
-              .map(
-                request => request.profile_id
-              )
-              .filter(Boolean)
+        [...new Set(
+          requests.map(
+            request => request.profile_id
           )
-        ];
+        )];
 
+      const {
+        data:profiles,
+        error:profilesError
+      } = await supabaseClient
+        .from('profiles')
+        .select(`
+          id,
+          display_name,
+          role
+        `)
+        .in('id',profileIds);
 
-      let profilesById =
-        {};
+      if(profilesError){
 
-
-      if(profileIds.length){
-
-        const {
-          data:profiles,
-          error:profileError
-        } =
-          await supabaseClient
-            .from('profiles')
-            .select(
-              'id, display_name, role'
-            )
-            .in(
-              'id',
-              profileIds
-            );
-
-
-        if(profileError){
-
-          console.error(
-            'Author applicant profile query error:',
-            profileError
-          );
-
-          authorRequestsLoading.style.display =
-            'none';
-
-          authorRequestList.innerHTML =
-            '<div class="empty">The author requests were found, but the applicant profiles could not be loaded.</div>';
-
-          toast(
-            profileError.message ||
-            'Unable to load applicant profiles.'
-          );
-
-          return;
-
-        }
-
-
-        (profiles || []).forEach(
-          profile => {
-
-            profilesById[
-              profile.id
-            ] =
-              profile;
-
-          }
+        console.error(
+          'Author request profile error:',
+          profilesError
         );
 
+        authorRequestList.innerHTML =
+          '<div class="empty">Unable to load author profiles.</div>';
+
+        showToast(
+          'Could not load author profile details.'
+        );
+
+        return;
       }
 
-
-      authorRequests =
-        requestRows.map(
-          request => ({
-            ...request,
-            profiles:
-              profilesById[
-                request.profile_id
-              ] || null
-          })
+      const profileMap =
+        new Map(
+          (profiles || []).map(
+            profile => [
+              profile.id,
+              profile
+            ]
+          )
         );
 
-
-      authorRequestsLoading.style.display =
-        'none';
+      authorRequests =
+        requests.map(request => ({
+          ...request,
+          profiles:
+            profileMap.get(request.profile_id)
+            || null
+        }));
 
       renderAuthorRequests();
-
     }
-
 
     function renderAuthorRequests(){
 
-      authorRequestList.innerHTML =
-        '';
-
-
       if(!authorRequests.length){
 
-        authorRequestList.innerHTML =
-          '<div class="empty">There are no author requests awaiting approval.</div>';
+        authorRequestList.innerHTML = `
+          <div class="empty">
+            No author requests are currently waiting for approval.
+          </div>
+        `;
 
         return;
-
       }
 
-
-      authorRequests.forEach(
-        request => {
+      authorRequestList.innerHTML =
+        authorRequests.map(request => {
 
           const profile =
             request.profiles || {};
 
-          const item =
-            document.createElement(
-              'article'
-            );
+          const authorName =
+            profile.display_name ||
+            'Unnamed applicant';
 
-          item.className =
-            'request-item';
+          return `
+            <div class="request-item">
 
+              <div class="request-top">
 
-          const createdDate =
-            request.created_at
-              ? new Date(
-                  request.created_at
-                ).toLocaleString(
-                  undefined,
-                  {
-                    year:'numeric',
-                    month:'long',
-                    day:'numeric',
-                    hour:'numeric',
-                    minute:'2-digit'
-                  }
-                )
-              : 'Date unavailable';
-
-
-          item.innerHTML = `
-
-            <div class="request-top">
-
-              <div>
-
-                <div class="request-name">
-                  ${escapeHtml(
-                    profile.display_name ||
-                    'Unnamed applicant'
-                  )}
-                </div>
-
-                <div class="request-role">
-                  Requested role:
-                  ${escapeHtml(
-                    request.requested_role ||
-                    'author'
-                  )}
-                </div>
-
-              </div>
-
-              <div class="request-date">
-                ${escapeHtml(createdDate)}
-              </div>
-
-            </div>
-
-
-            ${
-              request.message
-                ? `
-                  <div class="request-message">
-                    ${escapeHtml(request.message)}
+                <div>
+                  <div class="item-title">
+                    ${escapeHtml(authorName)}
                   </div>
-                `
-                : ''
-            }
 
+                  <div class="item-meta">
+                    Requested role:
+                    ${escapeHtml(request.requested_role)}
+                    <br>
+                    Submitted:
+                    ${escapeHtml(
+                      formatDate(request.created_at)
+                    )}
+                  </div>
+                </div>
 
-            <div class="request-actions">
+                <span class="status">
+                  Pending
+                </span>
 
-              <button
-                class="btn success"
-                type="button"
-                onclick="approveAuthorRequest('${request.id}')"
-              >
-                Approve Author
-              </button>
+              </div>
 
-              <button
-                class="btn danger"
-                type="button"
-                onclick="rejectAuthorRequest('${request.id}')"
-              >
-                Reject
-              </button>
+              ${
+                request.message
+                  ? `
+                    <div class="message">
+                      ${escapeHtml(request.message)}
+                    </div>
+                  `
+                  : ''
+              }
+
+              <div class="actions">
+
+                <button
+                  class="btn primary small"
+                  onclick="approveAuthorRequest('${request.id}')"
+                >
+                  Approve Author
+                </button>
+
+                <button
+                  class="btn danger small"
+                  onclick="rejectAuthorRequest('${request.id}')"
+                >
+                  Reject
+                </button>
+
+              </div>
 
             </div>
-
           `;
 
-
-          authorRequestList.appendChild(
-            item
-          );
-
-        }
-      );
-
+        }).join('');
     }
 
-
-    window.approveAuthorRequest =
-      async function(requestId){
-
-        const request =
-          authorRequests.find(
-            item =>
-              item.id === requestId
-          );
-
-
-        if(!request){
-          return;
-        }
-
-
-        const profile =
-          request.profiles || {};
-
-
-        const displayName =
-          profile.display_name ||
-          'Author';
-
-
-        const confirmed =
-          window.confirm(
-            `Approve ${displayName} as an author?`
-          );
-
-
-        if(!confirmed){
-          return;
-        }
-
-
-        try{
-
-          const {
-            error:authorInsertError
-          } =
-            await supabaseClient
-              .from('authors')
-              .insert({
-                profile_id:
-                  request.profile_id,
-                display_name:
-                  displayName,
-                status:
-                  'approved',
-                reviewed_by:
-                  currentUser.id
-              });
-
-
-          if(authorInsertError){
-
-            console.error(
-              authorInsertError
-            );
-
-            toast(
-              authorInsertError.message ||
-              'Unable to create the author record.'
-            );
-
-            return;
-
-          }
-
-
-          const {
-            error:profileError
-          } =
-            await supabaseClient
-              .from('profiles')
-              .update({
-                role:'author',
-                updated_at:
-                  new Date().toISOString()
-              })
-              .eq(
-                'id',
-                request.profile_id
-              );
-
-
-          if(profileError){
-
-            console.error(
-              profileError
-            );
-
-            await supabaseClient
-              .from('authors')
-              .delete()
-              .eq(
-                'profile_id',
-                request.profile_id
-              );
-
-            toast(
-              profileError.message ||
-              'Unable to update the author role.'
-            );
-
-            return;
-
-          }
-
-
-          const {
-            error:requestError
-          } =
-            await supabaseClient
-              .from('access_requests')
-              .update({
-                status:'approved',
-                reviewed_by:
-                  currentUser.id,
-                updated_at:
-                  new Date().toISOString()
-              })
-              .eq(
-                'id',
-                requestId
-              );
-
-
-          if(requestError){
-
-            console.error(
-              requestError
-            );
-
-            toast(
-              requestError.message ||
-              'Author access was granted, but the request status could not be updated.'
-            );
-
-            await loadAuthorRequests();
-
-            return;
-
-          }
-
-
-          toast(
-            `${displayName} has been approved as an author.`
-          );
-
-
-          await Promise.all([
-            loadAuthorRequests(),
-            loadApprovedAuthors()
-          ]);
-
-        }catch(error){
-
-          console.error(
-            error
-          );
-
-          toast(
-            error.message ||
-            'Unable to approve the author request.'
-          );
-
-        }
-
-      };
-
-
-    window.rejectAuthorRequest =
-      async function(requestId){
-
-        const request =
-          authorRequests.find(
-            item =>
-              item.id === requestId
-          );
-
-
-        if(!request){
-          return;
-        }
-
-
-        const profile =
-          request.profiles || {};
-
-
-        const displayName =
-          profile.display_name ||
-          'this applicant';
-
-
-        const confirmed =
-          window.confirm(
-            `Reject the author request from ${displayName}?`
-          );
-
-
-        if(!confirmed){
-          return;
-        }
-
-
-        const {
-          error
-        } =
-          await supabaseClient
-            .from('access_requests')
-            .update({
-              status:'rejected',
-              reviewed_by:
-                currentUser.id,
-              updated_at:
-                new Date().toISOString()
-            })
-            .eq(
-              'id',
-              requestId
-            );
-
-
-        if(error){
-
-          console.error(error);
-
-          toast(
-            error.message ||
-            'Unable to reject the author request.'
-          );
-
-          return;
-
-        }
-
-
-        toast(
-          'Author request rejected.'
+    async function approveAuthorRequest(requestId){
+
+      const request =
+        authorRequests.find(
+          item => item.id === requestId
         );
 
-
-        await loadAuthorRequests();
-
-      };
-
-
-    refreshAuthorRequestsButton.addEventListener(
-      'click',
-      async () => {
-
-        refreshAuthorRequestsButton.disabled =
-          true;
-
-        refreshAuthorRequestsButton.textContent =
-          'Refreshing...';
-
-        await loadAuthorRequests();
-
-        refreshAuthorRequestsButton.disabled =
-          false;
-
-        refreshAuthorRequestsButton.textContent =
-          'Refresh';
-
-        toast(
-          'Author requests refreshed.'
+      if(!request){
+        showToast(
+          'Author request could not be found.'
         );
-
+        return;
       }
-    );
 
+      if(!currentUser){
+        showToast(
+          'Administrator session not found.'
+        );
+        return;
+      }
 
-    /* APPROVED BOOKS */
+      const profile =
+        request.profiles || {};
+
+      const authorName =
+        profile.display_name ||
+        'Unnamed Author';
+
+      /*
+        Step 1:
+        Create the author record.
+
+        IMPORTANT:
+        The authors table uses author_name,
+        not display_name.
+      */
+      const {
+        data:author,
+        error:authorError
+      } = await supabaseClient
+        .from('authors')
+        .insert({
+          profile_id:request.profile_id,
+          author_name:authorName,
+          status:'approved',
+          submitted_at:request.created_at,
+          reviewed_at:new Date().toISOString(),
+          reviewed_by:currentUser.id
+        })
+        .select()
+        .single();
+
+      if(authorError){
+
+        console.error(
+          'Author creation error:',
+          authorError
+        );
+
+        showToast(
+          'Could not approve author: ' +
+          authorError.message
+        );
+
+        return;
+      }
+
+      /*
+        Step 2:
+        Change the profile role to author.
+      */
+      const {
+        error:profileError
+      } = await supabaseClient
+        .from('profiles')
+        .update({
+          role:'author'
+        })
+        .eq('id',request.profile_id);
+
+      if(profileError){
+
+        console.error(
+          'Profile role update error:',
+          profileError
+        );
+
+        /*
+          Roll back the author record if
+          the profile role cannot be changed.
+        */
+        await supabaseClient
+          .from('authors')
+          .delete()
+          .eq('id',author.id);
+
+        showToast(
+          'Could not change the user role: ' +
+          profileError.message
+        );
+
+        return;
+      }
+
+      /*
+        Step 3:
+        Mark the access request approved.
+      */
+      const {
+        error:requestError
+      } = await supabaseClient
+        .from('access_requests')
+        .update({
+          status:'approved',
+          reviewed_by:currentUser.id,
+          updated_at:new Date().toISOString()
+        })
+        .eq('id',requestId);
+
+      if(requestError){
+
+        console.error(
+          'Access request update error:',
+          requestError
+        );
+
+        showToast(
+          'Author was created, but the request status could not be updated: ' +
+          requestError.message
+        );
+
+        return;
+      }
+
+      showToast(
+        'Author approved successfully.'
+      );
+
+      await loadAuthorRequests();
+      await loadStats();
+    }
+
+    async function rejectAuthorRequest(requestId){
+
+      if(!currentUser){
+        showToast(
+          'Administrator session not found.'
+        );
+        return;
+      }
+
+      const {
+        error
+      } = await supabaseClient
+        .from('access_requests')
+        .update({
+          status:'rejected',
+          reviewed_by:currentUser.id,
+          updated_at:new Date().toISOString()
+        })
+        .eq('id',requestId);
+
+      if(error){
+
+        console.error(
+          'Reject author error:',
+          error
+        );
+
+        showToast(
+          'Could not reject author request: ' +
+          error.message
+        );
+
+        return;
+      }
+
+      showToast(
+        'Author request rejected.'
+      );
+
+      await loadAuthorRequests();
+    }
 
     async function loadApprovedBooks(){
+
+      approvedBookList.innerHTML =
+        '<div class="empty">Loading approved books...</div>';
 
       const {
         data,
         error
-      } =
-        await supabaseClient
-          .from('books')
-          .select(`
+      } = await supabaseClient
+        .from('books')
+        .select(`
+          id,
+          title,
+          author_id,
+          status,
+          authors (
             id,
-            title,
-            author_id,
-            authors (
-              id,
-              display_name
-            )
-          `)
-          .eq(
-            'status',
-            'approved'
+            author_name
           )
-          .order(
-            'title',
-            {
-              ascending:true
-            }
-          );
-
+        `)
+        .eq('status','approved')
+        .order('title',{
+          ascending:true
+        });
 
       if(error){
 
-        console.error(error);
-
-        toast(
-          'Unable to load approved books.'
+        console.error(
+          'Approved books error:',
+          error
         );
 
-        return;
+        approvedBookList.innerHTML =
+          '<div class="empty">Unable to load approved books.</div>';
 
+        return;
       }
 
-
-      approvedBooks =
-        data || [];
-
-
-      bookSelect.innerHTML =
-        '<option value="">Select an approved book</option>';
-
-
-      approvedBooks.forEach(
-        book => {
-
-          const option =
-            document.createElement(
-              'option'
-            );
-
-          option.value =
-            book.id;
-
-
-          const authorName =
-            book.authors &&
-            book.authors.display_name
-              ? ` — ${book.authors.display_name}`
-              : '';
-
-
-          option.textContent =
-            `${book.title}${authorName}`;
-
-
-          bookSelect.appendChild(
-            option
-          );
-
-        }
-      );
-
+      approvedBooks = data || [];
 
       document.getElementById(
         'approvedBooksCount'
       ).textContent =
         approvedBooks.length;
 
+      renderApprovedBooks();
+      populateBookSelect();
     }
 
+    function renderApprovedBooks(){
 
-    /* MODERATORS */
+      if(!approvedBooks.length){
+
+        approvedBookList.innerHTML = `
+          <div class="empty">
+            No approved books yet.
+          </div>
+        `;
+
+        return;
+      }
+
+      approvedBookList.innerHTML =
+        approvedBooks.map(book => {
+
+          const author =
+            book.authors || {};
+
+          return `
+            <div class="book-item">
+
+              <div class="book-top">
+
+                <div>
+                  <div class="item-title">
+                    ${escapeHtml(book.title)}
+                  </div>
+
+                  <div class="item-meta">
+                    Author:
+                    ${escapeHtml(
+                      author.author_name ||
+                      'Unknown author'
+                    )}
+                  </div>
+                </div>
+
+                <span class="status">
+                  Approved
+                </span>
+
+              </div>
+
+            </div>
+          `;
+
+        }).join('');
+    }
+
+    function populateBookSelect(){
+
+      const select =
+        document.getElementById(
+          'scheduleBook'
+        );
+
+      select.innerHTML =
+        '<option value="">Select an approved book</option>';
+
+      approvedBooks.forEach(book => {
+
+        const option =
+          document.createElement('option');
+
+        option.value = book.id;
+        option.textContent =
+          book.title;
+
+        select.appendChild(option);
+      });
+    }
 
     async function loadModerators(){
 
       const {
         data,
         error
-      } =
-        await supabaseClient
-          .from('moderators')
-          .select(`
-            id,
-            display_name,
-            active
-          `)
-          .eq(
-            'active',
-            true
-          )
-          .order(
-            'display_name',
-            {
-              ascending:true
-            }
-          );
-
+      } = await supabaseClient
+        .from('moderators')
+        .select(`
+          id,
+          profile_id,
+          display_name,
+          active
+        `)
+        .eq('active',true)
+        .order('display_name',{
+          ascending:true
+        });
 
       if(error){
 
-        console.error(error);
-
-        toast(
-          'Unable to load moderators.'
+        console.error(
+          'Moderators error:',
+          error
         );
 
         return;
-
       }
 
+      moderators = data || [];
 
-      activeModerators =
-        data || [];
-
-
-      moderatorSelect.innerHTML =
-        '<option value="">No moderator assigned</option>';
-
-
-      activeModerators.forEach(
-        moderator => {
-
-          const option =
-            document.createElement(
-              'option'
-            );
-
-          option.value =
-            moderator.id;
-
-          option.textContent =
-            moderator.display_name ||
-            'Moderator';
-
-          moderatorSelect.appendChild(
-            option
-          );
-
-        }
-      );
-
-    }
-
-
-    /* APPROVED AUTHORS */
-
-    async function loadApprovedAuthors(){
-
-      const {
-        count,
-        error
-      } =
-        await supabaseClient
-          .from('authors')
-          .select(
-            'id',
-            {
-              count:'exact',
-              head:true
-            }
-          )
-          .eq(
-            'status',
-            'approved'
-          );
-
-
-      if(!error){
-
+      const select =
         document.getElementById(
-          'approvedAuthorsCount'
-        ).textContent =
-          count || 0;
+          'scheduleModerator'
+        );
 
-      }
+      select.innerHTML =
+        '<option value="">Select a moderator</option>';
 
+      moderators.forEach(moderator => {
+
+        const option =
+          document.createElement('option');
+
+        option.value =
+          moderator.id;
+
+        option.textContent =
+          moderator.display_name ||
+          'Moderator';
+
+        select.appendChild(option);
+      });
     }
-
-
-    /* FEATURE SCHEDULES */
 
     async function loadSchedules(){
 
-      scheduleLoading.style.display =
-        'block';
-
       scheduleList.innerHTML =
-        '';
-
+        '<div class="empty">Loading schedules...</div>';
 
       const {
         data,
         error
-      } =
-        await supabaseClient
-          .from('feature_schedules')
-          .select(`
+      } = await supabaseClient
+        .from('feature_schedules')
+        .select(`
+          id,
+          book_id,
+          moderator_id,
+          feature_date,
+          feature_time,
+          status,
+          notes,
+          books (
             id,
-            book_id,
-            moderator_id,
-            scheduled_date,
-            scheduled_time,
-            status,
-            notes,
-            books (
+            title,
+            authors (
               id,
-              title,
-              authors (
-                id,
-                display_name
-              )
-            ),
-            moderators (
-              id,
-              display_name
+              author_name
             )
-          `)
-          .order(
-            'scheduled_date',
-            {
-              ascending:true
-            }
+          ),
+          moderators (
+            id,
+            display_name
           )
-          .order(
-            'scheduled_time',
-            {
-              ascending:true
-            }
-          );
-
-
-      scheduleLoading.style.display =
-        'none';
-
+        `)
+        .order('feature_date',{
+          ascending:true
+        })
+        .order('feature_time',{
+          ascending:true
+        });
 
       if(error){
 
-        console.error(error);
+        console.error(
+          'Schedules error:',
+          error
+        );
 
         scheduleList.innerHTML =
           '<div class="empty">Unable to load schedules.</div>';
 
-        toast(
-          'Unable to load feature schedules.'
-        );
-
         return;
-
       }
 
+      renderSchedules(data || []);
 
-      schedules =
-        data || [];
+      const scheduled =
+        (data || []).filter(
+          item => item.status === 'scheduled'
+        );
 
-      renderSchedules();
-
-    }
-
-
-    function renderSchedules(){
-
-      scheduleList.innerHTML =
-        '';
-
+      document.getElementById(
+        'scheduledFeaturesCount'
+      ).textContent =
+        scheduled.length;
 
       const today =
         new Date();
+      today.setHours(0,0,0,0);
 
-      today.setHours(
-        0,
-        0,
-        0,
-        0
-      );
+      const upcoming =
+        (data || []).filter(item => {
 
-
-      let upcoming =
-        0;
-
-      let scheduledTotal =
-        0;
-
-
-      schedules.forEach(
-        schedule => {
-
-          if(
-            schedule.status ===
-            'scheduled'
-          ){
-            scheduledTotal++;
+          if(item.status !== 'scheduled'){
+            return false;
           }
-
 
           const date =
             new Date(
-              schedule.scheduled_date +
-              'T00:00:00'
+              `${item.feature_date}T00:00:00`
             );
 
-
-          if(
-            schedule.status ===
-            'scheduled' &&
-            date >= today
-          ){
-            upcoming++;
-          }
-
-        }
-      );
-
+          return date >= today;
+        });
 
       document.getElementById(
-        'upcomingCount'
+        'upcomingFeaturesCount'
       ).textContent =
-        upcoming;
+        upcoming.length;
+    }
 
-
-      document.getElementById(
-        'scheduledCount'
-      ).textContent =
-        scheduledTotal;
-
+    function renderSchedules(schedules){
 
       if(!schedules.length){
 
-        scheduleList.innerHTML =
-          '<div class="empty">No feature schedules have been created yet.</div>';
+        scheduleList.innerHTML = `
+          <div class="empty">
+            No feature schedules yet.
+          </div>
+        `;
 
         return;
-
       }
 
-
-      schedules.forEach(
-        schedule => {
+      scheduleList.innerHTML =
+        schedules.map(schedule => {
 
           const book =
             schedule.books || {};
@@ -2277,545 +1353,316 @@
           const moderator =
             schedule.moderators || {};
 
-          const item =
-            document.createElement(
-              'article'
-            );
+          return `
+            <div class="schedule-item">
 
-          item.className =
-            'schedule-item';
+              <div class="schedule-top">
 
-
-          item.innerHTML = `
-
-            <div class="schedule-title">
-
-              <div>
-
-                <h3>
-                  ${escapeHtml(
-                    book.title ||
-                    'Untitled Book'
-                  )}
-                </h3>
-
-                <div class="schedule-author">
-                  ${escapeHtml(
-                    author.display_name ||
-                    'Author profile unavailable'
-                  )}
-                </div>
-
-              </div>
-
-              <span class="status ${escapeHtml(
-                schedule.status
-              )}">
-                ${escapeHtml(
-                  schedule.status
-                )}
-              </span>
-
-            </div>
-
-
-            <div class="schedule-meta">
-
-              <div>
-                <strong>Date:</strong>
-                ${escapeHtml(
-                  formatDate(
-                    schedule.scheduled_date
-                  )
-                )}
-              </div>
-
-              <div>
-                <strong>Time:</strong>
-                ${escapeHtml(
-                  formatTime(
-                    schedule.scheduled_time
-                  )
-                )}
-              </div>
-
-              <div>
-                <strong>Moderator:</strong>
-                ${escapeHtml(
-                  moderator.display_name ||
-                  'Not assigned'
-                )}
-              </div>
-
-            </div>
-
-
-            ${
-              schedule.notes
-                ? `
-                  <div class="schedule-notes">
+                <div>
+                  <div class="item-title">
                     ${escapeHtml(
-                      schedule.notes
+                      book.title ||
+                      'Untitled book'
                     )}
                   </div>
-                `
-                : ''
-            }
 
+                  <div class="item-meta">
+                    Author:
+                    ${escapeHtml(
+                      author.author_name ||
+                      'Unknown'
+                    )}
+                    <br>
+                    Moderator:
+                    ${escapeHtml(
+                      moderator.display_name ||
+                      'Unknown'
+                    )}
+                    <br>
+                    Date:
+                    ${escapeHtml(
+                      schedule.feature_date ||
+                      '—'
+                    )}
+                    <br>
+                    Time:
+                    ${escapeHtml(
+                      schedule.feature_time ||
+                      '—'
+                    )}
+                  </div>
+                </div>
 
-            <div class="schedule-actions">
+                <span class="status">
+                  ${escapeHtml(
+                    schedule.status
+                  )}
+                </span>
 
-              <button
-                class="btn secondary"
-                type="button"
-                onclick="editSchedule('${schedule.id}')"
-              >
-                Edit
-              </button>
+              </div>
 
               ${
-                schedule.status !==
-                'cancelled'
+                schedule.notes
                   ? `
-                    <button
-                      class="btn danger"
-                      type="button"
-                      onclick="cancelSchedule('${schedule.id}')"
-                    >
-                      Cancel
-                    </button>
+                    <div class="message">
+                      ${escapeHtml(
+                        schedule.notes
+                      )}
+                    </div>
+                  `
+                  : ''
+              }
+
+              ${
+                schedule.status === 'scheduled'
+                  ? `
+                    <div class="actions">
+                      <button
+                        class="btn danger small"
+                        onclick="cancelSchedule('${schedule.id}')"
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   `
                   : ''
               }
 
             </div>
-
           `;
 
-
-          scheduleList.appendChild(
-            item
-          );
-
-        }
-      );
-
+        }).join('');
     }
 
+    async function scheduleFeature(){
 
-    window.editSchedule =
-      function(id){
+      const bookId =
+        document.getElementById(
+          'scheduleBook'
+        ).value;
 
-        const schedule =
-          schedules.find(
-            item =>
-              item.id === id
-          );
+      const moderatorId =
+        document.getElementById(
+          'scheduleModerator'
+        ).value;
 
+      const featureDate =
+        document.getElementById(
+          'scheduleDate'
+        ).value;
 
-        if(!schedule){
-          return;
-        }
+      const featureTime =
+        document.getElementById(
+          'scheduleTime'
+        ).value;
 
+      const notes =
+        document.getElementById(
+          'scheduleNotes'
+        ).value.trim();
 
-        editingId.value =
-          schedule.id;
-
-        bookSelect.value =
-          schedule.book_id || '';
-
-        moderatorSelect.value =
-          schedule.moderator_id || '';
-
-        scheduleDate.value =
-          schedule.scheduled_date || '';
-
-        scheduleTime.value =
-          schedule.scheduled_time
-            ? schedule.scheduled_time.slice(
-                0,
-                5
-              )
-            : '';
-
-        scheduleStatus.value =
-          schedule.status ||
-          'scheduled';
-
-        scheduleNotes.value =
-          schedule.notes ||
-          '';
-
-
-        formTitle.textContent =
-          'Edit Feature Schedule';
-
-        saveScheduleButton.textContent =
-          'Update Schedule';
-
-        cancelEditButton.classList.remove(
-          'hidden'
+      if(
+        !bookId ||
+        !moderatorId ||
+        !featureDate ||
+        !featureTime
+      ){
+        showToast(
+          'Please complete the book, moderator, date and time.'
         );
+        return;
+      }
 
-
-        window.scrollTo({
-          top:0,
-          behavior:'smooth'
+      const {
+        error
+      } = await supabaseClient
+        .from('feature_schedules')
+        .insert({
+          book_id:bookId,
+          moderator_id:moderatorId,
+          feature_date:featureDate,
+          feature_time:featureTime,
+          status:'scheduled',
+          notes:notes || null
         });
 
-      };
+      if(error){
 
-
-    window.cancelSchedule =
-      async function(id){
-
-        const confirmed =
-          window.confirm(
-            'Cancel this feature schedule?'
-          );
-
-
-        if(!confirmed){
-          return;
-        }
-
-
-        const {
+        console.error(
+          'Schedule creation error:',
           error
-        } =
-          await supabaseClient
-            .from('feature_schedules')
-            .update({
-              status:'cancelled',
-              updated_at:
-                new Date().toISOString()
-            })
-            .eq(
-              'id',
-              id
-            );
-
-
-        if(error){
-
-          console.error(error);
-
-          toast(
-            'Unable to cancel the schedule.'
-          );
-
-          return;
-
-        }
-
-
-        toast(
-          'Feature schedule cancelled.'
         );
 
+        showToast(
+          'Could not schedule feature: ' +
+          error.message
+        );
 
-        await loadSchedules();
+        return;
+      }
 
-      };
-
-
-    function resetScheduleForm(){
-
-      editingId.value =
-        '';
-
-      bookSelect.value =
-        '';
-
-      moderatorSelect.value =
-        '';
-
-      scheduleDate.value =
-        '';
-
-      scheduleTime.value =
-        '';
-
-      scheduleStatus.value =
-        'scheduled';
-
-      scheduleNotes.value =
-        '';
-
-
-      formTitle.textContent =
-        'Add Feature Schedule';
-
-      saveScheduleButton.textContent =
-        'Save Schedule';
-
-      cancelEditButton.classList.add(
-        'hidden'
+      showToast(
+        'Feature scheduled successfully.'
       );
 
+      document.getElementById(
+        'scheduleBook'
+      ).value = '';
+
+      document.getElementById(
+        'scheduleModerator'
+      ).value = '';
+
+      document.getElementById(
+        'scheduleDate'
+      ).value = '';
+
+      document.getElementById(
+        'scheduleTime'
+      ).value = '';
+
+      document.getElementById(
+        'scheduleNotes'
+      ).value = '';
+
+      await loadSchedules();
     }
 
+    async function cancelSchedule(scheduleId){
 
-    cancelEditButton.addEventListener(
-      'click',
-      resetScheduleForm
-    );
+      const {
+        error
+      } = await supabaseClient
+        .from('feature_schedules')
+        .update({
+          status:'cancelled'
+        })
+        .eq('id',scheduleId);
 
+      if(error){
 
-    scheduleForm.addEventListener(
-      'submit',
-      async event => {
-
-        event.preventDefault();
-
-
-        const id =
-          editingId.value.trim();
-
-        const bookId =
-          bookSelect.value;
-
-        const moderatorId =
-          moderatorSelect.value ||
-          null;
-
-        const date =
-          scheduleDate.value;
-
-        const time =
-          scheduleTime.value;
-
-        const status =
-          scheduleStatus.value;
-
-        const notes =
-          scheduleNotes.value.trim() ||
-          null;
-
-
-        if(
-          !bookId ||
-          !date ||
-          !time
-        ){
-
-          toast(
-            'Please complete the book, date, and time.'
-          );
-
-          return;
-
-        }
-
-
-        saveScheduleButton.disabled =
-          true;
-
-        saveScheduleButton.textContent =
-          id
-            ? 'Updating...'
-            : 'Saving...';
-
-
-        const payload = {
-
-          book_id:
-            bookId,
-
-          moderator_id:
-            moderatorId,
-
-          scheduled_date:
-            date,
-
-          scheduled_time:
-            time,
-
-          status:
-            status,
-
-          notes:
-            notes,
-
-          updated_at:
-            new Date().toISOString()
-
-        };
-
-
-        let error =
-          null;
-
-
-        if(id){
-
-          const result =
-            await supabaseClient
-              .from('feature_schedules')
-              .update(payload)
-              .eq(
-                'id',
-                id
-              );
-
-          error =
-            result.error;
-
-        }else{
-
-          const result =
-            await supabaseClient
-              .from('feature_schedules')
-              .insert(payload);
-
-          error =
-            result.error;
-
-        }
-
-
-        saveScheduleButton.disabled =
-          false;
-
-        saveScheduleButton.textContent =
-          id
-            ? 'Update Schedule'
-            : 'Save Schedule';
-
-
-        if(error){
-
-          console.error(error);
-
-          toast(
-            error.message ||
-            'Unable to save the feature schedule.'
-          );
-
-          return;
-
-        }
-
-
-        toast(
-          id
-            ? 'Feature schedule updated.'
-            : 'Feature schedule created.'
+        console.error(
+          'Cancel schedule error:',
+          error
         );
 
-
-        resetScheduleForm();
-
-        await loadSchedules();
-
-      }
-    );
-
-
-    refreshButton.addEventListener(
-      'click',
-      async () => {
-
-        refreshButton.disabled =
-          true;
-
-        refreshButton.textContent =
-          'Refreshing...';
-
-
-        await Promise.all([
-          loadApprovedBooks(),
-          loadModerators(),
-          loadApprovedAuthors(),
-          loadAuthorRequests(),
-          loadSchedules()
-        ]);
-
-
-        refreshButton.disabled =
-          false;
-
-        refreshButton.textContent =
-          'Refresh';
-
-
-        toast(
-          'Dashboard refreshed.'
+        showToast(
+          'Could not cancel schedule: ' +
+          error.message
         );
 
+        return;
       }
-    );
 
+      showToast(
+        'Feature schedule cancelled.'
+      );
 
-    async function loadDashboard(){
-
-      await Promise.all([
-        loadApprovedBooks(),
-        loadModerators(),
-        loadApprovedAuthors(),
-        loadAuthorRequests(),
-        loadSchedules()
-      ]);
-
+      await loadSchedules();
     }
 
+    async function loadStats(){
 
-    supabaseClient.auth.onAuthStateChange(
-      async (
-        event,
-        session
-      ) => {
+      const {
+        count:approvedBooksCount,
+        error:booksError
+      } = await supabaseClient
+        .from('books')
+        .select('id',{
+          count:'exact',
+          head:true
+        })
+        .eq('status','approved');
 
-        if(
-          event === 'SIGNED_IN' &&
-          session
-        ){
+      if(!booksError){
 
-          const isAdmin =
-            await checkAdmin();
-
-
-          if(isAdmin){
-
-            await loadDashboard();
-
-          }
-
-        }
-
-
-        if(
-          event === 'SIGNED_OUT'
-        ){
-
-          currentUser =
-            null;
-
-          showLogin();
-
-        }
-
+        document.getElementById(
+          'approvedBooksCount'
+        ).textContent =
+          approvedBooksCount || 0;
       }
-    );
 
+      const {
+        count:approvedAuthorsCount,
+        error:authorsError
+      } = await supabaseClient
+        .from('authors')
+        .select('id',{
+          count:'exact',
+          head:true
+        })
+        .eq('status','approved');
 
-    async function start(){
+      if(!authorsError){
+
+        document.getElementById(
+          'approvedAuthorsCount'
+        ).textContent =
+          approvedAuthorsCount || 0;
+      }
+    }
+
+    async function initializeDashboard(){
 
       const isAdmin =
         await checkAdmin();
 
-
-      if(isAdmin){
-
-        await loadDashboard();
-
+      if(!isAdmin){
+        return;
       }
 
+      await Promise.all([
+        loadAuthorRequests(),
+        loadApprovedBooks(),
+        loadModerators(),
+        loadSchedules(),
+        loadStats()
+      ]);
     }
 
+    document
+      .getElementById(
+        'refreshAuthorRequestsBtn'
+      )
+      .addEventListener(
+        'click',
+        loadAuthorRequests
+      );
 
-    start();
+    document
+      .getElementById(
+        'scheduleBtn'
+      )
+      .addEventListener(
+        'click',
+        scheduleFeature
+      );
 
+    document
+      .getElementById(
+        'signOutBtn'
+      )
+      .addEventListener(
+        'click',
+        async () => {
+
+          await supabaseClient.auth.signOut();
+
+          window.location.href =
+            'auth.html?mode=signin';
+        }
+      );
+
+    window.approveAuthorRequest =
+      approveAuthorRequest;
+
+    window.rejectAuthorRequest =
+      rejectAuthorRequest;
+
+    window.cancelSchedule =
+      cancelSchedule;
+
+    initializeDashboard();
   </script>
 
 </body>

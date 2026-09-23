@@ -163,6 +163,10 @@
       background:#9a3d32;
     }
 
+    .btn.success{
+      background:#416b4c;
+    }
+
     .forgot{
       display:block;
       text-align:right;
@@ -319,6 +323,73 @@
       font-size:13px;
       line-height:1.5;
     }
+
+    /* AUTHOR REQUESTS */
+
+    .request-list{
+      display:flex;
+      flex-direction:column;
+      gap:13px;
+    }
+
+    .request-item{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:17px;
+      background:#fff;
+    }
+
+    .request-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:15px;
+    }
+
+    .request-name{
+      font-family:Georgia, "Times New Roman", serif;
+      font-size:19px;
+      margin-bottom:4px;
+    }
+
+    .request-role{
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .request-date{
+      color:var(--muted);
+      font-size:12px;
+      white-space:nowrap;
+    }
+
+    .request-message{
+      margin-top:13px;
+      padding-top:13px;
+      border-top:1px solid var(--line);
+      color:#5d5148;
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .request-actions{
+      margin-top:15px;
+      display:flex;
+      gap:9px;
+      flex-wrap:wrap;
+    }
+
+    .request-status{
+      display:inline-flex;
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:700;
+      background:#f4eadc;
+      color:var(--brown);
+    }
+
+    /* CALENDAR */
 
     .grid{
       display:grid;
@@ -496,8 +567,13 @@
         padding:17px;
       }
 
-      .schedule-title{
+      .schedule-title,
+      .request-top{
         flex-direction:column;
+      }
+
+      .request-date{
+        white-space:normal;
       }
     }
   </style>
@@ -527,6 +603,7 @@
 
           <div class="field">
             <label for="loginEmail">Email address</label>
+
             <input
               id="loginEmail"
               type="email"
@@ -537,6 +614,7 @@
 
           <div class="field">
             <label for="loginPassword">Password</label>
+
             <input
               id="loginPassword"
               type="password"
@@ -610,7 +688,7 @@
         <h1>Admin Dashboard</h1>
 
         <p>
-          Manage Reader Reach's approved content and feature schedule.
+          Manage Reader Reach's approved content, authors, and feature schedule.
         </p>
 
       </div>
@@ -640,6 +718,44 @@
         </div>
 
       </div>
+
+
+      <!-- AUTHORS AWAITING APPROVAL -->
+      <section class="section">
+
+        <div class="section-head">
+
+          <div>
+            <h2>Authors Awaiting Approval</h2>
+
+            <p>
+              Review author access requests before author privileges are granted.
+            </p>
+          </div>
+
+          <button
+            id="refreshAuthorRequestsButton"
+            class="btn secondary"
+            type="button"
+          >
+            Refresh
+          </button>
+
+        </div>
+
+        <div
+          id="authorRequestsLoading"
+          class="loading"
+        >
+          Loading author requests...
+        </div>
+
+        <div
+          id="authorRequestList"
+          class="request-list"
+        ></div>
+
+      </section>
 
 
       <!-- CALENDAR -->
@@ -847,16 +963,27 @@
 
 
   <script>
+
     const SUPABASE_URL =
       'https://bublmnfhyyrefcdkloak.supabase.co';
 
     const SUPABASE_PUBLISHABLE_KEY =
       'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
 
+
     const supabaseClient =
       window.supabase.createClient(
         SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+          auth:{
+            storageKey:'reader-reach-auth',
+            persistSession:true,
+            autoRefreshToken:true,
+            detectSessionInUrl:true,
+            storage:window.localStorage
+          }
+        }
       );
 
 
@@ -923,16 +1050,29 @@
     const refreshButton =
       document.getElementById('refreshButton');
 
+    const authorRequestList =
+      document.getElementById('authorRequestList');
+
+    const authorRequestsLoading =
+      document.getElementById('authorRequestsLoading');
+
+    const refreshAuthorRequestsButton =
+      document.getElementById(
+        'refreshAuthorRequestsButton'
+      );
+
 
     let currentUser = null;
     let schedules = [];
     let approvedBooks = [];
     let activeModerators = [];
+    let authorRequests = [];
 
 
     function showLoginMessage(message, type){
 
       loginMessage.textContent = message;
+
       loginMessage.className =
         'message ' + type;
 
@@ -942,7 +1082,9 @@
     function clearLoginMessage(){
 
       loginMessage.textContent = '';
-      loginMessage.className = 'message';
+
+      loginMessage.className =
+        'message';
 
     }
 
@@ -952,14 +1094,22 @@
       const element =
         document.getElementById('toast');
 
-      element.textContent = message;
-      element.style.display = 'block';
+      element.textContent =
+        message;
 
-      clearTimeout(window.toastTimer);
+      element.style.display =
+        'block';
+
+      clearTimeout(
+        window.toastTimer
+      );
 
       window.toastTimer =
         setTimeout(() => {
-          element.style.display = 'none';
+
+          element.style.display =
+            'none';
+
         }, 3200);
 
     }
@@ -967,7 +1117,10 @@
 
     function escapeHtml(value){
 
-      if(value === null || value === undefined){
+      if(
+        value === null ||
+        value === undefined
+      ){
         return '';
       }
 
@@ -988,7 +1141,9 @@
       }
 
       const date =
-        new Date(dateValue + 'T00:00:00');
+        new Date(
+          dateValue + 'T00:00:00'
+        );
 
       return date.toLocaleDateString(
         undefined,
@@ -1018,7 +1173,9 @@
         parts[1];
 
       const suffix =
-        hour >= 12 ? 'PM' : 'AM';
+        hour >= 12
+          ? 'PM'
+          : 'AM';
 
       const displayHour =
         hour % 12 || 12;
@@ -1031,19 +1188,24 @@
     async function checkAdmin(){
 
       const {
-        data: {
+        data:{
           user
         }
       } =
         await supabaseClient.auth.getUser();
 
+
       if(!user){
+
         showLogin();
+
         return false;
+
       }
 
+
       const {
-        data: profile,
+        data:profile,
         error
       } =
         await supabaseClient
@@ -1051,6 +1213,7 @@
           .select('id, role')
           .eq('id', user.id)
           .maybeSingle();
+
 
       if(error){
 
@@ -1066,9 +1229,14 @@
         showLogin();
 
         return false;
+
       }
 
-      if(!profile || profile.role !== 'admin'){
+
+      if(
+        !profile ||
+        profile.role !== 'admin'
+      ){
 
         await supabaseClient.auth.signOut();
 
@@ -1080,9 +1248,12 @@
         showLogin();
 
         return false;
+
       }
 
-      currentUser = user;
+
+      currentUser =
+        user;
 
       adminEmail.textContent =
         user.email || '';
@@ -1096,16 +1267,26 @@
 
     function showLogin(){
 
-      loginView.classList.remove('hidden');
-      dashboardView.classList.add('hidden');
+      loginView.classList.remove(
+        'hidden'
+      );
+
+      dashboardView.classList.add(
+        'hidden'
+      );
 
     }
 
 
     function showDashboard(){
 
-      loginView.classList.add('hidden');
-      dashboardView.classList.remove('hidden');
+      loginView.classList.add(
+        'hidden'
+      );
+
+      dashboardView.classList.remove(
+        'hidden'
+      );
 
     }
 
@@ -1129,8 +1310,12 @@
             .getElementById('loginPassword')
             .value;
 
-        loginButton.disabled = true;
-        loginButton.textContent = 'Signing in...';
+        loginButton.disabled =
+          true;
+
+        loginButton.textContent =
+          'Signing in...';
+
 
         const {
           error
@@ -1140,8 +1325,13 @@
             password
           });
 
-        loginButton.disabled = false;
-        loginButton.textContent = 'Sign In';
+
+        loginButton.disabled =
+          false;
+
+        loginButton.textContent =
+          'Sign In';
+
 
         if(error){
 
@@ -1151,9 +1341,17 @@
           );
 
           return;
+
         }
 
+
         await checkAdmin();
+
+        if(currentUser){
+
+          await loadDashboard();
+
+        }
 
       }
     );
@@ -1165,7 +1363,8 @@
 
         await supabaseClient.auth.signOut();
 
-        currentUser = null;
+        currentUser =
+          null;
 
         showLogin();
 
@@ -1173,11 +1372,487 @@
           .getElementById('loginPassword')
           .value = '';
 
-        toast('You have been signed out.');
+        toast(
+          'You have been signed out.'
+        );
 
       }
     );
 
+
+    /* AUTHOR APPROVAL */
+
+    async function loadAuthorRequests(){
+
+      authorRequestsLoading.style.display =
+        'block';
+
+      authorRequestList.innerHTML =
+        '';
+
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient
+          .from('access_requests')
+          .select(`
+            id,
+            profile_id,
+            requested_role,
+            message,
+            status,
+            reviewed_by,
+            created_at,
+            profiles (
+              id,
+              display_name,
+              role
+            )
+          `)
+          .eq('requested_role', 'author')
+          .eq('status', 'pending')
+          .order('created_at', {
+            ascending:true
+          });
+
+
+      authorRequestsLoading.style.display =
+        'none';
+
+
+      if(error){
+
+        console.error(error);
+
+        authorRequestList.innerHTML =
+          '<div class="empty">Unable to load author requests.</div>';
+
+        toast(
+          'Unable to load author requests.'
+        );
+
+        return;
+
+      }
+
+
+      authorRequests =
+        data || [];
+
+      renderAuthorRequests();
+
+    }
+
+
+    function renderAuthorRequests(){
+
+      authorRequestList.innerHTML =
+        '';
+
+
+      if(!authorRequests.length){
+
+        authorRequestList.innerHTML =
+          '<div class="empty">There are no author requests awaiting approval.</div>';
+
+        return;
+
+      }
+
+
+      authorRequests.forEach(request => {
+
+        const profile =
+          request.profiles || {};
+
+        const item =
+          document.createElement('article');
+
+        item.className =
+          'request-item';
+
+
+        const createdDate =
+          request.created_at
+            ? new Date(
+                request.created_at
+              ).toLocaleString(
+                undefined,
+                {
+                  year:'numeric',
+                  month:'long',
+                  day:'numeric',
+                  hour:'numeric',
+                  minute:'2-digit'
+                }
+              )
+            : 'Date unavailable';
+
+
+        item.innerHTML = `
+
+          <div class="request-top">
+
+            <div>
+
+              <div class="request-name">
+                ${escapeHtml(
+                  profile.display_name ||
+                  'Unnamed applicant'
+                )}
+              </div>
+
+              <div class="request-role">
+                Requested role:
+                ${escapeHtml(
+                  request.requested_role ||
+                  'author'
+                )}
+              </div>
+
+            </div>
+
+            <div class="request-date">
+              ${escapeHtml(createdDate)}
+            </div>
+
+          </div>
+
+
+          ${
+            request.message
+              ? `
+                <div class="request-message">
+                  ${escapeHtml(request.message)}
+                </div>
+              `
+              : ''
+          }
+
+
+          <div class="request-actions">
+
+            <button
+              class="btn success"
+              type="button"
+              onclick="approveAuthorRequest('${request.id}')"
+            >
+              Approve Author
+            </button>
+
+            <button
+              class="btn danger"
+              type="button"
+              onclick="rejectAuthorRequest('${request.id}')"
+            >
+              Reject
+            </button>
+
+          </div>
+
+        `;
+
+
+        authorRequestList.appendChild(
+          item
+        );
+
+      });
+
+    }
+
+
+    window.approveAuthorRequest =
+      async function(requestId){
+
+        const request =
+          authorRequests.find(
+            item => item.id === requestId
+          );
+
+
+        if(!request){
+          return;
+        }
+
+
+        const profile =
+          request.profiles || {};
+
+
+        const displayName =
+          profile.display_name ||
+          'Author';
+
+
+        const confirmed =
+          window.confirm(
+            `Approve ${displayName} as an author?`
+          );
+
+
+        if(!confirmed){
+          return;
+        }
+
+
+        try{
+
+          /*
+           * First create the author record.
+           * The profile remains a reader until this
+           * record is successfully created.
+           */
+
+          const {
+            error:authorInsertError
+          } =
+            await supabaseClient
+              .from('authors')
+              .insert({
+                profile_id:request.profile_id,
+                display_name:displayName,
+                status:'approved',
+                reviewed_by:currentUser.id
+              });
+
+
+          if(authorInsertError){
+
+            /*
+             * If an author record already exists,
+             * report that instead of silently changing
+             * the account.
+             */
+
+            console.error(
+              authorInsertError
+            );
+
+            toast(
+              authorInsertError.message ||
+              'Unable to create the author record.'
+            );
+
+            return;
+
+          }
+
+
+          /*
+           * Change the user's application role to author.
+           */
+
+          const {
+            error:profileError
+          } =
+            await supabaseClient
+              .from('profiles')
+              .update({
+                role:'author',
+                updated_at:new Date().toISOString()
+              })
+              .eq('id', request.profile_id);
+
+
+          if(profileError){
+
+            console.error(
+              profileError
+            );
+
+            /*
+             * Remove the newly created author record
+             * if the role update failed.
+             */
+
+            await supabaseClient
+              .from('authors')
+              .delete()
+              .eq(
+                'profile_id',
+                request.profile_id
+              );
+
+            toast(
+              profileError.message ||
+              'Unable to update the author role.'
+            );
+
+            return;
+
+          }
+
+
+          /*
+           * Mark the access request approved.
+           */
+
+          const {
+            error:requestError
+          } =
+            await supabaseClient
+              .from('access_requests')
+              .update({
+                status:'approved',
+                reviewed_by:currentUser.id,
+                updated_at:new Date().toISOString()
+              })
+              .eq('id', requestId);
+
+
+          if(requestError){
+
+            console.error(
+              requestError
+            );
+
+            /*
+             * We keep the author/profile changes because
+             * the account has already been granted author
+             * access. The request can be inspected and
+             * corrected from the database if this final
+             * update fails.
+             */
+
+            toast(
+              requestError.message ||
+              'Author access was granted, but the request status could not be updated.'
+            );
+
+            await loadAuthorRequests();
+
+            return;
+
+          }
+
+
+          toast(
+            `${displayName} has been approved as an author.`
+          );
+
+
+          await Promise.all([
+            loadAuthorRequests(),
+            loadApprovedAuthors()
+          ]);
+
+        }catch(error){
+
+          console.error(
+            error
+          );
+
+          toast(
+            error.message ||
+            'Unable to approve the author request.'
+          );
+
+        }
+
+      };
+
+
+    window.rejectAuthorRequest =
+      async function(requestId){
+
+        const request =
+          authorRequests.find(
+            item => item.id === requestId
+          );
+
+
+        if(!request){
+          return;
+        }
+
+
+        const profile =
+          request.profiles || {};
+
+
+        const displayName =
+          profile.display_name ||
+          'this applicant';
+
+
+        const confirmed =
+          window.confirm(
+            `Reject the author request from ${displayName}?`
+          );
+
+
+        if(!confirmed){
+          return;
+        }
+
+
+        const {
+          error
+        } =
+          await supabaseClient
+            .from('access_requests')
+            .update({
+              status:'rejected',
+              reviewed_by:currentUser.id,
+              updated_at:new Date().toISOString()
+            })
+            .eq('id', requestId);
+
+
+        if(error){
+
+          console.error(error);
+
+          toast(
+            error.message ||
+            'Unable to reject the author request.'
+          );
+
+          return;
+
+        }
+
+
+        toast(
+          'Author request rejected.'
+        );
+
+
+        await loadAuthorRequests();
+
+      };
+
+
+    refreshAuthorRequestsButton.addEventListener(
+      'click',
+      async () => {
+
+        refreshAuthorRequestsButton.disabled =
+          true;
+
+        refreshAuthorRequestsButton.textContent =
+          'Refreshing...';
+
+        await loadAuthorRequests();
+
+        refreshAuthorRequestsButton.disabled =
+          false;
+
+        refreshAuthorRequestsButton.textContent =
+          'Refresh';
+
+        toast(
+          'Author requests refreshed.'
+        );
+
+      }
+    );
+
+
+    /* APPROVED BOOKS */
 
     async function loadApprovedBooks(){
 
@@ -1201,6 +1876,7 @@
             ascending:true
           });
 
+
       if(error){
 
         console.error(error);
@@ -1213,17 +1889,23 @@
 
       }
 
-      approvedBooks = data || [];
+
+      approvedBooks =
+        data || [];
+
 
       bookSelect.innerHTML =
         '<option value="">Select an approved book</option>';
+
 
       approvedBooks.forEach(book => {
 
         const option =
           document.createElement('option');
 
-        option.value = book.id;
+        option.value =
+          book.id;
+
 
         const authorName =
           book.authors &&
@@ -1231,12 +1913,17 @@
             ? ` — ${book.authors.display_name}`
             : '';
 
+
         option.textContent =
           `${book.title}${authorName}`;
 
-        bookSelect.appendChild(option);
+
+        bookSelect.appendChild(
+          option
+        );
 
       });
+
 
       document.getElementById(
         'approvedBooksCount'
@@ -1245,6 +1932,8 @@
 
     }
 
+
+    /* MODERATORS */
 
     async function loadModerators(){
 
@@ -1264,6 +1953,7 @@
             ascending:true
           });
 
+
       if(error){
 
         console.error(error);
@@ -1276,30 +1966,39 @@
 
       }
 
+
       activeModerators =
         data || [];
+
 
       moderatorSelect.innerHTML =
         '<option value="">No moderator assigned</option>';
 
-      activeModerators.forEach(moderator => {
 
-        const option =
-          document.createElement('option');
+      activeModerators.forEach(
+        moderator => {
 
-        option.value =
-          moderator.id;
+          const option =
+            document.createElement('option');
 
-        option.textContent =
-          moderator.display_name ||
-          'Moderator';
+          option.value =
+            moderator.id;
 
-        moderatorSelect.appendChild(option);
+          option.textContent =
+            moderator.display_name ||
+            'Moderator';
 
-      });
+          moderatorSelect.appendChild(
+            option
+          );
+
+        }
+      );
 
     }
 
+
+    /* APPROVED AUTHORS */
 
     async function loadApprovedAuthors(){
 
@@ -1316,7 +2015,11 @@
               head:true
             }
           )
-          .eq('status', 'approved');
+          .eq(
+            'status',
+            'approved'
+          );
+
 
       if(!error){
 
@@ -1330,12 +2033,16 @@
     }
 
 
+    /* FEATURE SCHEDULES */
+
     async function loadSchedules(){
 
       scheduleLoading.style.display =
         'block';
 
-      scheduleList.innerHTML = '';
+      scheduleList.innerHTML =
+        '';
+
 
       const {
         data,
@@ -1364,15 +2071,23 @@
               display_name
             )
           `)
-          .order('scheduled_date', {
-            ascending:true
-          })
-          .order('scheduled_time', {
-            ascending:true
-          });
+          .order(
+            'scheduled_date',
+            {
+              ascending:true
+            }
+          )
+          .order(
+            'scheduled_time',
+            {
+              ascending:true
+            }
+          );
+
 
       scheduleLoading.style.display =
         'none';
+
 
       if(error){
 
@@ -1389,6 +2104,7 @@
 
       }
 
+
       schedules =
         data || [];
 
@@ -1399,44 +2115,69 @@
 
     function renderSchedules(){
 
-      scheduleList.innerHTML = '';
+      scheduleList.innerHTML =
+        '';
+
 
       const today =
         new Date();
 
-      today.setHours(0,0,0,0);
+      today.setHours(
+        0,
+        0,
+        0,
+        0
+      );
 
-      let upcoming = 0;
-      let scheduledTotal = 0;
 
-      schedules.forEach(schedule => {
+      let upcoming =
+        0;
 
-        if(schedule.status === 'scheduled'){
-          scheduledTotal++;
+      let scheduledTotal =
+        0;
+
+
+      schedules.forEach(
+        schedule => {
+
+          if(
+            schedule.status ===
+            'scheduled'
+          ){
+            scheduledTotal++;
+          }
+
+
+          const date =
+            new Date(
+              schedule.scheduled_date +
+              'T00:00:00'
+            );
+
+
+          if(
+            schedule.status ===
+            'scheduled' &&
+            date >= today
+          ){
+            upcoming++;
+          }
+
         }
+      );
 
-        const date =
-          new Date(
-            schedule.scheduled_date +
-            'T00:00:00'
-          );
-
-        if(
-          schedule.status === 'scheduled' &&
-          date >= today
-        ){
-          upcoming++;
-        }
-
-      });
 
       document.getElementById(
         'upcomingCount'
-      ).textContent = upcoming;
+      ).textContent =
+        upcoming;
+
 
       document.getElementById(
         'scheduledCount'
-      ).textContent = scheduledTotal;
+      ).textContent =
+        scheduledTotal;
+
 
       if(!schedules.length){
 
@@ -1447,115 +2188,146 @@
 
       }
 
-      schedules.forEach(schedule => {
 
-        const book =
-          schedule.books || {};
+      schedules.forEach(
+        schedule => {
 
-        const author =
-          book.authors || {};
+          const book =
+            schedule.books || {};
 
-        const moderator =
-          schedule.moderators || {};
 
-        const item =
-          document.createElement('article');
+          const author =
+            book.authors || {};
 
-        item.className =
-          'schedule-item';
 
-        item.innerHTML = `
+          const moderator =
+            schedule.moderators || {};
 
-          <div class="schedule-title">
 
-            <div>
+          const item =
+            document.createElement(
+              'article'
+            );
 
-              <h3>
-                ${escapeHtml(book.title || 'Untitled Book')}
-              </h3>
 
-              <div class="schedule-author">
+          item.className =
+            'schedule-item';
+
+
+          item.innerHTML = `
+
+            <div class="schedule-title">
+
+              <div>
+
+                <h3>
+                  ${escapeHtml(
+                    book.title ||
+                    'Untitled Book'
+                  )}
+                </h3>
+
+                <div class="schedule-author">
+                  ${escapeHtml(
+                    author.display_name ||
+                    'Author profile unavailable'
+                  )}
+                </div>
+
+              </div>
+
+              <span class="status ${escapeHtml(
+                schedule.status
+              )}">
                 ${escapeHtml(
-                  author.display_name ||
-                  'Author profile unavailable'
+                  schedule.status
+                )}
+              </span>
+
+            </div>
+
+
+            <div class="schedule-meta">
+
+              <div>
+                <strong>Date:</strong>
+                ${escapeHtml(
+                  formatDate(
+                    schedule.scheduled_date
+                  )
+                )}
+              </div>
+
+              <div>
+                <strong>Time:</strong>
+                ${escapeHtml(
+                  formatTime(
+                    schedule.scheduled_time
+                  )
+                )}
+              </div>
+
+              <div>
+                <strong>Moderator:</strong>
+                ${escapeHtml(
+                  moderator.display_name ||
+                  'Not assigned'
                 )}
               </div>
 
             </div>
 
-            <span class="status ${escapeHtml(schedule.status)}">
-              ${escapeHtml(schedule.status)}
-            </span>
-
-          </div>
-
-          <div class="schedule-meta">
-
-            <div>
-              <strong>Date:</strong>
-              ${escapeHtml(
-                formatDate(schedule.scheduled_date)
-              )}
-            </div>
-
-            <div>
-              <strong>Time:</strong>
-              ${escapeHtml(
-                formatTime(schedule.scheduled_time)
-              )}
-            </div>
-
-            <div>
-              <strong>Moderator:</strong>
-              ${escapeHtml(
-                moderator.display_name ||
-                'Not assigned'
-              )}
-            </div>
-
-          </div>
-
-          ${
-            schedule.notes
-              ? `
-                <div class="schedule-notes">
-                  ${escapeHtml(schedule.notes)}
-                </div>
-              `
-              : ''
-          }
-
-          <div class="schedule-actions">
-
-            <button
-              class="btn secondary"
-              type="button"
-              onclick="editSchedule('${schedule.id}')"
-            >
-              Edit
-            </button>
 
             ${
-              schedule.status !== 'cancelled'
+              schedule.notes
                 ? `
-                  <button
-                    class="btn danger"
-                    type="button"
-                    onclick="cancelSchedule('${schedule.id}')"
-                  >
-                    Cancel
-                  </button>
+                  <div class="schedule-notes">
+                    ${escapeHtml(
+                      schedule.notes
+                    )}
+                  </div>
                 `
                 : ''
             }
 
-          </div>
 
-        `;
+            <div class="schedule-actions">
 
-        scheduleList.appendChild(item);
+              <button
+                class="btn secondary"
+                type="button"
+                onclick="editSchedule('${schedule.id}')"
+              >
+                Edit
+              </button>
 
-      });
+
+              ${
+                schedule.status !==
+                'cancelled'
+                  ? `
+                    <button
+                      class="btn danger"
+                      type="button"
+                      onclick="cancelSchedule('${schedule.id}')"
+                    >
+                      Cancel
+                    </button>
+                  `
+                  : ''
+              }
+
+            </div>
+
+          `;
+
+
+          scheduleList.appendChild(
+            item
+          );
+
+        }
+      );
 
     }
 
@@ -1565,12 +2337,15 @@
 
         const schedule =
           schedules.find(
-            item => item.id === id
+            item =>
+              item.id === id
           );
+
 
         if(!schedule){
           return;
         }
+
 
         editingId.value =
           schedule.id;
@@ -1586,14 +2361,20 @@
 
         scheduleTime.value =
           schedule.scheduled_time
-            ? schedule.scheduled_time.slice(0,5)
+            ? schedule.scheduled_time.slice(
+                0,
+                5
+              )
             : '';
 
         scheduleStatus.value =
-          schedule.status || 'scheduled';
+          schedule.status ||
+          'scheduled';
 
         scheduleNotes.value =
-          schedule.notes || '';
+          schedule.notes ||
+          '';
+
 
         formTitle.textContent =
           'Edit Feature Schedule';
@@ -1604,6 +2385,7 @@
         cancelEditButton.classList.remove(
           'hidden'
         );
+
 
         window.scrollTo({
           top:0,
@@ -1621,9 +2403,11 @@
             'Cancel this feature schedule?'
           );
 
+
         if(!confirmed){
           return;
         }
+
 
         const {
           error
@@ -1632,9 +2416,14 @@
             .from('feature_schedules')
             .update({
               status:'cancelled',
-              updated_at:new Date().toISOString()
+              updated_at:
+                new Date().toISOString()
             })
-            .eq('id', id);
+            .eq(
+              'id',
+              id
+            );
+
 
         if(error){
 
@@ -1648,9 +2437,11 @@
 
         }
 
+
         toast(
           'Feature schedule cancelled.'
         );
+
 
         await loadSchedules();
 
@@ -1659,20 +2450,27 @@
 
     function resetScheduleForm(){
 
-      editingId.value = '';
+      editingId.value =
+        '';
 
-      bookSelect.value = '';
+      bookSelect.value =
+        '';
 
-      moderatorSelect.value = '';
+      moderatorSelect.value =
+        '';
 
-      scheduleDate.value = '';
+      scheduleDate.value =
+        '';
 
-      scheduleTime.value = '';
+      scheduleTime.value =
+        '';
 
       scheduleStatus.value =
         'scheduled';
 
-      scheduleNotes.value = '';
+      scheduleNotes.value =
+        '';
+
 
       formTitle.textContent =
         'Add Feature Schedule';
@@ -1699,6 +2497,7 @@
 
         event.preventDefault();
 
+
         const id =
           editingId.value.trim();
 
@@ -1706,7 +2505,8 @@
           bookSelect.value;
 
         const moderatorId =
-          moderatorSelect.value || null;
+          moderatorSelect.value ||
+          null;
 
         const date =
           scheduleDate.value;
@@ -1718,9 +2518,15 @@
           scheduleStatus.value;
 
         const notes =
-          scheduleNotes.value.trim() || null;
+          scheduleNotes.value.trim() ||
+          null;
 
-        if(!bookId || !date || !time){
+
+        if(
+          !bookId ||
+          !date ||
+          !time
+        ){
 
           toast(
             'Please complete the book, date, and time.'
@@ -1729,6 +2535,7 @@
           return;
 
         }
+
 
         saveScheduleButton.disabled =
           true;
@@ -1740,17 +2547,33 @@
 
 
         const payload = {
-          book_id:bookId,
-          moderator_id:moderatorId,
-          scheduled_date:date,
-          scheduled_time:time,
-          status,
-          notes,
-          updated_at:new Date().toISOString()
+
+          book_id:
+            bookId,
+
+          moderator_id:
+            moderatorId,
+
+          scheduled_date:
+            date,
+
+          scheduled_time:
+            time,
+
+          status:
+            status,
+
+          notes:
+            notes,
+
+          updated_at:
+            new Date().toISOString()
+
         };
 
 
-        let error = null;
+        let error =
+          null;
 
 
         if(id){
@@ -1759,7 +2582,10 @@
             await supabaseClient
               .from('feature_schedules')
               .update(payload)
-              .eq('id', id);
+              .eq(
+                'id',
+                id
+              );
 
           error =
             result.error;
@@ -1806,6 +2632,7 @@
             : 'Feature schedule created.'
         );
 
+
         resetScheduleForm();
 
         await loadSchedules();
@@ -1824,18 +2651,22 @@
         refreshButton.textContent =
           'Refreshing...';
 
+
         await Promise.all([
           loadApprovedBooks(),
           loadModerators(),
           loadApprovedAuthors(),
+          loadAuthorRequests(),
           loadSchedules()
         ]);
+
 
         refreshButton.disabled =
           false;
 
         refreshButton.textContent =
           'Refresh';
+
 
         toast(
           'Dashboard refreshed.'
@@ -1851,6 +2682,7 @@
         loadApprovedBooks(),
         loadModerators(),
         loadApprovedAuthors(),
+        loadAuthorRequests(),
         loadSchedules()
       ]);
 
@@ -1858,20 +2690,38 @@
 
 
     supabaseClient.auth.onAuthStateChange(
-      async (event, session) => {
+      async (
+        event,
+        session
+      ) => {
 
         if(
           event === 'SIGNED_IN' &&
           session
         ){
-          await checkAdmin();
+
+          const isAdmin =
+            await checkAdmin();
+
+
+          if(isAdmin){
+
+            await loadDashboard();
+
+          }
+
         }
+
 
         if(
           event === 'SIGNED_OUT'
         ){
-          currentUser = null;
+
+          currentUser =
+            null;
+
           showLogin();
+
         }
 
       }
@@ -1883,6 +2733,7 @@
       const isAdmin =
         await checkAdmin();
 
+
       if(isAdmin){
 
         await loadDashboard();
@@ -1893,6 +2744,7 @@
 
 
     start();
+
   </script>
 
 </body>

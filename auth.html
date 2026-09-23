@@ -691,10 +691,6 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
   'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
 
-/*
-  Reader Reach uses one explicit browser storage key
-  for authentication across all GitHub Pages files.
-*/
 const READER_REACH_STORAGE_KEY =
   'reader-reach-auth';
 
@@ -926,9 +922,12 @@ async function loadAccountProfile(session){
 async function routeAuthenticatedUser(session){
 
   if(!session){
+
     showAuth();
     showMode('signin');
+
     return;
+
   }
 
   try{
@@ -939,12 +938,11 @@ async function routeAuthenticatedUser(session){
     const role =
       profile.role || 'reader';
 
+    /*
+      Reader accounts go to the Reader dashboard.
+    */
     if(role === 'reader'){
 
-      /*
-        The explicit session storage is now written before
-        moving to the Reader dashboard.
-      */
       await supabaseClient.auth.setSession({
         access_token:session.access_token,
         refresh_token:session.refresh_token
@@ -952,6 +950,102 @@ async function routeAuthenticatedUser(session){
 
       window.location.replace(
         'reader-dashboard.html'
+      );
+
+      return;
+
+    }
+
+    /*
+      Approved Author accounts go directly
+      to the Author dashboard.
+    */
+    if(role === 'author'){
+
+      const {
+        data:author,
+        error:authorError
+      } =
+        await supabaseClient
+          .from('authors')
+          .select('id,status')
+          .eq(
+            'profile_id',
+            session.user.id
+          )
+          .maybeSingle();
+
+      if(authorError){
+        throw authorError;
+      }
+
+      if(
+        author &&
+        author.status === 'approved'
+      ){
+
+        await supabaseClient.auth.setSession({
+          access_token:session.access_token,
+          refresh_token:session.refresh_token
+        });
+
+        window.location.replace(
+          'author-dashboard.html'
+        );
+
+        return;
+
+      }
+
+      /*
+        If an Author role exists but the author
+        record is not approved, keep the user
+        on the account page.
+      */
+      showAccount(session);
+
+      history.replaceState(
+        {},
+        '',
+        'auth.html?mode=account'
+      );
+
+      return;
+
+    }
+
+    /*
+      Admin routing is prepared for the existing
+      Admin dashboard.
+    */
+    if(role === 'admin'){
+
+      await supabaseClient.auth.setSession({
+        access_token:session.access_token,
+        refresh_token:session.refresh_token
+      });
+
+      window.location.replace(
+        'admin-dashboard.html'
+      );
+
+      return;
+
+    }
+
+    /*
+      Moderator routing will use the Moderator
+      dashboard when that dashboard is in place.
+      Until then, keep the account page available.
+    */
+    if(role === 'moderator'){
+
+      showAccount(session);
+
+      history.replaceState(
+        {},
+        '',
+        'auth.html?mode=account'
       );
 
       return;
@@ -1473,11 +1567,6 @@ document
     }
   );
 
-/*
-  Do not redirect from the auth-state listener.
-  The explicit sign-in/signup handlers control navigation.
-  This prevents duplicate redirects and session races.
-*/
 supabaseClient.auth.onAuthStateChange(
   (event,session) => {
 

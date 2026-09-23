@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Author Access | Reader Reach</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --cream:#f7f1e7;
+      --cream-dark:#eee3d2;
+      --brown:#3f261b;
+      --brown-2:#5a3928;
+      --brown-3:#76533d;
+      --gold:#c8a15a;
+      --white:#fffdf9;
+      --border:rgba(63,38,27,.12);
+      --shadow:0 16px 45px rgba(63,38,27,.10);
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    body{
+      font-family:Georgia,"Times New Roman",serif;
+      background:var(--cream);
+      color:var(--brown);
+      min-height:100vh;
+    }
+
+    button,
+    input,
+    textarea{
+      font:inherit;
+    }
+
+    button{
+      cursor:pointer;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .topbar{
+      background:var(--brown);
+      color:#fff;
+      padding:9px 20px;
+      text-align:center;
+      font-size:13px;
+      letter-spacing:.04em;
+    }
+
+    nav{
+      background:rgba(247,241,231,.97);
+      border-bottom:1px solid var(--border);
+    }
+
+    .nav-inner{
+      max-width:1180px;
+      margin:auto;
+      padding:18px 22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:11px;
+      font-size:21px;
+      font-weight:bold;
+      letter-spacing:.02em;
+    }
+
+    .brand-mark{
+      width:38px;
+      height:38px;
+      border-radius:11px;
+      display:grid;
+      place-items:center;
+      background:var(--brown);
+      color:#fff;
+      font-size:19px;
+    }
+
+    .btn{
+      border:1px solid var(--brown);
+      border-radius:999px;
+      padding:10px 16px;
+      background:transparent;
+      color:var(--brown);
+      transition:.2s ease;
+    }
+
+    .btn:hover{
+      background:var(--brown);
+      color:#fff;
+    }
+
+    .btn.primary{
+      background:var(--brown);
+      color:#fff;
+    }
+
+    .btn.primary:hover{
+      background:var(--brown-2);
+    }
+
+    .page{
+      max-width:760px;
+      margin:0 auto;
+      padding:55px 22px 80px;
+    }
+
+    .hero{
+      text-align:center;
+      margin-bottom:28px;
+    }
+
+    .hero small{
+      display:block;
+      color:var(--brown-3);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:9px;
+      font-size:12px;
+    }
+
+    .hero h1{
+      font-size:39px;
+      line-height:1.15;
+      margin-bottom:13px;
+    }
+
+    .hero p{
+      max-width:620px;
+      margin:auto;
+      color:var(--brown-3);
+      line-height:1.7;
+    }
+
+    .card{
+      background:var(--white);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:30px;
+      box-shadow:var(--shadow);
+    }
+
+    .card h2{
+      font-size:24px;
+      margin-bottom:8px;
+    }
+
+    .card-intro{
+      color:var(--brown-3);
+      line-height:1.6;
+      margin-bottom:23px;
+    }
+
+    .field{
+      margin-bottom:17px;
+    }
+
+    .field label{
+      display:block;
+      font-size:13px;
+      font-weight:bold;
+      margin-bottom:7px;
+    }
+
+    .field input,
+    .field textarea{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fff;
+      color:var(--brown);
+      padding:13px 14px;
+      outline:none;
+    }
+
+    .field textarea{
+      min-height:125px;
+      resize:vertical;
+    }
+
+    .field input:focus,
+    .field textarea:focus{
+      border-color:var(--gold);
+      box-shadow:0 0 0 3px rgba(200,161,90,.13);
+    }
+
+    .submit-row{
+      margin-top:22px;
+    }
+
+    .submit-row button{
+      width:100%;
+      border:0;
+      border-radius:999px;
+      padding:14px 18px;
+      background:var(--brown);
+      color:#fff;
+      font-weight:bold;
+    }
+
+    .submit-row button:hover{
+      background:var(--brown-2);
+    }
+
+    .submit-row button:disabled{
+      opacity:.65;
+      cursor:not-allowed;
+    }
+
+    .message{
+      display:none;
+      margin-top:18px;
+      padding:14px 16px;
+      border-radius:13px;
+      line-height:1.55;
+      font-size:14px;
+    }
+
+    .message.success{
+      display:block;
+      background:#edf5eb;
+      color:#315b34;
+      border:1px solid #cfe2cb;
+    }
+
+    .message.error{
+      display:block;
+      background:#f8eaea;
+      color:#71352f;
+      border:1px solid #e5c5c0;
+    }
+
+    .pending{
+      display:none;
+      text-align:center;
+      padding:15px 5px 4px;
+    }
+
+    .pending-badge{
+      display:inline-block;
+      padding:7px 12px;
+      border-radius:999px;
+      background:var(--cream-dark);
+      color:var(--brown-2);
+      font-size:12px;
+      margin-bottom:14px;
+    }
+
+    .pending h2{
+      margin-bottom:9px;
+    }
+
+    .pending p{
+      color:var(--brown-3);
+      line-height:1.7;
+    }
+
+    .links{
+      margin-top:22px;
+      text-align:center;
+      color:var(--brown-3);
+      font-size:14px;
+    }
+
+    .links a{
+      color:var(--brown);
+      font-weight:bold;
+    }
+
+    .security-note{
+      margin-top:22px;
+      padding:15px 16px;
+      border-radius:14px;
+      background:var(--cream-dark);
+      color:var(--brown-3);
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .status-message{
+      position:fixed;
+      right:20px;
+      bottom:20px;
+      max-width:360px;
+      background:var(--brown);
+      color:#fff;
+      padding:13px 17px;
+      border-radius:12px;
+      box-shadow:var(--shadow);
+      display:none;
+      z-index:100;
+      font-size:14px;
+    }
+
+    @media(max-width:620px){
+      .nav-inner{
+        padding:14px 16px;
+      }
+
+      .nav-inner .btn{
+        display:none;
+      }
+
+      .page{
+        padding:35px 15px 60px;
+      }
+
+      .hero h1{
+        font-size:31px;
+      }
+
+      .card{
+        padding:22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">
+    Reader Reach · Author access begins with an application.
+  </div>
+
+  <nav>
+    <div class="nav-inner">
+
+      <a href="index.html" class="brand">
+        <span class="brand-mark">R</span>
+        <span>Reader Reach</span>
+      </a>
+
+      <a href="auth.html?mode=signin" class="btn">
+        Sign In
+      </a>
+
+    </div>
+  </nav>
+
+  <main class="page">
+
+    <div class="hero">
+      <small>For Authors</small>
+
+      <h1>Join Reader Reach as an Author</h1>
+
+      <p>
+        Create your account and submit an Author access request.
+        Your Author access will remain pending until it is reviewed by an Admin.
+      </p>
+    </div>
+
+    <section class="card">
+
+      <div id="applicationForm">
+
+        <h2>Author Access Request</h2>
+
+        <p class="card-intro">
+          Complete the form below. Your account will be created first,
+          then your Author access request will be sent for Admin review.
+        </p>
+
+        <form id="authorForm">
+
+          <div class="field">
+            <label for="displayName">
+              Name
+            </label>
+
+            <input
+              id="displayName"
+              type="text"
+              autocomplete="name"
+              required
+              placeholder="Your name"
+            >
+          </div>
+
+          <div class="field">
+            <label for="email">
+              Email
+            </label>
+
+            <input
+              id="email"
+              type="email"
+              autocomplete="email"
+              required
+              placeholder="Your email address"
+            >
+          </div>
+
+          <div class="field">
+            <label for="password">
+              Password
+            </label>
+
+            <input
+              id="password"
+              type="password"
+              autocomplete="new-password"
+              minlength="6"
+              required
+              placeholder="At least 6 characters"
+            >
+          </div>
+
+          <div class="field">
+            <label for="message">
+              About your request
+            </label>
+
+            <textarea
+              id="message"
+              placeholder="Tell us briefly about yourself or your books."
+            ></textarea>
+          </div>
+
+          <div class="submit-row">
+            <button
+              type="submit"
+              id="submitButton"
+            >
+              Create Account & Request Author Access
+            </button>
+          </div>
+
+        </form>
+
+        <div
+          id="formMessage"
+          class="message"
+        ></div>
+
+        <div class="security-note">
+          Author access is not granted automatically.
+          Admin approval is required before an account can use Author features.
+        </div>
+
+      </div>
+
+      <div
+        id="pendingState"
+        class="pending"
+      >
+
+        <span class="pending-badge">
+          Author Request Pending
+        </span>
+
+        <h2>Your request has been submitted.</h2>
+
+        <p>
+          Your Reader Reach account has been created and your Author access
+          request is waiting for Admin review.
+        </p>
+
+        <div class="links">
+          You can return to the
+          <a href="auth.html?mode=signin">sign-in page</a>.
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <div
+    id="statusMessage"
+    class="status-message"
+  ></div>
+
+  <script>
+
+    const SUPABASE_URL =
+      'https://bublmnfhyyrefcdkloak.supabase.co';
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
+
+    const READER_REACH_STORAGE_KEY =
+      'reader-reach-auth';
+
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+          auth:{
+            storage:window.localStorage,
+            storageKey:READER_REACH_STORAGE_KEY,
+            persistSession:true,
+            autoRefreshToken:true,
+            detectSessionInUrl:true
+          }
+        }
+      );
+
+    function showMessage(
+      message,
+      type
+    ){
+
+      const box =
+        document.getElementById(
+          'formMessage'
+        );
+
+      box.textContent = message;
+      box.className =
+        'message ' + type;
+
+    }
+
+    function showStatus(message){
+
+      const box =
+        document.getElementById(
+          'statusMessage'
+        );
+
+      box.textContent = message;
+      box.style.display = 'block';
+
+      setTimeout(() => {
+        box.style.display = 'none';
+      },3500);
+
+    }
+
+    function showPending(){
+
+      document.getElementById(
+        'applicationForm'
+      ).style.display = 'none';
+
+      document.getElementById(
+        'pendingState'
+      ).style.display = 'block';
+
+    }
+
+    async function getCurrentSession(){
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient.auth.getSession();
+
+      if(error){
+        throw error;
+      }
+
+      return data.session || null;
+
+    }
+
+    async function getExistingRequest(
+      profileId
+    ){
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient
+          .from('access_requests')
+          .select(
+            'id,status,requested_role,message'
+          )
+          .eq(
+            'profile_id',
+            profileId
+          )
+          .eq(
+            'requested_role',
+            'author'
+          )
+          .order(
+            'created_at',
+            {
+              ascending:false
+            }
+          )
+          .limit(1)
+          .maybeSingle();
+
+      if(error){
+        throw error;
+      }
+
+      return data;
+
+    }
+
+    async function submitAuthorRequest(
+      profileId,
+      message
+    ){
+
+      const {
+        error
+      } =
+        await supabaseClient
+          .from('access_requests')
+          .insert({
+            profile_id:profileId,
+            requested_role:'author',
+            message:message || null,
+            status:'pending'
+          });
+
+      if(error){
+        throw error;
+      }
+
+    }
+
+    document
+      .getElementById('authorForm')
+      .addEventListener(
+        'submit',
+        async function(event){
+
+          event.preventDefault();
+
+          const button =
+            document.getElementById(
+              'submitButton'
+            );
+
+          const displayName =
+            document.getElementById(
+              'displayName'
+            ).value.trim();
+
+          const email =
+            document.getElementById(
+              'email'
+            ).value.trim();
+
+          const password =
+            document.getElementById(
+              'password'
+            ).value;
+
+          const message =
+            document.getElementById(
+              'message'
+            ).value.trim();
+
+          if(!displayName){
+
+            showMessage(
+              'Please enter your name.',
+              'error'
+            );
+
+            return;
+
+          }
+
+          if(!email){
+
+            showMessage(
+              'Please enter your email address.',
+              'error'
+            );
+
+            return;
+
+          }
+
+          if(password.length < 6){
+
+            showMessage(
+              'Password must contain at least 6 characters.',
+              'error'
+            );
+
+            return;
+
+          }
+
+          button.disabled = true;
+          button.textContent =
+            'Creating account...';
+
+          showMessage(
+            '',
+            ''
+          );
+
+          try{
+
+            const {
+              data,
+              error
+            } =
+              await supabaseClient.auth.signUp({
+                email:email,
+                password:password,
+                options:{
+                  data:{
+                    display_name:displayName,
+                    full_name:displayName
+                  }
+                }
+              });
+
+            if(error){
+              throw error;
+            }
+
+            if(!data.user){
+
+              throw new Error(
+                'The account could not be created.'
+              );
+
+            }
+
+            let session =
+              data.session || null;
+
+            if(!session){
+
+              const {
+                data:sessionData,
+                error:sessionError
+              } =
+                await supabaseClient.auth.getSession();
+
+              if(sessionError){
+                throw sessionError;
+              }
+
+              session =
+                sessionData.session || null;
+
+            }
+
+            /*
+              If email confirmation is enabled later,
+              there may be no session immediately.
+              The account still exists, but the access
+              request cannot be created until the user
+              has a usable authenticated session.
+            */
+            if(!session){
+
+              showMessage(
+                'Your account was created. Please confirm your email, then sign in and submit the Author request.',
+                'success'
+              );
+
+              button.disabled = false;
+              button.textContent =
+                'Create Account & Request Author Access';
+
+              return;
+
+            }
+
+            /*
+              The existing Auth trigger creates the
+              profiles row automatically.
+            */
+            const profileId =
+              session.user.id;
+
+            /*
+              Give the database trigger a moment to
+              finish creating the profile before the
+              access request is inserted.
+            */
+            let profileExists = false;
+
+            for(
+              let attempt = 0;
+              attempt < 5;
+              attempt++
+            ){
+
+              const {
+                data:profile,
+                error:profileError
+              } =
+                await supabaseClient
+                  .from('profiles')
+                  .select('id')
+                  .eq(
+                    'id',
+                    profileId
+                  )
+                  .maybeSingle();
+
+              if(profileError){
+                throw profileError;
+              }
+
+              if(profile){
+
+                profileExists = true;
+                break;
+
+              }
+
+              await new Promise(
+                resolve =>
+                  setTimeout(
+                    resolve,
+                    500
+                  )
+              );
+
+            }
+
+            if(!profileExists){
+
+              throw new Error(
+                'Your account was created, but the profile could not be found yet. Please sign in and try the Author request again.'
+              );
+
+            }
+
+            const existingRequest =
+              await getExistingRequest(
+                profileId
+              );
+
+            if(existingRequest){
+
+              if(
+                existingRequest.status ===
+                'pending'
+              ){
+
+                showPending();
+                return;
+
+              }
+
+              if(
+                existingRequest.status ===
+                'approved'
+              ){
+
+                showMessage(
+                  'Your Author access has already been approved.',
+                  'success'
+                );
+
+                button.disabled = false;
+                button.textContent =
+                  'Create Account & Request Author Access';
+
+                return;
+
+              }
+
+              if(
+                existingRequest.status ===
+                'rejected'
+              ){
+
+                /*
+                  A rejected request is left visible
+                  for Admin review history. We do not
+                  silently overwrite it.
+                */
+                showMessage(
+                  'An Author access request already exists for this account and was previously rejected. Please contact Reader Reach Admin for the next step.',
+                  'error'
+                );
+
+                button.disabled = false;
+                button.textContent =
+                  'Create Account & Request Author Access';
+
+                return;
+
+              }
+
+            }
+
+            await submitAuthorRequest(
+              profileId,
+              message
+            );
+
+            showPending();
+
+            showStatus(
+              'Author access request submitted.'
+            );
+
+          }catch(error){
+
+            console.error(
+              'Author access request error:',
+              error
+            );
+
+            let messageText =
+              'Unable to submit the Author access request. Please try again.';
+
+            if(error && error.message){
+
+              messageText =
+                error.message;
+
+            }
+
+            showMessage(
+              messageText,
+              'error'
+            );
+
+            button.disabled = false;
+            button.textContent =
+              'Create Account & Request Author Access';
+
+          }
+
+        }
+      );
+
+    /*
+      If an already signed-in account opens this
+      page, check whether it already has an Author
+      access request.
+    */
+    async function initializeAuthorAccess(){
+
+      try{
+
+        const session =
+          await getCurrentSession();
+
+        if(!session){
+          return;
+        }
+
+        const existingRequest =
+          await getExistingRequest(
+            session.user.id
+          );
+
+        if(
+          existingRequest &&
+          existingRequest.status ===
+          'pending'
+        ){
+
+          showPending();
+
+        }
+
+      }catch(error){
+
+        console.error(
+          'Author access initialization error:',
+          error
+        );
+
+      }
+
+    }
+
+    initializeAuthorAccess();
+
+  </script>
+
+</body>
+</html>

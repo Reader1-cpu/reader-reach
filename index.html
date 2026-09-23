@@ -1004,8 +1004,8 @@ footer{
     </div>
 
     <div>
-      <a class="btn" href="#access">Sign In</a>
-      <a class="btn primary" href="#submit">For Authors</a>
+      <a class="btn" href="auth.html?mode=signin">Sign In</a>
+      <a class="btn primary" href="auth.html?mode=author">For Authors</a>
     </div>
 
   </div>
@@ -1027,7 +1027,7 @@ footer{
 
       <div class="actions">
         <a class="btn primary" href="#books">Discover Books →</a>
-        <a class="btn outline" href="#submit">For Authors</a>
+        <a class="btn outline" href="auth.html?mode=author">For Authors</a>
       </div>
 
     </div>
@@ -1226,11 +1226,9 @@ footer{
           features, and Reader Reach content.
         </p>
 
-        <button
-          class="btn primary"
-          onclick="toast('Reader sign-in will be connected to the Reader Reach account system.')">
+        <a class="btn primary" href="auth.html?mode=reader">
           Continue as Reader
-        </button>
+        </a>
 
       </div>
 
@@ -1242,7 +1240,7 @@ footer{
           Present your books and your author profile to Reader Reach readers.
         </p>
 
-        <a class="btn primary" href="#submit">
+        <a class="btn primary" href="auth.html?mode=author">
           Continue as Author
         </a>
 
@@ -3592,10 +3590,17 @@ async function initializeReaderReach(){
 
   await loadCalendar();
 
+  await updateAuthLinks();
+
 }
 
 
 initializeReaderReach();
+
+
+supabaseClient.auth.onAuthStateChange(() => {
+  updateAuthLinks();
+});
 
 
 /*

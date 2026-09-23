@@ -461,6 +461,7 @@
 
       <div class="nav-actions">
         <a href="index.html" class="btn">Home</a>
+
         <button class="btn primary" id="navSignOut">
           Sign Out
         </button>
@@ -636,23 +637,35 @@
   <div id="statusMessage" class="status-message"></div>
 
   <script>
+
     const SUPABASE_URL =
       'https://bublmnfhyyrefcdkloak.supabase.co';
 
     const SUPABASE_PUBLISHABLE_KEY =
       'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
 
+    /*
+      THIS MUST MATCH auth.html EXACTLY.
+
+      auth.html stores the Reader Reach session under:
+      reader-reach-auth
+
+      The dashboard must read that same session.
+    */
+    const READER_REACH_STORAGE_KEY =
+      'reader-reach-auth';
+
     const supabaseClient =
       window.supabase.createClient(
         SUPABASE_URL,
         SUPABASE_PUBLISHABLE_KEY,
         {
-          auth: {
-            persistSession: true,
-            autoRefreshToken: true,
-            detectSessionInUrl: true,
-            storage: window.localStorage,
-            flowType: 'pkce'
+          auth:{
+            storage:window.localStorage,
+            storageKey:READER_REACH_STORAGE_KEY,
+            persistSession:true,
+            autoRefreshToken:true,
+            detectSessionInUrl:true
           }
         }
       );
@@ -663,6 +676,7 @@
     let currentReader = null;
 
     function showStatus(message){
+
       const box =
         document.getElementById('statusMessage');
 
@@ -671,11 +685,16 @@
 
       setTimeout(() => {
         box.style.display = 'none';
-      }, 3500);
+      },3500);
+
     }
 
     function escapeHtml(value){
-      if(value === null || value === undefined){
+
+      if(
+        value === null ||
+        value === undefined
+      ){
         return '';
       }
 
@@ -685,12 +704,15 @@
         .replace(/>/g,'&gt;')
         .replace(/"/g,'&quot;')
         .replace(/'/g,'&#039;');
+
     }
 
     function activateSection(sectionName){
 
       document
-        .querySelectorAll('.side-link[data-section]')
+        .querySelectorAll(
+          '.side-link[data-section]'
+        )
         .forEach(button => {
 
           button.classList.toggle(
@@ -704,7 +726,9 @@
         .querySelectorAll('.section')
         .forEach(section => {
 
-          section.classList.remove('active');
+          section.classList.remove(
+            'active'
+          );
 
         });
 
@@ -716,131 +740,46 @@
       if(target){
         target.classList.add('active');
       }
+
     }
 
     document
-      .querySelectorAll('.side-link[data-section]')
+      .querySelectorAll(
+        '.side-link[data-section]'
+      )
       .forEach(button => {
 
         button.addEventListener(
           'click',
-          () => activateSection(button.dataset.section)
+          () => {
+
+            activateSection(
+              button.dataset.section
+            );
+
+          }
         );
 
       });
 
     /*
-      IMPORTANT AUTHENTICATION FIX
-
-      The listener is created BEFORE we attempt to make
-      any decision about redirecting.
-
-      Supabase will send INITIAL_SESSION when it has restored
-      the persisted login session.
+      We wait for Supabase to restore the SAME
+      reader-reach-auth session used by auth.html.
     */
-    let authSessionPromiseResolve;
-
-    let authSessionPromise =
-      new Promise(resolve => {
-        authSessionPromiseResolve = resolve;
-      });
-
-    let authSessionResolved = false;
-
-    function resolveAuthSession(session){
-
-      if(authSessionResolved){
-        return;
-      }
-
-      authSessionResolved = true;
-
-      authSessionPromiseResolve(
-        session || null
-      );
-    }
-
-    supabaseClient.auth.onAuthStateChange(
-      (event, session) => {
-
-        console.log(
-          'Reader Reach auth event:',
-          event,
-          !!session
-        );
-
-        if(event === 'INITIAL_SESSION'){
-
-          resolveAuthSession(session);
-
-        }
-
-        if(event === 'SIGNED_IN'){
-
-          currentSession = session;
-          currentUser = session
-            ? session.user
-            : null;
-
-          resolveAuthSession(session);
-
-        }
-
-        if(event === 'TOKEN_REFRESHED' && session){
-
-          currentSession = session;
-          currentUser = session.user;
-
-        }
-
-        if(event === 'SIGNED_OUT'){
-
-          window.location.replace(
-            'auth.html?mode=signin'
-          );
-
-        }
-
-      }
-    );
-
     async function getRealSession(){
 
-      /*
-        Give Supabase a chance to restore the persisted session.
-      */
-      const sessionFromAuthEvent =
-        await Promise.race([
-
-          authSessionPromise,
-
-          new Promise(resolve => {
-            setTimeout(() => resolve('__TIMEOUT__'), 10000);
-          })
-
-        ]);
-
-      if(
-        sessionFromAuthEvent &&
-        sessionFromAuthEvent !== '__TIMEOUT__'
-      ){
-
-        return sessionFromAuthEvent;
-      }
-
-      /*
-        Final direct check after the auth event wait.
-      */
       const {
         data,
         error
-      } = await supabaseClient.auth.getSession();
+      } =
+        await supabaseClient.auth.getSession();
 
       if(error){
         throw error;
       }
 
       return data.session || null;
+
     }
 
     async function loadProfile(userId){
@@ -848,19 +787,24 @@
       const {
         data,
         error
-      } = await supabaseClient
-        .from('profiles')
-        .select(
-          'id,display_name,role'
-        )
-        .eq('id',userId)
-        .maybeSingle();
+      } =
+        await supabaseClient
+          .from('profiles')
+          .select(
+            'id,display_name,role'
+          )
+          .eq(
+            'id',
+            userId
+          )
+          .maybeSingle();
 
       if(error){
         throw error;
       }
 
       return data;
+
     }
 
     async function loadReader(profileId){
@@ -868,47 +812,57 @@
       const {
         data,
         error
-      } = await supabaseClient
-        .from('readers')
-        .select(
-          'id,profile_id,created_at'
-        )
-        .eq('profile_id',profileId)
-        .maybeSingle();
+      } =
+        await supabaseClient
+          .from('readers')
+          .select(
+            'id,profile_id,created_at'
+          )
+          .eq(
+            'profile_id',
+            profileId
+          )
+          .maybeSingle();
 
       if(error){
         throw error;
       }
 
       return data;
+
     }
 
     async function loadFeaturedBooks(){
 
       const container =
-        document.getElementById('featuredBooks');
+        document.getElementById(
+          'featuredBooks'
+        );
 
       const {
         data,
         error
-      } = await supabaseClient
-        .from('homepage_featured_books')
-        .select(`
-          id,
-          book_id,
-          books (
+      } =
+        await supabaseClient
+          .from('homepage_featured_books')
+          .select(`
             id,
-            title,
-            description,
-            genre_topic,
-            cover_url,
-            status
-          )
-        `)
-        .order(
-          'selected_at',
-          { ascending:false }
-        );
+            book_id,
+            books (
+              id,
+              title,
+              description,
+              genre_topic,
+              cover_url,
+              status
+            )
+          `)
+          .order(
+            'selected_at',
+            {
+              ascending:false
+            }
+          );
 
       if(error){
 
@@ -921,6 +875,7 @@
           '<div class="empty">Featured books could not be loaded right now.</div>';
 
         return;
+
       }
 
       const books =
@@ -938,67 +893,74 @@
           '<div class="empty">There are no featured books available yet.</div>';
 
         return;
+
       }
 
       container.innerHTML =
-        books.map(book => {
+        books
+          .map(book => {
 
-          const cover =
-            book.cover_url
-            ? `
-              <img
-                class="book-cover"
-                src="${escapeHtml(book.cover_url)}"
-                alt="${escapeHtml(book.title)} cover"
-              >
-            `
-            : `
-              <div class="book-placeholder">
-                ${escapeHtml(book.title)}
-              </div>
+            const cover =
+              book.cover_url
+              ? `
+                <img
+                  class="book-cover"
+                  src="${escapeHtml(book.cover_url)}"
+                  alt="${escapeHtml(book.title)} cover"
+                >
+              `
+              : `
+                <div class="book-placeholder">
+                  ${escapeHtml(book.title)}
+                </div>
+              `;
+
+            return `
+              <article class="card">
+
+                ${cover}
+
+                <div class="card-body">
+
+                  <h3>
+                    ${escapeHtml(book.title)}
+                  </h3>
+
+                  <p>
+                    ${escapeHtml(
+                      book.description ||
+                      'Book information will appear here.'
+                    )}
+                  </p>
+
+                  ${
+                    book.genre_topic
+                    ? `
+                      <span class="tag">
+                        ${escapeHtml(
+                          book.genre_topic
+                        )}
+                      </span>
+                    `
+                    : ''
+                  }
+
+                </div>
+
+              </article>
             `;
 
-          return `
-            <article class="card">
-
-              ${cover}
-
-              <div class="card-body">
-
-                <h3>
-                  ${escapeHtml(book.title)}
-                </h3>
-
-                <p>
-                  ${escapeHtml(
-                    book.description ||
-                    'Book information will appear here.'
-                  )}
-                </p>
-
-                ${
-                  book.genre_topic
-                  ? `
-                    <span class="tag">
-                      ${escapeHtml(book.genre_topic)}
-                    </span>
-                  `
-                  : ''
-                }
-
-              </div>
-
-            </article>
-          `;
-
-        }).join('');
+          })
+          .join('');
 
     }
 
     async function loadMyBooks(){
 
       const container =
-        document.getElementById('myBooks');
+        document.getElementById(
+          'myBooks'
+        );
 
       if(!currentReader){
 
@@ -1006,35 +968,39 @@
           '<div class="empty">Your reader profile is being prepared.</div>';
 
         return;
+
       }
 
       const {
         data,
         error
-      } = await supabaseClient
-        .from('reader_books')
-        .select(`
-          id,
-          book_id,
-          status,
-          created_at,
-          books (
+      } =
+        await supabaseClient
+          .from('reader_books')
+          .select(`
             id,
-            title,
-            description,
-            genre_topic,
-            cover_url,
-            status
+            book_id,
+            status,
+            created_at,
+            books (
+              id,
+              title,
+              description,
+              genre_topic,
+              cover_url,
+              status
+            )
+          `)
+          .eq(
+            'reader_id',
+            currentReader.id
           )
-        `)
-        .eq(
-          'reader_id',
-          currentReader.id
-        )
-        .order(
-          'created_at',
-          { ascending:false }
-        );
+          .order(
+            'created_at',
+            {
+              ascending:false
+            }
+          );
 
       if(error){
 
@@ -1047,15 +1013,20 @@
           '<div class="empty">Your books could not be loaded right now.</div>';
 
         return;
+
       }
 
       const books =
         (data || [])
-          .filter(item => item.books)
-          .map(item => ({
-            ...item.books,
-            readerStatus:item.status
-          }));
+          .filter(
+            item => item.books
+          )
+          .map(
+            item => ({
+              ...item.books,
+              readerStatus:item.status
+            })
+          );
 
       if(!books.length){
 
@@ -1063,6 +1034,7 @@
           '<div class="empty">You have not added any books yet.</div>';
 
         return;
+
       }
 
       renderReaderBooks(
@@ -1088,39 +1060,43 @@
           '<div class="empty">Your reader profile is being prepared.</div>';
 
         return;
+
       }
 
       const {
         data,
         error
-      } = await supabaseClient
-        .from('reader_books')
-        .select(`
-          id,
-          book_id,
-          status,
-          created_at,
-          books (
+      } =
+        await supabaseClient
+          .from('reader_books')
+          .select(`
             id,
-            title,
-            description,
-            genre_topic,
-            cover_url,
+            book_id,
+            status,
+            created_at,
+            books (
+              id,
+              title,
+              description,
+              genre_topic,
+              cover_url,
+              status
+            )
+          `)
+          .eq(
+            'reader_id',
+            currentReader.id
+          )
+          .eq(
+            'status',
             status
           )
-        `)
-        .eq(
-          'reader_id',
-          currentReader.id
-        )
-        .eq(
-          'status',
-          status
-        )
-        .order(
-          'created_at',
-          { ascending:false }
-        );
+          .order(
+            'created_at',
+            {
+              ascending:false
+            }
+          );
 
       if(error){
 
@@ -1133,15 +1109,20 @@
           '<div class="empty">Your reading information could not be loaded right now.</div>';
 
         return;
+
       }
 
       const books =
         (data || [])
-          .filter(item => item.books)
-          .map(item => ({
-            ...item.books,
-            readerStatus:item.status
-          }));
+          .filter(
+            item => item.books
+          )
+          .map(
+            item => ({
+              ...item.books,
+              readerStatus:item.status
+            })
+          );
 
       if(!books.length){
 
@@ -1157,6 +1138,7 @@
           `;
 
         return;
+
       }
 
       renderReaderBooks(
@@ -1172,56 +1154,61 @@
     ){
 
       container.innerHTML =
-        books.map(book => {
+        books
+          .map(book => {
 
-          const cover =
-            book.cover_url
-            ? `
-              <img
-                class="book-cover"
-                src="${escapeHtml(book.cover_url)}"
-                alt="${escapeHtml(book.title)} cover"
-              >
-            `
-            : `
-              <div class="book-placeholder">
-                ${escapeHtml(book.title)}
-              </div>
+            const cover =
+              book.cover_url
+              ? `
+                <img
+                  class="book-cover"
+                  src="${escapeHtml(book.cover_url)}"
+                  alt="${escapeHtml(book.title)} cover"
+                >
+              `
+              : `
+                <div class="book-placeholder">
+                  ${escapeHtml(book.title)}
+                </div>
+              `;
+
+            const status =
+              book.readerStatus
+              ? book.readerStatus.replace(
+                  /_/g,
+                  ' '
+                )
+              : 'My Book';
+
+            return `
+              <article class="card">
+
+                ${cover}
+
+                <div class="card-body">
+
+                  <h3>
+                    ${escapeHtml(book.title)}
+                  </h3>
+
+                  <p>
+                    ${escapeHtml(
+                      book.description ||
+                      'Book information will appear here.'
+                    )}
+                  </p>
+
+                  <span class="tag">
+                    ${escapeHtml(status)}
+                  </span>
+
+                </div>
+
+              </article>
             `;
 
-          const status =
-            book.readerStatus
-            ? book.readerStatus.replace(/_/g,' ')
-            : 'My Book';
-
-          return `
-            <article class="card">
-
-              ${cover}
-
-              <div class="card-body">
-
-                <h3>
-                  ${escapeHtml(book.title)}
-                </h3>
-
-                <p>
-                  ${escapeHtml(
-                    book.description ||
-                    'Book information will appear here.'
-                  )}
-                </p>
-
-                <span class="tag">
-                  ${escapeHtml(status)}
-                </span>
-
-              </div>
-
-            </article>
-          `;
-
-        }).join('');
+          })
+          .join('');
 
     }
 
@@ -1235,24 +1222,27 @@
       const {
         data,
         error
-      } = await supabaseClient
-        .from('notifications')
-        .select(`
-          id,
-          type,
-          title,
-          message,
-          is_read,
-          created_at
-        `)
-        .eq(
-          'profile_id',
-          currentUser.id
-        )
-        .order(
-          'created_at',
-          { ascending:false }
-        );
+      } =
+        await supabaseClient
+          .from('notifications')
+          .select(`
+            id,
+            type,
+            title,
+            message,
+            is_read,
+            created_at
+          `)
+          .eq(
+            'profile_id',
+            currentUser.id
+          )
+          .order(
+            'created_at',
+            {
+              ascending:false
+            }
+          );
 
       if(error){
 
@@ -1265,39 +1255,46 @@
           '<div class="empty">Notifications could not be loaded right now.</div>';
 
         return;
+
       }
 
-      if(!data || !data.length){
+      if(
+        !data ||
+        !data.length
+      ){
 
         container.innerHTML =
           '<div class="empty">You have no notifications yet.</div>';
 
         return;
+
       }
 
       container.innerHTML =
-        data.map(notification => {
+        data
+          .map(notification => {
 
-          return `
-            <div class="notification-item">
+            return `
+              <div class="notification-item">
 
-              <strong>
-                ${escapeHtml(
-                  notification.title ||
-                  'Reader Reach Notification'
-                )}
-              </strong>
+                <strong>
+                  ${escapeHtml(
+                    notification.title ||
+                    'Reader Reach Notification'
+                  )}
+                </strong>
 
-              <p>
-                ${escapeHtml(
-                  notification.message || ''
-                )}
-              </p>
+                <p>
+                  ${escapeHtml(
+                    notification.message || ''
+                  )}
+                </p>
 
-            </div>
-          `;
+              </div>
+            `;
 
-        }).join('');
+          })
+          .join('');
 
     }
 
@@ -1308,76 +1305,81 @@
           'accountDetails'
         );
 
-      if(!currentUser || !currentProfile){
+      if(
+        !currentUser ||
+        !currentProfile
+      ){
 
         container.innerHTML =
           '<div class="empty">Account information is unavailable.</div>';
 
         return;
+
       }
 
-      container.innerHTML = `
+      container.innerHTML =
+        `
 
-        <div class="account-row">
+          <div class="account-row">
 
-          <span class="account-label">
-            Display Name
-          </span>
+            <span class="account-label">
+              Display Name
+            </span>
 
-          <span class="account-value">
-            ${escapeHtml(
-              currentProfile.display_name ||
-              'Reader'
-            )}
-          </span>
+            <span class="account-value">
+              ${escapeHtml(
+                currentProfile.display_name ||
+                'Reader'
+              )}
+            </span>
 
-        </div>
+          </div>
 
-        <div class="account-row">
+          <div class="account-row">
 
-          <span class="account-label">
-            Email
-          </span>
+            <span class="account-label">
+              Email
+            </span>
 
-          <span class="account-value">
-            ${escapeHtml(
-              currentUser.email || ''
-            )}
-          </span>
+            <span class="account-value">
+              ${escapeHtml(
+                currentUser.email || ''
+              )}
+            </span>
 
-        </div>
+          </div>
 
-        <div class="account-row">
+          <div class="account-row">
 
-          <span class="account-label">
-            Account Type
-          </span>
+            <span class="account-label">
+              Account Type
+            </span>
 
-          <span class="account-value">
-            Reader
-          </span>
+            <span class="account-value">
+              Reader
+            </span>
 
-        </div>
+          </div>
 
-        <div class="account-row">
+          <div class="account-row">
 
-          <span class="account-label">
-            Account Created
-          </span>
+            <span class="account-label">
+              Account Created
+            </span>
 
-          <span class="account-value">
-            ${
-              currentUser.created_at
-              ? new Date(
-                  currentUser.created_at
-                ).toLocaleDateString()
-              : '—'
-            }
-          </span>
+            <span class="account-value">
+              ${
+                currentUser.created_at
+                ? new Date(
+                    currentUser.created_at
+                  ).toLocaleDateString()
+                : '—'
+              }
+            </span>
 
-        </div>
+          </div>
 
-      `;
+        `;
 
     }
 
@@ -1385,7 +1387,8 @@
 
       const {
         error
-      } = await supabaseClient.auth.signOut();
+      } =
+        await supabaseClient.auth.signOut();
 
       if(error){
 
@@ -1399,6 +1402,7 @@
         );
 
         return;
+
       }
 
       window.location.replace(
@@ -1421,12 +1425,59 @@
         signOut
       );
 
+    /*
+      Keep the dashboard in place when Supabase refreshes
+      the token. Only a genuine SIGNED_OUT event sends
+      the reader back to authentication.
+    */
+    supabaseClient.auth.onAuthStateChange(
+      (event,session) => {
+
+        console.log(
+          'Reader Reach dashboard auth event:',
+          event,
+          !!session
+        );
+
+        if(
+          event === 'SIGNED_IN' &&
+          session
+        ){
+
+          currentSession = session;
+          currentUser = session.user;
+
+        }
+
+        if(
+          event === 'TOKEN_REFRESHED' &&
+          session
+        ){
+
+          currentSession = session;
+          currentUser = session.user;
+
+        }
+
+        if(event === 'SIGNED_OUT'){
+
+          window.location.replace(
+            'auth.html?mode=signin'
+          );
+
+        }
+
+      }
+    );
+
     async function initializeDashboard(){
 
       try{
 
         /*
-          Wait for Supabase's INITIAL_SESSION event.
+          IMPORTANT:
+          The dashboard now reads the exact same
+          reader-reach-auth storage key as auth.html.
         */
         const session =
           await getRealSession();
@@ -1434,7 +1485,7 @@
         if(!session){
 
           console.log(
-            'No authenticated Reader Reach session found.'
+            'No Reader Reach session found in shared storage.'
           );
 
           window.location.replace(
@@ -1442,19 +1493,17 @@
           );
 
           return;
+
         }
 
         currentSession = session;
         currentUser = session.user;
 
         console.log(
-          'Authenticated Reader Reach user:',
+          'Reader Reach session restored:',
           currentUser.id
         );
 
-        /*
-          Load the user's profile.
-        */
         currentProfile =
           await loadProfile(
             currentUser.id
@@ -1467,11 +1516,9 @@
           );
 
           return;
+
         }
 
-        /*
-          Only a Reader account should use this dashboard.
-        */
         if(
           currentProfile.role !== 'reader'
         ){
@@ -1481,6 +1528,7 @@
           );
 
           return;
+
         }
 
         const displayName =
@@ -1489,11 +1537,13 @@
 
         document.getElementById(
           'welcomeName'
-        ).textContent = displayName;
+        ).textContent =
+          displayName;
 
         document.getElementById(
           'sideReaderName'
-        ).textContent = displayName;
+        ).textContent =
+          displayName;
 
         document.getElementById(
           'sideReaderEmail'
@@ -1507,9 +1557,6 @@
 
         renderAccount();
 
-        /*
-          The dashboard remains open while its content loads.
-        */
         await Promise.all([
           loadFeaturedBooks(),
           loadMyBooks(),
@@ -1532,26 +1579,43 @@
         );
 
         /*
-          IMPORTANT:
-          Database errors must NOT send the reader back
-          to the sign-in page.
-
-          Only an actual missing session causes a redirect.
+          Database/content errors do NOT redirect.
+          Only absence of an actual authentication
+          session redirects to sign-in.
         */
-        const {
-          data
-        } = await supabaseClient.auth.getSession();
+        try{
 
-        if(
-          !data ||
-          !data.session
-        ){
+          const {
+            data
+          } =
+            await supabaseClient.auth.getSession();
+
+          if(
+            !data ||
+            !data.session
+          ){
+
+            window.location.replace(
+              'auth.html?mode=signin'
+            );
+
+            return;
+
+          }
+
+        }catch(sessionError){
+
+          console.error(
+            'Session verification failed:',
+            sessionError
+          );
 
           window.location.replace(
             'auth.html?mode=signin'
           );
 
           return;
+
         }
 
         showStatus(

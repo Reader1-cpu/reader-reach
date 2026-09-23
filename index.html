@@ -957,6 +957,7 @@ footer{
 
     <div class="links">
       <a href="#books">Books</a>
+      <a href="#featured">Featured</a>
       <a href="#flipper">Flipper Guide</a>
       <a href="#discussions">Discussions</a>
       <a href="#calendar">Calendar</a>
@@ -993,6 +994,33 @@ footer{
     </div>
   </div>
 </header>
+
+
+<!-- FEATURED BOOKS -->
+
+<section id="featured">
+
+  <div class="wrap">
+
+    <div class="head">
+
+      <div class="kicker">Featured Books</div>
+
+      <h2>Books selected for the Reader Reach homepage.</h2>
+
+      <p>
+        Featured books are selected by the Reader Reach Admin and remain connected to their approved book profiles.
+      </p>
+
+    </div>
+
+    <div class="books" id="featuredBookGrid">
+      <div class="loading">Loading featured books...</div>
+    </div>
+
+  </div>
+
+</section>
 
 
 <!-- BOOKS -->
@@ -1878,6 +1906,154 @@ async function loadApprovedAuthors(){
   }
 
   approvedAuthors = data || [];
+
+}
+
+
+async function loadFeaturedBooks(){
+
+  const grid =
+    document.getElementById('featuredBookGrid');
+
+  if(!grid) return;
+
+  grid.innerHTML =
+    '<div class="loading">Loading featured books...</div>';
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from('homepage_featured_books')
+    .select('book_id,selected_at')
+    .order('selected_at',{ascending:false});
+
+  if(error){
+
+    console.error(
+      'Unable to load featured books:',
+      error
+    );
+
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>Featured books are temporarily unavailable.</h3>
+        <p>Please try again shortly.</p>
+      </div>
+    `;
+
+    return;
+
+  }
+
+  const featuredRows =
+    data || [];
+
+  const featuredBooks =
+    featuredRows
+      .map(row =>
+        approvedBooks.find(
+          book => book.id === row.book_id
+        )
+      )
+      .filter(Boolean);
+
+  if(!featuredBooks.length){
+
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>No featured books yet.</h3>
+        <p>
+          Books selected by the Reader Reach Admin will appear here.
+        </p>
+      </div>
+    `;
+
+    return;
+
+  }
+
+  grid.innerHTML = '';
+
+  featuredBooks.forEach(book => {
+
+    const author =
+      approvedAuthors.find(
+        item => item.id === book.author_id
+      );
+
+    const cover = book.cover_url
+      ? `
+        <img
+          src="${escapeHtml(book.cover_url)}"
+          alt="${escapeHtml(book.title)} cover">
+      `
+      : `
+        <div class="coverInner">
+          <small>Reader Reach</small>
+          <strong>${escapeHtml(book.title)}</strong>
+          <small>${escapeHtml(authorName(author))}</small>
+        </div>
+      `;
+
+    const article =
+      document.createElement('article');
+
+    article.className = 'book';
+
+    article.innerHTML = `
+
+      <div class="cover">
+        ${cover}
+      </div>
+
+      <div class="bookInfo">
+
+        <span class="tag">
+          Featured
+        </span>
+
+        <h3>
+          ${escapeHtml(book.title)}
+        </h3>
+
+        <p>
+          ${escapeHtml(
+            book.description ||
+            'No description provided.'
+          )}
+        </p>
+
+        <div class="bookActions">
+
+          <button
+            class="btn small"
+            type="button"
+            onclick="openBook('${book.id}')">
+            View Book
+          </button>
+
+          ${
+            author
+            ? `
+              <button
+                class="btn small"
+                type="button"
+                onclick="openAuthor('${author.id}')">
+                View Author Profile
+              </button>
+            `
+            : ''
+          }
+
+        </div>
+
+      </div>
+    `;
+
+    grid.appendChild(article);
+
+  });
 
 }
 
@@ -3010,6 +3186,8 @@ async function initializeReaderReach(){
 
   await loadApprovedBooks();
 
+  await loadFeaturedBooks();
+
   await loadDiscussionSessions();
 
   await loadCalendar();
@@ -3031,6 +3209,7 @@ initializeReaderReach();
 document.addEventListener('visibilitychange',() => {
 
   if(!document.hidden){
+    loadFeaturedBooks();
     loadCalendar();
   }
 
@@ -3038,6 +3217,7 @@ document.addEventListener('visibilitychange',() => {
 
 
 window.setInterval(() => {
+  loadFeaturedBooks();
   loadCalendar();
 },60000);
 

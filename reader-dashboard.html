@@ -160,6 +160,7 @@
     .reader-mini span{
       color:var(--brown-3);
       font-size:13px;
+      word-break:break-word;
     }
 
     .side-links{
@@ -452,6 +453,7 @@
 
   <nav>
     <div class="nav-inner">
+
       <a href="index.html" class="brand">
         <span class="brand-mark">R</span>
         <span>Reader Reach</span>
@@ -459,8 +461,11 @@
 
       <div class="nav-actions">
         <a href="index.html" class="btn">Home</a>
-        <button class="btn primary" id="navSignOut">Sign Out</button>
+        <button class="btn primary" id="navSignOut">
+          Sign Out
+        </button>
       </div>
+
     </div>
   </nav>
 
@@ -470,7 +475,7 @@
 
       <div class="reader-mini">
         <strong id="sideReaderName">Reader</strong>
-        <span id="sideReaderEmail">Loading account...</span>
+        <span id="sideReaderEmail">Checking account...</span>
       </div>
 
       <div class="side-links">
@@ -504,20 +509,24 @@
         </button>
 
       </div>
+
     </aside>
 
     <section class="content">
 
       <div class="welcome">
         <small>Reader Dashboard</small>
-        <h1>Welcome, <span id="welcomeName">Reader</span>.</h1>
+
+        <h1>
+          Welcome, <span id="welcomeName">Reader</span>.
+        </h1>
+
         <p>
-          Explore featured books, manage your reading list, follow your reading progress,
-          and stay connected with Reader Reach.
+          Explore featured books, manage your reading list,
+          follow your reading progress, and stay connected with Reader Reach.
         </p>
       </div>
 
-      <!-- FEATURED BOOKS -->
       <section class="section active" id="section-featured">
 
         <div class="section-heading">
@@ -528,12 +537,13 @@
         </div>
 
         <div id="featuredBooks" class="grid">
-          <div class="loading">Loading featured books...</div>
+          <div class="loading">
+            Loading featured books...
+          </div>
         </div>
 
       </section>
 
-      <!-- MY BOOKS -->
       <section class="section" id="section-my-books">
 
         <div class="section-heading">
@@ -544,12 +554,13 @@
         </div>
 
         <div id="myBooks" class="grid">
-          <div class="loading">Loading your books...</div>
+          <div class="loading">
+            Loading your books...
+          </div>
         </div>
 
       </section>
 
-      <!-- CURRENTLY READING -->
       <section class="section" id="section-currently-reading">
 
         <div class="section-heading">
@@ -560,12 +571,13 @@
         </div>
 
         <div id="currentlyReading" class="grid">
-          <div class="loading">Loading your reading list...</div>
+          <div class="loading">
+            Loading your reading list...
+          </div>
         </div>
 
       </section>
 
-      <!-- COMPLETED -->
       <section class="section" id="section-completed">
 
         <div class="section-heading">
@@ -576,12 +588,13 @@
         </div>
 
         <div id="completedBooks" class="grid">
-          <div class="loading">Loading completed books...</div>
+          <div class="loading">
+            Loading completed books...
+          </div>
         </div>
 
       </section>
 
-      <!-- NOTIFICATIONS -->
       <section class="section" id="section-notifications">
 
         <div class="section-heading">
@@ -592,12 +605,13 @@
         </div>
 
         <div id="notifications" class="notification-box">
-          <div class="loading">Loading notifications...</div>
+          <div class="loading">
+            Loading notifications...
+          </div>
         </div>
 
       </section>
 
-      <!-- ACCOUNT -->
       <section class="section" id="section-account">
 
         <div class="section-heading">
@@ -608,7 +622,9 @@
         </div>
 
         <div id="accountDetails" class="account-box">
-          <div class="loading">Loading account...</div>
+          <div class="loading">
+            Loading account...
+          </div>
         </div>
 
       </section>
@@ -626,11 +642,6 @@
     const SUPABASE_PUBLISHABLE_KEY =
       'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
 
-    /*
-      IMPORTANT:
-      The dashboard uses the same persistent Supabase authentication
-      configuration as auth.html.
-    */
     const supabaseClient =
       window.supabase.createClient(
         SUPABASE_URL,
@@ -640,7 +651,8 @@
             persistSession: true,
             autoRefreshToken: true,
             detectSessionInUrl: true,
-            storage: window.localStorage
+            storage: window.localStorage,
+            flowType: 'pkce'
           }
         }
       );
@@ -651,7 +663,8 @@
     let currentReader = null;
 
     function showStatus(message){
-      const box = document.getElementById('statusMessage');
+      const box =
+        document.getElementById('statusMessage');
 
       box.textContent = message;
       box.style.display = 'block';
@@ -667,47 +680,156 @@
       }
 
       return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
     }
 
     function activateSection(sectionName){
 
-      document.querySelectorAll('.side-link[data-section]').forEach(button => {
-        button.classList.toggle(
-          'active',
-          button.dataset.section === sectionName
+      document
+        .querySelectorAll('.side-link[data-section]')
+        .forEach(button => {
+
+          button.classList.toggle(
+            'active',
+            button.dataset.section === sectionName
+          );
+
+        });
+
+      document
+        .querySelectorAll('.section')
+        .forEach(section => {
+
+          section.classList.remove('active');
+
+        });
+
+      const target =
+        document.getElementById(
+          `section-${sectionName}`
         );
-      });
-
-      document.querySelectorAll('.section').forEach(section => {
-        section.classList.remove('active');
-      });
-
-      const target = document.getElementById(
-        `section-${sectionName}`
-      );
 
       if(target){
         target.classList.add('active');
       }
     }
 
-    document.querySelectorAll('.side-link[data-section]').forEach(button => {
+    document
+      .querySelectorAll('.side-link[data-section]')
+      .forEach(button => {
 
-      button.addEventListener('click', () => {
-        activateSection(button.dataset.section);
+        button.addEventListener(
+          'click',
+          () => activateSection(button.dataset.section)
+        );
+
       });
 
-    });
+    /*
+      IMPORTANT AUTHENTICATION FIX
 
-    async function getAuthenticatedSession(){
+      The listener is created BEFORE we attempt to make
+      any decision about redirecting.
+
+      Supabase will send INITIAL_SESSION when it has restored
+      the persisted login session.
+    */
+    let authSessionPromiseResolve;
+
+    let authSessionPromise =
+      new Promise(resolve => {
+        authSessionPromiseResolve = resolve;
+      });
+
+    let authSessionResolved = false;
+
+    function resolveAuthSession(session){
+
+      if(authSessionResolved){
+        return;
+      }
+
+      authSessionResolved = true;
+
+      authSessionPromiseResolve(
+        session || null
+      );
+    }
+
+    supabaseClient.auth.onAuthStateChange(
+      (event, session) => {
+
+        console.log(
+          'Reader Reach auth event:',
+          event,
+          !!session
+        );
+
+        if(event === 'INITIAL_SESSION'){
+
+          resolveAuthSession(session);
+
+        }
+
+        if(event === 'SIGNED_IN'){
+
+          currentSession = session;
+          currentUser = session
+            ? session.user
+            : null;
+
+          resolveAuthSession(session);
+
+        }
+
+        if(event === 'TOKEN_REFRESHED' && session){
+
+          currentSession = session;
+          currentUser = session.user;
+
+        }
+
+        if(event === 'SIGNED_OUT'){
+
+          window.location.replace(
+            'auth.html?mode=signin'
+          );
+
+        }
+
+      }
+    );
+
+    async function getRealSession(){
 
       /*
-        First ask Supabase for the existing persisted session.
+        Give Supabase a chance to restore the persisted session.
+      */
+      const sessionFromAuthEvent =
+        await Promise.race([
+
+          authSessionPromise,
+
+          new Promise(resolve => {
+            setTimeout(() => resolve('__TIMEOUT__'), 10000);
+          })
+
+        ]);
+
+      if(
+        sessionFromAuthEvent &&
+        sessionFromAuthEvent !== '__TIMEOUT__'
+      ){
+
+        return sessionFromAuthEvent;
+      }
+
+      /*
+        Final direct check after the auth event wait.
       */
       const {
         data,
@@ -718,48 +840,7 @@
         throw error;
       }
 
-      if(data && data.session){
-        return data.session;
-      }
-
-      /*
-        If the session is not immediately available, wait briefly for
-        the authentication state listener to receive the persisted session.
-      */
-      return new Promise(resolve => {
-
-        let finished = false;
-
-        const finish = session => {
-
-          if(finished){
-            return;
-          }
-
-          finished = true;
-
-          resolve(session || null);
-        };
-
-        const timeout = setTimeout(() => {
-          finish(null);
-        }, 5000);
-
-        supabaseClient.auth.onAuthStateChange(
-          (event, session) => {
-
-            if(event === 'SIGNED_IN' || event === 'INITIAL_SESSION'){
-
-              clearTimeout(timeout);
-
-              finish(session);
-            }
-
-          }
-        );
-
-      });
-
+      return data.session || null;
     }
 
     async function loadProfile(userId){
@@ -769,8 +850,10 @@
         error
       } = await supabaseClient
         .from('profiles')
-        .select('id,display_name,role')
-        .eq('id', userId)
+        .select(
+          'id,display_name,role'
+        )
+        .eq('id',userId)
         .maybeSingle();
 
       if(error){
@@ -787,8 +870,10 @@
         error
       } = await supabaseClient
         .from('readers')
-        .select('id,profile_id,created_at')
-        .eq('profile_id', profileId)
+        .select(
+          'id,profile_id,created_at'
+        )
+        .eq('profile_id',profileId)
         .maybeSingle();
 
       if(error){
@@ -820,12 +905,17 @@
             status
           )
         `)
-        .order('selected_at', {
-          ascending:false
-        });
+        .order(
+          'selected_at',
+          { ascending:false }
+        );
 
       if(error){
-        console.error('Featured books error:', error);
+
+        console.error(
+          'Featured books error:',
+          error
+        );
 
         container.innerHTML =
           '<div class="empty">Featured books could not be loaded right now.</div>';
@@ -833,12 +923,14 @@
         return;
       }
 
-      const books = (data || [])
-        .map(item => item.books)
-        .filter(book =>
-          book &&
-          book.status === 'approved'
-        );
+      const books =
+        (data || [])
+          .map(item => item.books)
+          .filter(
+            book =>
+              book &&
+              book.status === 'approved'
+          );
 
       if(!books.length){
 
@@ -848,45 +940,58 @@
         return;
       }
 
-      container.innerHTML = books.map(book => {
+      container.innerHTML =
+        books.map(book => {
 
-        const cover = book.cover_url
-          ? `
-            <img
-              class="book-cover"
-              src="${escapeHtml(book.cover_url)}"
-              alt="${escapeHtml(book.title)} cover"
-            >
-          `
-          : `
-            <div class="book-placeholder">
-              ${escapeHtml(book.title)}
-            </div>
+          const cover =
+            book.cover_url
+            ? `
+              <img
+                class="book-cover"
+                src="${escapeHtml(book.cover_url)}"
+                alt="${escapeHtml(book.title)} cover"
+              >
+            `
+            : `
+              <div class="book-placeholder">
+                ${escapeHtml(book.title)}
+              </div>
+            `;
+
+          return `
+            <article class="card">
+
+              ${cover}
+
+              <div class="card-body">
+
+                <h3>
+                  ${escapeHtml(book.title)}
+                </h3>
+
+                <p>
+                  ${escapeHtml(
+                    book.description ||
+                    'Book information will appear here.'
+                  )}
+                </p>
+
+                ${
+                  book.genre_topic
+                  ? `
+                    <span class="tag">
+                      ${escapeHtml(book.genre_topic)}
+                    </span>
+                  `
+                  : ''
+                }
+
+              </div>
+
+            </article>
           `;
 
-        return `
-          <article class="card">
-            ${cover}
-
-            <div class="card-body">
-              <h3>${escapeHtml(book.title)}</h3>
-
-              <p>
-                ${escapeHtml(
-                  book.description || 'Book information will appear here.'
-                )}
-              </p>
-
-              ${
-                book.genre_topic
-                ? `<span class="tag">${escapeHtml(book.genre_topic)}</span>`
-                : ''
-              }
-            </div>
-          </article>
-        `;
-
-      }).join('');
+        }).join('');
 
     }
 
@@ -922,13 +1027,21 @@
             status
           )
         `)
-        .eq('reader_id', currentReader.id)
-        .order('created_at', {
-          ascending:false
-        });
+        .eq(
+          'reader_id',
+          currentReader.id
+        )
+        .order(
+          'created_at',
+          { ascending:false }
+        );
 
       if(error){
-        console.error('My books error:', error);
+
+        console.error(
+          'My books error:',
+          error
+        );
 
         container.innerHTML =
           '<div class="empty">Your books could not be loaded right now.</div>';
@@ -936,12 +1049,13 @@
         return;
       }
 
-      const books = (data || [])
-        .filter(item => item.books)
-        .map(item => ({
-          ...item.books,
-          readerStatus: item.status
-        }));
+      const books =
+        (data || [])
+          .filter(item => item.books)
+          .map(item => ({
+            ...item.books,
+            readerStatus:item.status
+          }));
 
       if(!books.length){
 
@@ -951,61 +1065,22 @@
         return;
       }
 
-      renderReaderBooks(container, books);
+      renderReaderBooks(
+        container,
+        books
+      );
 
     }
 
-    function renderReaderBooks(container, books){
-
-      container.innerHTML = books.map(book => {
-
-        const cover = book.cover_url
-          ? `
-            <img
-              class="book-cover"
-              src="${escapeHtml(book.cover_url)}"
-              alt="${escapeHtml(book.title)} cover"
-            >
-          `
-          : `
-            <div class="book-placeholder">
-              ${escapeHtml(book.title)}
-            </div>
-          `;
-
-        const status =
-          book.readerStatus
-          ? book.readerStatus.replace(/_/g,' ')
-          : 'My Book';
-
-        return `
-          <article class="card">
-            ${cover}
-
-            <div class="card-body">
-              <h3>${escapeHtml(book.title)}</h3>
-
-              <p>
-                ${escapeHtml(
-                  book.description || 'Book information will appear here.'
-                )}
-              </p>
-
-              <span class="tag">
-                ${escapeHtml(status)}
-              </span>
-            </div>
-          </article>
-        `;
-
-      }).join('');
-
-    }
-
-    async function loadBooksByStatus(status, containerId){
+    async function loadBooksByStatus(
+      status,
+      containerId
+    ){
 
       const container =
-        document.getElementById(containerId);
+        document.getElementById(
+          containerId
+        );
 
       if(!currentReader){
 
@@ -1034,14 +1109,25 @@
             status
           )
         `)
-        .eq('reader_id', currentReader.id)
-        .eq('status', status)
-        .order('created_at', {
-          ascending:false
-        });
+        .eq(
+          'reader_id',
+          currentReader.id
+        )
+        .eq(
+          'status',
+          status
+        )
+        .order(
+          'created_at',
+          { ascending:false }
+        );
 
       if(error){
-        console.error(`${status} error:`, error);
+
+        console.error(
+          `${status} error:`,
+          error
+        );
 
         container.innerHTML =
           '<div class="empty">Your reading information could not be loaded right now.</div>';
@@ -1049,39 +1135,102 @@
         return;
       }
 
-      const books = (data || [])
-        .filter(item => item.books)
-        .map(item => ({
-          ...item.books,
-          readerStatus: item.status
-        }));
+      const books =
+        (data || [])
+          .filter(item => item.books)
+          .map(item => ({
+            ...item.books,
+            readerStatus:item.status
+          }));
 
       if(!books.length){
 
         container.innerHTML =
-          `<div class="empty">You have no books marked as ${escapeHtml(
-            status.replace(/_/g,' ')
-          )} yet.</div>`;
+          `
+            <div class="empty">
+              You have no books marked as
+              ${escapeHtml(
+                status.replace(/_/g,' ')
+              )}
+              yet.
+            </div>
+          `;
 
         return;
       }
 
-      renderReaderBooks(container, books);
+      renderReaderBooks(
+        container,
+        books
+      );
+
+    }
+
+    function renderReaderBooks(
+      container,
+      books
+    ){
+
+      container.innerHTML =
+        books.map(book => {
+
+          const cover =
+            book.cover_url
+            ? `
+              <img
+                class="book-cover"
+                src="${escapeHtml(book.cover_url)}"
+                alt="${escapeHtml(book.title)} cover"
+              >
+            `
+            : `
+              <div class="book-placeholder">
+                ${escapeHtml(book.title)}
+              </div>
+            `;
+
+          const status =
+            book.readerStatus
+            ? book.readerStatus.replace(/_/g,' ')
+            : 'My Book';
+
+          return `
+            <article class="card">
+
+              ${cover}
+
+              <div class="card-body">
+
+                <h3>
+                  ${escapeHtml(book.title)}
+                </h3>
+
+                <p>
+                  ${escapeHtml(
+                    book.description ||
+                    'Book information will appear here.'
+                  )}
+                </p>
+
+                <span class="tag">
+                  ${escapeHtml(status)}
+                </span>
+
+              </div>
+
+            </article>
+          `;
+
+        }).join('');
 
     }
 
     async function loadNotifications(){
 
       const container =
-        document.getElementById('notifications');
-
-      if(!currentUser){
-
-        container.innerHTML =
-          '<div class="empty">Your notifications are unavailable.</div>';
-
-        return;
-      }
+        document.getElementById(
+          'notifications'
+        );
 
       const {
         data,
@@ -1096,13 +1245,21 @@
           is_read,
           created_at
         `)
-        .eq('profile_id', currentUser.id)
-        .order('created_at', {
-          ascending:false
-        });
+        .eq(
+          'profile_id',
+          currentUser.id
+        )
+        .order(
+          'created_at',
+          { ascending:false }
+        );
 
       if(error){
-        console.error('Notifications error:', error);
+
+        console.error(
+          'Notifications error:',
+          error
+        );
 
         container.innerHTML =
           '<div class="empty">Notifications could not be loaded right now.</div>';
@@ -1118,34 +1275,38 @@
         return;
       }
 
-      container.innerHTML = data.map(notification => {
+      container.innerHTML =
+        data.map(notification => {
 
-        return `
-          <div class="notification-item">
+          return `
+            <div class="notification-item">
 
-            <strong>
-              ${escapeHtml(
-                notification.title || 'Reader Reach Notification'
-              )}
-            </strong>
+              <strong>
+                ${escapeHtml(
+                  notification.title ||
+                  'Reader Reach Notification'
+                )}
+              </strong>
 
-            <p>
-              ${escapeHtml(
-                notification.message || ''
-              )}
-            </p>
+              <p>
+                ${escapeHtml(
+                  notification.message || ''
+                )}
+              </p>
 
-          </div>
-        `;
+            </div>
+          `;
 
-      }).join('');
+        }).join('');
 
     }
 
     function renderAccount(){
 
       const container =
-        document.getElementById('accountDetails');
+        document.getElementById(
+          'accountDetails'
+        );
 
       if(!currentUser || !currentProfile){
 
@@ -1158,30 +1319,52 @@
       container.innerHTML = `
 
         <div class="account-row">
-          <span class="account-label">Display Name</span>
+
+          <span class="account-label">
+            Display Name
+          </span>
+
           <span class="account-value">
             ${escapeHtml(
-              currentProfile.display_name || 'Reader'
+              currentProfile.display_name ||
+              'Reader'
             )}
           </span>
+
         </div>
 
         <div class="account-row">
-          <span class="account-label">Email</span>
-          <span class="account-value">
-            ${escapeHtml(currentUser.email || '')}
+
+          <span class="account-label">
+            Email
           </span>
+
+          <span class="account-value">
+            ${escapeHtml(
+              currentUser.email || ''
+            )}
+          </span>
+
         </div>
 
         <div class="account-row">
-          <span class="account-label">Account Type</span>
+
+          <span class="account-label">
+            Account Type
+          </span>
+
           <span class="account-value">
             Reader
           </span>
+
         </div>
 
         <div class="account-row">
-          <span class="account-label">Account Created</span>
+
+          <span class="account-label">
+            Account Created
+          </span>
+
           <span class="account-value">
             ${
               currentUser.created_at
@@ -1191,6 +1374,7 @@
               : '—'
             }
           </span>
+
         </div>
 
       `;
@@ -1205,7 +1389,10 @@
 
       if(error){
 
-        console.error('Sign out error:', error);
+        console.error(
+          'Sign out error:',
+          error
+        );
 
         showStatus(
           'Unable to sign out. Please try again.'
@@ -1214,32 +1401,41 @@
         return;
       }
 
-      window.location.href =
-        'auth.html?mode=signin';
+      window.location.replace(
+        'auth.html?mode=signin'
+      );
 
     }
 
     document
       .getElementById('navSignOut')
-      .addEventListener('click', signOut);
+      .addEventListener(
+        'click',
+        signOut
+      );
 
     document
       .getElementById('sideSignOut')
-      .addEventListener('click', signOut);
+      .addEventListener(
+        'click',
+        signOut
+      );
 
     async function initializeDashboard(){
 
       try{
 
         /*
-          Do NOT redirect immediately.
-
-          First allow Supabase to restore the persisted session.
+          Wait for Supabase's INITIAL_SESSION event.
         */
         const session =
-          await getAuthenticatedSession();
+          await getRealSession();
 
         if(!session){
+
+          console.log(
+            'No authenticated Reader Reach session found.'
+          );
 
           window.location.replace(
             'auth.html?mode=signin'
@@ -1251,28 +1447,34 @@
         currentSession = session;
         currentUser = session.user;
 
+        console.log(
+          'Authenticated Reader Reach user:',
+          currentUser.id
+        );
+
         /*
-          Confirm the profile belonging to the authenticated user.
+          Load the user's profile.
         */
         currentProfile =
-          await loadProfile(currentUser.id);
+          await loadProfile(
+            currentUser.id
+          );
 
         if(!currentProfile){
 
-          document.getElementById('welcomeName').textContent =
-            'Reader';
-
           showStatus(
-            'Your account profile is still loading.'
+            'Your account profile could not be loaded.'
           );
 
           return;
         }
 
         /*
-          Reader Dashboard is only for Reader accounts.
+          Only a Reader account should use this dashboard.
         */
-        if(currentProfile.role !== 'reader'){
+        if(
+          currentProfile.role !== 'reader'
+        ){
 
           window.location.replace(
             'auth.html?mode=account'
@@ -1298,16 +1500,15 @@
         ).textContent =
           currentUser.email || '';
 
-        /*
-          Load the reader record.
-        */
         currentReader =
-          await loadReader(currentUser.id);
+          await loadReader(
+            currentUser.id
+          );
 
         renderAccount();
 
         /*
-          Load dashboard content.
+          The dashboard remains open while its content loads.
         */
         await Promise.all([
           loadFeaturedBooks(),
@@ -1326,20 +1527,25 @@
       }catch(error){
 
         console.error(
-          'Reader Dashboard initialization error:',
+          'Reader Dashboard error:',
           error
         );
 
         /*
-          Only redirect when we know there is no authenticated
-          session. Other database errors should NOT throw the
-          reader out of the dashboard.
+          IMPORTANT:
+          Database errors must NOT send the reader back
+          to the sign-in page.
+
+          Only an actual missing session causes a redirect.
         */
         const {
           data
         } = await supabaseClient.auth.getSession();
 
-        if(!data || !data.session){
+        if(
+          !data ||
+          !data.session
+        ){
 
           window.location.replace(
             'auth.html?mode=signin'
@@ -1349,30 +1555,12 @@
         }
 
         showStatus(
-          'Your dashboard loaded, but some information could not be retrieved.'
+          'Your dashboard is open, but some information could not be loaded.'
         );
 
       }
 
     }
-
-    /*
-      Keep the dashboard session alive if Supabase refreshes
-      the access token.
-    */
-    supabaseClient.auth.onAuthStateChange(
-      (event, session) => {
-
-        if(event === 'SIGNED_OUT'){
-
-          window.location.replace(
-            'auth.html?mode=signin'
-          );
-
-        }
-
-      }
-    );
 
     initializeDashboard();
 

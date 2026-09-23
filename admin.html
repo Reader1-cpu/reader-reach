@@ -50,8 +50,6 @@
       display:none !important;
     }
 
-    /* LOGIN */
-
     #loginView{
       min-height:100vh;
       display:flex;
@@ -205,8 +203,6 @@
       border:1px solid #c8ddce;
     }
 
-    /* DASHBOARD */
-
     #dashboardView{
       min-height:100vh;
     }
@@ -324,8 +320,6 @@
       line-height:1.5;
     }
 
-    /* AUTHOR REQUESTS */
-
     .request-list{
       display:flex;
       flex-direction:column;
@@ -378,18 +372,6 @@
       gap:9px;
       flex-wrap:wrap;
     }
-
-    .request-status{
-      display:inline-flex;
-      padding:5px 9px;
-      border-radius:999px;
-      font-size:11px;
-      font-weight:700;
-      background:#f4eadc;
-      color:var(--brown);
-    }
-
-    /* CALENDAR */
 
     .grid{
       display:grid;
@@ -581,7 +563,6 @@
 
 <body>
 
-  <!-- LOGIN -->
   <section id="loginView">
 
     <div class="login-wrap">
@@ -652,7 +633,6 @@
   </section>
 
 
-  <!-- DASHBOARD -->
   <section
     id="dashboardView"
     class="hidden"
@@ -694,7 +674,6 @@
       </div>
 
 
-      <!-- STATS -->
       <div class="stats">
 
         <div class="stat">
@@ -720,7 +699,6 @@
       </div>
 
 
-      <!-- AUTHORS AWAITING APPROVAL -->
       <section class="section">
 
         <div class="section-head">
@@ -758,7 +736,6 @@
       </section>
 
 
-      <!-- CALENDAR -->
       <section class="section">
 
         <div class="section-head">
@@ -784,7 +761,6 @@
 
         <div class="grid">
 
-          <!-- FORM -->
           <div class="schedule-form">
 
             <h3 id="formTitle">
@@ -930,7 +906,6 @@
           </div>
 
 
-          <!-- LIST -->
           <div>
 
             <div
@@ -969,7 +944,6 @@
 
     const SUPABASE_PUBLISHABLE_KEY =
       'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
-
 
     const supabaseClient =
       window.supabase.createClient(
@@ -1345,9 +1319,10 @@
         }
 
 
-        await checkAdmin();
+        const isAdmin =
+          await checkAdmin();
 
-        if(currentUser){
+        if(isAdmin){
 
           await loadDashboard();
 
@@ -1391,45 +1366,47 @@
         '';
 
 
+      /*
+       * Load the requests first.
+       * We deliberately do not use a nested profiles()
+       * relationship because access_requests has more than
+       * one foreign key pointing to profiles.
+       */
+
       const {
-        data,
-        error
+        data:requests,
+        error:requestError
       } =
         await supabaseClient
           .from('access_requests')
-          .select(`
-            id,
-            profile_id,
-            requested_role,
-            message,
-            status,
-            reviewed_by,
-            created_at,
-            profiles (
-              id,
-              display_name,
-              role
-            )
-          `)
+          .select(
+            'id, profile_id, requested_role, message, status, reviewed_by, created_at'
+          )
           .eq('requested_role', 'author')
           .eq('status', 'pending')
-          .order('created_at', {
-            ascending:true
-          });
+          .order(
+            'created_at',
+            {
+              ascending:true
+            }
+          );
 
 
-      authorRequestsLoading.style.display =
-        'none';
+      if(requestError){
 
+        console.error(
+          'Author request query error:',
+          requestError
+        );
 
-      if(error){
-
-        console.error(error);
+        authorRequestsLoading.style.display =
+          'none';
 
         authorRequestList.innerHTML =
           '<div class="empty">Unable to load author requests.</div>';
 
         toast(
+          requestError.message ||
           'Unable to load author requests.'
         );
 
@@ -1438,8 +1415,98 @@
       }
 
 
+      const requestRows =
+        requests || [];
+
+
+      /*
+       * Load applicant profiles separately.
+       */
+
+      const profileIds =
+        [
+          ...new Set(
+            requestRows
+              .map(
+                request => request.profile_id
+              )
+              .filter(Boolean)
+          )
+        ];
+
+
+      let profilesById =
+        {};
+
+
+      if(profileIds.length){
+
+        const {
+          data:profiles,
+          error:profileError
+        } =
+          await supabaseClient
+            .from('profiles')
+            .select(
+              'id, display_name, role'
+            )
+            .in(
+              'id',
+              profileIds
+            );
+
+
+        if(profileError){
+
+          console.error(
+            'Author applicant profile query error:',
+            profileError
+          );
+
+          authorRequestsLoading.style.display =
+            'none';
+
+          authorRequestList.innerHTML =
+            '<div class="empty">The author requests were found, but the applicant profiles could not be loaded.</div>';
+
+          toast(
+            profileError.message ||
+            'Unable to load applicant profiles.'
+          );
+
+          return;
+
+        }
+
+
+        (profiles || []).forEach(
+          profile => {
+
+            profilesById[
+              profile.id
+            ] =
+              profile;
+
+          }
+        );
+
+      }
+
+
       authorRequests =
-        data || [];
+        requestRows.map(
+          request => ({
+            ...request,
+            profiles:
+              profilesById[
+                request.profile_id
+              ] || null
+          })
+        );
+
+
+      authorRequestsLoading.style.display =
+        'none';
 
       renderAuthorRequests();
 
@@ -1462,104 +1529,108 @@
       }
 
 
-      authorRequests.forEach(request => {
+      authorRequests.forEach(
+        request => {
 
-        const profile =
-          request.profiles || {};
+          const profile =
+            request.profiles || {};
 
-        const item =
-          document.createElement('article');
+          const item =
+            document.createElement(
+              'article'
+            );
 
-        item.className =
-          'request-item';
-
-
-        const createdDate =
-          request.created_at
-            ? new Date(
-                request.created_at
-              ).toLocaleString(
-                undefined,
-                {
-                  year:'numeric',
-                  month:'long',
-                  day:'numeric',
-                  hour:'numeric',
-                  minute:'2-digit'
-                }
-              )
-            : 'Date unavailable';
+          item.className =
+            'request-item';
 
 
-        item.innerHTML = `
-
-          <div class="request-top">
-
-            <div>
-
-              <div class="request-name">
-                ${escapeHtml(
-                  profile.display_name ||
-                  'Unnamed applicant'
-                )}
-              </div>
-
-              <div class="request-role">
-                Requested role:
-                ${escapeHtml(
-                  request.requested_role ||
-                  'author'
-                )}
-              </div>
-
-            </div>
-
-            <div class="request-date">
-              ${escapeHtml(createdDate)}
-            </div>
-
-          </div>
+          const createdDate =
+            request.created_at
+              ? new Date(
+                  request.created_at
+                ).toLocaleString(
+                  undefined,
+                  {
+                    year:'numeric',
+                    month:'long',
+                    day:'numeric',
+                    hour:'numeric',
+                    minute:'2-digit'
+                  }
+                )
+              : 'Date unavailable';
 
 
-          ${
-            request.message
-              ? `
-                <div class="request-message">
-                  ${escapeHtml(request.message)}
+          item.innerHTML = `
+
+            <div class="request-top">
+
+              <div>
+
+                <div class="request-name">
+                  ${escapeHtml(
+                    profile.display_name ||
+                    'Unnamed applicant'
+                  )}
                 </div>
-              `
-              : ''
-          }
+
+                <div class="request-role">
+                  Requested role:
+                  ${escapeHtml(
+                    request.requested_role ||
+                    'author'
+                  )}
+                </div>
+
+              </div>
+
+              <div class="request-date">
+                ${escapeHtml(createdDate)}
+              </div>
+
+            </div>
 
 
-          <div class="request-actions">
-
-            <button
-              class="btn success"
-              type="button"
-              onclick="approveAuthorRequest('${request.id}')"
-            >
-              Approve Author
-            </button>
-
-            <button
-              class="btn danger"
-              type="button"
-              onclick="rejectAuthorRequest('${request.id}')"
-            >
-              Reject
-            </button>
-
-          </div>
-
-        `;
+            ${
+              request.message
+                ? `
+                  <div class="request-message">
+                    ${escapeHtml(request.message)}
+                  </div>
+                `
+                : ''
+            }
 
 
-        authorRequestList.appendChild(
-          item
-        );
+            <div class="request-actions">
 
-      });
+              <button
+                class="btn success"
+                type="button"
+                onclick="approveAuthorRequest('${request.id}')"
+              >
+                Approve Author
+              </button>
+
+              <button
+                class="btn danger"
+                type="button"
+                onclick="rejectAuthorRequest('${request.id}')"
+              >
+                Reject
+              </button>
+
+            </div>
+
+          `;
+
+
+          authorRequestList.appendChild(
+            item
+          );
+
+        }
+      );
 
     }
 
@@ -1569,7 +1640,8 @@
 
         const request =
           authorRequests.find(
-            item => item.id === requestId
+            item =>
+              item.id === requestId
           );
 
 
@@ -1600,32 +1672,24 @@
 
         try{
 
-          /*
-           * First create the author record.
-           * The profile remains a reader until this
-           * record is successfully created.
-           */
-
           const {
             error:authorInsertError
           } =
             await supabaseClient
               .from('authors')
               .insert({
-                profile_id:request.profile_id,
-                display_name:displayName,
-                status:'approved',
-                reviewed_by:currentUser.id
+                profile_id:
+                  request.profile_id,
+                display_name:
+                  displayName,
+                status:
+                  'approved',
+                reviewed_by:
+                  currentUser.id
               });
 
 
           if(authorInsertError){
-
-            /*
-             * If an author record already exists,
-             * report that instead of silently changing
-             * the account.
-             */
 
             console.error(
               authorInsertError
@@ -1641,10 +1705,6 @@
           }
 
 
-          /*
-           * Change the user's application role to author.
-           */
-
           const {
             error:profileError
           } =
@@ -1652,9 +1712,13 @@
               .from('profiles')
               .update({
                 role:'author',
-                updated_at:new Date().toISOString()
+                updated_at:
+                  new Date().toISOString()
               })
-              .eq('id', request.profile_id);
+              .eq(
+                'id',
+                request.profile_id
+              );
 
 
           if(profileError){
@@ -1662,11 +1726,6 @@
             console.error(
               profileError
             );
-
-            /*
-             * Remove the newly created author record
-             * if the role update failed.
-             */
 
             await supabaseClient
               .from('authors')
@@ -1686,10 +1745,6 @@
           }
 
 
-          /*
-           * Mark the access request approved.
-           */
-
           const {
             error:requestError
           } =
@@ -1697,10 +1752,15 @@
               .from('access_requests')
               .update({
                 status:'approved',
-                reviewed_by:currentUser.id,
-                updated_at:new Date().toISOString()
+                reviewed_by:
+                  currentUser.id,
+                updated_at:
+                  new Date().toISOString()
               })
-              .eq('id', requestId);
+              .eq(
+                'id',
+                requestId
+              );
 
 
           if(requestError){
@@ -1708,14 +1768,6 @@
             console.error(
               requestError
             );
-
-            /*
-             * We keep the author/profile changes because
-             * the account has already been granted author
-             * access. The request can be inspected and
-             * corrected from the database if this final
-             * update fails.
-             */
 
             toast(
               requestError.message ||
@@ -1760,7 +1812,8 @@
 
         const request =
           authorRequests.find(
-            item => item.id === requestId
+            item =>
+              item.id === requestId
           );
 
 
@@ -1796,10 +1849,15 @@
             .from('access_requests')
             .update({
               status:'rejected',
-              reviewed_by:currentUser.id,
-              updated_at:new Date().toISOString()
+              reviewed_by:
+                currentUser.id,
+              updated_at:
+                new Date().toISOString()
             })
-            .eq('id', requestId);
+            .eq(
+              'id',
+              requestId
+            );
 
 
         if(error){
@@ -1871,10 +1929,16 @@
               display_name
             )
           `)
-          .eq('status', 'approved')
-          .order('title', {
-            ascending:true
-          });
+          .eq(
+            'status',
+            'approved'
+          )
+          .order(
+            'title',
+            {
+              ascending:true
+            }
+          );
 
 
       if(error){
@@ -1898,31 +1962,35 @@
         '<option value="">Select an approved book</option>';
 
 
-      approvedBooks.forEach(book => {
+      approvedBooks.forEach(
+        book => {
 
-        const option =
-          document.createElement('option');
+          const option =
+            document.createElement(
+              'option'
+            );
 
-        option.value =
-          book.id;
-
-
-        const authorName =
-          book.authors &&
-          book.authors.display_name
-            ? ` — ${book.authors.display_name}`
-            : '';
+          option.value =
+            book.id;
 
 
-        option.textContent =
-          `${book.title}${authorName}`;
+          const authorName =
+            book.authors &&
+            book.authors.display_name
+              ? ` — ${book.authors.display_name}`
+              : '';
 
 
-        bookSelect.appendChild(
-          option
-        );
+          option.textContent =
+            `${book.title}${authorName}`;
 
-      });
+
+          bookSelect.appendChild(
+            option
+          );
+
+        }
+      );
 
 
       document.getElementById(
@@ -1948,10 +2016,16 @@
             display_name,
             active
           `)
-          .eq('active', true)
-          .order('display_name', {
-            ascending:true
-          });
+          .eq(
+            'active',
+            true
+          )
+          .order(
+            'display_name',
+            {
+              ascending:true
+            }
+          );
 
 
       if(error){
@@ -1979,7 +2053,9 @@
         moderator => {
 
           const option =
-            document.createElement('option');
+            document.createElement(
+              'option'
+            );
 
           option.value =
             moderator.id;
@@ -2195,20 +2271,16 @@
           const book =
             schedule.books || {};
 
-
           const author =
             book.authors || {};
 
-
           const moderator =
             schedule.moderators || {};
-
 
           const item =
             document.createElement(
               'article'
             );
-
 
           item.className =
             'schedule-item';
@@ -2300,7 +2372,6 @@
               >
                 Edit
               </button>
-
 
               ${
                 schedule.status !==

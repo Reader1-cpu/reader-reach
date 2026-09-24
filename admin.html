@@ -996,6 +996,7 @@
               <div class="actions">
                 <button class="btn small" onclick="viewApprovedAuthor('${author.id}')">View</button>
                 <button class="btn primary small" onclick="viewAuthorBooks('${author.id}')">View Books</button>
+                <button class="btn danger small" onclick="removeAuthor('${author.id}')">Remove Author</button>
               </div>
 
             </div>
@@ -1781,8 +1782,8 @@
               ${featured
                 ? '<button class="btn small feature-active" disabled>Featured</button>'
                 : `<button class="btn small" onclick="featureApprovedBook('${book.id}')">Feature</button>`}
-              <button class="btn small" onclick="viewApprovedBook('${book.id}')" aria-label="More options">⋯</button>
               <button class="btn danger small" onclick="removeBook('${book.id}')">Remove Book</button>
+              <button class="btn small" onclick="viewApprovedBook('${book.id}')" aria-label="More options">⋯</button>
             </div>
           </div>
         `;
@@ -1827,6 +1828,8 @@
         </div>
         <div class="modal-actions">
           <button class="btn primary small" onclick="viewAuthorBooks('${author.id}')">View Books (${(books || []).length})</button>
+          <button class="btn danger small" onclick="removeAuthor('${author.id}')">Remove Author</button>
+          <button class="btn small" onclick="closeDetailModal()">Close</button>
         </div>
       `);
     }
@@ -1942,67 +1945,10 @@
           ${featured
             ? '<button class="btn small feature-active" disabled>Already Featured</button>'
             : `<button class="btn primary small" onclick="featureApprovedBook('${book.id}')">Feature This Book</button>`}
+          <button class="btn danger small" onclick="removeBook('${book.id}')">Remove Book</button>
           <button class="btn small" onclick="closeDetailModal()">Close</button>
         </div>
       `);
-    }
-
-    async function removeBook(bookId){
-      if(!currentUser){ showToast('Administrator session not found.'); return; }
-
-      const book = approvedBooks.find(item => item.id === bookId);
-      if(!book){ showToast('Book could not be found.'); return; }
-
-      const confirmed = window.confirm(`Remove "${book.title || 'this book'}" from Reader Reach? This will remove the book and its connected discussion, schedule, featured record, trailer and Flipper Guide records. This action cannot be undone.`);
-      if(!confirmed) return;
-
-      const {data:guides,error:guideLookupError} = await supabaseClient
-        .from('flipper_guides').select('id').eq('book_id',bookId);
-      if(guideLookupError){ console.error(guideLookupError); showToast('Could not prepare the book for removal.'); return; }
-
-      const guideIds = (guides || []).map(g => g.id);
-
-      if(guideIds.length){
-        const {error} = await supabaseClient.from('flipper_guide_access').delete().in('guide_id',guideIds);
-        if(error){ console.error(error); showToast('Could not remove Flipper Guide access records.'); return; }
-      }
-
-      const {data:discussions,error:discussionLookupError} = await supabaseClient
-        .from('discussions').select('id').eq('book_id',bookId);
-      if(discussionLookupError){ console.error(discussionLookupError); showToast('Could not prepare discussion records for removal.'); return; }
-
-      const discussionIds = (discussions || []).map(d => d.id);
-      if(discussionIds.length){
-        const {error} = await supabaseClient.from('discussion_messages').delete().in('discussion_id',discussionIds);
-        if(error){ console.error(error); showToast('Could not remove discussion messages.'); return; }
-        const {error:discussionDeleteError} = await supabaseClient.from('discussions').delete().eq('book_id',bookId);
-        if(discussionDeleteError){ console.error(discussionDeleteError); showToast('Could not remove the book discussion.'); return; }
-      }
-
-      const cleanup = [
-        ['homepage_featured_books','book_id'],
-        ['feature_schedules','book_id'],
-        ['book_trailers','book_id'],
-        ['flipper_guides','book_id'],
-        ['reader_books','book_id'],
-        ['notifications','related_book_id']
-      ];
-
-      for(const [table,column] of cleanup){
-        const {error} = await supabaseClient.from(table).delete().eq(column,bookId);
-        if(error){ console.error(`Remove ${table} error:`,error); showToast(`Could not remove connected ${table} records.`); return; }
-      }
-
-      const {error:bookDeleteError} = await supabaseClient.from('books').delete().eq('id',bookId);
-      if(bookDeleteError){ console.error('Book deletion error:',bookDeleteError); showToast('Could not remove the book: ' + bookDeleteError.message); return; }
-
-      featuredBookIds.delete(bookId);
-      approvedBooks = approvedBooks.filter(item => item.id !== bookId);
-      renderApprovedBooks();
-      populateBookSelect();
-      closeDetailModal();
-      showToast('Book and its connected records were removed.');
-      await loadStats();
     }
 
     async function featureApprovedBook(bookId){
@@ -2604,6 +2550,15 @@
                 Reader passwords are never displayed to administrators.
               </div>
 
+              <div class="actions">
+                <button
+                  class="btn danger small"
+                  onclick="removeReader('${reader.profile_id}')"
+                >
+                  Remove Reader
+                </button>
+              </div>
+
             </div>
           `;
 
@@ -3044,6 +2999,216 @@
       await loadDiscussions();
     }
 
+
+    /*
+      ADMIN REMOVAL CONTROLS
+
+      These actions call protected SECURITY DEFINER database functions.
+      They are intentionally confirmed before execution.
+    */
+
+    async function removeBook(bookId){
+      if(!currentUser){
+        showToast('Administrator session not found.');
+        return;
+      }
+
+      const book =
+        approvedBooks.find(item => item.id === bookId)
+        || pendingBooks.find(item => item.id === bookId);
+
+      if(!book){
+        showToast('Book could not be found.');
+        return;
+      }
+
+      const title =
+        book.title || 'this book';
+
+      const confirmed = window.confirm(
+        `Remove "${title}" from Reader Reach?\n\n` +
+        `This permanently removes the book and its connected ` +
+        `discussions, schedules, trailer record, Flipper Guide record, ` +
+        `reader access records and homepage Featured record.\n\n` +
+        `The author account will NOT be removed.\n\n` +
+        `This action cannot be undone.`
+      );
+
+      if(!confirmed){
+        return;
+      }
+
+      showToast('Removing book...');
+
+      const {data,error} =
+        await supabaseClient.rpc(
+          'admin_remove_book',
+          {p_book_id:bookId}
+        );
+
+      if(error){
+        console.error('Admin remove book error:',error);
+        showToast('Could not remove book: ' + error.message);
+        return;
+      }
+
+      if(!data || data.success !== true){
+        console.error('Unexpected remove book response:',data);
+        showToast('The book removal was not confirmed.');
+        return;
+      }
+
+      featuredBookIds.delete(bookId);
+      closeDetailModal();
+
+      showToast('Book removed successfully.');
+
+      await Promise.all([
+        loadPendingBooks(),
+        loadApprovedBooks(),
+        loadSchedules(),
+        loadDiscussions(),
+        loadStats()
+      ]);
+    }
+
+    async function removeAuthor(authorId){
+      if(!currentUser){
+        showToast('Administrator session not found.');
+        return;
+      }
+
+      const author =
+        approvedAuthors.find(item => item.id === authorId);
+
+      if(!author){
+        showToast('Approved author could not be found.');
+        return;
+      }
+
+      const authorName =
+        author.author_name
+        || (author.profiles || {}).display_name
+        || 'this author';
+
+      const {data:authorBooks,error:booksError} =
+        await supabaseClient
+          .from('books')
+          .select('id,title')
+          .eq('author_id',authorId);
+
+      if(booksError){
+        console.error('Author book count error:',booksError);
+        showToast('Could not check this author before removal.');
+        return;
+      }
+
+      const bookCount = (authorBooks || []).length;
+
+      const confirmed = window.confirm(
+        `Remove "${authorName}" as an approved Reader Reach author?\n\n` +
+        `${bookCount} book${bookCount === 1 ? '' : 's'} belonging to this author ` +
+        `will also be removed with their connected Reader Reach content.\n\n` +
+        `The Supabase login account will NOT be deleted; the profile will return to Reader status.\n\n` +
+        `This action cannot be undone.`
+      );
+
+      if(!confirmed){
+        return;
+      }
+
+      showToast('Removing author...');
+
+      const {data,error} =
+        await supabaseClient.rpc(
+          'admin_remove_author',
+          {p_author_id:authorId}
+        );
+
+      if(error){
+        console.error('Admin remove author error:',error);
+        showToast('Could not remove author: ' + error.message);
+        return;
+      }
+
+      if(!data || data.success !== true){
+        console.error('Unexpected remove author response:',data);
+        showToast('The author removal was not confirmed.');
+        return;
+      }
+
+      closeDetailModal();
+
+      showToast('Author removed successfully.');
+
+      await Promise.all([
+        loadAuthorRequests(),
+        loadApprovedAuthors(),
+        loadPendingBooks(),
+        loadApprovedBooks(),
+        loadReaders(),
+        loadSchedules(),
+        loadDiscussions(),
+        loadStats()
+      ]);
+    }
+
+    async function removeReader(profileId){
+      if(!currentUser){
+        showToast('Administrator session not found.');
+        return;
+      }
+
+      const reader =
+        document.querySelector(
+          `[onclick="removeReader('${profileId}')"]`
+        );
+
+      const readerName =
+        reader
+          ? reader.closest('.request-item')?.querySelector('.item-title')?.textContent?.trim()
+          : 'this reader';
+
+      const confirmed = window.confirm(
+        `Remove "${readerName || 'this reader'}" from Reader Reach?\n\n` +
+        `This removes the Reader profile, reader notifications, ` +
+        `bookshelf records, Flipper Guide access and reader discussion/conversation data.\n\n` +
+        `The Supabase login account itself will NOT be deleted.\n\n` +
+        `This action cannot be undone.`
+      );
+
+      if(!confirmed){
+        return;
+      }
+
+      showToast('Removing reader...');
+
+      const {data,error} =
+        await supabaseClient.rpc(
+          'admin_remove_reader',
+          {p_profile_id:profileId}
+        );
+
+      if(error){
+        console.error('Admin remove reader error:',error);
+        showToast('Could not remove reader: ' + error.message);
+        return;
+      }
+
+      if(!data || data.success !== true){
+        console.error('Unexpected remove reader response:',data);
+        showToast('The reader removal was not confirmed.');
+        return;
+      }
+
+      showToast('Reader removed successfully.');
+
+      await Promise.all([
+        loadReaders(),
+        loadStats()
+      ]);
+    }
+
     async function loadStats(){
 
       const {
@@ -3332,9 +3497,11 @@
     window.viewAuthorBooks = viewAuthorBooks;
     window.viewApprovedBook = viewApprovedBook;
     window.featureApprovedBook = featureApprovedBook;
-    window.removeBook = removeBook;
     window.toggleTrailerHomepageVisibility = toggleTrailerHomepageVisibility;
     window.closeDetailModal = closeDetailModal;
+    window.removeBook = removeBook;
+    window.removeAuthor = removeAuthor;
+    window.removeReader = removeReader;
 
     window.approveAuthorRequest =
       approveAuthorRequest;

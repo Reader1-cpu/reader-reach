@@ -150,6 +150,13 @@
       font-size:13px;
     }
 
+    .btn.link{
+      display:inline-block;
+      text-decoration:none;
+      background:#ead9c6;
+      color:#4b2f24;
+    }
+
     .hidden{
       display:none !important;
     }
@@ -294,6 +301,106 @@
       font-weight:700;
     }
 
+    .status.pending{
+      background:#f1dfc3;
+      color:#765126;
+    }
+
+    .status.complete{
+      background:#dce9d9;
+      color:#355b35;
+    }
+
+    .status.incomplete{
+      background:#f1d9cf;
+      color:#7b3024;
+    }
+
+    .book-detail-grid{
+      display:grid;
+      grid-template-columns:180px 1fr;
+      gap:18px;
+      margin-top:16px;
+    }
+
+    .cover-preview{
+      width:180px;
+      height:240px;
+      border-radius:10px;
+      border:1px solid #eadccc;
+      background:#f7efe4;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#806b5d;
+      text-align:center;
+      padding:12px;
+    }
+
+    .cover-preview img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .detail-list{
+      display:grid;
+      gap:12px;
+    }
+
+    .detail-block{
+      background:#fdf7ef;
+      border:1px solid #eadccc;
+      border-radius:10px;
+      padding:12px 14px;
+    }
+
+    .detail-label{
+      color:#806b5d;
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:4px;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    .detail-value{
+      color:#4b2f24;
+      line-height:1.6;
+      white-space:pre-wrap;
+    }
+
+    .missing-list{
+      margin:8px 0 0 20px;
+      color:#7b3024;
+      line-height:1.6;
+    }
+
+    .trailer-box{
+      margin-top:16px;
+      padding:16px;
+      border-radius:12px;
+      background:#f7efe4;
+      border:1px solid #eadccc;
+    }
+
+    .trailer-box video{
+      width:100%;
+      max-height:420px;
+      border-radius:10px;
+      background:#2f211a;
+      display:block;
+      margin-top:12px;
+    }
+
+    .review-box{
+      margin-top:16px;
+      padding-top:16px;
+      border-top:1px solid #eadccc;
+    }
+
     .toast{
       position:fixed;
       right:22px;
@@ -322,6 +429,15 @@
 
       .grid-2{
         grid-template-columns:1fr;
+      }
+
+      .book-detail-grid{
+        grid-template-columns:1fr;
+      }
+
+      .cover-preview{
+        width:160px;
+        height:215px;
       }
     }
 
@@ -353,6 +469,11 @@
 
       .dashboard-header h1{
         font-size:28px;
+      }
+
+      .cover-preview{
+        width:100%;
+        max-width:220px;
       }
     }
   </style>
@@ -429,6 +550,28 @@
 
           <div id="authorRequestList" class="request-list">
             <div class="empty">Loading author requests...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PENDING BOOKS -->
+      <section class="section">
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Books Awaiting Approval</h2>
+              <p class="muted">
+                Review submitted books, covers and trailers before approving them.
+              </p>
+            </div>
+
+            <button id="refreshPendingBooksBtn" class="btn small">
+              Refresh
+            </button>
+          </div>
+
+          <div id="pendingBookList" class="book-list">
+            <div class="empty">Loading pending books...</div>
           </div>
         </div>
       </section>
@@ -550,6 +693,7 @@
 
     let currentUser = null;
     let authorRequests = [];
+    let pendingBooks = [];
     let approvedBooks = [];
     let moderators = [];
 
@@ -564,6 +708,9 @@
 
     const authorRequestList =
       document.getElementById('authorRequestList');
+
+    const pendingBookList =
+      document.getElementById('pendingBookList');
 
     const approvedBookList =
       document.getElementById('approvedBookList');
@@ -641,6 +788,7 @@
         .maybeSingle();
 
       if(profileError){
+
         console.error(
           'Admin profile error:',
           profileError
@@ -654,6 +802,7 @@
       }
 
       if(!profile || profile.role !== 'admin'){
+
         await supabaseClient.auth.signOut();
 
         showLogin(
@@ -908,14 +1057,6 @@
         profile.display_name ||
         'Unnamed Author';
 
-      /*
-        Step 1:
-        Create the author record.
-
-        IMPORTANT:
-        The authors table uses author_name,
-        not display_name.
-      */
       const {
         data:author,
         error:authorError
@@ -947,10 +1088,6 @@
         return;
       }
 
-      /*
-        Step 2:
-        Change the profile role to author.
-      */
       const {
         error:profileError
       } = await supabaseClient
@@ -967,10 +1104,6 @@
           profileError
         );
 
-        /*
-          Roll back the author record if
-          the profile role cannot be changed.
-        */
         await supabaseClient
           .from('authors')
           .delete()
@@ -984,10 +1117,6 @@
         return;
       }
 
-      /*
-        Step 3:
-        Mark the access request approved.
-      */
       const {
         error:requestError
       } = await supabaseClient
@@ -1014,6 +1143,16 @@
         return;
       }
 
+      /*
+        Notify the newly approved author.
+      */
+      await createNotification({
+        profileId:request.profile_id,
+        type:'author_approved',
+        title:'Author access approved',
+        message:'Your Reader Reach author access has been approved.'
+      });
+
       showToast(
         'Author approved successfully.'
       );
@@ -1030,6 +1169,11 @@
         );
         return;
       }
+
+      const request =
+        authorRequests.find(
+          item => item.id === requestId
+        );
 
       const {
         error
@@ -1057,11 +1201,766 @@
         return;
       }
 
+      if(request){
+
+        await createNotification({
+          profileId:request.profile_id,
+          type:'author_rejected',
+          title:'Author access request rejected',
+          message:'Your Reader Reach author access request was not approved.'
+        });
+      }
+
       showToast(
         'Author request rejected.'
       );
 
       await loadAuthorRequests();
+    }
+
+    /*
+      BOOK NOTIFICATIONS
+    */
+    async function createNotification({
+      profileId,
+      type,
+      title,
+      message,
+      relatedBookId = null,
+      relatedScheduleId = null
+    }){
+
+      if(!profileId){
+        return;
+      }
+
+      const {
+        error
+      } = await supabaseClient
+        .from('notifications')
+        .insert({
+          profile_id:profileId,
+          type:type,
+          title:title,
+          message:message,
+          related_book_id:relatedBookId,
+          related_schedule_id:relatedScheduleId,
+          is_read:false
+        });
+
+      if(error){
+
+        console.error(
+          'Notification creation error:',
+          error
+        );
+      }
+    }
+
+    async function notifyModeratorsOfApprovedBook(book){
+
+      const {
+        data:activeModerators,
+        error:moderatorError
+      } = await supabaseClient
+        .from('moderators')
+        .select(`
+          profile_id,
+          active
+        `)
+        .eq('active',true);
+
+      if(moderatorError){
+
+        console.error(
+          'Moderator notification lookup error:',
+          moderatorError
+        );
+
+        return;
+      }
+
+      for(const moderator of activeModerators || []){
+
+        await createNotification({
+          profileId:moderator.profile_id,
+          type:'new_approved_book',
+          title:'New approved book',
+          message:
+            `"${book.title}" by ${book.authorName || 'an approved author'} is now approved and available for feature scheduling.`,
+          relatedBookId:book.id
+        });
+      }
+    }
+
+    /*
+      PENDING BOOKS
+
+      We load books separately from authors and trailers
+      to avoid relationship ambiguity and to keep the
+      Admin review data reliable.
+    */
+    async function loadPendingBooks(){
+
+      pendingBookList.innerHTML =
+        '<div class="empty">Loading pending books...</div>';
+
+      const {
+        data:books,
+        error:booksError
+      } = await supabaseClient
+        .from('books')
+        .select(`
+          id,
+          author_id,
+          title,
+          description,
+          genre_topic,
+          who_its_for,
+          availability,
+          cover_url,
+          status,
+          submitted_at,
+          reviewed_at,
+          reviewed_by,
+          submission_complete,
+          missing_fields
+        `)
+        .eq('status','pending')
+        .order('submitted_at',{
+          ascending:true
+        });
+
+      if(booksError){
+
+        console.error(
+          'Pending books error:',
+          booksError
+        );
+
+        pendingBookList.innerHTML =
+          '<div class="empty">Unable to load pending books.</div>';
+
+        showToast(
+          'Could not load pending books.'
+        );
+
+        return;
+      }
+
+      if(!books || books.length === 0){
+
+        pendingBooks = [];
+
+        pendingBookList.innerHTML = `
+          <div class="empty">
+            No books are currently waiting for approval.
+          </div>
+        `;
+
+        return;
+      }
+
+      const authorIds =
+        [...new Set(
+          books.map(book => book.author_id)
+        )];
+
+      const bookIds =
+        [...new Set(
+          books.map(book => book.id)
+        )];
+
+      const [
+        authorsResult,
+        trailersResult
+      ] = await Promise.all([
+
+        supabaseClient
+          .from('authors')
+          .select(`
+            id,
+            profile_id,
+            author_name,
+            bio,
+            status
+          `)
+          .in('id',authorIds),
+
+        supabaseClient
+          .from('book_trailers')
+          .select(`
+            id,
+            book_id,
+            trailer_url,
+            title,
+            description
+          `)
+          .in('book_id',bookIds)
+      ]);
+
+      if(authorsResult.error){
+
+        console.error(
+          'Pending book authors error:',
+          authorsResult.error
+        );
+
+        pendingBookList.innerHTML =
+          '<div class="empty">Unable to load book author details.</div>';
+
+        return;
+      }
+
+      if(trailersResult.error){
+
+        console.error(
+          'Pending book trailers error:',
+          trailersResult.error
+        );
+
+        pendingBookList.innerHTML =
+          '<div class="empty">Unable to load book trailer details.</div>';
+
+        return;
+      }
+
+      const authorMap =
+        new Map(
+          (authorsResult.data || []).map(
+            author => [
+              author.id,
+              author
+            ]
+          )
+        );
+
+      const trailerMap =
+        new Map(
+          (trailersResult.data || []).map(
+            trailer => [
+              trailer.book_id,
+              trailer
+            ]
+          )
+        );
+
+      pendingBooks =
+        books.map(book => ({
+          ...book,
+          author:
+            authorMap.get(book.author_id)
+            || null,
+          trailer:
+            trailerMap.get(book.id)
+            || null
+        }));
+
+      renderPendingBooks();
+    }
+
+    function renderPendingBooks(){
+
+      if(!pendingBooks.length){
+
+        pendingBookList.innerHTML = `
+          <div class="empty">
+            No books are currently waiting for approval.
+          </div>
+        `;
+
+        return;
+      }
+
+      pendingBookList.innerHTML =
+        pendingBooks.map(book => {
+
+          const author =
+            book.author || {};
+
+          const trailer =
+            book.trailer || {};
+
+          const missingFields =
+            Array.isArray(book.missing_fields)
+              ? book.missing_fields
+              : [];
+
+          const submissionComplete =
+            book.submission_complete === true;
+
+          return `
+            <div class="book-item">
+
+              <div class="book-top">
+
+                <div>
+                  <div class="item-title">
+                    ${escapeHtml(
+                      book.title ||
+                      'Untitled Book Submission'
+                    )}
+                  </div>
+
+                  <div class="item-meta">
+                    Author:
+                    ${escapeHtml(
+                      author.author_name ||
+                      'Unknown author'
+                    )}
+                    <br>
+                    Submitted:
+                    ${escapeHtml(
+                      formatDate(book.submitted_at)
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <span class="status pending">
+                    Pending Review
+                  </span>
+
+                  <span class="status ${
+                    submissionComplete
+                      ? 'complete'
+                      : 'incomplete'
+                  }" style="margin-left:6px;">
+                    ${
+                      submissionComplete
+                        ? 'Complete'
+                        : 'Incomplete'
+                    }
+                  </span>
+                </div>
+
+              </div>
+
+              <div class="book-detail-grid">
+
+                <div>
+
+                  <div class="cover-preview">
+
+                    ${
+                      book.cover_url
+                        ? `
+                          <img
+                            src="${escapeHtml(book.cover_url)}"
+                            alt="Book cover for ${escapeHtml(
+                              book.title ||
+                              'submitted book'
+                            )}"
+                          />
+                        `
+                        : `
+                          No book cover
+                          was uploaded.
+                        `
+                    }
+
+                  </div>
+
+                </div>
+
+                <div class="detail-list">
+
+                  <div class="detail-block">
+                    <div class="detail-label">
+                      Genre / Topic
+                    </div>
+
+                    <div class="detail-value">
+                      ${escapeHtml(
+                        book.genre_topic ||
+                        'Not provided'
+                      )}
+                    </div>
+                  </div>
+
+                  <div class="detail-block">
+                    <div class="detail-label">
+                      Who Is the Book For?
+                    </div>
+
+                    <div class="detail-value">
+                      ${escapeHtml(
+                        book.who_its_for ||
+                        'Not provided'
+                      )}
+                    </div>
+                  </div>
+
+                  <div class="detail-block">
+                    <div class="detail-label">
+                      Where Is the Book Currently Available?
+                    </div>
+
+                    <div class="detail-value">
+                      ${escapeHtml(
+                        book.availability ||
+                        'Not provided'
+                      )}
+                    </div>
+                  </div>
+
+                  <div class="detail-block">
+                    <div class="detail-label">
+                      Book Description
+                    </div>
+
+                    <div class="detail-value">
+                      ${escapeHtml(
+                        book.description ||
+                        'No description provided.'
+                      )}
+                    </div>
+                  </div>
+
+                  <div class="detail-block">
+                    <div class="detail-label">
+                      About the Author
+                    </div>
+
+                    <div class="detail-value">
+                      ${escapeHtml(
+                        author.bio ||
+                        'No author biography provided.'
+                      )}
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+              ${
+                !submissionComplete
+                  ? `
+                    <div class="message">
+                      <strong>Missing required information:</strong>
+
+                      ${
+                        missingFields.length
+                          ? `
+                            <ul class="missing-list">
+                              ${missingFields.map(
+                                field => `
+                                  <li>
+                                    ${escapeHtml(field)}
+                                  </li>
+                                `
+                              ).join('')}
+                            </ul>
+                          `
+                          : `
+                            <div style="margin-top:6px;">
+                              The submission is marked incomplete.
+                            </div>
+                          `
+                      }
+                    </div>
+                  `
+                  : ''
+              }
+
+              <div class="trailer-box">
+
+                <div class="item-title">
+                  Book Trailer
+                </div>
+
+                ${
+                  trailer.trailer_url
+                    ? `
+                      <div class="item-meta">
+                        Review the trailer before making an approval decision.
+                      </div>
+
+                      <video
+                        controls
+                        preload="metadata"
+                        src="${escapeHtml(
+                          trailer.trailer_url
+                        )}"
+                      >
+                        Your browser does not support video playback.
+                      </video>
+
+                      <div class="actions">
+
+                        <a
+                          class="btn link small"
+                          href="${escapeHtml(
+                            trailer.trailer_url
+                          )}"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Open Trailer
+                        </a>
+
+                      </div>
+                    `
+                    : `
+                      <div class="message">
+                        No book trailer was uploaded with this submission.
+                      </div>
+                    `
+                }
+
+              </div>
+
+              <div class="review-box">
+
+                <div class="item-meta">
+                  The book will remain Pending until the Administrator
+                  approves or rejects it.
+                </div>
+
+                <div class="actions">
+
+                  <button
+                    class="btn primary small"
+                    onclick="approveBook('${book.id}')"
+                  >
+                    Approve Book
+                  </button>
+
+                  <button
+                    class="btn danger small"
+                    onclick="rejectBook('${book.id}')"
+                  >
+                    Reject Book
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+          `;
+
+        }).join('');
+    }
+
+    async function approveBook(bookId){
+
+      if(!currentUser){
+        showToast(
+          'Administrator session not found.'
+        );
+        return;
+      }
+
+      const book =
+        pendingBooks.find(
+          item => item.id === bookId
+        );
+
+      if(!book){
+        showToast(
+          'Pending book could not be found.'
+        );
+        return;
+      }
+
+      const confirmed =
+        window.confirm(
+          `Approve "${book.title || 'this book'}" for Reader Reach?`
+        );
+
+      if(!confirmed){
+        return;
+      }
+
+      const now =
+        new Date().toISOString();
+
+      const {
+        error
+      } = await supabaseClient
+        .from('books')
+        .update({
+          status:'approved',
+          reviewed_at:now,
+          reviewed_by:currentUser.id
+        })
+        .eq('id',bookId)
+        .eq('status','pending');
+
+      if(error){
+
+        console.error(
+          'Book approval error:',
+          error
+        );
+
+        showToast(
+          'Could not approve book: ' +
+          error.message
+        );
+
+        return;
+      }
+
+      const author =
+        book.author || {};
+
+      /*
+        Notify the author that the book has been approved.
+      */
+      await createNotification({
+        profileId:author.profile_id,
+        type:'book_approved',
+        title:'Book approved',
+        message:
+          `"${book.title || 'Your submitted book'}" has been approved by Reader Reach.`,
+        relatedBookId:book.id
+      });
+
+      /*
+        Notify active moderators that a new approved
+        book is available for scheduling.
+      */
+      await notifyModeratorsOfApprovedBook({
+        ...book,
+        authorName:
+          author.author_name || 'Unknown author'
+      });
+
+      showToast(
+        'Book approved successfully.'
+      );
+
+      await Promise.all([
+        loadPendingBooks(),
+        loadApprovedBooks(),
+        loadStats()
+      ]);
+    }
+
+    async function rejectBook(bookId){
+
+      if(!currentUser){
+        showToast(
+          'Administrator session not found.'
+        );
+        return;
+      }
+
+      const book =
+        pendingBooks.find(
+          item => item.id === bookId
+        );
+
+      if(!book){
+        showToast(
+          'Pending book could not be found.'
+        );
+        return;
+      }
+
+      const reviewNotes =
+        window.prompt(
+          'Optional reason or review notes for the author:',
+          ''
+        );
+
+      if(reviewNotes === null){
+        return;
+      }
+
+      const now =
+        new Date().toISOString();
+
+      const updateData = {
+        status:'rejected',
+        reviewed_at:now,
+        reviewed_by:currentUser.id
+      };
+
+      /*
+        review_notes is used when available in the
+        Reader Reach books schema.
+      */
+      updateData.review_notes =
+        reviewNotes.trim() || null;
+
+      let {
+        error
+      } = await supabaseClient
+        .from('books')
+        .update(updateData)
+        .eq('id',bookId)
+        .eq('status','pending');
+
+      /*
+        If the optional review_notes column is not available,
+        retry the rejection without it rather than blocking
+        the actual book rejection.
+      */
+      if(error && /review_notes/i.test(error.message || '')){
+
+        console.warn(
+          'Review notes column unavailable; retrying rejection without it.'
+        );
+
+        const retry =
+          await supabaseClient
+            .from('books')
+            .update({
+              status:'rejected',
+              reviewed_at:now,
+              reviewed_by:currentUser.id
+            })
+            .eq('id',bookId)
+            .eq('status','pending');
+
+        error =
+          retry.error || null;
+      }
+
+      if(error){
+
+        console.error(
+          'Book rejection error:',
+          error
+        );
+
+        showToast(
+          'Could not reject book: ' +
+          error.message
+        );
+
+        return;
+      }
+
+      const author =
+        book.author || {};
+
+      const authorMessage =
+        reviewNotes.trim()
+          ? `Your book "${book.title || 'submitted book'}" was rejected by Reader Reach. Review notes: ${reviewNotes.trim()}`
+          : `Your book "${book.title || 'submitted book'}" was rejected by Reader Reach. Please review the submission and resubmit when appropriate.`;
+
+      await createNotification({
+        profileId:author.profile_id,
+        type:'book_rejected',
+        title:'Book submission rejected',
+        message:authorMessage,
+        relatedBookId:book.id
+      });
+
+      showToast(
+        'Book rejected.'
+      );
+
+      await Promise.all([
+        loadPendingBooks(),
+        loadApprovedBooks(),
+        loadStats()
+      ]);
     }
 
     async function loadApprovedBooks(){
@@ -1305,6 +2204,7 @@
 
       const today =
         new Date();
+
       today.setHours(0,0,0,0);
 
       const upcoming =
@@ -1613,6 +2513,7 @@
 
       await Promise.all([
         loadAuthorRequests(),
+        loadPendingBooks(),
         loadApprovedBooks(),
         loadModerators(),
         loadSchedules(),
@@ -1627,6 +2528,15 @@
       .addEventListener(
         'click',
         loadAuthorRequests
+      );
+
+    document
+      .getElementById(
+        'refreshPendingBooksBtn'
+      )
+      .addEventListener(
+        'click',
+        loadPendingBooks
       );
 
     document
@@ -1658,6 +2568,12 @@
 
     window.rejectAuthorRequest =
       rejectAuthorRequest;
+
+    window.approveBook =
+      approveBook;
+
+    window.rejectBook =
+      rejectBook;
 
     window.cancelSchedule =
       cancelSchedule;

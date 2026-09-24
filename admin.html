@@ -128,9 +128,22 @@
               </div>
             </div>
           </section>
-
           <section id="featuredBooks" class="section">
-            <div class="card"><div class="section-head"><div><h2 class="section-title">Featured Books</h2><p class="muted">Admin-controlled homepage featured status remains separate from scheduling.</p></div></div><div class="empty">Featured-book controls are already connected to the homepage system and will be displayed here as part of the Admin control center.</div></div>
+            <div class="card">
+              <div class="section-head">
+                <div>
+                  <h2 class="section-title">Featured Books</h2>
+                  <p class="muted">Manage the books selected for the Reader Reach homepage. Featured status is separate from approval and scheduling.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <button id="refreshFeaturedBooksBtn" class="btn small" type="button">Refresh</button>
+                  <span class="section-count" id="featuredBooksBadge">—</span>
+                </div>
+              </div>
+              <div id="featuredBooksList" class="book-list">
+                <div class="empty">Loading featured books...</div>
+              </div>
+            </div>
           </section>
 
           <section id="calendarSchedules" class="section wide">
@@ -1960,6 +1973,205 @@
 
     }
 
+
+    async function loadFeaturedBooks(){
+
+      const container =
+        document.getElementById('featuredBooksList');
+
+      const badge =
+        document.getElementById('featuredBooksBadge');
+
+      if(!container){
+        return;
+      }
+
+      container.innerHTML =
+        '<div class="empty">Loading featured books...</div>';
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient
+          .from('homepage_featured_books')
+          .select(`
+            id,
+            book_id,
+            selected_at,
+            selected_by,
+            books (
+              id,
+              title,
+              description,
+              genre_topic,
+              who_its_for,
+              availability,
+              cover_url,
+              status,
+              author_id
+            )
+          `)
+          .order(
+            'selected_at',
+            {
+              ascending:false
+            }
+          );
+
+      if(error){
+
+        console.error(
+          'Featured books error:',
+          error
+        );
+
+        container.innerHTML =
+          '<div class="empty">Featured books could not be loaded.</div>';
+
+        if(badge){
+          badge.textContent = '0';
+        }
+
+        return;
+      }
+
+      const rows =
+        (data || [])
+          .filter(
+            row =>
+              row.books &&
+              row.books.status === 'approved'
+          );
+
+      if(badge){
+        badge.textContent = rows.length;
+      }
+
+      if(!rows.length){
+
+        container.innerHTML =
+          '<div class="empty">No approved books are currently featured.</div>';
+
+        return;
+      }
+
+      const authorIds =
+        [
+          ...new Set(
+            rows
+              .map(row => row.books.author_id)
+              .filter(Boolean)
+          )
+        ];
+
+      const {
+        data:authors
+      } =
+        authorIds.length
+          ? await supabaseClient
+              .from('authors')
+              .select('id,author_name')
+              .in('id',authorIds)
+          : {data:[]};
+
+      const authorMap =
+        new Map(
+          (authors || []).map(
+            author => [
+              author.id,
+              author.author_name
+            ]
+          )
+        );
+
+      container.innerHTML =
+        rows.map(row => {
+
+          const book = row.books;
+
+          const cover =
+            book.cover_url
+              ? `
+                <img
+                  src="${escapeHtml(book.cover_url)}"
+                  alt="${escapeHtml(book.title || 'Book')} cover"
+                  style="width:92px;height:120px;object-fit:cover;border-radius:12px;background:var(--cream-dark);"
+                >
+              `
+              : `
+                <div style="width:92px;height:120px;border-radius:12px;background:var(--cream-dark);display:grid;place-items:center;text-align:center;padding:10px;">
+                  ${escapeHtml(book.title || 'Book')}
+                </div>
+              `;
+
+          return `
+            <div class="book-item">
+              <div style="display:flex;gap:16px;align-items:flex-start;">
+
+                ${cover}
+
+                <div style="flex:1;min-width:0;">
+
+                  <div class="item-title">
+                    ${escapeHtml(book.title || 'Untitled Book')}
+                  </div>
+
+                  <div class="item-meta" style="margin-top:5px;">
+                    Author:
+                    ${escapeHtml(
+                      authorMap.get(book.author_id) ||
+                      'Unknown author'
+                    )}
+                    <br>
+                    Genre / Topic:
+                    ${escapeHtml(book.genre_topic || '—')}
+                    <br>
+                    Selected:
+                    ${
+                      row.selected_at
+                        ? escapeHtml(
+                            new Date(row.selected_at)
+                              .toLocaleString()
+                          )
+                        : '—'
+                    }
+                  </div>
+
+                  <div class="actions" style="margin-top:12px;">
+
+                    <button
+                      class="btn small"
+                      type="button"
+                      onclick="viewApprovedBook('${book.id}')"
+                    >
+                      View
+                    </button>
+
+                    <button
+                      class="btn small danger"
+                      type="button"
+                      onclick="removeFeaturedBook('${row.book_id}')"
+                    >
+                      Remove
+                    </button>
+
+                  </div>
+
+                </div>
+
+                <span class="status complete">
+                  Featured
+                </span>
+
+              </div>
+            </div>
+          `;
+
+        }).join('');
+
+    }
+
     async function loadApprovedBooks(){
 
       approvedBookList.innerHTML =
@@ -2241,6 +2453,59 @@
           <button class="btn small" onclick="closeDetailModal()">Close</button>
         </div>
       `);
+    }
+
+
+    async function removeFeaturedBook(bookId){
+
+      if(!bookId){
+        return;
+      }
+
+      const confirmed =
+        window.confirm(
+          'Remove this book from Featured Books? The book itself will not be deleted.'
+        );
+
+      if(!confirmed){
+        return;
+      }
+
+      const {
+        error
+      } =
+        await supabaseClient
+          .from('homepage_featured_books')
+          .delete()
+          .eq(
+            'book_id',
+            bookId
+          );
+
+      if(error){
+
+        console.error(
+          'Remove featured book error:',
+          error
+        );
+
+        showToast(
+          'Unable to remove this book from Featured Books.'
+        );
+
+        return;
+      }
+
+      showToast(
+        'Book removed from Featured Books.'
+      );
+
+      await Promise.all([
+        loadFeaturedBooks(),
+        loadApprovedBooks(),
+        loadStats()
+      ]);
+
     }
 
     async function featureApprovedBook(bookId){
@@ -3687,6 +3952,16 @@
       loginButton.textContent = 'Sign In as Admin';
     }
 
+
+    document
+      .getElementById(
+        'refreshFeaturedBooksBtn'
+      )
+      .addEventListener(
+        'click',
+        loadFeaturedBooks
+      );
+
     async function initializeDashboard(){
 
       const isAdmin =
@@ -3819,6 +4094,7 @@
     window.viewAuthorBooks = viewAuthorBooks;
     window.viewApprovedBook = viewApprovedBook;
     window.featureApprovedBook = featureApprovedBook;
+    window.removeFeaturedBook = removeFeaturedBook;
     window.toggleTrailerHomepageVisibility = toggleTrailerHomepageVisibility;
     window.closeDetailModal = closeDetailModal;
     window.removeBook = removeBook;

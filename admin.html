@@ -145,8 +145,23 @@
             </div>
           </section>
 
-          <section id="discussions" class="section">
-            <div class="card"><div class="section-head"><div><h2 class="section-title">Discussions</h2><p class="muted">Review book discussions and administer discussion content according to your role permissions.</p></div></div><div class="empty">Discussion management panel is reserved here for the real book discussion records.</div></div>
+          <section id="discussions" class="section wide">
+            <div class="card">
+              <div class="section-head">
+                <div>
+                  <h2 class="section-title">Discussions</h2>
+                  <p class="muted">Review book discussions and administer discussion messages according to your Admin permissions.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <button id="refreshDiscussionsBtn" class="btn small">Refresh</button>
+                  <span class="section-count" id="discussionsBadge">—</span>
+                </div>
+              </div>
+
+              <div id="discussionList" class="request-list">
+                <div class="empty">Loading discussions...</div>
+              </div>
+            </div>
           </section>
 
           <section id="notifications" class="section">
@@ -224,6 +239,9 @@
 
     const scheduleList =
       document.getElementById('scheduleList');
+
+    const discussionList =
+      document.getElementById('discussionList');
 
     const toast =
       document.getElementById('toast');
@@ -2274,6 +2292,431 @@
       if(stat) stat.textContent = readers.length;
     }
 
+    async function loadDiscussions(){
+
+      discussionList.innerHTML =
+        '<div class="empty">Loading discussions...</div>';
+
+      const {
+        data:discussions,
+        error:discussionsError
+      } = await supabaseClient
+        .from('discussions')
+        .select(`
+          id,
+          book_id,
+          created_at
+        `)
+        .order('created_at',{
+          ascending:false
+        });
+
+      if(discussionsError){
+
+        console.error(
+          'Discussions error:',
+          discussionsError
+        );
+
+        discussionList.innerHTML =
+          '<div class="empty">Unable to load discussions.</div>';
+
+        showToast(
+          'Could not load discussions.'
+        );
+
+        return;
+      }
+
+      if(!discussions || discussions.length === 0){
+
+        discussionList.innerHTML = `
+          <div class="empty">
+            No book discussions have been created yet.
+          </div>
+        `;
+
+        const badge =
+          document.getElementById('discussionsBadge');
+
+        if(badge){
+          badge.textContent = '0';
+        }
+
+        return;
+      }
+
+      const bookIds =
+        [...new Set(
+          discussions.map(
+            discussion => discussion.book_id
+          )
+        )];
+
+      const discussionIds =
+        [...new Set(
+          discussions.map(
+            discussion => discussion.id
+          )
+        )];
+
+      const [
+        booksResult,
+        messagesResult
+      ] = await Promise.all([
+
+        supabaseClient
+          .from('books')
+          .select(`
+            id,
+            title,
+            author_id,
+            status
+          `)
+          .in('id',bookIds),
+
+        supabaseClient
+          .from('discussion_messages')
+          .select(`
+            id,
+            discussion_id,
+            author_profile_id,
+            message,
+            created_at,
+            updated_at
+          `)
+          .in('discussion_id',discussionIds)
+          .order('created_at',{
+            ascending:true
+          })
+      ]);
+
+      if(booksResult.error){
+
+        console.error(
+          'Discussion books error:',
+          booksResult.error
+        );
+
+        discussionList.innerHTML =
+          '<div class="empty">Unable to load discussion book details.</div>';
+
+        return;
+      }
+
+      if(messagesResult.error){
+
+        console.error(
+          'Discussion messages error:',
+          messagesResult.error
+        );
+
+        discussionList.innerHTML =
+          '<div class="empty">Unable to load discussion messages.</div>';
+
+        return;
+      }
+
+      const authorIds =
+        [...new Set(
+          (booksResult.data || [])
+            .map(book => book.author_id)
+            .filter(Boolean)
+        )];
+
+      const profileIds =
+        [...new Set(
+          (messagesResult.data || [])
+            .map(message => message.author_profile_id)
+            .filter(Boolean)
+        )];
+
+      const [
+        authorsResult,
+        profilesResult
+      ] = await Promise.all([
+
+        authorIds.length
+          ? supabaseClient
+              .from('authors')
+              .select(`
+                id,
+                author_name,
+                profile_id
+              `)
+              .in('id',authorIds)
+          : Promise.resolve({
+              data:[],
+              error:null
+            }),
+
+        profileIds.length
+          ? supabaseClient
+              .from('profiles')
+              .select(`
+                id,
+                display_name,
+                role
+              `)
+              .in('id',profileIds)
+          : Promise.resolve({
+              data:[],
+              error:null
+            })
+      ]);
+
+      if(authorsResult.error){
+
+        console.error(
+          'Discussion authors error:',
+          authorsResult.error
+        );
+
+        discussionList.innerHTML =
+          '<div class="empty">Unable to load discussion author details.</div>';
+
+        return;
+      }
+
+      if(profilesResult.error){
+
+        console.error(
+          'Discussion message profiles error:',
+          profilesResult.error
+        );
+
+        discussionList.innerHTML =
+          '<div class="empty">Unable to load discussion participant details.</div>';
+
+        return;
+      }
+
+      const bookMap =
+        new Map(
+          (booksResult.data || []).map(
+            book => [
+              book.id,
+              book
+            ]
+          )
+        );
+
+      const authorMap =
+        new Map(
+          (authorsResult.data || []).map(
+            author => [
+              author.id,
+              author
+            ]
+          )
+        );
+
+      const profileMap =
+        new Map(
+          (profilesResult.data || []).map(
+            profile => [
+              profile.id,
+              profile
+            ]
+          )
+        );
+
+      const messageMap =
+        new Map();
+
+      for(const message of messagesResult.data || []){
+
+        if(!messageMap.has(message.discussion_id)){
+          messageMap.set(
+            message.discussion_id,
+            []
+          );
+        }
+
+        messageMap
+          .get(message.discussion_id)
+          .push(message);
+      }
+
+      discussionList.innerHTML =
+        discussions.map(discussion => {
+
+          const book =
+            bookMap.get(discussion.book_id) || {};
+
+          const author =
+            authorMap.get(book.author_id) || {};
+
+          const messages =
+            messageMap.get(discussion.id) || [];
+
+          const discussionTitle =
+            book.title ||
+            'Untitled book discussion';
+
+          return `
+            <div class="request-item">
+
+              <div class="request-top">
+
+                <div>
+                  <div class="item-title">
+                    ${escapeHtml(discussionTitle)}
+                  </div>
+
+                  <div class="item-meta">
+                    Author:
+                    ${escapeHtml(
+                      author.author_name ||
+                      'Unknown author'
+                    )}
+                    <br>
+                    Discussion created:
+                    ${escapeHtml(
+                      formatDate(discussion.created_at)
+                    )}
+                    <br>
+                    Messages:
+                    ${escapeHtml(messages.length)}
+                  </div>
+                </div>
+
+                <span class="status ${
+                  book.status === 'approved'
+                    ? 'approved'
+                    : ''
+                }">
+                  ${escapeHtml(
+                    book.status ||
+                    'discussion'
+                  )}
+                </span>
+
+              </div>
+
+              ${
+                messages.length
+                  ? `
+                    <div style="display:grid;gap:9px;margin-top:13px;">
+                      ${messages.map(message => {
+
+                        const profile =
+                          profileMap.get(
+                            message.author_profile_id
+                          ) || {};
+
+                        const displayName =
+                          profile.display_name ||
+                          'Reader Reach user';
+
+                        return `
+                          <div class="detail-block">
+
+                            <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
+                              <div>
+                                <div class="item-title">
+                                  ${escapeHtml(displayName)}
+                                </div>
+
+                                <div class="item-meta">
+                                  ${escapeHtml(
+                                    profile.role ||
+                                    'user'
+                                  )}
+                                  ·
+                                  ${escapeHtml(
+                                    formatDate(
+                                      message.created_at
+                                    )
+                                  )}
+                                </div>
+                              </div>
+
+                              <button
+                                class="btn danger small"
+                                onclick="deleteDiscussionMessage('${message.id}')"
+                              >
+                                Delete Message
+                              </button>
+                            </div>
+
+                            <div class="message">
+                              ${escapeHtml(message.message)}
+                            </div>
+
+                          </div>
+                        `;
+
+                      }).join('')}
+                    </div>
+                  `
+                  : `
+                    <div class="empty" style="margin-top:12px;">
+                      No messages have been posted in this discussion yet.
+                    </div>
+                  `
+              }
+
+            </div>
+          `;
+
+        }).join('');
+
+      const badge =
+        document.getElementById('discussionsBadge');
+
+      if(badge){
+        badge.textContent = discussions.length;
+      }
+    }
+
+    async function deleteDiscussionMessage(messageId){
+
+      if(!currentUser){
+        showToast(
+          'Administrator session not found.'
+        );
+        return;
+      }
+
+      const confirmed =
+        window.confirm(
+          'Delete this discussion message? This action cannot be undone.'
+        );
+
+      if(!confirmed){
+        return;
+      }
+
+      const {
+        error
+      } = await supabaseClient
+        .from('discussion_messages')
+        .delete()
+        .eq('id',messageId);
+
+      if(error){
+
+        console.error(
+          'Discussion message deletion error:',
+          error
+        );
+
+        showToast(
+          'Could not delete discussion message: ' +
+          error.message
+        );
+
+        return;
+      }
+
+      showToast(
+        'Discussion message deleted.'
+      );
+
+      await loadDiscussions();
+    }
+
     async function loadStats(){
 
       const {
@@ -2455,6 +2898,7 @@
         loadPendingBooks(),
         loadApprovedBooks(),
         loadReaders(),
+        loadDiscussions(),
         loadModerators(),
         loadSchedules(),
         loadStats()
@@ -2508,6 +2952,15 @@
 
     document
       .getElementById(
+        'refreshDiscussionsBtn'
+      )
+      .addEventListener(
+        'click',
+        loadDiscussions
+      );
+
+    document
+      .getElementById(
         'scheduleBtn'
       )
       .addEventListener(
@@ -2544,6 +2997,9 @@
 
     window.cancelSchedule =
       cancelSchedule;
+
+    window.deleteDiscussionMessage =
+      deleteDiscussionMessage;
 
     initializeDashboard();
   </script>

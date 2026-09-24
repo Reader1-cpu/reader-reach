@@ -1782,6 +1782,7 @@
                 ? '<button class="btn small feature-active" disabled>Featured</button>'
                 : `<button class="btn small" onclick="featureApprovedBook('${book.id}')">Feature</button>`}
               <button class="btn small" onclick="viewApprovedBook('${book.id}')" aria-label="More options">⋯</button>
+              <button class="btn danger small" onclick="removeBook('${book.id}')">Remove Book</button>
             </div>
           </div>
         `;
@@ -1944,6 +1945,64 @@
           <button class="btn small" onclick="closeDetailModal()">Close</button>
         </div>
       `);
+    }
+
+    async function removeBook(bookId){
+      if(!currentUser){ showToast('Administrator session not found.'); return; }
+
+      const book = approvedBooks.find(item => item.id === bookId);
+      if(!book){ showToast('Book could not be found.'); return; }
+
+      const confirmed = window.confirm(`Remove "${book.title || 'this book'}" from Reader Reach? This will remove the book and its connected discussion, schedule, featured record, trailer and Flipper Guide records. This action cannot be undone.`);
+      if(!confirmed) return;
+
+      const {data:guides,error:guideLookupError} = await supabaseClient
+        .from('flipper_guides').select('id').eq('book_id',bookId);
+      if(guideLookupError){ console.error(guideLookupError); showToast('Could not prepare the book for removal.'); return; }
+
+      const guideIds = (guides || []).map(g => g.id);
+
+      if(guideIds.length){
+        const {error} = await supabaseClient.from('flipper_guide_access').delete().in('guide_id',guideIds);
+        if(error){ console.error(error); showToast('Could not remove Flipper Guide access records.'); return; }
+      }
+
+      const {data:discussions,error:discussionLookupError} = await supabaseClient
+        .from('discussions').select('id').eq('book_id',bookId);
+      if(discussionLookupError){ console.error(discussionLookupError); showToast('Could not prepare discussion records for removal.'); return; }
+
+      const discussionIds = (discussions || []).map(d => d.id);
+      if(discussionIds.length){
+        const {error} = await supabaseClient.from('discussion_messages').delete().in('discussion_id',discussionIds);
+        if(error){ console.error(error); showToast('Could not remove discussion messages.'); return; }
+        const {error:discussionDeleteError} = await supabaseClient.from('discussions').delete().eq('book_id',bookId);
+        if(discussionDeleteError){ console.error(discussionDeleteError); showToast('Could not remove the book discussion.'); return; }
+      }
+
+      const cleanup = [
+        ['homepage_featured_books','book_id'],
+        ['feature_schedules','book_id'],
+        ['book_trailers','book_id'],
+        ['flipper_guides','book_id'],
+        ['reader_books','book_id'],
+        ['notifications','related_book_id']
+      ];
+
+      for(const [table,column] of cleanup){
+        const {error} = await supabaseClient.from(table).delete().eq(column,bookId);
+        if(error){ console.error(`Remove ${table} error:`,error); showToast(`Could not remove connected ${table} records.`); return; }
+      }
+
+      const {error:bookDeleteError} = await supabaseClient.from('books').delete().eq('id',bookId);
+      if(bookDeleteError){ console.error('Book deletion error:',bookDeleteError); showToast('Could not remove the book: ' + bookDeleteError.message); return; }
+
+      featuredBookIds.delete(bookId);
+      approvedBooks = approvedBooks.filter(item => item.id !== bookId);
+      renderApprovedBooks();
+      populateBookSelect();
+      closeDetailModal();
+      showToast('Book and its connected records were removed.');
+      await loadStats();
     }
 
     async function featureApprovedBook(bookId){
@@ -3273,6 +3332,7 @@
     window.viewAuthorBooks = viewAuthorBooks;
     window.viewApprovedBook = viewApprovedBook;
     window.featureApprovedBook = featureApprovedBook;
+    window.removeBook = removeBook;
     window.toggleTrailerHomepageVisibility = toggleTrailerHomepageVisibility;
     window.closeDetailModal = closeDetailModal;
 

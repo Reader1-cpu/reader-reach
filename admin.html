@@ -133,7 +133,7 @@
               <div class="section-head">
                 <div>
                   <h2 class="section-title">Featured Books</h2>
-                  <p class="muted">Manage the books selected for the Reader Reach homepage. Featured status is separate from approval and scheduling.</p>
+                  <p class="muted">Manage the books selected for the Reader Reach homepage. Featured status is separate from approval and scheduling.</p><p class="muted" style="margin-top:6px;">Use <strong>Remove Featured</strong> to remove a book from the homepage Featured selection without deleting the book.</p>
                 </div>
                 <div style="display:flex;align-items:center;gap:8px">
                   <button id="refreshFeaturedBooksBtn" class="btn small" type="button">Refresh</button>
@@ -2285,7 +2285,7 @@
               <button class="btn small" onclick="viewApprovedBook('${book.id}')">View</button>
               ${featured
                 ? '<button class="btn small feature-active" disabled>Featured</button>'
-                : `<button class="btn small" onclick="featureApprovedBook('${book.id}')">Feature</button>`}
+                : `<button class="btn small" onclick="featureApprovedBook(\'${book.id}\')" >Feature</button>`}
               <button class="btn danger small" onclick="removeBook('${book.id}')">Remove Book</button>
               <button class="btn small" onclick="viewApprovedBook('${book.id}')" aria-label="More options">⋯</button>
             </div>
@@ -2506,6 +2506,27 @@
         loadStats()
       ]);
 
+    }
+
+
+    async function isBookFeatured(bookId){
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient
+          .from('homepage_featured_books')
+          .select('id')
+          .eq('book_id', bookId)
+          .maybeSingle();
+
+      if(error){
+        console.error('Featured status check error:', error);
+        return false;
+      }
+
+      return !!data;
     }
 
     async function featureApprovedBook(bookId){

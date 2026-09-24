@@ -121,15 +121,38 @@
       outline:none;
     }
 
+    input:focus,
+    textarea:focus{
+      border-color:#a67850;
+      box-shadow:0 0 0 3px rgba(166,120,80,.12);
+    }
+
     textarea{
       min-height:110px;
       resize:vertical;
     }
 
-    input:focus,
-    textarea:focus{
-      border-color:#a67850;
-      box-shadow:0 0 0 3px rgba(166,120,80,.12);
+    input[readonly]{
+      background:#f1e7da;
+      color:#6f584a;
+      cursor:not-allowed;
+    }
+
+    input[type="file"]{
+      padding:10px;
+    }
+
+    .file-note{
+      color:#806b5d;
+      font-size:12px;
+      margin-top:6px;
+      line-height:1.5;
+    }
+
+    .required-note{
+      color:#806b5d;
+      font-size:12px;
+      margin-top:6px;
     }
 
     .btn{
@@ -155,11 +178,6 @@
     .btn.secondary{
       background:#eee1d2;
       color:#5a3b2c;
-    }
-
-    .btn.danger{
-      background:#ead0ca;
-      color:#7b3024;
     }
 
     .btn:disabled{
@@ -232,6 +250,23 @@
       color:#624331;
     }
 
+    .completion{
+      display:inline-block;
+      margin-top:8px;
+      margin-left:5px;
+      padding:5px 10px;
+      border-radius:999px;
+      background:#f2d7c6;
+      color:#7b4b32;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .completion.complete{
+      background:#dfe9dc;
+      color:#3f633c;
+    }
+
     .empty{
       padding:26px;
       text-align:center;
@@ -278,6 +313,16 @@
       background:#f7efe4;
       color:#5d4333;
       line-height:1.6;
+    }
+
+    .notice.warning{
+      background:#f4dfd2;
+      color:#75402e;
+    }
+
+    .notice.success{
+      background:#e2ecdf;
+      color:#41603d;
     }
 
     .hidden{
@@ -346,6 +391,7 @@
 
     <div class="user-area">
       <span id="authorEmail"></span>
+
       <button id="signOutBtn" class="btn secondary">
         Sign Out
       </button>
@@ -356,6 +402,7 @@
 
     <section class="welcome">
       <h1>Author Dashboard</h1>
+
       <p class="muted">
         Manage your books and submit new titles for Reader Reach review.
       </p>
@@ -371,98 +418,170 @@
         </h2>
 
         <p class="section-description">
-          You can submit multiple books from your approved author account.
-          Each book is reviewed separately.
+          Submit your book for Reader Reach review. You can submit multiple
+          books from your approved author account.
         </p>
 
         <form id="bookForm">
 
+          <!-- AUTHOR NAME -->
+          <div class="field">
+            <label for="authorName">
+              Author Name *
+            </label>
+
+            <input
+              id="authorName"
+              type="text"
+              readonly
+            />
+          </div>
+
+          <!-- EMAIL -->
+          <div class="field">
+            <label for="authorEmailField">
+              Email Address *
+            </label>
+
+            <input
+              id="authorEmailField"
+              type="email"
+              readonly
+            />
+          </div>
+
+          <!-- ABOUT AUTHOR -->
+          <div class="field">
+            <label for="aboutAuthor">
+              About the Author *
+            </label>
+
+            <textarea
+              id="aboutAuthor"
+              placeholder="Tell readers about yourself as an author"
+            ></textarea>
+          </div>
+
+          <!-- BOOK TITLE -->
           <div class="field">
             <label for="bookTitle">
-              Book Title
+              Book Title *
             </label>
 
             <input
               id="bookTitle"
               type="text"
-              required
               placeholder="Enter your book title"
             />
           </div>
 
-          <div class="field">
-            <label for="bookDescription">
-              Description
-            </label>
-
-            <textarea
-              id="bookDescription"
-              required
-              placeholder="Describe your book"
-            ></textarea>
-          </div>
-
+          <!-- GENRE -->
           <div class="field">
             <label for="bookGenre">
-              Genre / Topic
+              Genre / Topic *
             </label>
 
             <input
               id="bookGenre"
               type="text"
-              required
               placeholder="For example: Fiction, Business, Romance"
             />
           </div>
 
+          <!-- DESCRIPTION -->
+          <div class="field">
+            <label for="bookDescription">
+              Book Description *
+            </label>
+
+            <textarea
+              id="bookDescription"
+              placeholder="Describe your book"
+            ></textarea>
+          </div>
+
+          <!-- AUDIENCE -->
           <div class="field">
             <label for="bookAudience">
-              Who It's For
+              Who Is the Book For? *
             </label>
 
             <input
               id="bookAudience"
               type="text"
-              required
               placeholder="Describe the intended readers"
             />
           </div>
 
+          <!-- AVAILABILITY -->
           <div class="field">
             <label for="bookAvailability">
-              Availability
+              Where Is the Book Currently Available? *
             </label>
 
             <input
               id="bookAvailability"
               type="text"
-              required
-              placeholder="Where or how readers can get the book"
+              placeholder="Tell readers where the book is available"
             />
           </div>
 
+          <!-- COVER -->
           <div class="field">
-            <label for="bookLink">
-              Book Link
+            <label for="coverFile">
+              Book Cover Image
             </label>
 
             <input
-              id="bookLink"
-              type="url"
-              placeholder="https://..."
+              id="coverFile"
+              type="file"
+              accept="image/*"
             />
+
+            <div class="file-note">
+              Upload the actual book cover image. A URL is not required.
+            </div>
           </div>
 
+          <!-- TRAILER -->
           <div class="field">
-            <label for="coverUrl">
-              Cover Image URL
+            <label for="trailerFile">
+              Book Trailer Video
             </label>
 
             <input
-              id="coverUrl"
+              id="trailerFile"
+              type="file"
+              accept="video/*"
+            />
+
+            <div class="file-note">
+              Upload the actual book trailer video. Admin will be able to
+              review the trailer before approving the book.
+            </div>
+          </div>
+
+          <!-- FLIPPER GUIDE -->
+          <div class="field">
+            <label for="flipperGuideLink">
+              Flipper Guide Link *
+            </label>
+
+            <input
+              id="flipperGuideLink"
               type="url"
               placeholder="https://..."
             />
+
+            <div class="file-note">
+              This link is stored as protected Flipper Guide information.
+            </div>
+          </div>
+
+          <div class="required-note">
+            * Required information. If required information is missing,
+            the submission can still be sent for Admin review, but you will
+            receive a notification listing what is missing.
           </div>
 
           <div class="actions">
@@ -471,7 +590,7 @@
               type="submit"
               class="btn primary"
             >
-              Submit Book
+              Submit Book for Review
             </button>
           </div>
 
@@ -480,6 +599,7 @@
         <div id="submitNotice" class="notice hidden"></div>
 
       </div>
+
 
       <!-- ACCOUNT -->
       <div class="card">
@@ -557,10 +677,12 @@
 
     </section>
 
+
     <!-- MY BOOKS -->
     <section class="card" style="margin-top:22px;">
 
       <div style="margin-bottom:20px;">
+
         <h2 class="section-title">
           My Books
         </h2>
@@ -569,12 +691,15 @@
           View every book submitted from your approved author account and
           its current review status.
         </p>
+
       </div>
 
       <div id="bookList" class="book-list">
+
         <div class="empty">
           Loading your books...
         </div>
+
       </div>
 
     </section>
@@ -582,6 +707,7 @@
   </main>
 
   <div id="toast" class="toast"></div>
+
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -608,9 +734,11 @@
         }
       );
 
+
     let currentUser = null;
     let currentProfile = null;
     let currentAuthor = null;
+
 
     const bookForm =
       document.getElementById('bookForm');
@@ -627,14 +755,18 @@
     const toast =
       document.getElementById('toast');
 
+
     function escapeHtml(value){
+
       return String(value ?? '')
         .replace(/&/g,'&amp;')
         .replace(/</g,'&lt;')
         .replace(/>/g,'&gt;')
         .replace(/"/g,'&quot;')
         .replace(/'/g,'&#039;');
+
     }
+
 
     function showToast(message){
 
@@ -645,14 +777,26 @@
       setTimeout(() => {
         toast.classList.remove('show');
       },3500);
+
     }
 
-    function showNotice(message){
+
+    function showNotice(message,type='normal'){
 
       submitNotice.textContent = message;
 
+      submitNotice.className =
+        'notice ' +
+        (type === 'warning'
+          ? 'warning'
+          : type === 'success'
+            ? 'success'
+            : '');
+
       submitNotice.classList.remove('hidden');
+
     }
+
 
     function statusClass(status){
 
@@ -665,7 +809,9 @@
       }
 
       return 'pending';
+
     }
+
 
     function formatDate(value){
 
@@ -681,7 +827,18 @@
       }
 
       return date.toLocaleDateString();
+
     }
+
+
+    function cleanFileName(fileName){
+
+      return fileName
+        .toLowerCase()
+        .replace(/[^a-z0-9._-]/g,'-');
+
+    }
+
 
     async function getRealSession(){
 
@@ -701,7 +858,9 @@
       }
 
       return data.session;
+
     }
+
 
     async function loadProfile(){
 
@@ -723,7 +882,9 @@
       }
 
       return data;
+
     }
+
 
     async function loadAuthor(){
 
@@ -751,12 +912,128 @@
       }
 
       return data;
+
     }
+
+
+    async function uploadFile(
+      bucketName,
+      file,
+      folder
+    ){
+
+      if(!file){
+        return null;
+      }
+
+      const safeName =
+        cleanFileName(file.name);
+
+      const path =
+        folder +
+        '/' +
+        Date.now() +
+        '-' +
+        crypto.randomUUID() +
+        '-' +
+        safeName;
+
+
+      const {
+        error
+      } = await supabaseClient.storage
+        .from(bucketName)
+        .upload(
+          path,
+          file,
+          {
+            cacheControl:'3600',
+            upsert:false
+          }
+        );
+
+
+      if(error){
+        throw error;
+      }
+
+
+      const {
+        data
+      } = supabaseClient.storage
+        .from(bucketName)
+        .getPublicUrl(path);
+
+
+      return data.publicUrl;
+
+    }
+
+
+    async function createFlipperGuide(
+      bookId,
+      bookTitle,
+      guideLink
+    ){
+
+      if(!guideLink){
+        return;
+      }
+
+
+      const {
+        error
+      } = await supabaseClient
+        .from('flipper_guides')
+        .insert({
+          book_id:bookId,
+          title:bookTitle + ' — Flipper Guide',
+          description:'Flipper Guide for ' + bookTitle,
+          content_url:guideLink
+        });
+
+
+      if(error){
+        throw error;
+      }
+
+    }
+
+
+    async function createTrailer(
+      bookId,
+      trailerUrl
+    ){
+
+      if(!trailerUrl){
+        return;
+      }
+
+
+      const {
+        error
+      } = await supabaseClient
+        .from('book_trailers')
+        .insert({
+          book_id:bookId,
+          trailer_url:trailerUrl,
+          title:'Book Trailer',
+          description:'Book trailer for this Reader Reach submission.'
+        });
+
+
+      if(error){
+        throw error;
+      }
+
+    }
+
 
     async function loadBooks(){
 
       bookList.innerHTML =
         '<div class="empty">Loading your books...</div>';
+
 
       const {
         data,
@@ -770,17 +1047,19 @@
           genre_topic,
           who_its_for,
           availability,
-          book_link,
           cover_url,
           status,
           submitted_at,
           reviewed_at,
-          review_notes
+          review_notes,
+          submission_complete,
+          missing_fields
         `)
         .eq('author_id',currentAuthor.id)
         .order('submitted_at',{
           ascending:false
         });
+
 
       if(error){
 
@@ -789,34 +1068,42 @@
           error
         );
 
-        bookList.innerHTML = `
-          <div class="empty">
-            Unable to load your books.
-          </div>
-        `;
+        bookList.innerHTML =
+          '<div class="empty">Unable to load your books.</div>';
 
         return;
+
       }
 
+
       renderBooks(data || []);
+
     }
+
 
     function renderBooks(books){
 
       if(!books.length){
 
-        bookList.innerHTML = `
-          <div class="empty">
-            You have not submitted any books yet.
-            Use the form above to submit your first book.
-          </div>
-        `;
+        bookList.innerHTML =
+          '<div class="empty">' +
+          'You have not submitted any books yet. ' +
+          'Use the form above to submit your first book.' +
+          '</div>';
 
         return;
+
       }
+
 
       bookList.innerHTML =
         books.map(book => {
+
+          const missing =
+            Array.isArray(book.missing_fields)
+              ? book.missing_fields
+              : [];
+
 
           return `
             <div class="book-card">
@@ -827,36 +1114,66 @@
 
               <div class="book-meta">
                 Genre / Topic:
-                ${escapeHtml(
-                  book.genre_topic || '—'
-                )}
+                ${escapeHtml(book.genre_topic || '—')}
                 <br>
                 Submitted:
-                ${escapeHtml(
-                  formatDate(book.submitted_at)
-                )}
+                ${escapeHtml(formatDate(book.submitted_at))}
               </div>
 
               <div class="book-description">
-                ${escapeHtml(
-                  book.description || ''
-                )}
+                ${escapeHtml(book.description || '')}
               </div>
 
               <span class="status ${statusClass(book.status)}">
-                ${escapeHtml(
-                  book.status || 'pending'
-                )}
+                ${escapeHtml(book.status || 'pending')}
               </span>
+
+              <span class="completion ${
+                book.submission_complete
+                  ? 'complete'
+                  : ''
+              }">
+                ${
+                  book.submission_complete
+                    ? 'Submission Complete'
+                    : 'Submission Incomplete'
+                }
+              </span>
+
+              ${
+                missing.length
+                  ? `
+                    <div class="notice warning">
+                      Missing information:
+                      ${escapeHtml(missing.join(', '))}
+                    </div>
+                  `
+                  : ''
+              }
 
               ${
                 book.review_notes
                   ? `
                     <div class="notice">
                       Review note:
-                      ${escapeHtml(
-                        book.review_notes
-                      )}
+                      ${escapeHtml(book.review_notes)}
+                    </div>
+                  `
+                  : ''
+              }
+
+              ${
+                book.cover_url
+                  ? `
+                    <div class="actions">
+                      <a
+                        class="btn secondary"
+                        href="${escapeHtml(book.cover_url)}"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        View Cover
+                      </a>
                     </div>
                   `
                   : ''
@@ -866,11 +1183,14 @@
           `;
 
         }).join('');
+
     }
+
 
     async function submitBook(event){
 
       event.preventDefault();
+
 
       if(!currentUser || !currentAuthor){
 
@@ -879,25 +1199,44 @@
         );
 
         return;
+
       }
+
 
       submitBookBtn.disabled = true;
       submitBookBtn.textContent =
         'Submitting...';
+
+      showNotice(
+        'Submitting your book...',
+        'normal'
+      );
+
+
+      const authorName =
+        currentAuthor.author_name?.trim() || '';
+
+      const email =
+        currentUser.email?.trim() || '';
+
+      const aboutAuthor =
+        document.getElementById(
+          'aboutAuthor'
+        ).value.trim();
 
       const title =
         document.getElementById(
           'bookTitle'
         ).value.trim();
 
-      const description =
-        document.getElementById(
-          'bookDescription'
-        ).value.trim();
-
       const genreTopic =
         document.getElementById(
           'bookGenre'
+        ).value.trim();
+
+      const description =
+        document.getElementById(
+          'bookDescription'
         ).value.trim();
 
       const whoItsFor =
@@ -910,68 +1249,340 @@
           'bookAvailability'
         ).value.trim();
 
-      const bookLink =
+      const flipperGuideLink =
         document.getElementById(
-          'bookLink'
+          'flipperGuideLink'
         ).value.trim();
 
-      const coverUrl =
+      const coverFile =
         document.getElementById(
-          'coverUrl'
-        ).value.trim();
+          'coverFile'
+        ).files[0] || null;
 
+      const trailerFile =
+        document.getElementById(
+          'trailerFile'
+        ).files[0] || null;
+
+
+      /*
+       * These are the exact required fields requested
+       * for the Author Book Submission.
+       *
+       * Cover and Trailer are intentionally NOT included
+       * because they are optional in the requested form.
+       */
+      const missingFields = [];
+
+
+      if(!authorName){
+        missingFields.push('Author Name');
+      }
+
+      if(!email){
+        missingFields.push('Email Address');
+      }
+
+      if(!aboutAuthor){
+        missingFields.push('About the Author');
+      }
+
+      if(!title){
+        missingFields.push('Book Title');
+      }
+
+      if(!genreTopic){
+        missingFields.push('Genre / Topic');
+      }
+
+      if(!description){
+        missingFields.push('Book Description');
+      }
+
+      if(!whoItsFor){
+        missingFields.push('Who Is the Book For?');
+      }
+
+      if(!availability){
+        missingFields.push(
+          'Where Is the Book Currently Available?'
+        );
+      }
+
+      if(!flipperGuideLink){
+        missingFields.push('Flipper Guide Link');
+      }
+
+
+      const submissionComplete =
+        missingFields.length === 0;
+
+
+      /*
+       * Update the author's About the Author information
+       * when something was supplied.
+       */
+      if(aboutAuthor){
+
+        const {
+          error:authorUpdateError
+        } = await supabaseClient
+          .from('authors')
+          .update({
+            bio:aboutAuthor
+          })
+          .eq('id',currentAuthor.id);
+
+
+        if(authorUpdateError){
+
+          console.error(
+            'Author bio update error:',
+            authorUpdateError
+          );
+
+          showToast(
+            'Could not update your author information: ' +
+            authorUpdateError.message
+          );
+
+          submitBookBtn.disabled = false;
+          submitBookBtn.textContent =
+            'Submit Book for Review';
+
+          return;
+        }
+
+      }
+
+
+      /*
+       * Create the pending book first.
+       *
+       * This deliberately does NOT require every field,
+       * because incomplete submissions must still reach Admin.
+       */
       const {
-        error
+        data:book,
+        error:bookError
       } = await supabaseClient
         .from('books')
         .insert({
           author_id:currentAuthor.id,
-          title:title,
-          description:description,
-          genre_topic:genreTopic,
-          who_its_for:whoItsFor,
-          availability:availability,
-          book_link:bookLink || null,
-          cover_url:coverUrl || null,
-          status:'pending'
-        });
+          title:title || 'Untitled Book Submission',
+          description:description || null,
+          genre_topic:genreTopic || null,
+          who_its_for:whoItsFor || null,
+          availability:availability || null,
+          book_link:null,
+          cover_url:null,
+          status:'pending',
+          submission_complete:submissionComplete,
+          missing_fields:missingFields
+        })
+        .select('id,title')
+        .single();
 
-      submitBookBtn.disabled = false;
-      submitBookBtn.textContent =
-        'Submit Book';
 
-      if(error){
+      if(bookError){
 
         console.error(
           'Book submission error:',
-          error
+          bookError
         );
 
         showToast(
           'Could not submit book: ' +
-          error.message
+          bookError.message
         );
 
+        submitBookBtn.disabled = false;
+        submitBookBtn.textContent =
+          'Submit Book for Review';
+
         return;
+
       }
+
+
+      let coverUrl = null;
+      let trailerUrl = null;
+      let mediaWarning = '';
+
+
+      /*
+       * Upload cover if supplied.
+       */
+      if(coverFile){
+
+        try{
+
+          coverUrl =
+            await uploadFile(
+              'book-covers',
+              coverFile,
+              currentAuthor.id + '/' + book.id
+            );
+
+
+          const {
+            error:updateCoverError
+          } = await supabaseClient
+            .from('books')
+            .update({
+              cover_url:coverUrl
+            })
+            .eq('id',book.id);
+
+
+          if(updateCoverError){
+            throw updateCoverError;
+          }
+
+        }catch(error){
+
+          console.error(
+            'Cover upload error:',
+            error
+          );
+
+          mediaWarning +=
+            ' The cover image could not be uploaded.';
+
+        }
+
+      }
+
+
+      /*
+       * Upload trailer if supplied.
+       */
+      if(trailerFile){
+
+        try{
+
+          trailerUrl =
+            await uploadFile(
+              'book-trailers',
+              trailerFile,
+              currentAuthor.id + '/' + book.id
+            );
+
+
+          await createTrailer(
+            book.id,
+            trailerUrl
+          );
+
+        }catch(error){
+
+          console.error(
+            'Trailer upload error:',
+            error
+          );
+
+          mediaWarning +=
+            ' The trailer video could not be uploaded.';
+
+        }
+
+      }
+
+
+      /*
+       * Create the protected Flipper Guide record
+       * when the author supplied the required link.
+       */
+      if(flipperGuideLink){
+
+        try{
+
+          await createFlipperGuide(
+            book.id,
+            title || 'Book Submission',
+            flipperGuideLink
+          );
+
+        }catch(error){
+
+          console.error(
+            'Flipper Guide error:',
+            error
+          );
+
+          mediaWarning +=
+            ' The Flipper Guide link could not be saved.';
+
+        }
+
+      }
+
+
+      submitBookBtn.disabled = false;
+      submitBookBtn.textContent =
+        'Submit Book for Review';
+
 
       bookForm.reset();
 
-      showNotice(
-        'Your book has been submitted successfully and is now pending Admin review.'
-      );
 
-      showToast(
-        'Book submitted successfully.'
-      );
+      /*
+       * Restore the account information after reset.
+       */
+      document.getElementById(
+        'authorName'
+      ).value =
+        currentAuthor.author_name || '';
+
+      document.getElementById(
+        'authorEmailField'
+      ).value =
+        currentUser.email || '';
+
+
+      if(submissionComplete){
+
+        showNotice(
+          'Your book has been submitted successfully and is now pending Admin review.' +
+          mediaWarning,
+          mediaWarning
+            ? 'warning'
+            : 'success'
+        );
+
+        showToast(
+          mediaWarning
+            ? 'Book submitted with a media warning.'
+            : 'Book submitted successfully.'
+        );
+
+      }else{
+
+        showNotice(
+          'Your book was submitted to Admin for review, but the submission is incomplete. Missing: ' +
+          missingFields.join(', ') +
+          '.' +
+          mediaWarning,
+          'warning'
+        );
+
+        showToast(
+          'Book submitted. Please check the missing information notification.'
+        );
+
+      }
+
 
       await loadBooks();
+
     }
+
 
     async function initializeAuthorDashboard(){
 
       const session =
         await getRealSession();
+
 
       if(!session){
 
@@ -979,20 +1590,31 @@
           'auth.html?mode=signin';
 
         return;
+
       }
+
 
       currentUser =
         session.user;
+
 
       document.getElementById(
         'authorEmail'
       ).textContent =
         currentUser.email || '';
 
+
+      document.getElementById(
+        'authorEmailField'
+      ).value =
+        currentUser.email || '';
+
+
       try{
 
         currentProfile =
           await loadProfile();
+
 
         if(
           !currentProfile ||
@@ -1005,10 +1627,13 @@
             'auth.html?mode=signin';
 
           return;
+
         }
+
 
         currentAuthor =
           await loadAuthor();
+
 
         if(
           !currentAuthor ||
@@ -1021,11 +1646,13 @@
             currentProfile.display_name ||
             '—';
 
+
           document.getElementById(
             'accountEmail'
           ).textContent =
             currentUser.email ||
             '—';
+
 
           document.getElementById(
             'accountRole'
@@ -1033,20 +1660,48 @@
             currentProfile.role ||
             '—';
 
+
           document.getElementById(
             'accountAuthorStatus'
           ).textContent =
             currentAuthor?.status ||
             'Not approved';
 
+
           bookForm.classList.add('hidden');
+
 
           showNotice(
             'Your author account is not currently approved for book submission.'
           );
 
+
           return;
+
         }
+
+
+        document.getElementById(
+          'authorName'
+        ).value =
+          currentAuthor.author_name ||
+          currentProfile.display_name ||
+          '';
+
+
+        document.getElementById(
+          'authorEmailField'
+        ).value =
+          currentUser.email ||
+          '';
+
+
+        document.getElementById(
+          'aboutAuthor'
+        ).value =
+          currentAuthor.bio ||
+          '';
+
 
         document.getElementById(
           'accountName'
@@ -1055,23 +1710,28 @@
           currentAuthor.author_name ||
           '—';
 
+
         document.getElementById(
           'accountEmail'
         ).textContent =
           currentUser.email ||
           '—';
 
+
         document.getElementById(
           'accountRole'
         ).textContent =
           currentProfile.role;
+
 
         document.getElementById(
           'accountAuthorStatus'
         ).textContent =
           currentAuthor.status;
 
+
         await loadBooks();
+
 
       }catch(error){
 
@@ -1083,13 +1743,17 @@
         showToast(
           'Unable to load your author account.'
         );
+
       }
+
     }
+
 
     bookForm.addEventListener(
       'submit',
       submitBook
     );
+
 
     document
       .getElementById('signOutBtn')
@@ -1101,8 +1765,10 @@
 
           window.location.href =
             'auth.html?mode=signin';
+
         }
       );
+
 
     initializeAuthorDashboard();
 

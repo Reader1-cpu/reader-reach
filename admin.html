@@ -111,7 +111,22 @@
           </section>
 
           <section id="trailerReview" class="section">
-            <div class="card"><div class="section-head"><div><h2 class="section-title">Trailer Review</h2><p class="muted">Watch submitted trailers before approving a book, then control whether an approved trailer appears on the public homepage.</p></div></div><div class="empty">Trailer previews appear inside each pending book review above. No maximum duration has been enforced because the project brief does not specify one.</div></div>
+            <div class="card">
+              <div class="section-head">
+                <div>
+                  <h2 class="section-title">Trailer Review</h2>
+                  <p class="muted">Watch uploaded book trailers and control whether each approved trailer appears on the public homepage.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <button id="refreshTrailerReviewBtn" class="btn small" type="button">Refresh</button>
+                  <span class="section-count" id="trailerReviewBadge">—</span>
+                </div>
+              </div>
+
+              <div id="trailerReviewList" class="book-list">
+                <div class="empty">Loading trailers...</div>
+              </div>
+            </div>
           </section>
 
           <section id="featuredBooks" class="section">
@@ -1668,6 +1683,283 @@
       ]);
     }
 
+
+    async function loadTrailerReview(){
+
+      const container =
+        document.getElementById('trailerReviewList');
+
+      const badge =
+        document.getElementById('trailerReviewBadge');
+
+      if(!container){
+        return;
+      }
+
+      container.innerHTML =
+        '<div class="empty">Loading trailers...</div>';
+
+      const {
+        data:trailers,
+        error:trailersError
+      } =
+        await supabaseClient
+          .from('book_trailers')
+          .select(`
+            id,
+            book_id,
+            trailer_url,
+            title,
+            description,
+            show_on_homepage,
+            created_at,
+            books (
+              id,
+              title,
+              status,
+              author_id,
+              cover_url
+            )
+          `)
+          .order(
+            'created_at',
+            {
+              ascending:false
+            }
+          );
+
+      if(trailersError){
+
+        console.error(
+          'Trailer review error:',
+          trailersError
+        );
+
+        container.innerHTML =
+          '<div class="empty">Unable to load trailer review items.</div>';
+
+        if(badge){
+          badge.textContent = '0';
+        }
+
+        showToast(
+          'Could not load trailer review.'
+        );
+
+        return;
+
+      }
+
+      const items =
+        (trailers || [])
+          .filter(item => item.books);
+
+      if(badge){
+        badge.textContent = items.length;
+      }
+
+      if(!items.length){
+
+        container.innerHTML =
+          '<div class="empty">No book trailers have been uploaded yet.</div>';
+
+        return;
+
+      }
+
+      const authorIds =
+        [
+          ...new Set(
+            items
+              .map(item => item.books && item.books.author_id)
+              .filter(Boolean)
+          )
+        ];
+
+      const {
+        data:authors,
+        error:authorsError
+      } =
+        authorIds.length
+          ? await supabaseClient
+              .from('authors')
+              .select('id,author_name')
+              .in('id',authorIds)
+          : {data:[],error:null};
+
+      if(authorsError){
+
+        console.error(
+          'Trailer review author error:',
+          authorsError
+        );
+
+        container.innerHTML =
+          '<div class="empty">Trailer information loaded, but author details could not be loaded.</div>';
+
+        return;
+
+      }
+
+      const authorMap =
+        new Map(
+          (authors || []).map(
+            author => [
+              author.id,
+              author
+            ]
+          )
+        );
+
+      container.innerHTML =
+        items.map(item => {
+
+          const book =
+            item.books || {};
+
+          const author =
+            authorMap.get(book.author_id) || {};
+
+          const isApproved =
+            book.status === 'approved';
+
+          const isVisible =
+            item.show_on_homepage === true;
+
+          return `
+            <div class="book-item">
+
+              <div class="book-top">
+
+                <div>
+                  <div class="item-title">
+                    ${escapeHtml(
+                      book.title ||
+                      'Untitled Book'
+                    )}
+                  </div>
+
+                  <div class="item-meta">
+                    Author:
+                    ${escapeHtml(
+                      author.author_name ||
+                      'Unknown author'
+                    )}
+                    <br>
+                    Book status:
+                    ${escapeHtml(
+                      book.status ||
+                      'Unknown'
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <span class="status ${
+                    isApproved
+                      ? 'complete'
+                      : 'pending'
+                  }">
+                    ${
+                      isApproved
+                        ? 'Approved Book'
+                        : 'Pending Book'
+                    }
+                  </span>
+                </div>
+
+              </div>
+
+              <div class="trailer-box">
+
+                <div class="item-title">
+                  ${escapeHtml(
+                    item.title ||
+                    'Book Trailer'
+                  )}
+                </div>
+
+                ${
+                  item.description
+                    ? `
+                      <div class="item-meta" style="margin-top:5px;">
+                        ${escapeHtml(item.description)}
+                      </div>
+                    `
+                    : ''
+                }
+
+                <video
+                  controls
+                  preload="metadata"
+                  src="${escapeHtml(item.trailer_url || '')}"
+                >
+                  Your browser does not support video playback.
+                </video>
+
+                <div class="actions">
+
+                  <a
+                    class="btn link small"
+                    href="${escapeHtml(item.trailer_url || '#')}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Watch in New Tab
+                  </a>
+
+                  ${
+                    isApproved
+                      ? `
+                        <label
+                          class="switch"
+                          title="Show trailer on homepage"
+                        >
+                          <input
+                            type="checkbox"
+                            ${
+                              isVisible
+                                ? 'checked'
+                                : ''
+                            }
+                            onchange="toggleTrailerHomepageVisibility('${item.id}', this.checked, true)"
+                          >
+                          <span class="slider"></span>
+                        </label>
+
+                        <span
+                          id="trailer-review-state-${item.id}"
+                          class="trailer-visibility-state ${
+                            isVisible
+                              ? 'visibility-on'
+                              : 'visibility-off'
+                          }"
+                        >
+                          ${
+                            isVisible
+                              ? 'ON — visible on homepage'
+                              : 'OFF — hidden from homepage'
+                          }
+                        </span>
+                      `
+                      : `
+                        <span class="message">
+                          Homepage trailer control becomes available after the book is approved.
+                        </span>
+                      `
+                  }
+
+                </div>
+
+              </div>
+
+            </div>
+          `;
+
+        }).join('');
+
+    }
+
     async function loadApprovedBooks(){
 
       approvedBookList.innerHTML =
@@ -1981,7 +2273,7 @@
       showToast('Book added to Featured Books.');
     }
 
-    async function toggleTrailerHomepageVisibility(trailerId,showOnHomepage){
+    async function toggleTrailerHomepageVisibility(trailerId,showOnHomepage,fromTrailerReview = false){
       if(!currentUser){
         showToast('Administrator session not found.');
         return;
@@ -2018,6 +2310,26 @@
       showToast(showOnHomepage
         ? 'Book trailer is now visible on the homepage.'
         : 'Book trailer is now hidden from the homepage.');
+
+      const reviewState =
+        document.getElementById(
+          `trailer-review-state-${trailerId}`
+        );
+
+      if(reviewState){
+        reviewState.textContent =
+          showOnHomepage
+            ? 'ON — visible on homepage'
+            : 'OFF — hidden from homepage';
+
+        reviewState.className =
+          'trailer-visibility-state ' +
+          (
+            showOnHomepage
+              ? 'visibility-on'
+              : 'visibility-off'
+          );
+      }
     }
 
     function populateBookSelect(){
@@ -3393,6 +3705,7 @@
         loadDiscussions(),
         loadModerators(),
         loadSchedules(),
+        loadTrailerReview(),
         loadStats()
       ]);
     }
@@ -3431,6 +3744,15 @@
       .addEventListener(
         'click',
         loadPendingBooks
+      );
+
+    document
+      .getElementById(
+        'refreshTrailerReviewBtn'
+      )
+      .addEventListener(
+        'click',
+        loadTrailerReview
       );
 
     document

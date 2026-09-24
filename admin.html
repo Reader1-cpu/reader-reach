@@ -128,19 +128,21 @@
               </div>
             </div>
           </section>
+
           <section id="featuredBooks" class="section">
             <div class="card">
               <div class="section-head">
                 <div>
                   <h2 class="section-title">Featured Books</h2>
-                  <p class="muted">Manage the books selected for the Reader Reach homepage. Featured status is separate from approval and scheduling.</p><p class="muted" style="margin-top:6px;">Use <strong>Remove Featured</strong> to remove a book from the homepage Featured selection without deleting the book.</p>
+                  <p class="muted">Manage which approved books are selected for the Reader Reach homepage. Featured status is separate from approval and scheduling.</p>
                 </div>
                 <div style="display:flex;align-items:center;gap:8px">
                   <button id="refreshFeaturedBooksBtn" class="btn small" type="button">Refresh</button>
                   <span class="section-count" id="featuredBooksBadge">—</span>
                 </div>
               </div>
-              <div id="featuredBooksList" class="book-list">
+
+              <div id="featuredBookList" class="book-list">
                 <div class="empty">Loading featured books...</div>
               </div>
             </div>
@@ -1973,11 +1975,10 @@
 
     }
 
-
-    async function loadFeaturedBooks(){
+    async function loadFeaturedBooksAdmin(){
 
       const container =
-        document.getElementById('featuredBooksList');
+        document.getElementById('featuredBookList');
 
       const badge =
         document.getElementById('featuredBooksBadge');
@@ -1990,186 +1991,130 @@
         '<div class="empty">Loading featured books...</div>';
 
       const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('homepage_featured_books')
-          .select(`
-            id,
-            book_id,
-            selected_at,
-            selected_by,
-            books (
-              id,
-              title,
-              description,
-              genre_topic,
-              who_its_for,
-              availability,
-              cover_url,
-              status,
-              author_id
-            )
-          `)
-          .order(
-            'selected_at',
-            {
-              ascending:false
-            }
-          );
+        data:featuredRows,
+        error:featuredError
+      } = await supabaseClient
+        .from('homepage_featured_books')
+        .select('book_id,selected_at,selected_by,created_at')
+        .order('selected_at',{ascending:false});
 
-      if(error){
-
-        console.error(
-          'Featured books error:',
-          error
-        );
-
+      if(featuredError){
+        console.error('Featured books error:',featuredError);
         container.innerHTML =
-          '<div class="empty">Featured books could not be loaded.</div>';
-
-        if(badge){
-          badge.textContent = '0';
-        }
-
+          '<div class="empty">Unable to load Featured Books.</div>';
+        if(badge) badge.textContent = '0';
+        showToast('Could not load Featured Books.');
         return;
       }
 
-      const rows =
-        (data || [])
-          .filter(
-            row =>
-              row.books &&
-              row.books.status === 'approved'
-          );
+      const rows = featuredRows || [];
+      const featuredBooks = rows
+        .map(row => ({
+          row,
+          book:approvedBooks.find(item => item.id === row.book_id)
+        }))
+        .filter(item => item.book);
 
       if(badge){
-        badge.textContent = rows.length;
+        badge.textContent = featuredBooks.length;
       }
 
-      if(!rows.length){
-
-        container.innerHTML =
-          '<div class="empty">No approved books are currently featured.</div>';
-
+      if(!featuredBooks.length){
+        container.innerHTML = `
+          <div class="empty">
+            No books are currently featured. Use <strong>Feature</strong> on an approved book to add one to the homepage.
+          </div>
+        `;
         return;
       }
 
-      const authorIds =
-        [
-          ...new Set(
-            rows
-              .map(row => row.books.author_id)
-              .filter(Boolean)
-          )
-        ];
+      container.innerHTML = featuredBooks.map(({row,book}) => {
+        const author = book.author || {};
+        const cover = book.cover_url
+          ? `<img src="${escapeHtml(book.cover_url)}" alt="Book cover for ${escapeHtml(book.title || 'book')}">`
+          : 'No cover uploaded.';
 
-      const {
-        data:authors
-      } =
-        authorIds.length
-          ? await supabaseClient
-              .from('authors')
-              .select('id,author_name')
-              .in('id',authorIds)
-          : {data:[]};
-
-      const authorMap =
-        new Map(
-          (authors || []).map(
-            author => [
-              author.id,
-              author.author_name
-            ]
-          )
-        );
-
-      container.innerHTML =
-        rows.map(row => {
-
-          const book = row.books;
-
-          const cover =
-            book.cover_url
-              ? `
-                <img
-                  src="${escapeHtml(book.cover_url)}"
-                  alt="${escapeHtml(book.title || 'Book')} cover"
-                  style="width:92px;height:120px;object-fit:cover;border-radius:12px;background:var(--cream-dark);"
-                >
-              `
-              : `
-                <div style="width:92px;height:120px;border-radius:12px;background:var(--cream-dark);display:grid;place-items:center;text-align:center;padding:10px;">
-                  ${escapeHtml(book.title || 'Book')}
+        return `
+          <div class="book-item">
+            <div class="book-top">
+              <div style="display:flex;gap:14px;align-items:flex-start;min-width:0">
+                <div class="cover-preview" style="width:82px;height:108px;flex:none">${cover}</div>
+                <div>
+                  <div class="item-title">${escapeHtml(book.title || 'Untitled book')}</div>
+                  <div class="item-meta">
+                    Author: ${escapeHtml(author.author_name || 'Unknown author')}<br>
+                    Genre: ${escapeHtml(book.genre_topic || '—')}<br>
+                    Selected: ${escapeHtml(formatAdminDateTime(row.selected_at || row.created_at))}
+                  </div>
                 </div>
-              `;
-
-          return `
-            <div class="book-item">
-              <div style="display:flex;gap:16px;align-items:flex-start;">
-
-                ${cover}
-
-                <div style="flex:1;min-width:0;">
-
-                  <div class="item-title">
-                    ${escapeHtml(book.title || 'Untitled Book')}
-                  </div>
-
-                  <div class="item-meta" style="margin-top:5px;">
-                    Author:
-                    ${escapeHtml(
-                      authorMap.get(book.author_id) ||
-                      'Unknown author'
-                    )}
-                    <br>
-                    Genre / Topic:
-                    ${escapeHtml(book.genre_topic || '—')}
-                    <br>
-                    Selected:
-                    ${
-                      row.selected_at
-                        ? escapeHtml(
-                            new Date(row.selected_at)
-                              .toLocaleString()
-                          )
-                        : '—'
-                    }
-                  </div>
-
-                  <div class="actions" style="margin-top:12px;">
-
-                    <button
-                      class="btn small"
-                      type="button"
-                      onclick="viewApprovedBook('${book.id}')"
-                    >
-                      View
-                    </button>
-
-                    <button
-                      class="btn small danger"
-                      type="button"
-                      onclick="removeFeaturedBook('${row.book_id}')"
-                    >
-                      Remove
-                    </button>
-
-                  </div>
-
-                </div>
-
-                <span class="status complete">
-                  Featured
-                </span>
-
               </div>
+              <span class="status approved">Featured</span>
             </div>
-          `;
 
-        }).join('');
+            <div class="actions">
+              <button class="btn small" type="button" onclick="viewApprovedBook('${book.id}')">View</button>
+              <button class="btn danger small" type="button" onclick="removeFeaturedBook('${book.id}')">Remove from Featured</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
 
+    function formatAdminDateTime(dateValue){
+      if(!dateValue) return '—';
+      const date = new Date(dateValue);
+      if(Number.isNaN(date.getTime())) return String(dateValue);
+      return date.toLocaleString(undefined,{
+        year:'numeric',
+        month:'short',
+        day:'numeric',
+        hour:'numeric',
+        minute:'2-digit'
+      });
+    }
+
+    async function removeFeaturedBook(bookId){
+      if(!currentUser){
+        showToast('Administrator session not found.');
+        return;
+      }
+
+      const book = approvedBooks.find(item => item.id === bookId);
+      if(!book){
+        showToast('Approved book could not be found.');
+        return;
+      }
+
+      const confirmed = window.confirm(
+        `Remove "${book.title || 'this book'}" from Featured Books?\n\n` +
+        `The book will remain approved and its schedule, trailer and other records will not be deleted.`
+      );
+
+      if(!confirmed){
+        return;
+      }
+
+      const {error} = await supabaseClient
+        .from('homepage_featured_books')
+        .delete()
+        .eq('book_id',bookId);
+
+      if(error){
+        console.error('Remove featured book error:',error);
+        showToast('Could not remove book from Featured Books: ' + error.message);
+        return;
+      }
+
+      featuredBookIds.delete(bookId);
+      book.isFeatured = false;
+
+      await Promise.all([
+        loadFeaturedBooksAdmin(),
+        loadApprovedBooks(),
+        loadStats()
+      ]);
+
+      showToast('Book removed from Featured Books.');
     }
 
     async function loadApprovedBooks(){
@@ -2285,7 +2230,7 @@
               <button class="btn small" onclick="viewApprovedBook('${book.id}')">View</button>
               ${featured
                 ? '<button class="btn small feature-active" disabled>Featured</button>'
-                : `<button class="btn small" onclick="featureApprovedBook(\'${book.id}\')" >Feature</button>`}
+                : `<button class="btn small" onclick="featureApprovedBook('${book.id}')">Feature</button>`}
               <button class="btn danger small" onclick="removeBook('${book.id}')">Remove Book</button>
               <button class="btn small" onclick="viewApprovedBook('${book.id}')" aria-label="More options">⋯</button>
             </div>
@@ -2455,80 +2400,6 @@
       `);
     }
 
-
-    async function removeFeaturedBook(bookId){
-
-      if(!bookId){
-        return;
-      }
-
-      const confirmed =
-        window.confirm(
-          'Remove this book from Featured Books? The book itself will not be deleted.'
-        );
-
-      if(!confirmed){
-        return;
-      }
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .from('homepage_featured_books')
-          .delete()
-          .eq(
-            'book_id',
-            bookId
-          );
-
-      if(error){
-
-        console.error(
-          'Remove featured book error:',
-          error
-        );
-
-        showToast(
-          'Unable to remove this book from Featured Books.'
-        );
-
-        return;
-      }
-
-      showToast(
-        'Book removed from Featured Books.'
-      );
-
-      await Promise.all([
-        loadFeaturedBooks(),
-        loadApprovedBooks(),
-        loadStats()
-      ]);
-
-    }
-
-
-    async function isBookFeatured(bookId){
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('homepage_featured_books')
-          .select('id')
-          .eq('book_id', bookId)
-          .maybeSingle();
-
-      if(error){
-        console.error('Featured status check error:', error);
-        return false;
-      }
-
-      return !!data;
-    }
-
     async function featureApprovedBook(bookId){
       if(!currentUser){ showToast('Administrator session not found.'); return; }
       const book = approvedBooks.find(item => item.id === bookId);
@@ -2555,6 +2426,7 @@
       featuredBookIds.add(bookId);
       book.isFeatured = true;
       renderApprovedBooks();
+      await loadFeaturedBooksAdmin();
       closeDetailModal();
       showToast('Book added to Featured Books.');
     }
@@ -3666,7 +3538,8 @@
         loadApprovedBooks(),
         loadSchedules(),
         loadDiscussions(),
-        loadStats()
+        loadStats(),
+        loadFeaturedBooksAdmin()
       ]);
     }
 
@@ -3973,16 +3846,6 @@
       loginButton.textContent = 'Sign In as Admin';
     }
 
-
-    document
-      .getElementById(
-        'refreshFeaturedBooksBtn'
-      )
-      .addEventListener(
-        'click',
-        loadFeaturedBooks
-      );
-
     async function initializeDashboard(){
 
       const isAdmin =
@@ -4004,6 +3867,8 @@
         loadTrailerReview(),
         loadStats()
       ]);
+
+      await loadFeaturedBooksAdmin();
     }
 
     document
@@ -4049,6 +3914,15 @@
       .addEventListener(
         'click',
         loadTrailerReview
+      );
+
+    document
+      .getElementById(
+        'refreshFeaturedBooksBtn'
+      )
+      .addEventListener(
+        'click',
+        loadFeaturedBooksAdmin
       );
 
     document

@@ -592,6 +592,29 @@
         </div>
       </section>
 
+
+      <!-- APPROVED AUTHORS -->
+      <section class="section">
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Approved Authors</h2>
+              <p class="muted">
+                Authors who have been approved and can submit books to Reader Reach.
+              </p>
+            </div>
+
+            <button id="refreshApprovedAuthorsBtn" class="btn small">
+              Refresh
+            </button>
+          </div>
+
+          <div id="approvedAuthorList" class="request-list">
+            <div class="empty">Loading approved authors...</div>
+          </div>
+        </div>
+      </section>
+
       <!-- PENDING BOOKS -->
       <section class="section">
         <div class="card">
@@ -731,6 +754,7 @@
 
     let currentUser = null;
     let authorRequests = [];
+    let approvedAuthors = [];
     let pendingBooks = [];
     let approvedBooks = [];
     let moderators = [];
@@ -746,6 +770,9 @@
 
     const authorRequestList =
       document.getElementById('authorRequestList');
+
+    const approvedAuthorList =
+      document.getElementById('approvedAuthorList');
 
     const pendingBookList =
       document.getElementById('pendingBookList');
@@ -1340,6 +1367,158 @@
       to avoid relationship ambiguity and to keep the
       Admin review data reliable.
     */
+
+    async function loadApprovedAuthors(){
+
+      approvedAuthorList.innerHTML =
+        '<div class="empty">Loading approved authors...</div>';
+
+      const {
+        data:authors,
+        error:authorsError
+      } = await supabaseClient
+        .from('authors')
+        .select(`
+          id,
+          profile_id,
+          author_name,
+          bio,
+          status,
+          submitted_at,
+          reviewed_at,
+          created_at
+        `)
+        .eq('status','approved')
+        .order('reviewed_at',{ascending:false});
+
+      if(authorsError){
+
+        console.error(
+          'Approved authors error:',
+          authorsError
+        );
+
+        approvedAuthorList.innerHTML =
+          '<div class="empty">Unable to load approved authors.</div>';
+
+        showToast(
+          'Could not load approved authors.'
+        );
+
+        return;
+      }
+
+      if(!authors || authors.length === 0){
+
+        approvedAuthors = [];
+
+        approvedAuthorList.innerHTML = `
+          <div class="empty">
+            No approved authors found.
+          </div>
+        `;
+
+        return;
+      }
+
+      const profileIds =
+        [...new Set(
+          authors.map(author => author.profile_id)
+        )];
+
+      const {
+        data:profiles,
+        error:profilesError
+      } = await supabaseClient
+        .from('profiles')
+        .select(`
+          id,
+          display_name,
+          role
+        `)
+        .in('id',profileIds);
+
+      if(profilesError){
+
+        console.error(
+          'Approved author profile error:',
+          profilesError
+        );
+
+        approvedAuthorList.innerHTML =
+          '<div class="empty">Unable to load approved author profiles.</div>';
+
+        showToast(
+          'Could not load approved author profile details.'
+        );
+
+        return;
+      }
+
+      const profileMap =
+        new Map(
+          (profiles || []).map(profile => [
+            profile.id,
+            profile
+          ])
+        );
+
+      approvedAuthors =
+        authors.map(author => ({
+          ...author,
+          profiles:profileMap.get(author.profile_id) || null
+        }));
+
+      approvedAuthorList.innerHTML =
+        approvedAuthors.map(author => {
+
+          const profile =
+            author.profiles || {};
+
+          const displayName =
+            author.author_name ||
+            profile.display_name ||
+            'Unnamed author';
+
+          return `
+            <div class="request-item">
+
+              <div class="request-top">
+
+                <div>
+                  <div class="item-title">
+                    ${escapeHtml(displayName)}
+                  </div>
+
+                  <div class="item-meta">
+                    Role: ${escapeHtml(profile.role || 'author')}
+                    <br>
+                    Approved: ${escapeHtml(formatDate(author.reviewed_at || author.created_at))}
+                  </div>
+                </div>
+
+                <span class="status approved">
+                  Approved
+                </span>
+
+              </div>
+
+              ${
+                author.bio
+                  ? `
+                    <div class="message">
+                      ${escapeHtml(author.bio)}
+                    </div>
+                  `
+                  : ''
+              }
+
+            </div>
+          `;
+        })
+        .join('');
+    }
+
     async function loadPendingBooks(){
 
       pendingBookList.innerHTML =
@@ -2630,6 +2809,7 @@
 
       await Promise.all([
         loadAuthorRequests(),
+        loadApprovedAuthors(),
         loadPendingBooks(),
         loadApprovedBooks(),
         loadModerators(),
@@ -2654,6 +2834,15 @@
       .addEventListener(
         'click',
         loadAuthorRequests
+      );
+
+    document
+      .getElementById(
+        'refreshApprovedAuthorsBtn'
+      )
+      .addEventListener(
+        'click',
+        loadApprovedAuthors
       );
 
     document

@@ -491,8 +491,46 @@
     <section id="loginSection" class="login-card">
       <h1>Admin Access</h1>
       <p class="muted">
-        Checking your Reader Reach administrator account...
+        Sign in with your Reader Reach administrator account.
       </p>
+
+      <form id="adminLoginForm">
+        <div class="field">
+          <label for="adminLoginEmail">Email Address</label>
+          <input
+            id="adminLoginEmail"
+            type="email"
+            autocomplete="username"
+            placeholder="Admin email address"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label for="adminLoginPassword">Password</label>
+          <input
+            id="adminLoginPassword"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Admin password"
+            required
+          />
+        </div>
+
+        <div class="actions">
+          <button id="adminLoginBtn" type="submit" class="btn primary">
+            Sign In as Admin
+          </button>
+        </div>
+
+        <p id="adminLoginMessage" class="muted" style="margin-top:14px;"></p>
+
+        <div style="margin-top:14px;">
+          <a class="btn link small" href="auth.html?mode=reset">
+            Reset Password
+          </a>
+        </div>
+      </form>
     </section>
 
     <section id="dashboardSection" class="hidden">
@@ -760,10 +798,12 @@
       dashboardSection.classList.add('hidden');
       loginSection.classList.remove('hidden');
 
-      loginSection.innerHTML = `
-        <h1>Admin Access</h1>
-        <p class="muted">${escapeHtml(message)}</p>
-      `;
+      const messageElement =
+        document.getElementById('adminLoginMessage');
+
+      if(messageElement){
+        messageElement.textContent = message || '';
+      }
     }
 
     async function checkAdmin(){
@@ -2502,6 +2542,83 @@
       }
     }
 
+    async function handleAdminLogin(event){
+
+      event.preventDefault();
+
+      const email =
+        document.getElementById(
+          'adminLoginEmail'
+        ).value.trim();
+
+      const password =
+        document.getElementById(
+          'adminLoginPassword'
+        ).value;
+
+      const loginButton =
+        document.getElementById(
+          'adminLoginBtn'
+        );
+
+      const messageElement =
+        document.getElementById(
+          'adminLoginMessage'
+        );
+
+      if(!email || !password){
+        messageElement.textContent =
+          'Please enter your email address and password.';
+        return;
+      }
+
+      loginButton.disabled = true;
+      loginButton.textContent = 'Signing In...';
+      messageElement.textContent = '';
+
+      const {
+        data,
+        error
+      } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if(error){
+        console.error(
+          'Admin sign-in error:',
+          error
+        );
+
+        messageElement.textContent =
+          error.message ||
+          'Unable to sign in.';
+        loginButton.disabled = false;
+        loginButton.textContent = 'Sign In as Admin';
+        return;
+      }
+
+      if(!data || !data.user){
+        messageElement.textContent =
+          'Sign-in did not return an administrator account.';
+        loginButton.disabled = false;
+        loginButton.textContent = 'Sign In as Admin';
+        return;
+      }
+
+      const isAdmin =
+        await checkAdmin();
+
+      if(!isAdmin){
+        loginButton.disabled = false;
+        loginButton.textContent = 'Sign In as Admin';
+        return;
+      }
+
+      loginButton.disabled = false;
+      loginButton.textContent = 'Sign In as Admin';
+    }
+
     async function initializeDashboard(){
 
       const isAdmin =
@@ -2520,6 +2637,15 @@
         loadStats()
       ]);
     }
+
+    document
+      .getElementById(
+        'adminLoginForm'
+      )
+      .addEventListener(
+        'submit',
+        handleAdminLogin
+      );
 
     document
       .getElementById(

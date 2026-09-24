@@ -2567,6 +2567,8 @@
       });
     }
 
+    let editingScheduleId = null;
+
     async function loadSchedules(){
 
       scheduleList.innerHTML =
@@ -2619,16 +2621,6 @@
       }
 
       renderSchedules(data || []);
-
-      const scheduled =
-        (data || []).filter(
-          item => item.status === 'scheduled'
-        );
-
-      document.getElementById(
-        'scheduledFeaturesCount'
-      ).textContent =
-        scheduled.length;
 
       const today =
         new Date();
@@ -2746,6 +2738,12 @@
                   ? `
                     <div class="actions">
                       <button
+                        class="btn small"
+                        onclick="editSchedule('${schedule.id}')"
+                      >
+                        Edit
+                      </button>
+                      <button
                         class="btn danger small"
                         onclick="cancelSchedule('${schedule.id}')"
                       >
@@ -2801,28 +2799,49 @@
         return;
       }
 
-      const {
-        error
-      } = await supabaseClient
-        .from('feature_schedules')
-        .insert({
-          book_id:bookId,
-          moderator_id:moderatorId,
-          feature_date:featureDate,
-          feature_time:featureTime,
-          status:'scheduled',
-          notes:notes || null
-        });
+      let error = null;
+
+      if(editingScheduleId){
+
+        const result = await supabaseClient
+          .from('feature_schedules')
+          .update({
+            book_id:bookId,
+            moderator_id:moderatorId,
+            feature_date:featureDate,
+            feature_time:featureTime,
+            status:'scheduled',
+            notes:notes || null
+          })
+          .eq('id',editingScheduleId);
+
+        error = result.error;
+
+      }else{
+
+        const result = await supabaseClient
+          .from('feature_schedules')
+          .insert({
+            book_id:bookId,
+            moderator_id:moderatorId,
+            feature_date:featureDate,
+            feature_time:featureTime,
+            status:'scheduled',
+            notes:notes || null
+          });
+
+        error = result.error;
+      }
 
       if(error){
 
         console.error(
-          'Schedule creation error:',
+          'Schedule save error:',
           error
         );
 
         showToast(
-          'Could not schedule feature: ' +
+          'Could not save schedule: ' +
           error.message
         );
 
@@ -2830,8 +2849,12 @@
       }
 
       showToast(
-        'Feature scheduled successfully.'
+        editingScheduleId
+          ? 'Feature schedule updated successfully.'
+          : 'Feature scheduled successfully.'
       );
+
+      editingScheduleId = null;
 
       document.getElementById(
         'scheduleBook'
@@ -2853,7 +2876,97 @@
         'scheduleNotes'
       ).value = '';
 
+      const scheduleBtn =
+        document.getElementById('scheduleBtn');
+
+      if(scheduleBtn){
+        scheduleBtn.textContent =
+          'Schedule Feature';
+      }
+
       await loadSchedules();
+    }
+
+    async function editSchedule(scheduleId){
+
+      const {
+        data,
+        error
+      } = await supabaseClient
+        .from('feature_schedules')
+        .select(`
+          id,
+          book_id,
+          moderator_id,
+          feature_date,
+          feature_time,
+          notes,
+          status
+        `)
+        .eq('id',scheduleId)
+        .maybeSingle();
+
+      if(error || !data){
+
+        console.error(
+          'Load schedule for edit error:',
+          error
+        );
+
+        showToast(
+          'Could not load this schedule for editing.'
+        );
+
+        return;
+      }
+
+      if(data.status !== 'scheduled'){
+        showToast(
+          'Only scheduled features can be edited.'
+        );
+        return;
+      }
+
+      editingScheduleId = scheduleId;
+
+      document.getElementById(
+        'scheduleBook'
+      ).value = data.book_id || '';
+
+      document.getElementById(
+        'scheduleModerator'
+      ).value = data.moderator_id || '';
+
+      document.getElementById(
+        'scheduleDate'
+      ).value = data.feature_date || '';
+
+      document.getElementById(
+        'scheduleTime'
+      ).value = data.feature_time || '';
+
+      document.getElementById(
+        'scheduleNotes'
+      ).value = data.notes || '';
+
+      const scheduleBtn =
+        document.getElementById('scheduleBtn');
+
+      if(scheduleBtn){
+        scheduleBtn.textContent =
+          'Update Schedule';
+      }
+
+      document.getElementById(
+        'calendarSchedules'
+      ).scrollIntoView({
+        behavior:'smooth',
+        block:'start'
+      });
+
+      showToast(
+        'Schedule loaded. Update the details and save.'
+      );
     }
 
     async function cancelSchedule(scheduleId){

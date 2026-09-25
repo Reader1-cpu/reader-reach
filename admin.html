@@ -210,11 +210,11 @@
           </section>
 
           <section id="notifications" class="section">
-            <div class="card"><div class="section-head"><div><h2 class="section-title">Notifications</h2><p class="muted">Monitor important author, book, moderator and schedule activity.</p></div></div><div class="empty">Admin notifications will appear here from the existing notification system.</div></div>
+            <div class="card"><div class="section-head"><div><h2 class="section-title">Notifications</h2><p class="muted">Monitor important author, book, moderator and schedule activity.</p></div><button class="btn" onclick="loadAdminNotifications()">Refresh</button></div><div id="adminNotificationList" class="request-list"><div class="empty">Loading notifications...</div></div></div>
           </section>
 
           <section id="moderators" class="section">
-            <div class="card"><div class="section-head"><div><h2 class="section-title">Moderators</h2><p class="muted">Manage active moderators and their scheduling role.</p></div></div><div id="moderatorPanel" class="empty">Moderator management panel will use the real moderator records. Active moderators are already available to the scheduling system.</div></div>
+            <div class="card"><div class="section-head"><div><h2 class="section-title">Moderators</h2><p class="muted">Manage active moderators and their scheduling role.</p></div><button class="btn" onclick="loadModeratorManagement()">Refresh</button></div><div id="moderatorPanel" class="request-list"><div class="empty">Loading moderators...</div></div></div>
           </section>
 
           <section id="settings" class="section">
@@ -1604,7 +1604,9 @@
       await Promise.all([
         loadPendingBooks(),
         loadApprovedBooks(),
-        loadStats()
+        loadStats(),
+        loadAdminNotifications(),
+        loadModeratorManagement()
       ]);
     }
 
@@ -1727,7 +1729,9 @@
       await Promise.all([
         loadPendingBooks(),
         loadApprovedBooks(),
-        loadStats()
+        loadStats(),
+        loadAdminNotifications(),
+        loadModeratorManagement()
       ]);
     }
 
@@ -2144,7 +2148,9 @@
       await Promise.all([
         loadFeaturedBooksAdmin(),
         loadApprovedBooks(),
-        loadStats()
+        loadStats(),
+        loadAdminNotifications(),
+        loadModeratorManagement()
       ]);
 
       showToast('Book removed from Featured Books.');
@@ -4080,7 +4086,9 @@
         loadReaders(),
         loadSchedules(),
         loadDiscussions(),
-        loadStats()
+        loadStats(),
+        loadAdminNotifications(),
+        loadModeratorManagement()
       ]);
     }
 
@@ -4136,8 +4144,63 @@
 
       await Promise.all([
         loadReaders(),
-        loadStats()
+        loadStats(),
+        loadAdminNotifications(),
+        loadModeratorManagement()
       ]);
+    }
+
+    async function loadAdminNotifications(){
+      const list = document.getElementById('adminNotificationList');
+      if(!list) return;
+      list.innerHTML = '<div class="empty">Loading notifications...</div>';
+      const { data:userData } = await supabaseClient.auth.getUser();
+      const user = userData?.user;
+      if(!user){ list.innerHTML = '<div class="empty">Admin session not found.</div>'; return; }
+      const { data, error } = await supabaseClient
+        .from('notifications')
+        .select('id,type,title,message,is_read,created_at,related_book_id,related_schedule_id')
+        .eq('profile_id', user.id)
+        .order('created_at',{ascending:false})
+        .limit(100);
+      if(error){ console.error(error); list.innerHTML = '<div class="empty">Unable to load notifications.</div>'; return; }
+      if(!data?.length){ list.innerHTML = '<div class="empty">No admin notifications yet.</div>'; return; }
+      list.innerHTML = data.map(n => `
+        <div class="request-item" style="${n.is_read ? '' : 'border-color:#b9944a;box-shadow:0 0 0 1px rgba(185,148,74,.12) inset;'}">
+          <div class="request-top"><div><div class="item-title">${escapeHtml(n.title || n.type || 'Notification')}</div><div class="item-meta">${escapeHtml(n.message || '')}</div></div><span class="status ${n.is_read ? '' : 'pending'}">${n.is_read ? 'Read' : 'Unread'}</span></div>
+          <div class="item-meta">${n.created_at ? new Date(n.created_at).toLocaleString() : ''}</div>
+          ${n.is_read ? '' : `<div class="actions"><button class="btn" onclick="markAdminNotificationRead('${n.id}')">Mark Read</button></div>`}
+        </div>`).join('');
+    }
+
+    async function markAdminNotificationRead(id){
+      const { error } = await supabaseClient.from('notifications').update({is_read:true}).eq('id',id);
+      if(error){ showToast('Could not update notification.'); return; }
+      await loadAdminNotifications();
+    }
+
+    async function loadModeratorManagement(){
+      const panel = document.getElementById('moderatorPanel');
+      if(!panel) return;
+      panel.innerHTML = '<div class="empty">Loading moderators...</div>';
+      const { data, error } = await supabaseClient
+        .from('moderators')
+        .select('id,profile_id,display_name,active,created_at,updated_at')
+        .order('display_name',{ascending:true});
+      if(error){ console.error(error); panel.innerHTML = '<div class="empty">Unable to load moderators.</div>'; return; }
+      if(!data?.length){ panel.innerHTML = '<div class="empty">No moderator records yet.</div>'; return; }
+      panel.innerHTML = data.map(m => `
+        <div class="request-item">
+          <div class="request-top"><div><div class="item-title">${escapeHtml(m.display_name || 'Moderator')}</div><div class="item-meta">Profile ID: ${escapeHtml(m.profile_id || '')}</div></div><span class="status ${m.active ? 'approved' : 'incomplete'}">${m.active ? 'Active' : 'Inactive'}</span></div>
+          <div class="actions"><button class="btn" onclick="setModeratorActive('${m.id}',${!m.active})">${m.active ? 'Deactivate' : 'Activate'}</button></div>
+        </div>`).join('');
+    }
+
+    async function setModeratorActive(id,active){
+      const { error } = await supabaseClient.from('moderators').update({active}).eq('id',id);
+      if(error){ console.error(error); showToast('Could not update moderator: ' + error.message); return; }
+      showToast(active ? 'Moderator activated.' : 'Moderator deactivated.');
+      await Promise.all([loadModeratorManagement(),loadModerators()]);
     }
 
     async function loadStats(){
@@ -4326,10 +4389,21 @@
         loadSchedules(),
         loadFlipperGuides(),
         loadTrailerReview(),
-        loadStats()
+        loadStats(),
+        loadAdminNotifications(),
+        loadModeratorManagement()
       ]);
 
       await loadFeaturedBooksAdmin();
+    }
+
+    const homepageVisibilityToggle = document.getElementById('homepageVisibilityToggle');
+    if(homepageVisibilityToggle){
+      homepageVisibilityToggle.checked = localStorage.getItem('readerReachShowScheduledBooks') !== 'false';
+      homepageVisibilityToggle.addEventListener('change', () => {
+        localStorage.setItem('readerReachShowScheduledBooks', homepageVisibilityToggle.checked ? 'true' : 'false');
+        showToast(homepageVisibilityToggle.checked ? 'Scheduled homepage display enabled.' : 'Scheduled homepage display disabled.');
+      });
     }
 
     document

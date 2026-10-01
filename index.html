@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Reader Reach | Every Book Has Its Readers</title>
+<meta name="description" content="Reader Reach connects readers with approved books, authors, featured book trailers, discussions, and scheduled features.">
 
 <style>
 :root{
@@ -921,12 +922,290 @@ footer{
   padding:25px;
 }
 
+
+.navActions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex:none;
+}
+
+.upcomingSection{
+  border-top:1px solid var(--line);
+}
+
+.trailerGrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:22px;
+}
+
+.trailerCard{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 14px 40px #3b241b12;
+}
+
+.trailerMedia{
+  position:relative;
+  min-height:330px;
+  background:#2b1a13;
+}
+
+.trailerMedia video{
+  width:100%;
+  height:330px;
+  display:block;
+  object-fit:cover;
+  background:#2b1a13;
+}
+
+.trailerPoster{
+  min-height:330px;
+  display:grid;
+  place-items:center;
+  padding:28px;
+  background:linear-gradient(145deg,#eadcc7,#79553f);
+  color:#fff;
+  text-align:center;
+}
+
+.trailerPoster strong{
+  display:block;
+  font-size:30px;
+  margin-bottom:8px;
+}
+
+.trailerInfo{
+  padding:23px;
+}
+
+.trailerInfo h3{
+  color:var(--brown);
+  font-size:26px;
+  margin:8px 0;
+}
+
+.trailerMeta{
+  color:var(--muted);
+  font:12px Arial;
+}
+
+.authorGrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+}
+
+.authorCard{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:24px;
+}
+
+.authorMini{
+  width:72px;
+  height:72px;
+  border-radius:18px;
+  background:var(--soft);
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  color:var(--brown);
+  font-weight:bold;
+  font-size:24px;
+  margin-bottom:15px;
+}
+
+.authorMini img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.authorCard h3{
+  color:var(--brown);
+  margin:0 0 7px;
+}
+
+.authorCard p{
+  color:var(--muted);
+  font-size:14px;
+  min-height:68px;
+}
+
+.sectionAction{
+  margin-top:24px;
+  text-align:center;
+}
+
+.flipperInfo{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:35px;
+  align-items:center;
+}
+
+.guideInfoCard{
+  background:var(--brown);
+  color:#fff;
+  border-radius:25px;
+  padding:30px;
+  display:flex;
+  gap:18px;
+  align-items:center;
+}
+
+.guideInfoCard strong{
+  font-size:22px;
+}
+
+.guideInfoCard p{
+  color:#e9ddd6;
+  margin-bottom:0;
+}
+
+.guideSeal{
+  width:58px;
+  height:58px;
+  border-radius:18px;
+  background:var(--butter);
+  color:var(--brown);
+  display:grid;
+  place-items:center;
+  font-weight:bold;
+  font-size:24px;
+  flex:none;
+}
+
+.authorAccessPanel{
+  background:var(--soft);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+}
+
+.authorAccessPanel h3{
+  color:var(--brown);
+  margin:0 0 5px;
+}
+
+.authorAccessPanel p{
+  color:var(--muted);
+  margin:0;
+}
+
+.contactFloat,
+.chatFloat{
+  position:fixed;
+  right:20px;
+  z-index:20;
+  border:1px solid var(--brown);
+  box-shadow:0 12px 35px #3b241b22;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border-radius:999px;
+  padding:11px 15px;
+  font:bold 12px Arial;
+}
+
+.contactFloat{
+  top:50%;
+  transform:translateY(-50%);
+  background:#fff;
+  color:var(--brown);
+}
+
+.chatFloat{
+  bottom:20px;
+  background:var(--brown);
+  color:#fff;
+  cursor:pointer;
+}
+
+.contactFloat:hover,
+.chatFloat:hover{
+  transform:translateY(-2px);
+}
+
+.contactFloat:hover{
+  transform:translateY(calc(-50% - 2px));
+}
+
+.chatPanel{
+  position:fixed;
+  right:20px;
+  bottom:76px;
+  width:min(360px,calc(100% - 40px));
+  background:var(--cream);
+  border:1px solid var(--line);
+  border-radius:20px;
+  box-shadow:0 18px 50px #3b241b33;
+  z-index:30;
+  display:none;
+  overflow:hidden;
+}
+
+.chatPanel.show{
+  display:block;
+}
+
+.chatPanelHead{
+  background:var(--brown);
+  color:#fff;
+  padding:16px 18px;
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+}
+
+.chatPanelHead small{
+  display:block;
+  color:#eadcd4;
+  font:11px Arial;
+  margin-top:2px;
+}
+
+.chatPanelHead button{
+  border:0;
+  background:transparent;
+  color:#fff;
+  font-size:22px;
+  cursor:pointer;
+}
+
+.chatPanelBody{
+  padding:20px;
+}
+
+.chatPanelBody p{
+  color:var(--muted);
+}
+
+.chatPanelNote{
+  font:12px Arial;
+  background:var(--soft);
+  border-radius:12px;
+  padding:11px;
+}
+
 @media(max-width:900px){
   .links{display:none}
 
   .grid3,
   .books,
   .flipper,
+  .flipperInfo,
+  .trailerGrid,
+  .authorGrid,
   .features,
   .access,
   .discussions,
@@ -937,6 +1216,30 @@ footer{
 
   .form{
     grid-template-columns:1fr;
+  }
+
+  .navActions .btn:first-child{
+    display:none;
+  }
+
+  .authorAccessPanel{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .contactFloat{
+    top:auto;
+    bottom:76px;
+    right:20px;
+    transform:none;
+  }
+
+  .contactFloat:hover{
+    transform:translateY(-2px);
+  }
+
+  .chatFloat{
+    bottom:20px;
   }
 
   .full{
@@ -995,15 +1298,14 @@ footer{
     </a>
 
     <div class="links">
-      <a href="#books">Books</a>
-      <a href="#featured">Featured</a>
-      <a href="#flipper">Flipper Guide</a>
-      <a href="#discussions">Discussions</a>
-      <a href="#calendar">Calendar</a>
-      <a href="#about">About</a>
+      <a href="index.html#home">Home</a>
+      <a href="authors.html">Authors</a>
+      <a href="index.html#featured">Featured</a>
+      <a href="index.html#about">About Us</a>
+      <a href="contact.html">Contact Us</a>
     </div>
 
-    <div>
+    <div class="navActions">
       <a class="btn" href="auth.html?mode=signin">Sign In</a>
       <a class="btn primary" href="auth.html?mode=author">For Authors</a>
     </div>
@@ -1027,12 +1329,41 @@ footer{
 
       <div class="actions">
         <a class="btn primary" href="#books">Discover Books →</a>
-        <a class="btn outline" href="auth.html?mode=author">For Authors</a>
+        <a class="btn outline" href="authors.html">Explore Authors</a>
       </div>
 
     </div>
   </div>
 </header>
+
+
+<!-- UPCOMING FEATURED BOOK TRAILERS -->
+
+<section id="upcoming" class="soft upcomingSection">
+
+  <div class="wrap">
+
+    <div class="head">
+      <div class="kicker">Upcoming Featured Books</div>
+      <h2>Watch the books scheduled to meet readers next.</h2>
+      <p>
+        These trailers come only from approved books that have been scheduled by Reader Reach.
+        Admin controls whether each approved trailer is visible here.
+      </p>
+    </div>
+
+    <div class="trailerGrid" id="upcomingTrailerGrid">
+      <div class="emptyState">
+        <h3>No upcoming featured books yet.</h3>
+        <p>
+          When a real approved book is scheduled and its trailer is switched on for the homepage, it will appear here.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+</section>
 
 
 <!-- FEATURED BOOKS -->
@@ -1055,6 +1386,38 @@ footer{
 
     <div class="books" id="featuredBookGrid">
       <div class="loading">Loading featured books...</div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- AUTHORS -->
+
+<section id="authors" class="authorsSection">
+
+  <div class="wrap">
+
+    <div class="head">
+      <div class="kicker">Authors</div>
+      <h2>Meet the approved authors behind the books.</h2>
+      <p>
+        Author profiles are connected to real approved Reader Reach accounts and their approved books.
+      </p>
+    </div>
+
+    <div class="authorGrid" id="authorGrid">
+      <div class="emptyState">
+        <h3>Authors will appear here.</h3>
+        <p>
+          Approved author profiles will be shown when they are available.
+        </p>
+      </div>
+    </div>
+
+    <div class="sectionAction">
+      <a class="btn primary" href="authors.html">View All Authors</a>
     </div>
 
   </div>
@@ -1091,48 +1454,26 @@ footer{
 
 <section id="flipper">
 
-  <div class="wrap flipper">
+  <div class="wrap flipperInfo">
 
     <div>
-
       <div class="kicker">Flipper Guide</div>
-
-      <h2>A shorter way to explore a book.</h2>
-
+      <h2>A protected reading companion connected to approved books.</h2>
       <p style="color:var(--muted);font-size:17px">
-        Explore approved Flipper Guide content connected to Reader Reach books.
+        Reader Reach does not publish fake guide examples on the homepage.
+        Authorized Flipper Guide content becomes available through the appropriate Reader account and access controls.
       </p>
-
-      <button
-        class="btn primary"
-        type="button"
-        onclick="openFlipperGuides()">
-        Explore Flipper Guides
-      </button>
-
+      <a class="btn primary" href="auth.html?mode=reader">Reader Sign In</a>
     </div>
 
-    <div class="reader">
-
-      <div class="page">
-
-        <small>Reader Reach</small>
-
-        <h3 id="ft">Flipper Guide</h3>
-
-        <p id="fp">
-          Approved Flipper Guide content will appear here when connected
-          to an authorized book.
+    <div class="guideInfoCard">
+      <div class="guideSeal">F</div>
+      <div>
+        <strong>Protected content</strong>
+        <p>
+          Guide access is controlled by the Reader Reach account and database permissions.
         </p>
-
-        <div class="controls">
-          <button onclick="flip(-1)">‹</button>
-          <span id="pn">Page 1 of 3</span>
-          <button onclick="flip(1)">›</button>
-        </div>
-
       </div>
-
     </div>
 
   </div>
@@ -1253,138 +1594,27 @@ footer{
 </section>
 
 
-<!-- AUTHOR SUBMISSION -->
+<!-- AUTHOR ACCESS -->
 
 <section id="submit">
 
   <div class="wrap">
 
     <div class="head">
-
       <div class="kicker">For Authors</div>
-
-      <h2>Tell Us About Your Book.</h2>
-
+      <h2>Submit your book through your approved Author account.</h2>
       <p>
-        Author submissions will appear after the appropriate Reader Reach
-        access and approval process.
+        Real book submissions, cover uploads, trailer uploads, and Flipper Guide links are handled through the Reader Reach Author workflow.
+        Approved authors can submit multiple books for Admin review and later scheduling.
       </p>
-
     </div>
 
-    <div class="formShell">
-
-      <form
-        class="form"
-        id="authorSubmissionForm">
-
-        <div class="field">
-          <label>Author Name *</label>
-          <input
-            id="authorName"
-            required
-            placeholder="Author Name">
-        </div>
-
-        <div class="field">
-          <label>Email Address *</label>
-          <input
-            id="authorEmail"
-            type="email"
-            required
-            placeholder="author@example.com">
-        </div>
-
-        <div class="field full">
-          <label>About the Author *</label>
-          <textarea
-            id="authorBio"
-            required
-            placeholder="Tell readers about the author."></textarea>
-        </div>
-
-        <div class="field">
-          <label>Book Title *</label>
-          <input
-            id="bookTitle"
-            required
-            placeholder="Book Title">
-        </div>
-
-        <div class="field">
-          <label>Genre / Topic *</label>
-          <input
-            id="bookGenre"
-            required
-            placeholder="Genre / Topic">
-        </div>
-
-        <div class="field full">
-          <label>Book Description *</label>
-          <textarea
-            id="bookDescription"
-            required
-            placeholder="Book Description"></textarea>
-        </div>
-
-        <div class="field full">
-          <label>Who Is the Book For? *</label>
-          <textarea
-            id="bookAudience"
-            required
-            placeholder="Describe the readers this book is intended for."></textarea>
-        </div>
-
-        <div class="field full">
-          <label>Where Is the Book Currently Available? *</label>
-          <input
-            id="bookAvailability"
-            required
-            placeholder="Availability">
-        </div>
-
-        <div class="field">
-          <label>Book Cover Image</label>
-          <input
-            id="bookCover"
-            type="file"
-            accept="image/*">
-        </div>
-
-        <div class="field">
-          <label>Book Trailer Video</label>
-          <input
-            id="bookTrailer"
-            type="file"
-            accept="video/*">
-        </div>
-
-        <div class="field">
-          <label>Flipper Guide Link *</label>
-          <input
-            id="guideLink"
-            type="url"
-            required
-            placeholder="https://">
-        </div>
-
-        <div class="field full">
-
-          <button
-            class="btn primary"
-            type="submit">
-            Submit Book for Review
-          </button>
-
-          <div class="formNote">
-            Author authentication, file storage, and submission approval
-            will be connected through the Reader Reach account system.
-          </div>
-
-        </div>
-
-      </form>
-
+    <div class="authorAccessPanel">
+      <div>
+        <h3>Already an approved Author?</h3>
+        <p>Open your Author dashboard to submit or manage your books.</p>
+      </div>
+      <a class="btn primary" href="auth.html?mode=author">Author Access</a>
     </div>
 
   </div>
@@ -1630,15 +1860,17 @@ footer{
       <div>
         <h4>Explore</h4>
         <a href="#books">Books</a>
-        <a href="#flipper">Flipper Guide</a>
+        <a href="authors.html">Authors</a>
+        <a href="#featured">Featured</a>
         <a href="#discussions">Discussions</a>
         <a href="#calendar">Calendar</a>
+        <a href="contact.html">Contact Us</a>
       </div>
 
       <div>
         <h4>For Authors</h4>
-        <a href="#submit">Tell Us About Your Book</a>
-        <a href="#access">Author Access</a>
+        <a href="#submit">Author Access</a>
+        <a href="auth.html?mode=author">Author Sign In / Sign Up</a>
         <a href="#about">About Reader Reach</a>
       </div>
 
@@ -1724,6 +1956,31 @@ footer{
 
 </div>
 
+
+<a class="contactFloat" href="contact.html" aria-label="Contact Reader Reach">
+  <span>✉</span>
+  <strong>Contact</strong>
+</a>
+
+<button class="chatFloat" id="liveChatLauncher" type="button" aria-label="Open Live Chat">
+  <span>◌</span>
+  <strong>Live Chat</strong>
+</button>
+
+<div class="chatPanel" id="liveChatPanel" aria-hidden="true">
+  <div class="chatPanelHead">
+    <div>
+      <strong>Reader Reach Live Chat</strong>
+      <small>Moderator support</small>
+    </div>
+    <button type="button" id="liveChatClose" aria-label="Close chat">×</button>
+  </div>
+  <div class="chatPanelBody">
+    <p>Send a message to Reader Reach support.</p>
+    <p class="chatPanelNote">The conversation and moderator reply system will be connected when the Contact / Live Chat page is built.</p>
+    <a class="btn primary" href="contact.html">Open Contact & Support</a>
+  </div>
+</div>
 
 <div id="toast" class="toast"></div>
 
@@ -2273,6 +2530,7 @@ function authorName(author){
   if(!author) return 'Author';
 
   return (
+    author.author_name ||
     author.display_name ||
     author.name ||
     'Author'
@@ -2308,149 +2566,209 @@ async function loadApprovedAuthors(){
 }
 
 
-async function loadFeaturedBooks(){
+function renderAuthorGrid(){
 
-  const grid =
-    document.getElementById('featuredBookGrid');
-
+  const grid = document.getElementById('authorGrid');
   if(!grid) return;
 
-  grid.innerHTML =
-    '<div class="loading">Loading featured books...</div>';
+  if(!approvedAuthors.length){
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>No approved authors yet.</h3>
+        <p>Approved author profiles will appear here when available.</p>
+      </div>`;
+    return;
+  }
 
-  const {
-    data,
-    error
-  } = await supabaseClient
+  grid.innerHTML = '';
+
+  approvedAuthors.slice(0,6).forEach(author => {
+    const name = authorName(author);
+    const initials = name.split(' ').map(part => part.charAt(0)).join('').slice(0,2).toUpperCase();
+    const photo = author.profile_image_url || author.photo_url || author.avatar_url || '';
+    const bookCount = approvedBooks.filter(book => book.author_id === author.id).length;
+
+    const card = document.createElement('article');
+    card.className = 'authorCard';
+    card.innerHTML = `
+      <div class="authorMini">
+        ${photo ? `<img src="${escapeHtml(photo)}" alt="${escapeHtml(name)}">` : escapeHtml(initials)}
+      </div>
+      <h3>${escapeHtml(name)}</h3>
+      <p>${escapeHtml(author.bio || author.about || 'Approved Reader Reach author.')}</p>
+      <div class="trailerMeta">${bookCount} approved ${bookCount === 1 ? 'book' : 'books'}</div>
+      <div class="bookActions">
+        <a class="btn small" href="author-profile.html?id=${encodeURIComponent(author.id)}">View Author Profile</a>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+}
+
+
+async function loadFeaturedBooks(){
+
+  const grid = document.getElementById('featuredBookGrid');
+  if(!grid) return;
+
+  grid.innerHTML = '<div class="loading">Loading featured books...</div>';
+
+  const {data,error} = await supabaseClient
     .from('homepage_featured_books')
     .select('book_id,selected_at')
     .order('selected_at',{ascending:false});
 
   if(error){
-
-    console.error(
-      'Unable to load featured books:',
-      error
-    );
-
+    console.error('Unable to load featured books:',error);
     grid.innerHTML = `
       <div class="emptyState">
         <h3>Featured books are temporarily unavailable.</h3>
         <p>Please try again shortly.</p>
-      </div>
-    `;
-
+      </div>`;
     return;
-
   }
 
-  const featuredRows =
-    data || [];
-
-  const featuredBooks =
-    featuredRows
-      .map(row =>
-        approvedBooks.find(
-          book => book.id === row.book_id
-        )
-      )
-      .filter(Boolean);
+  const featuredBooks = (data || [])
+    .map(row => approvedBooks.find(book => book.id === row.book_id))
+    .filter(Boolean);
 
   if(!featuredBooks.length){
-
     grid.innerHTML = `
       <div class="emptyState">
         <h3>No featured books yet.</h3>
-        <p>
-          Books selected by the Reader Reach Admin will appear here.
-        </p>
-      </div>
-    `;
-
+        <p>Books selected by the Reader Reach Admin will appear here.</p>
+      </div>`;
     return;
-
   }
 
   grid.innerHTML = '';
 
   featuredBooks.forEach(book => {
-
-    const author =
-      approvedAuthors.find(
-        item => item.id === book.author_id
-      );
-
+    const author = approvedAuthors.find(item => item.id === book.author_id);
     const cover = book.cover_url
-      ? `
-        <img
-          src="${escapeHtml(book.cover_url)}"
-          alt="${escapeHtml(book.title)} cover">
-      `
-      : `
-        <div class="coverInner">
-          <small>Reader Reach</small>
-          <strong>${escapeHtml(book.title)}</strong>
-          <small>${escapeHtml(authorName(author))}</small>
-        </div>
-      `;
+      ? `<img src="${escapeHtml(book.cover_url)}" alt="${escapeHtml(book.title)} cover">`
+      : `<div class="coverInner"><small>Reader Reach</small><strong>${escapeHtml(book.title)}</strong><small>${escapeHtml(authorName(author))}</small></div>`;
 
-    const article =
-      document.createElement('article');
-
+    const article = document.createElement('article');
     article.className = 'book';
-
     article.innerHTML = `
-
-      <div class="cover">
-        ${cover}
-      </div>
-
+      <div class="cover">${cover}</div>
       <div class="bookInfo">
-
-        <span class="tag">
-          Featured
-        </span>
-
-        <h3>
-          ${escapeHtml(book.title)}
-        </h3>
-
-        <p>
-          ${escapeHtml(
-            book.description ||
-            'No description provided.'
-          )}
-        </p>
-
+        <span class="tag">Featured</span>
+        <h3>${escapeHtml(book.title)}</h3>
+        <p>${escapeHtml(book.description || 'No description provided.')}</p>
         <div class="bookActions">
-
-          <button
-            class="btn small"
-            type="button"
-            onclick="openBook('${book.id}')">
-            View Book
-          </button>
-
-          ${
-            author
-            ? `
-              <button
-                class="btn small"
-                type="button"
-                onclick="openAuthor('${author.id}')">
-                View Author Profile
-              </button>
-            `
-            : ''
-          }
-
+          <a class="btn small" href="book.html?id=${encodeURIComponent(book.id)}">View Book</a>
+          ${author ? `<a class="btn small" href="author-profile.html?id=${encodeURIComponent(author.id)}">View Author Profile</a>` : ''}
         </div>
-
-      </div>
-    `;
-
+      </div>`;
     grid.appendChild(article);
+  });
 
+}
+
+
+async function loadUpcomingTrailers(){
+
+  const grid = document.getElementById('upcomingTrailerGrid');
+  if(!grid) return;
+
+  grid.innerHTML = '<div class="loading">Checking scheduled featured books...</div>';
+
+  const {data:schedules,error:scheduleError} = await supabaseClient
+    .from('feature_schedules')
+    .select('id,book_id,feature_date,feature_time,status,notes')
+    .eq('status','scheduled')
+    .order('feature_date',{ascending:true})
+    .order('feature_time',{ascending:true});
+
+  if(scheduleError){
+    console.error('Unable to load upcoming feature schedules:',scheduleError);
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>Upcoming features are temporarily unavailable.</h3>
+        <p>Please try again shortly.</p>
+      </div>`;
+    return;
+  }
+
+  const bookIds = [...new Set((schedules || []).map(item => item.book_id).filter(Boolean))];
+
+  if(!bookIds.length){
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>No upcoming featured books yet.</h3>
+        <p>A real scheduled book will appear here when its approved trailer is switched on for the homepage.</p>
+      </div>`;
+    return;
+  }
+
+  const {data:trailers,error:trailerError} = await supabaseClient
+    .from('book_trailers')
+    .select('id,book_id,trailer_url,title,description,show_on_homepage')
+    .in('book_id',bookIds);
+
+  if(trailerError){
+    console.error('Unable to load book trailers:',trailerError);
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>Upcoming trailers are temporarily unavailable.</h3>
+        <p>Please try again shortly.</p>
+      </div>`;
+    return;
+  }
+
+  const trailerMap = new Map((trailers || []).map(trailer => [trailer.book_id,trailer]));
+  const now = new Date();
+
+  const visible = (schedules || []).filter(schedule => {
+    const book = approvedBooks.find(item => item.id === schedule.book_id);
+    const trailer = trailerMap.get(schedule.book_id);
+    if(!book || !trailer || trailer.show_on_homepage !== true) return false;
+
+    const dateText = `${schedule.feature_date}T${schedule.feature_time || '00:00'}`;
+    const start = new Date(dateText);
+    return Number.isNaN(start.getTime()) ? true : start >= now;
+  });
+
+  if(!visible.length){
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>No upcoming featured trailers are visible right now.</h3>
+        <p>Admin can make an approved scheduled trailer visible here with the homepage trailer toggle.</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = '';
+
+  visible.forEach(schedule => {
+    const book = approvedBooks.find(item => item.id === schedule.book_id);
+    const author = approvedAuthors.find(item => item.id === book.author_id);
+    const trailer = trailerMap.get(schedule.book_id);
+    const trailerTitle = trailer.title || `${book.title} — Book Trailer`;
+    const scheduleText = `${formatCalendarDate(schedule.feature_date)}${schedule.feature_time ? ' • ' + formatCalendarTime(schedule.feature_time) : ''}`;
+
+    const card = document.createElement('article');
+    card.className = 'trailerCard';
+    card.innerHTML = `
+      <div class="trailerMedia">
+        ${trailer.trailer_url
+          ? `<video controls preload="metadata" src="${escapeHtml(trailer.trailer_url)}"></video>`
+          : `<div class="trailerPoster"><div><strong>${escapeHtml(book.title)}</strong><span>Trailer coming soon</span></div></div>`}
+      </div>
+      <div class="trailerInfo">
+        <span class="tag">Upcoming Featured Book</span>
+        <h3>${escapeHtml(trailerTitle)}</h3>
+        <div class="trailerMeta">Scheduled: ${escapeHtml(scheduleText)}</div>
+        ${author ? `<div class="trailerMeta">Author: ${escapeHtml(authorName(author))}</div>` : ''}
+        ${trailer.description ? `<p>${escapeHtml(trailer.description)}</p>` : ''}
+        <div class="bookActions">
+          <a class="btn small" href="book.html?id=${encodeURIComponent(book.id)}">View Book</a>
+          ${author ? `<a class="btn small" href="author-profile.html?id=${encodeURIComponent(author.id)}">View Author Profile</a>` : ''}
+        </div>
+      </div>`;
+    grid.appendChild(card);
   });
 
 }
@@ -2561,22 +2879,20 @@ async function loadApprovedBooks(){
 
         <div class="bookActions">
 
-          <button
+          <a
             class="btn small"
-            type="button"
-            onclick="openBook('${book.id}')">
+            href="book.html?id=${encodeURIComponent(book.id)}">
             View Book
-          </button>
+          </a>
 
           ${
             author
             ? `
-              <button
+              <a
                 class="btn small"
-                type="button"
-                onclick="openAuthor('${author.id}')">
+                href="author-profile.html?id=${encodeURIComponent(author.id)}">
                 View Author Profile
-              </button>
+              </a>
             `
             : ''
           }
@@ -3446,11 +3762,11 @@ async function loadCalendar(){
   } = await supabaseClient
     .from('feature_schedules')
     .select(
-      'id,book_id,scheduled_date,scheduled_time,status,notes'
+      'id,book_id,feature_date,feature_time,status,notes'
     )
     .eq('status','scheduled')
-    .order('scheduled_date',{ascending:true})
-    .order('scheduled_time',{ascending:true});
+    .order('feature_date',{ascending:true})
+    .order('feature_time',{ascending:true});
 
   if(error){
 
@@ -3491,10 +3807,10 @@ async function loadCalendar(){
     if(!book) return;
 
     const dateText =
-      formatCalendarDate(schedule.scheduled_date);
+      formatCalendarDate(schedule.feature_date);
 
     const timeText =
-      formatCalendarTime(schedule.scheduled_time);
+      formatCalendarTime(schedule.feature_time);
 
     const notesText =
       schedule.notes
@@ -3531,12 +3847,11 @@ async function loadCalendar(){
 
       </div>
 
-      <button
+      <a
         class="btn small"
-        type="button"
-        onclick="openBook('${book.id}')">
+        href="book.html?id=${encodeURIComponent(book.id)}">
         View Book
-      </button>
+      </a>
 
     `;
 
@@ -3569,6 +3884,37 @@ document
   });
 
 
+async function updateAuthLinks(){
+
+  const {data:{user}} = await supabaseClient.auth.getUser();
+  const signInLink = document.querySelector('.navActions .btn:not(.primary)');
+  const authorLink = document.querySelector('.navActions .btn.primary');
+
+  if(user){
+    if(signInLink){
+      signInLink.textContent = 'Account';
+      signInLink.href = 'reader.html';
+    }
+
+    if(authorLink){
+      authorLink.textContent = 'Author Access';
+      authorLink.href = 'author.html';
+    }
+  }else{
+    if(signInLink){
+      signInLink.textContent = 'Sign In';
+      signInLink.href = 'auth.html?mode=signin';
+    }
+
+    if(authorLink){
+      authorLink.textContent = 'For Authors';
+      authorLink.href = 'auth.html?mode=author';
+    }
+  }
+
+}
+
+
 /* ============================================================
    STARTUP
 ============================================================ */
@@ -3584,7 +3930,11 @@ async function initializeReaderReach(){
 
   await loadApprovedBooks();
 
+  renderAuthorGrid();
+
   await loadFeaturedBooks();
+
+  await loadUpcomingTrailers();
 
   await loadDiscussionSessions();
 
@@ -3615,6 +3965,7 @@ document.addEventListener('visibilitychange',() => {
 
   if(!document.hidden){
     loadFeaturedBooks();
+    loadUpcomingTrailers();
     loadCalendar();
   }
 
@@ -3623,6 +3974,7 @@ document.addEventListener('visibilitychange',() => {
 
 window.setInterval(() => {
   loadFeaturedBooks();
+  loadUpcomingTrailers();
   loadCalendar();
 },60000);
 

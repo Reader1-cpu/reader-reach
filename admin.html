@@ -1,4710 +1,1362 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reader Reach — Admin Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Reader Reach | Admin Dashboard</title>
 
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:Georgia,"Times New Roman",serif;background:#f6efe4;color:#3f2a1f;min-height:100vh}
-    button,input,select,textarea{font:inherit}
-    .topbar{height:64px;background:#4b2f24;color:#fff8ef;padding:12px 24px;display:flex;align-items:center;gap:22px;position:sticky;top:0;z-index:50;box-shadow:0 4px 16px rgba(63,42,31,.14)}
-    .brand{font-size:24px;font-weight:700;letter-spacing:.3px;white-space:nowrap}
-    .admin-email{margin-left:auto;font-size:13px;opacity:.9}
-    .admin-shell{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:calc(100vh - 64px)}
-    .sidebar{background:#3f281e;color:#fff8ef;padding:22px 14px;position:sticky;top:64px;height:calc(100vh - 64px);overflow:auto}
-    .sidebar-brand{padding:4px 10px 22px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:14px}
-    .sidebar-brand strong{display:block;font-size:18px}.sidebar-brand span{font-size:11px;opacity:.7}
-    .side-nav{display:grid;gap:5px}.side-nav a{display:flex;align-items:center;gap:10px;color:#fff8ef;text-decoration:none;padding:11px 12px;border-radius:9px;font-size:13px}.side-nav a:hover,.side-nav a.active{background:#684532}
-    .side-footer{margin-top:28px;padding:18px 10px;color:#cdb6a4;font-size:12px;text-align:center;border-top:1px solid rgba(255,255,255,.12)}
-    .main-area{padding:28px 30px 60px;min-width:0}
-    .login-card,.card{background:#fffaf3;border:1px solid #eadccc;border-radius:18px;box-shadow:0 10px 30px rgba(80,52,34,.08)}
-    .login-card{max-width:520px;margin:70px auto;padding:36px}.login-card h1{color:#4b2f24;margin-bottom:10px;font-size:30px}.muted{color:#806b5d;line-height:1.6}
-    .field{margin-top:18px}label{display:block;margin-bottom:7px;font-weight:700;color:#5a3b2c}input,select,textarea{width:100%;border:1px solid #dbc8b5;border-radius:10px;background:#fffdf9;color:#3f2a1f;padding:12px 13px;outline:none}textarea{min-height:100px;resize:vertical}input:focus,select:focus,textarea:focus{border-color:#a67850;box-shadow:0 0 0 3px rgba(166,120,80,.12)}
-    .btn{border:0;border-radius:10px;padding:10px 14px;cursor:pointer;background:#ead9c6;color:#4b2f24;font-weight:700;transition:.2s}.btn:hover{transform:translateY(-1px)}.btn.primary{background:#6b4634;color:#fffaf3}.btn.danger{background:#ead0ca;color:#7b3024}.btn.small{padding:7px 11px;font-size:12px}.btn.link{display:inline-block;text-decoration:none;background:#ead9c6;color:#4b2f24}.hidden{display:none!important}
-    .dashboard-header{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:22px}.dashboard-header h1{font-size:34px;color:#4b2f24;margin-bottom:7px}.eyebrow{font-size:11px;letter-spacing:.14em;color:#9a7658;font-weight:700;text-transform:uppercase}
-    .stats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:22px}.stat{background:#fffaf3;border:1px solid #eadccc;border-radius:14px;padding:16px;box-shadow:0 8px 22px rgba(80,52,34,.06)}.stat-label{color:#806b5d;font-size:12px;line-height:1.3;min-height:30px}.stat-value{font-size:27px;font-weight:700;color:#4b2f24;margin-top:7px}
-    .admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.section{scroll-margin-top:85px}.card{padding:18px}.section-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}.section-title{font-size:20px;color:#4b2f24}.section-head p{font-size:12px;margin-top:4px}.section-count{min-width:28px;height:28px;padding:0 8px;border-radius:999px;background:#ead9c6;color:#5a3b2c;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
-    .wide{grid-column:1/-1}.request-list,.schedule-list,.book-list{display:grid;gap:10px}.request-item,.schedule-item,.book-item{border:1px solid #eadccc;background:#fffdf9;border-radius:12px;padding:14px}.request-top,.schedule-top,.book-top{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.item-title{color:#4b2f24;font-weight:700;font-size:15px}.item-meta{color:#806b5d;font-size:12px;line-height:1.5;margin-top:4px}.message{margin-top:10px;padding:10px 12px;border-radius:9px;background:#f7efe4;color:#5d4333;line-height:1.5;font-size:13px}.actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}.empty{padding:20px;text-align:center;color:#806b5d;border:1px dashed #d9c5b0;border-radius:11px;background:#fffdf9;font-size:13px}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.status{display:inline-block;padding:4px 8px;border-radius:999px;background:#eee0cf;color:#624331;font-size:11px;font-weight:700}.status.pending{background:#f1dfc3;color:#765126}.status.complete,.status.approved{background:#dce9d9;color:#355b35}.status.incomplete{background:#f1d9cf;color:#7b3024}
-    .book-detail-grid{display:grid;grid-template-columns:140px 1fr;gap:14px;margin-top:14px}.cover-preview{width:140px;height:190px;border-radius:9px;border:1px solid #eadccc;background:#f7efe4;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#806b5d;text-align:center;padding:10px}.cover-preview img{width:100%;height:100%;object-fit:cover;display:block}.detail-list{display:grid;gap:9px}.detail-block{background:#fdf7ef;border:1px solid #eadccc;border-radius:9px;padding:10px 12px}.detail-label{color:#806b5d;font-size:10px;font-weight:700;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}.detail-value{color:#4b2f24;line-height:1.5;white-space:pre-wrap;font-size:12px}.missing-list{margin:7px 0 0 18px;color:#7b3024;line-height:1.5;font-size:12px}.trailer-box{margin-top:14px;padding:13px;border-radius:10px;background:#f7efe4;border:1px solid #eadccc}.trailer-box video{width:100%;max-height:300px;border-radius:9px;background:#2f211a;display:block;margin-top:9px}.review-box{margin-top:13px;padding-top:13px;border-top:1px solid #eadccc}
-    .placeholder-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.mini-panel{border:1px solid #eadccc;background:#fffdf9;border-radius:11px;padding:13px}.mini-panel strong{display:block;color:#4b2f24;font-size:14px}.mini-panel span{display:block;color:#806b5d;font-size:12px;margin-top:4px}.settings-row{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid #eadccc}.settings-row:last-child{border-bottom:0}.switch{position:relative;width:42px;height:24px;display:inline-block;margin:0}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;inset:0;background:#cbb7a4;border-radius:999px;cursor:pointer}.slider:before{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}.switch input:checked+.slider{background:#6b4634}.switch input:checked+.slider:before{transform:translateX(18px)}.trailer-visibility-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:14px;padding:12px 14px;border:1px solid #eadccc;border-radius:12px;background:#fffaf4}.trailer-visibility-copy strong{display:block;color:#4b2f24;font-size:13px}.trailer-visibility-copy span{display:block;color:#806b5d;font-size:12px;margin-top:3px}.trailer-visibility-state{font-size:12px;font-weight:700;margin-top:4px}.visibility-on{color:#3d7a4b}.visibility-off{color:#8a5b43}
-    .guide-access-list{display:grid;gap:10px;margin-top:14px}.guide-access-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 14px;background:#fff;border:1px solid #eadccc;border-radius:12px}.guide-access-row label{display:flex;align-items:center;gap:10px;min-width:0}.guide-access-row input{width:18px;height:18px;accent-color:#6f4b3a}.guide-access-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;padding-top:14px;border-top:1px solid #eadccc}.guide-link{color:#6f4b3a;text-decoration:none;font-weight:700}.guide-link:hover{text-decoration:underline}
-    .modal-backdrop{position:fixed;inset:0;background:rgba(44,27,18,.56);display:flex;align-items:center;justify-content:center;padding:24px;z-index:90}.modal{width:min(900px,100%);max-height:88vh;overflow:auto;background:#fffaf3;border:1px solid #eadccc;border-radius:18px;box-shadow:0 24px 70px rgba(35,22,15,.28);padding:22px}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px}.modal-title{font-size:25px;color:#4b2f24}.modal-close{border:0;background:#ead9c6;color:#4b2f24;width:34px;height:34px;border-radius:50%;cursor:pointer;font-weight:700}.modal-grid{display:grid;grid-template-columns:180px 1fr;gap:18px}.modal-cover{width:180px;height:245px;border-radius:10px;border:1px solid #eadccc;background:#f7efe4;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;color:#806b5d;padding:10px}.modal-cover img{width:100%;height:100%;object-fit:cover}.modal-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.author-book-list{display:grid;gap:10px;margin-top:14px}.author-book-row{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #eadccc;background:#fffdf9;border-radius:11px;padding:12px}.author-book-row .item-meta{margin-top:2px}.feature-active{background:#ead9c6;color:#5a3b2c;cursor:default}.notification-unread{border-left:4px solid #6b4634}.notification-read{opacity:.78}.moderator-active{color:#3d7a4b}.moderator-inactive{color:#8a5b43}.presence-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#4d9b5d;margin-right:6px}.presence-dot.offline{background:#bca99a}.toast{position:fixed;right:22px;bottom:22px;background:#4b2f24;color:#fffaf3;padding:13px 17px;border-radius:11px;box-shadow:0 10px 30px rgba(0,0,0,.18);opacity:0;transform:translateY(12px);pointer-events:none;transition:.25s ease;z-index:100}.toast.show{opacity:1;transform:translateY(0)}
-    @media(max-width:1100px){.stats{grid-template-columns:repeat(3,1fr)}.admin-grid{grid-template-columns:1fr}.wide{grid-column:auto}}
-    @media(max-width:820px){.admin-shell{grid-template-columns:1fr}.sidebar{position:static;height:auto}.side-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.main-area{padding:22px 16px 50px}.stats{grid-template-columns:repeat(2,1fr)}.grid-2,.placeholder-grid{grid-template-columns:1fr}}
-    @media(max-width:560px){.topbar{padding:14px 16px}.admin-email{display:none}.stats{grid-template-columns:1fr}.dashboard-header{align-items:flex-start;flex-direction:column}.side-nav{grid-template-columns:1fr}.card{padding:15px}.book-detail-grid{grid-template-columns:1fr}.cover-preview{width:100%;max-width:220px}}
-  </style>
+<style>
+:root{
+  --brown:#3b241b;
+  --brown2:#5a3829;
+  --cream:#fffdf8;
+  --soft:#f7efe4;
+  --butter:#ead79b;
+  --text:#34251f;
+  --muted:#76665d;
+  --line:#e7dbcf;
+  --white:#fff;
+  --green:#dce9d9;
+  --greenText:#355b35;
+  --red:#f1d9cf;
+  --redText:#7b3024;
+  --gold:#f1dfc3;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Georgia,"Times New Roman",serif;
+  background:var(--soft);
+  color:var(--text);
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+.topbar{
+  height:66px;
+  background:var(--brown);
+  color:#fffaf3;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  padding:0 24px;
+  position:sticky;
+  top:0;
+  z-index:50;
+  box-shadow:0 4px 18px rgba(50,30,20,.15);
+}
+.brand{
+  font-size:23px;
+  font-weight:700;
+}
+.admin-label{
+  font-size:12px;
+  opacity:.75;
+}
+.admin-email{
+  margin-left:auto;
+  font-size:13px;
+  opacity:.9;
+}
+.logout{
+  border:0;
+  background:#ead9c6;
+  color:var(--brown);
+  padding:8px 13px;
+  border-radius:9px;
+  font-weight:700;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:235px minmax(0,1fr);
+  min-height:calc(100vh - 66px);
+}
+.sidebar{
+  background:#302018;
+  color:#fffaf3;
+  padding:20px 13px;
+  position:sticky;
+  top:66px;
+  height:calc(100vh - 66px);
+  overflow:auto;
+}
+.sidebar-title{
+  padding:8px 10px 20px;
+  border-bottom:1px solid rgba(255,255,255,.12);
+  margin-bottom:13px;
+}
+.sidebar-title strong{display:block;font-size:18px}
+.sidebar-title span{font-size:11px;opacity:.6}
+.nav{
+  display:grid;
+  gap:5px;
+}
+.nav a{
+  color:#fffaf3;
+  text-decoration:none;
+  padding:10px 12px;
+  border-radius:9px;
+  font-size:13px;
+}
+.nav a:hover,.nav a.active{background:#62402f}
+
+.main{
+  padding:28px 30px 70px;
+  min-width:0;
+}
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:20px;
+  margin-bottom:22px;
+}
+.eyebrow{
+  text-transform:uppercase;
+  letter-spacing:.13em;
+  color:#9a7658;
+  font-size:11px;
+  font-weight:700;
+}
+h1{
+  color:var(--brown);
+  font-size:34px;
+  margin:7px 0;
+}
+.subtitle{
+  color:var(--muted);
+  line-height:1.6;
+  font-size:14px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:12px;
+  margin-bottom:22px;
+}
+.stat{
+  background:#fffaf3;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:15px;
+  box-shadow:0 7px 20px rgba(70,45,30,.06);
+}
+.stat small{
+  color:var(--muted);
+  display:block;
+  line-height:1.3;
+}
+.stat strong{
+  display:block;
+  font-size:27px;
+  color:var(--brown);
+  margin-top:7px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+}
+.section{
+  scroll-margin-top:85px;
+}
+.card{
+  background:#fffaf3;
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:18px;
+  box-shadow:0 9px 25px rgba(70,45,30,.06);
+}
+.wide{grid-column:1/-1}
+.card-head{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  align-items:flex-start;
+  margin-bottom:15px;
+}
+.card h2{
+  color:var(--brown);
+  margin:0;
+  font-size:20px;
+}
+.card-head p{
+  color:var(--muted);
+  font-size:12px;
+  margin:5px 0 0;
+}
+.count{
+  background:#ead9c6;
+  color:var(--brown2);
+  min-width:28px;
+  height:28px;
+  border-radius:50px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:12px;
+}
+
+.list{
+  display:grid;
+  gap:10px;
+}
+.item{
+  background:#fffdf9;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:14px;
+}
+.item-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:15px;
+}
+.item-title{
+  color:var(--brown);
+  font-weight:700;
+  font-size:15px;
+}
+.meta{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+  margin-top:4px;
+}
+.description{
+  color:#5d493d;
+  line-height:1.55;
+  font-size:13px;
+  margin-top:9px;
+}
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:11px;
+}
+
+.btn{
+  border:0;
+  border-radius:9px;
+  padding:9px 12px;
+  background:#ead9c6;
+  color:var(--brown);
+  font-weight:700;
+  font-size:12px;
+}
+.btn.primary{
+  background:#6b4634;
+  color:#fffaf3;
+}
+.btn.danger{
+  background:var(--red);
+  color:var(--redText);
+}
+.btn.green{
+  background:var(--green);
+  color:var(--greenText);
+}
+.btn:hover{transform:translateY(-1px)}
+
+.status{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:700;
+}
+.pending{background:var(--gold);color:#765126}
+.approved{background:var(--green);color:var(--greenText)}
+.rejected{background:var(--red);color:var(--redText)}
+.on{background:var(--green);color:var(--greenText)}
+.off{background:#ead9c6;color:#765b48}
+
+.empty{
+  text-align:center;
+  padding:22px;
+  border:1px dashed #d8c3af;
+  border-radius:11px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.cover{
+  width:64px;
+  height:86px;
+  object-fit:cover;
+  border-radius:7px;
+  background:#f3e7d8;
+  border:1px solid var(--line);
+}
+.book-row{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+}
+
+.form{
+  display:grid;
+  gap:12px;
+}
+.field label{
+  display:block;
+  color:var(--brown2);
+  font-weight:700;
+  font-size:12px;
+  margin-bottom:6px;
+}
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  border:1px solid #dbc8b5;
+  background:#fffdf9;
+  border-radius:9px;
+  padding:10px 11px;
+  outline:none;
+}
+.field textarea{min-height:100px;resize:vertical}
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  border-color:#a67850;
+  box-shadow:0 0 0 3px rgba(166,120,80,.12);
+}
+
+.switch-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:13px 0;
+  border-bottom:1px solid var(--line);
+}
+.switch-row:last-child{border-bottom:0}
+.switch-copy strong{display:block;color:var(--brown);font-size:14px}
+.switch-copy span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+.switch{
+  width:45px;
+  height:25px;
+  position:relative;
+  flex:none;
+}
+.switch input{display:none}
+.slider{
+  position:absolute;
+  inset:0;
+  background:#cbb7a4;
+  border-radius:30px;
+}
+.slider:before{
+  content:"";
+  width:19px;
+  height:19px;
+  position:absolute;
+  left:3px;
+  top:3px;
+  background:#fff;
+  border-radius:50%;
+  transition:.2s;
+}
+.switch input:checked+.slider{background:#6b4634}
+.switch input:checked+.slider:before{transform:translateX(20px)}
+
+.toast{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  background:var(--brown);
+  color:#fffaf3;
+  padding:13px 17px;
+  border-radius:10px;
+  opacity:0;
+  transform:translateY(10px);
+  transition:.2s;
+  pointer-events:none;
+  z-index:100;
+}
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+@media(max-width:1150px){
+  .stats{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:850px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{
+    position:static;
+    height:auto;
+  }
+  .nav{grid-template-columns:repeat(2,1fr)}
+  .grid{grid-template-columns:1fr}
+  .wide{grid-column:auto}
+  .main{padding:22px 16px 50px}
+}
+@media(max-width:560px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .nav{grid-template-columns:1fr}
+  .topbar{padding:0 15px}
+  .admin-email,.admin-label{display:none}
+}
+</style>
 </head>
 
 <body>
-  <header class="topbar">
-    <div class="brand">Reader Reach</div>
-    <div id="adminEmail" class="admin-email"></div>
-  </header>
 
-  <section id="loginSection" class="login-card">
-    <h1>Admin Access</h1>
-    <p class="muted">Sign in with your Reader Reach administrator account.</p>
-    <form id="adminLoginForm">
-      <div class="field"><label for="adminLoginEmail">Email Address</label><input id="adminLoginEmail" type="email" autocomplete="username" placeholder="Admin email address" required></div>
-      <div class="field"><label for="adminLoginPassword">Password</label><input id="adminLoginPassword" type="password" autocomplete="current-password" placeholder="Admin password" required></div>
-      <div class="actions"><button id="adminLoginBtn" type="submit" class="btn primary">Sign In as Admin</button></div>
-      <p id="adminLoginMessage" class="muted" style="margin-top:14px;"></p>
-      <div style="margin-top:14px;"><a class="btn link small" href="auth.html?mode=reset">Reset Password</a></div>
-    </form>
-  </section>
+<header class="topbar">
+  <div class="brand">Reader Reach</div>
+  <div class="admin-label">ADMIN DASHBOARD</div>
+  <div id="adminEmail" class="admin-email"></div>
+  <button class="logout" onclick="signOut()">Sign Out</button>
+</header>
 
-  <section id="dashboardSection" class="hidden">
-    <div class="admin-shell">
-      <aside class="sidebar">
-        <div class="sidebar-brand"><strong>Reader Reach</strong><span>Admin Control Center</span></div>
-        <nav class="side-nav">
-          <a class="active" href="#top">⌂ Dashboard</a>
-          <a href="#authorsAwaiting">♙ Authors Awaiting Approval</a>
-          <a href="#approvedAuthors">♙ Approved Authors</a>
-          <a href="#pendingBooks">▣ Pending Books</a>
-          <a href="#approvedBooks">▣ Approved Books</a>
-          <a href="#trailerReview">▶ Trailer Review</a>
-          <a href="#featuredBooks">★ Featured Books</a>
-          <a href="#calendarSchedules">▣ Calendar / Schedules</a>
-          <a href="#flipperGuides">↗ Flipper Guide Controls</a>
-          <a href="#readers">♙ Readers</a>
-          <a href="#discussions">◌ Discussions</a>
-          <a href="#notifications">♧ Notifications</a>
-          <a href="#moderators">♙ Moderators</a>
-          <a href="#settings">⚙ Settings</a>
-        </nav>
-        <div class="side-footer">Reader Reach<br><span>Build · Share · Grow</span></div>
-      </aside>
+<div id="loading" style="padding:50px;text-align:center;color:#76665d">
+  Loading Admin Dashboard...
+</div>
 
-      <main id="top" class="main-area">
-        <div class="dashboard-header">
-          <div><span class="eyebrow">READER REACH ADMINISTRATION</span><h1>Admin Dashboard</h1><p class="muted">Manage authors, books, features and platform activity from one place.</p></div>
-          <button id="signOutBtn" class="btn">Sign Out</button>
-        </div>
+<div id="app" class="layout hidden">
 
-        <section class="stats">
-          <div class="stat"><div class="stat-label">Authors Awaiting Approval</div><div id="pendingAuthorsCount" class="stat-value">—</div></div>
-          <div class="stat"><div class="stat-label">Approved Authors</div><div id="approvedAuthorsCount" class="stat-value">0</div></div>
-          <div class="stat"><div class="stat-label">Pending Books</div><div id="pendingBooksCount" class="stat-value">—</div></div>
-          <div class="stat"><div class="stat-label">Approved Books</div><div id="approvedBooksCount" class="stat-value">0</div></div>
-          <div class="stat"><div class="stat-label">Upcoming Features</div><div id="upcomingFeaturesCount" class="stat-value">0</div></div>
-          <div class="stat"><div class="stat-label">Readers</div><div id="readersCount" class="stat-value">—</div></div>
-          <div class="stat"><div class="stat-label">Online Moderators</div><div id="onlineModeratorsCount" class="stat-value">0</div></div>
-        </section>
-
-        <div class="admin-grid">
-          <section id="authorsAwaiting" class="section">
-            <div class="card"><div class="section-head"><div><h2 class="section-title">Authors Awaiting Approval</h2><p class="muted">Review author access requests before granting Author status.</p></div><div style="display:flex;align-items:center;gap:8px"><button id="refreshAuthorRequestsBtn" class="btn small">Refresh</button><span class="section-count" id="pendingAuthorsBadge">—</span></div></div><div id="authorRequestList" class="request-list"><div class="empty">Loading author requests...</div></div></div>
-          </section>
-
-          <section id="approvedAuthors" class="section">
-            <div class="card"><div class="section-head"><div><h2 class="section-title">Approved Authors</h2><p class="muted">Review authors you have approved and inspect their information and books.</p></div><div style="display:flex;align-items:center;gap:8px"><button id="refreshApprovedAuthorsBtn" class="btn small">Refresh</button><span class="section-count" id="approvedAuthorsBadge">—</span></div></div><div id="approvedAuthorList" class="request-list"><div class="empty">Loading approved authors...</div></div></div>
-          </section>
-
-          <section id="pendingBooks" class="section">
-            <div class="card"><div class="section-head"><div><h2 class="section-title">Pending Books</h2><p class="muted">Review submitted books, covers and trailers before approval.</p></div><div style="display:flex;align-items:center;gap:8px"><button id="refreshPendingBooksBtn" class="btn small">Refresh</button><span class="section-count" id="pendingBooksBadge">—</span></div></div><div id="pendingBookList" class="book-list"><div class="empty">Loading pending books...</div></div></div>
-          </section>
-
-          <section id="approvedBooks" class="section">
-            <div class="card"><div class="section-head"><div><h2 class="section-title">Approved Books</h2><p class="muted">Keep approved books available for later review and homepage decisions.</p></div><span class="section-count" id="approvedBooksBadge">—</span></div><div id="approvedBookList" class="book-list"><div class="empty">Loading approved books...</div></div></div>
-          </section>
-
-          <section id="trailerReview" class="section">
-            <div class="card">
-              <div class="section-head">
-                <div>
-                  <h2 class="section-title">Trailer Review</h2>
-                  <p class="muted">Watch uploaded book trailers and control whether each approved trailer appears on the public homepage.</p>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px">
-                  <button id="refreshTrailerReviewBtn" class="btn small" type="button">Refresh</button>
-                  <span class="section-count" id="trailerReviewBadge">—</span>
-                </div>
-              </div>
-
-              <div id="trailerReviewList" class="book-list">
-                <div class="empty">Loading trailers...</div>
-              </div>
-            </div>
-          </section>
-
-          <section id="featuredBooks" class="section">
-            <div class="card">
-              <div class="section-head">
-                <div>
-                  <h2 class="section-title">Featured Books</h2>
-                  <p class="muted">Manage which approved books are selected for the Reader Reach homepage. Featured status is separate from approval and scheduling.</p>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px">
-                  <button id="refreshFeaturedBooksBtn" class="btn small" type="button">Refresh</button>
-                  <span class="section-count" id="featuredBooksBadge">—</span>
-                </div>
-              </div>
-
-              <div id="featuredBookList" class="book-list">
-                <div class="empty">Loading featured books...</div>
-              </div>
-            </div>
-          </section>
-
-          <section id="calendarSchedules" class="section wide">
-            <div class="card"><div class="section-head"><div><h2 class="section-title">Calendar &amp; Schedules</h2><p class="muted">Manage scheduled features for approved books.</p></div></div><div class="grid-2"><div><div class="field"><label for="scheduleBook">Book</label><select id="scheduleBook"><option value="">Select an approved book</option></select></div><div class="field"><label for="scheduleModerator">Moderator</label><select id="scheduleModerator"><option value="">Select a moderator</option></select></div><div class="field"><label for="scheduleDate">Date</label><input id="scheduleDate" type="date"></div><div class="field"><label for="scheduleTime">Time</label><input id="scheduleTime" type="time"></div><div class="field"><label for="scheduleNotes">Notes</label><textarea id="scheduleNotes" placeholder="Optional scheduling notes"></textarea></div><div class="actions"><button id="scheduleBtn" class="btn primary">Schedule Feature</button></div></div><div><h3 class="item-title" style="margin-bottom:12px;">Scheduled Features</h3><div id="scheduleList" class="schedule-list"><div class="empty">Loading schedules...</div></div></div></div></div>
-          </section>
-
-          <section id="flipperGuides" class="section wide">
-            <div class="card">
-              <div class="section-head">
-                <div>
-                  <h2 class="section-title">Flipper Guide Controls</h2>
-                  <p class="muted">Manage protected guide access without making the guide itself public.</p>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px">
-                  <button id="refreshFlipperGuidesBtn" class="btn small">Refresh</button>
-                  <span class="section-count" id="flipperGuidesBadge">—</span>
-                </div>
-              </div>
-              <div id="flipperGuideList" class="request-list">
-                <div class="empty">Loading Flipper Guides...</div>
-              </div>
-            </div>
-          </section>
-
-          <section id="readers" class="section">
-            <div class="card">
-              <div class="section-head">
-                <div>
-                  <h2 class="section-title">Readers</h2>
-                  <p class="muted">Review registered reader accounts and confirm the reader records created in Reader Reach.</p>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px">
-                  <button id="refreshReadersBtn" class="btn small">Refresh</button>
-                  <span class="section-count" id="readersBadge">—</span>
-                </div>
-              </div>
-
-              <div id="readerList" class="request-list">
-                <div class="empty">Loading reader accounts...</div>
-              </div>
-            </div>
-          </section>
-
-          <section id="discussions" class="section wide">
-            <div class="card">
-              <div class="section-head">
-                <div>
-                  <h2 class="section-title">Discussions</h2>
-                  <p class="muted">Review book discussions and administer discussion messages according to your Admin permissions.</p>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px">
-                  <button id="refreshDiscussionsBtn" class="btn small">Refresh</button>
-                  <span class="section-count" id="discussionsBadge">—</span>
-                </div>
-              </div>
-
-              <div id="discussionList" class="request-list">
-                <div class="empty">Loading discussions...</div>
-              </div>
-            </div>
-          </section>
-
-          <section id="notifications" class="section">
-            <div class="card">
-              <div class="section-head">
-                <div><h2 class="section-title">Notifications</h2><p class="muted">Monitor important author, book, moderator and schedule activity for this administrator account.</p></div>
-                <div style="display:flex;align-items:center;gap:8px"><button id="markAllNotificationsBtn" class="btn small" type="button">Mark All Read</button><button id="refreshNotificationsBtn" class="btn small" type="button">Refresh</button><span class="section-count" id="notificationsBadge">—</span></div>
-              </div>
-              <div id="notificationList" class="request-list"><div class="empty">Loading notifications...</div></div>
-            </div>
-          </section>
-
-          <section id="moderators" class="section">
-            <div class="card">
-              <div class="section-head">
-                <div><h2 class="section-title">Moderators</h2><p class="muted">Review moderator accounts and control whether each moderator is active for scheduling and communication.</p></div>
-                <div style="display:flex;align-items:center;gap:8px"><button id="refreshModeratorsBtn" class="btn small" type="button">Refresh</button><span class="section-count" id="moderatorsBadge">—</span></div>
-              </div>
-              <div id="moderatorPanel" class="request-list"><div class="empty">Loading moderators...</div></div>
-            </div>
-          </section>
-
-          <section id="settings" class="section">
-            <div class="card"><div class="section-head"><div><h2 class="section-title">Settings</h2><p class="muted">Admin-controlled platform settings.</p></div></div><div class="settings-row"><div><strong>Show scheduled books on homepage</strong><p class="muted" style="font-size:12px;margin-top:3px;">This control will determine whether scheduled content is allowed to appear on the public homepage.</p></div><label class="switch"><input id="homepageVisibilityToggle" type="checkbox"><span class="slider"></span></label></div></div>
-          </section>
-        </div>
-      </main>
+  <aside class="sidebar">
+    <div class="sidebar-title">
+      <strong>Administration</strong>
+      <span>Reader Reach control center</span>
     </div>
-  </section>
 
-  <div id="detailModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle">
-    <div class="modal">
-      <div class="modal-head">
+    <nav class="nav">
+      <a href="#overview">Overview</a>
+      <a href="#authors">Authors</a>
+      <a href="#books">Books</a>
+      <a href="#featured">Featured Books</a>
+      <a href="#trailers">Book Trailers</a>
+      <a href="#schedule">Feature Schedule</a>
+      <a href="#readers">Readers</a>
+      <a href="#discussions">Discussions</a>
+      <a href="#notifications">Notifications</a>
+      <a href="#moderators">Moderators</a>
+      <a href="#settings">Settings</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+
+    <section id="overview" class="section">
+      <div class="header">
         <div>
-          <div class="eyebrow">ADMIN REVIEW</div>
-          <h2 id="detailModalTitle" class="modal-title">Details</h2>
+          <div class="eyebrow">Platform administration</div>
+          <h1>Admin Dashboard</h1>
+          <p class="subtitle">
+            Manage authors, books, homepage content, schedules, readers,
+            moderators and platform activity.
+          </p>
         </div>
-        <button id="detailModalClose" class="modal-close" type="button" aria-label="Close">×</button>
       </div>
-      <div id="detailModalBody"></div>
-    </div>
-  </div>
 
-  <div id="guideAccessModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="guideAccessModalTitle">
-    <div class="modal">
-      <div class="modal-head">
-        <div>
-          <div class="eyebrow">FLIPPER GUIDE ACCESS</div>
-          <h2 id="guideAccessModalTitle" class="modal-title">Manage Reader Access</h2>
-          <p id="guideAccessModalSubtitle" class="muted" style="margin-top:5px;"></p>
-        </div>
-        <button id="guideAccessModalClose" class="modal-close" type="button" aria-label="Close">×</button>
+      <div class="stats">
+        <div class="stat"><small>Authors Pending</small><strong id="statAuthors">0</strong></div>
+        <div class="stat"><small>Books Pending</small><strong id="statBooks">0</strong></div>
+        <div class="stat"><small>Featured Books</small><strong id="statFeatured">0</strong></div>
+        <div class="stat"><small>Scheduled Features</small><strong id="statSchedules">0</strong></div>
+        <div class="stat"><small>Readers</small><strong id="statReaders">0</strong></div>
+        <div class="stat"><small>Unread Notifications</small><strong id="statNotifications">0</strong></div>
       </div>
-      <div id="guideAccessModalBody"></div>
-    </div>
-  </div>
+    </section>
 
-  <div id="toast" class="toast"></div>
+    <div class="grid">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <script>
-    const SUPABASE_URL =
-      'https://bublmnfhyyrefcdkloak.supabase.co';
-
-    const SUPABASE_PUBLISHABLE_KEY =
-      'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
-
-    const supabaseClient =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY,
-        {
-          auth:{
-            storageKey:'reader-reach-auth',
-            persistSession:true,
-            autoRefreshToken:true,
-            detectSessionInUrl:true,
-            storage:window.localStorage
-          }
-        }
-      );
-
-    let currentUser = null;
-    let authorRequests = [];
-    let approvedAuthors = [];
-    let pendingBooks = [];
-    let approvedBooks = [];
-    let moderators = [];
-    let featuredBookIds = new Set();
-    let flipperGuides = [];
-    let readerRecords = [];
-    let guideAccessRecords = [];
-    let activeGuideForAccess = null;
-    let adminNotifications = [];
-    let adminPresenceChannel = null;
-
-    const loginSection =
-      document.getElementById('loginSection');
-
-    const dashboardSection =
-      document.getElementById('dashboardSection');
-
-    const adminEmail =
-      document.getElementById('adminEmail');
-
-    const authorRequestList =
-      document.getElementById('authorRequestList');
-
-    const approvedAuthorList =
-      document.getElementById('approvedAuthorList');
-
-    const pendingBookList =
-      document.getElementById('pendingBookList');
-
-    const approvedBookList =
-      document.getElementById('approvedBookList');
-
-    const readerList =
-      document.getElementById('readerList');
-
-    const scheduleList =
-      document.getElementById('scheduleList');
-
-    const discussionList =
-      document.getElementById('discussionList');
-
-    const toast =
-      document.getElementById('toast');
-
-    function showToast(message){
-      toast.textContent = message;
-      toast.classList.add('show');
-
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3500);
-    }
-
-    function escapeHtml(value){
-      return String(value ?? '')
-        .replace(/&/g,'&amp;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;')
-        .replace(/'/g,'&#039;');
-    }
-
-    function formatDate(value){
-      if(!value) return '—';
-
-      const date = new Date(value);
-
-      if(Number.isNaN(date.getTime())){
-        return value;
-      }
-
-      return date.toLocaleDateString();
-    }
-
-    function showDashboard(){
-      loginSection.classList.add('hidden');
-      dashboardSection.classList.remove('hidden');
-    }
-
-    function showLogin(message){
-      dashboardSection.classList.add('hidden');
-      loginSection.classList.remove('hidden');
-
-      const messageElement =
-        document.getElementById('adminLoginMessage');
-
-      if(messageElement){
-        messageElement.textContent = message || '';
-      }
-    }
-
-    async function checkAdmin(){
-
-      const {
-        data:{ user },
-        error:userError
-      } = await supabaseClient.auth.getUser();
-
-      if(userError || !user){
-        showLogin('Please sign in with your administrator account.');
-        return false;
-      }
-
-      const {
-        data:profile,
-        error:profileError
-      } = await supabaseClient
-        .from('profiles')
-        .select('id, role')
-        .eq('id', user.id)
-        .maybeSingle();
-
-      if(profileError){
-
-        console.error(
-          'Admin profile error:',
-          profileError
-        );
-
-        showLogin(
-          'Unable to verify administrator access.'
-        );
-
-        return false;
-      }
-
-      if(!profile || profile.role !== 'admin'){
-
-        await supabaseClient.auth.signOut();
-
-        showLogin(
-          'This account does not have administrator access.'
-        );
-
-        return false;
-      }
-
-      currentUser = user;
-
-      adminEmail.textContent =
-        user.email || '';
-
-      showDashboard();
-
-      return true;
-    }
-
-    /*
-      AUTHOR REQUESTS
-
-      We intentionally load access_requests first
-      and profiles separately.
-
-      This avoids the ambiguous relationship caused by
-      access_requests having two foreign keys to profiles:
-      - profile_id
-      - reviewed_by
-    */
-    async function loadAuthorRequests(){
-
-      authorRequestList.innerHTML =
-        '<div class="empty">Loading author requests...</div>';
-
-      const {
-        data:requests,
-        error:requestsError
-      } = await supabaseClient
-        .from('access_requests')
-        .select(`
-          id,
-          profile_id,
-          requested_role,
-          message,
-          status,
-          reviewed_by,
-          created_at
-        `)
-        .eq('requested_role','author')
-        .eq('status','pending')
-        .order('created_at',{
-          ascending:true
-        });
-
-      if(requestsError){
-
-        console.error(
-          'Author request error:',
-          requestsError
-        );
-
-        authorRequestList.innerHTML =
-          '<div class="empty">Unable to load author requests.</div>';
-
-        showToast(
-          'Could not load author requests.'
-        );
-
-        return;
-      }
-
-      if(!requests || requests.length === 0){
-
-        authorRequests = [];
-
-        authorRequestList.innerHTML = `
-          <div class="empty">
-            No author requests are currently waiting for approval.
-          </div>
-        `;
-
-        return;
-      }
-
-      const profileIds =
-        [...new Set(
-          requests.map(
-            request => request.profile_id
-          )
-        )];
-
-      const {
-        data:profiles,
-        error:profilesError
-      } = await supabaseClient
-        .from('profiles')
-        .select(`
-          id,
-          display_name,
-          role
-        `)
-        .in('id',profileIds);
-
-      if(profilesError){
-
-        console.error(
-          'Author request profile error:',
-          profilesError
-        );
-
-        authorRequestList.innerHTML =
-          '<div class="empty">Unable to load author profiles.</div>';
-
-        showToast(
-          'Could not load author profile details.'
-        );
-
-        return;
-      }
-
-      const profileMap =
-        new Map(
-          (profiles || []).map(
-            profile => [
-              profile.id,
-              profile
-            ]
-          )
-        );
-
-      authorRequests =
-        requests.map(request => ({
-          ...request,
-          profiles:
-            profileMap.get(request.profile_id)
-            || null
-        }));
-
-      renderAuthorRequests();
-    }
-
-    function renderAuthorRequests(){
-
-      if(!authorRequests.length){
-
-        authorRequestList.innerHTML = `
-          <div class="empty">
-            No author requests are currently waiting for approval.
-          </div>
-        `;
-
-        return;
-      }
-
-      authorRequestList.innerHTML =
-        authorRequests.map(request => {
-
-          const profile =
-            request.profiles || {};
-
-          const authorName =
-            profile.display_name ||
-            'Unnamed applicant';
-
-          return `
-            <div class="request-item">
-
-              <div class="request-top">
-
-                <div>
-                  <div class="item-title">
-                    ${escapeHtml(authorName)}
-                  </div>
-
-                  <div class="item-meta">
-                    Requested role:
-                    ${escapeHtml(request.requested_role)}
-                    <br>
-                    Submitted:
-                    ${escapeHtml(
-                      formatDate(request.created_at)
-                    )}
-                  </div>
-                </div>
-
-                <span class="status">
-                  Pending
-                </span>
-
-              </div>
-
-              ${
-                request.message
-                  ? `
-                    <div class="message">
-                      ${escapeHtml(request.message)}
-                    </div>
-                  `
-                  : ''
-              }
-
-              <div class="actions">
-
-                <button
-                  class="btn primary small"
-                  onclick="approveAuthorRequest('${request.id}')"
-                >
-                  Approve Author
-                </button>
-
-                <button
-                  class="btn danger small"
-                  onclick="rejectAuthorRequest('${request.id}')"
-                >
-                  Reject
-                </button>
-
-              </div>
-
-            </div>
-          `;
-
-        }).join('');
-    }
-
-    async function approveAuthorRequest(requestId){
-
-      const request =
-        authorRequests.find(
-          item => item.id === requestId
-        );
-
-      if(!request){
-        showToast(
-          'Author request could not be found.'
-        );
-        return;
-      }
-
-      if(!currentUser){
-        showToast(
-          'Administrator session not found.'
-        );
-        return;
-      }
-
-      const profile =
-        request.profiles || {};
-
-      const authorName =
-        profile.display_name ||
-        'Unnamed Author';
-
-      const {
-        data:author,
-        error:authorError
-      } = await supabaseClient
-        .from('authors')
-        .insert({
-          profile_id:request.profile_id,
-          author_name:authorName,
-          status:'approved',
-          submitted_at:request.created_at,
-          reviewed_at:new Date().toISOString(),
-          reviewed_by:currentUser.id
-        })
-        .select()
-        .single();
-
-      if(authorError){
-
-        console.error(
-          'Author creation error:',
-          authorError
-        );
-
-        showToast(
-          'Could not approve author: ' +
-          authorError.message
-        );
-
-        return;
-      }
-
-      const {
-        error:profileError
-      } = await supabaseClient
-        .from('profiles')
-        .update({
-          role:'author'
-        })
-        .eq('id',request.profile_id);
-
-      if(profileError){
-
-        console.error(
-          'Profile role update error:',
-          profileError
-        );
-
-        await supabaseClient
-          .from('authors')
-          .delete()
-          .eq('id',author.id);
-
-        showToast(
-          'Could not change the user role: ' +
-          profileError.message
-        );
-
-        return;
-      }
-
-      const {
-        error:requestError
-      } = await supabaseClient
-        .from('access_requests')
-        .update({
-          status:'approved',
-          reviewed_by:currentUser.id,
-          updated_at:new Date().toISOString()
-        })
-        .eq('id',requestId);
-
-      if(requestError){
-
-        console.error(
-          'Access request update error:',
-          requestError
-        );
-
-        showToast(
-          'Author was created, but the request status could not be updated: ' +
-          requestError.message
-        );
-
-        return;
-      }
-
-      /*
-        Notify the newly approved author.
-      */
-      await createNotification({
-        profileId:request.profile_id,
-        type:'author_approved',
-        title:'Author access approved',
-        message:'Your Reader Reach author access has been approved.'
-      });
-
-      showToast(
-        'Author approved successfully.'
-      );
-
-      await loadAuthorRequests();
-      await loadStats();
-    }
-
-    async function rejectAuthorRequest(requestId){
-
-      if(!currentUser){
-        showToast(
-          'Administrator session not found.'
-        );
-        return;
-      }
-
-      const request =
-        authorRequests.find(
-          item => item.id === requestId
-        );
-
-      const {
-        error
-      } = await supabaseClient
-        .from('access_requests')
-        .update({
-          status:'rejected',
-          reviewed_by:currentUser.id,
-          updated_at:new Date().toISOString()
-        })
-        .eq('id',requestId);
-
-      if(error){
-
-        console.error(
-          'Reject author error:',
-          error
-        );
-
-        showToast(
-          'Could not reject author request: ' +
-          error.message
-        );
-
-        return;
-      }
-
-      if(request){
-
-        await createNotification({
-          profileId:request.profile_id,
-          type:'author_rejected',
-          title:'Author access request rejected',
-          message:'Your Reader Reach author access request was not approved.'
-        });
-      }
-
-      showToast(
-        'Author request rejected.'
-      );
-
-      await loadAuthorRequests();
-    }
-
-    /*
-      BOOK NOTIFICATIONS
-    */
-    async function createNotification({
-      profileId,
-      type,
-      title,
-      message,
-      relatedBookId = null,
-      relatedScheduleId = null
-    }){
-
-      if(!profileId){
-        return;
-      }
-
-      const {
-        error
-      } = await supabaseClient
-        .from('notifications')
-        .insert({
-          profile_id:profileId,
-          type:type,
-          title:title,
-          message:message,
-          related_book_id:relatedBookId,
-          related_schedule_id:relatedScheduleId,
-          is_read:false
-        });
-
-      if(error){
-
-        console.error(
-          'Notification creation error:',
-          error
-        );
-      }
-    }
-
-    async function notifyModeratorsOfApprovedBook(book){
-
-      const {
-        data:activeModerators,
-        error:moderatorError
-      } = await supabaseClient
-        .from('moderators')
-        .select(`
-          profile_id,
-          active
-        `)
-        .eq('active',true);
-
-      if(moderatorError){
-
-        console.error(
-          'Moderator notification lookup error:',
-          moderatorError
-        );
-
-        return;
-      }
-
-      for(const moderator of activeModerators || []){
-
-        await createNotification({
-          profileId:moderator.profile_id,
-          type:'new_approved_book',
-          title:'New approved book',
-          message:
-            `"${book.title}" by ${book.authorName || 'an approved author'} is now approved and available for feature scheduling.`,
-          relatedBookId:book.id
-        });
-      }
-    }
-
-    /*
-      PENDING BOOKS
-
-      We load books separately from authors and trailers
-      to avoid relationship ambiguity and to keep the
-      Admin review data reliable.
-    */
-
-    async function loadApprovedAuthors(){
-
-      approvedAuthorList.innerHTML =
-        '<div class="empty">Loading approved authors...</div>';
-
-      const {
-        data:authors,
-        error:authorsError
-      } = await supabaseClient
-        .from('authors')
-        .select(`
-          id,
-          profile_id,
-          author_name,
-          bio,
-          status,
-          submitted_at,
-          reviewed_at,
-          created_at
-        `)
-        .eq('status','approved')
-        .order('reviewed_at',{ascending:false});
-
-      if(authorsError){
-
-        console.error(
-          'Approved authors error:',
-          authorsError
-        );
-
-        approvedAuthorList.innerHTML =
-          '<div class="empty">Unable to load approved authors.</div>';
-
-        showToast(
-          'Could not load approved authors.'
-        );
-
-        return;
-      }
-
-      if(!authors || authors.length === 0){
-
-        approvedAuthors = [];
-
-        approvedAuthorList.innerHTML = `
-          <div class="empty">
-            No approved authors found.
-          </div>
-        `;
-
-        return;
-      }
-
-      const profileIds =
-        [...new Set(
-          authors.map(author => author.profile_id)
-        )];
-
-      const {
-        data:profiles,
-        error:profilesError
-      } = await supabaseClient
-        .from('profiles')
-        .select(`
-          id,
-          display_name,
-          role
-        `)
-        .in('id',profileIds);
-
-      if(profilesError){
-
-        console.error(
-          'Approved author profile error:',
-          profilesError
-        );
-
-        approvedAuthorList.innerHTML =
-          '<div class="empty">Unable to load approved author profiles.</div>';
-
-        showToast(
-          'Could not load approved author profile details.'
-        );
-
-        return;
-      }
-
-      const profileMap =
-        new Map(
-          (profiles || []).map(profile => [
-            profile.id,
-            profile
-          ])
-        );
-
-      approvedAuthors =
-        authors.map(author => ({
-          ...author,
-          profiles:profileMap.get(author.profile_id) || null
-        }));
-
-      document.getElementById('approvedAuthorsCount').textContent = approvedAuthors.length;
-      const approvedAuthorsBadge = document.getElementById('approvedAuthorsBadge');
-      if(approvedAuthorsBadge) approvedAuthorsBadge.textContent = approvedAuthors.length;
-
-      approvedAuthorList.innerHTML =
-        approvedAuthors.map(author => {
-
-          const profile =
-            author.profiles || {};
-
-          const displayName =
-            author.author_name ||
-            profile.display_name ||
-            'Unnamed author';
-
-          return `
-            <div class="request-item">
-
-              <div class="request-top">
-
-                <div>
-                  <div class="item-title">
-                    ${escapeHtml(displayName)}
-                  </div>
-
-                  <div class="item-meta">
-                    Email: ${escapeHtml(profile.email || '—')}
-                    <br>
-                    Role: ${escapeHtml(profile.role || 'author')}
-                    <br>
-                    Approved: ${escapeHtml(formatDate(author.reviewed_at || author.created_at))}
-                  </div>
-                </div>
-
-                <span class="status approved">
-                  Approved
-                </span>
-
-              </div>
-
-              ${
-                author.bio
-                  ? `
-                    <div class="message">
-                      ${escapeHtml(author.bio)}
-                    </div>
-                  `
-                  : ''
-              }
-
-              <div class="actions">
-                <button class="btn small" onclick="viewApprovedAuthor('${author.id}')">View</button>
-                <button class="btn primary small" onclick="viewAuthorBooks('${author.id}')">View Books</button>
-                <button class="btn danger small" onclick="removeAuthor('${author.id}')">Remove Author</button>
-              </div>
-
-            </div>
-          `;
-        })
-        .join('');
-    }
-
-    async function loadPendingBooks(){
-
-      pendingBookList.innerHTML =
-        '<div class="empty">Loading pending books...</div>';
-
-      const {
-        data:books,
-        error:booksError
-      } = await supabaseClient
-        .from('books')
-        .select(`
-          id,
-          author_id,
-          title,
-          description,
-          genre_topic,
-          who_its_for,
-          availability,
-          cover_url,
-          status,
-          submitted_at,
-          reviewed_at,
-          reviewed_by,
-          submission_complete,
-          missing_fields
-        `)
-        .eq('status','pending')
-        .order('submitted_at',{
-          ascending:true
-        });
-
-      if(booksError){
-
-        console.error(
-          'Pending books error:',
-          booksError
-        );
-
-        pendingBookList.innerHTML =
-          '<div class="empty">Unable to load pending books.</div>';
-
-        showToast(
-          'Could not load pending books.'
-        );
-
-        return;
-      }
-
-      if(!books || books.length === 0){
-
-        pendingBooks = [];
-
-        pendingBookList.innerHTML = `
-          <div class="empty">
-            No books are currently waiting for approval.
-          </div>
-        `;
-
-        return;
-      }
-
-      const authorIds =
-        [...new Set(
-          books.map(book => book.author_id)
-        )];
-
-      const bookIds =
-        [...new Set(
-          books.map(book => book.id)
-        )];
-
-      const [
-        authorsResult,
-        trailersResult
-      ] = await Promise.all([
-
-        supabaseClient
-          .from('authors')
-          .select(`
-            id,
-            profile_id,
-            author_name,
-            bio,
-            status
-          `)
-          .in('id',authorIds),
-
-        supabaseClient
-          .from('book_trailers')
-          .select(`
-            id,
-            book_id,
-            trailer_url,
-            title,
-            description
-          `)
-          .in('book_id',bookIds)
-      ]);
-
-      if(authorsResult.error){
-
-        console.error(
-          'Pending book authors error:',
-          authorsResult.error
-        );
-
-        pendingBookList.innerHTML =
-          '<div class="empty">Unable to load book author details.</div>';
-
-        return;
-      }
-
-      if(trailersResult.error){
-
-        console.error(
-          'Pending book trailers error:',
-          trailersResult.error
-        );
-
-        pendingBookList.innerHTML =
-          '<div class="empty">Unable to load book trailer details.</div>';
-
-        return;
-      }
-
-      const authorMap =
-        new Map(
-          (authorsResult.data || []).map(
-            author => [
-              author.id,
-              author
-            ]
-          )
-        );
-
-      const trailerMap =
-        new Map(
-          (trailersResult.data || []).map(
-            trailer => [
-              trailer.book_id,
-              trailer
-            ]
-          )
-        );
-
-      pendingBooks =
-        books.map(book => ({
-          ...book,
-          author:
-            authorMap.get(book.author_id)
-            || null,
-          trailer:
-            trailerMap.get(book.id)
-            || null
-        }));
-
-      renderPendingBooks();
-    }
-
-    function renderPendingBooks(){
-
-      if(!pendingBooks.length){
-
-        pendingBookList.innerHTML = `
-          <div class="empty">
-            No books are currently waiting for approval.
-          </div>
-        `;
-
-        return;
-      }
-
-      pendingBookList.innerHTML =
-        pendingBooks.map(book => {
-
-          const author =
-            book.author || {};
-
-          const trailer =
-            book.trailer || {};
-
-          const missingFields =
-            Array.isArray(book.missing_fields)
-              ? book.missing_fields
-              : [];
-
-          const submissionComplete =
-            book.submission_complete === true;
-
-          return `
-            <div class="book-item">
-
-              <div class="book-top">
-
-                <div>
-                  <div class="item-title">
-                    ${escapeHtml(
-                      book.title ||
-                      'Untitled Book Submission'
-                    )}
-                  </div>
-
-                  <div class="item-meta">
-                    Author:
-                    ${escapeHtml(
-                      author.author_name ||
-                      'Unknown author'
-                    )}
-                    <br>
-                    Submitted:
-                    ${escapeHtml(
-                      formatDate(book.submitted_at)
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <span class="status pending">
-                    Pending Review
-                  </span>
-
-                  <span class="status ${
-                    submissionComplete
-                      ? 'complete'
-                      : 'incomplete'
-                  }" style="margin-left:6px;">
-                    ${
-                      submissionComplete
-                        ? 'Complete'
-                        : 'Incomplete'
-                    }
-                  </span>
-                </div>
-
-              </div>
-
-              <div class="book-detail-grid">
-
-                <div>
-
-                  <div class="cover-preview">
-
-                    ${
-                      book.cover_url
-                        ? `
-                          <img
-                            src="${escapeHtml(book.cover_url)}"
-                            alt="Book cover for ${escapeHtml(
-                              book.title ||
-                              'submitted book'
-                            )}"
-                          />
-                        `
-                        : `
-                          No book cover
-                          was uploaded.
-                        `
-                    }
-
-                  </div>
-
-                </div>
-
-                <div class="detail-list">
-
-                  <div class="detail-block">
-                    <div class="detail-label">
-                      Genre / Topic
-                    </div>
-
-                    <div class="detail-value">
-                      ${escapeHtml(
-                        book.genre_topic ||
-                        'Not provided'
-                      )}
-                    </div>
-                  </div>
-
-                  <div class="detail-block">
-                    <div class="detail-label">
-                      Who Is the Book For?
-                    </div>
-
-                    <div class="detail-value">
-                      ${escapeHtml(
-                        book.who_its_for ||
-                        'Not provided'
-                      )}
-                    </div>
-                  </div>
-
-                  <div class="detail-block">
-                    <div class="detail-label">
-                      Where Is the Book Currently Available?
-                    </div>
-
-                    <div class="detail-value">
-                      ${escapeHtml(
-                        book.availability ||
-                        'Not provided'
-                      )}
-                    </div>
-                  </div>
-
-                  <div class="detail-block">
-                    <div class="detail-label">
-                      Book Description
-                    </div>
-
-                    <div class="detail-value">
-                      ${escapeHtml(
-                        book.description ||
-                        'No description provided.'
-                      )}
-                    </div>
-                  </div>
-
-                  <div class="detail-block">
-                    <div class="detail-label">
-                      About the Author
-                    </div>
-
-                    <div class="detail-value">
-                      ${escapeHtml(
-                        author.bio ||
-                        'No author biography provided.'
-                      )}
-                    </div>
-                  </div>
-
-                </div>
-
-              </div>
-
-              ${
-                !submissionComplete
-                  ? `
-                    <div class="message">
-                      <strong>Missing required information:</strong>
-
-                      ${
-                        missingFields.length
-                          ? `
-                            <ul class="missing-list">
-                              ${missingFields.map(
-                                field => `
-                                  <li>
-                                    ${escapeHtml(field)}
-                                  </li>
-                                `
-                              ).join('')}
-                            </ul>
-                          `
-                          : `
-                            <div style="margin-top:6px;">
-                              The submission is marked incomplete.
-                            </div>
-                          `
-                      }
-                    </div>
-                  `
-                  : ''
-              }
-
-              <div class="trailer-box">
-
-                <div class="item-title">
-                  Book Trailer
-                </div>
-
-                ${
-                  trailer.trailer_url
-                    ? `
-                      <div class="item-meta">
-                        Review the trailer before making an approval decision.
-                      </div>
-
-                      <video
-                        controls
-                        preload="metadata"
-                        src="${escapeHtml(
-                          trailer.trailer_url
-                        )}"
-                      >
-                        Your browser does not support video playback.
-                      </video>
-
-                      <div class="actions">
-
-                        <a
-                          class="btn link small"
-                          href="${escapeHtml(
-                            trailer.trailer_url
-                          )}"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Open Trailer
-                        </a>
-
-                      </div>
-                    `
-                    : `
-                      <div class="message">
-                        No book trailer was uploaded with this submission.
-                      </div>
-                    `
-                }
-
-              </div>
-
-              <div class="review-box">
-
-                <div class="item-meta">
-                  The book will remain Pending until the Administrator
-                  approves or rejects it.
-                </div>
-
-                <div class="actions">
-
-                  <button
-                    class="btn primary small"
-                    onclick="approveBook('${book.id}')"
-                  >
-                    Approve Book
-                  </button>
-
-                  <button
-                    class="btn danger small"
-                    onclick="rejectBook('${book.id}')"
-                  >
-                    Reject Book
-                  </button>
-
-                </div>
-
-              </div>
-
-            </div>
-          `;
-
-        }).join('');
-    }
-
-    async function approveBook(bookId){
-
-      if(!currentUser){
-        showToast(
-          'Administrator session not found.'
-        );
-        return;
-      }
-
-      const book =
-        pendingBooks.find(
-          item => item.id === bookId
-        );
-
-      if(!book){
-        showToast(
-          'Pending book could not be found.'
-        );
-        return;
-      }
-
-      const confirmed =
-        window.confirm(
-          `Approve "${book.title || 'this book'}" for Reader Reach?`
-        );
-
-      if(!confirmed){
-        return;
-      }
-
-      const now =
-        new Date().toISOString();
-
-      const {
-        error
-      } = await supabaseClient
-        .from('books')
-        .update({
-          status:'approved',
-          reviewed_at:now,
-          reviewed_by:currentUser.id
-        })
-        .eq('id',bookId)
-        .eq('status','pending');
-
-      if(error){
-
-        console.error(
-          'Book approval error:',
-          error
-        );
-
-        showToast(
-          'Could not approve book: ' +
-          error.message
-        );
-
-        return;
-      }
-
-      const author =
-        book.author || {};
-
-      /*
-        Notify the author that the book has been approved.
-      */
-      await createNotification({
-        profileId:author.profile_id,
-        type:'book_approved',
-        title:'Book approved',
-        message:
-          `"${book.title || 'Your submitted book'}" has been approved by Reader Reach.`,
-        relatedBookId:book.id
-      });
-
-      /*
-        Notify active moderators that a new approved
-        book is available for scheduling.
-      */
-      await notifyModeratorsOfApprovedBook({
-        ...book,
-        authorName:
-          author.author_name || 'Unknown author'
-      });
-
-      showToast(
-        'Book approved successfully.'
-      );
-
-      await Promise.all([
-        loadPendingBooks(),
-        loadApprovedBooks(),
-        loadStats()
-      ]);
-    }
-
-    async function rejectBook(bookId){
-
-      if(!currentUser){
-        showToast(
-          'Administrator session not found.'
-        );
-        return;
-      }
-
-      const book =
-        pendingBooks.find(
-          item => item.id === bookId
-        );
-
-      if(!book){
-        showToast(
-          'Pending book could not be found.'
-        );
-        return;
-      }
-
-      const reviewNotes =
-        window.prompt(
-          'Optional reason or review notes for the author:',
-          ''
-        );
-
-      if(reviewNotes === null){
-        return;
-      }
-
-      const now =
-        new Date().toISOString();
-
-      const updateData = {
-        status:'rejected',
-        reviewed_at:now,
-        reviewed_by:currentUser.id
-      };
-
-      /*
-        review_notes is used when available in the
-        Reader Reach books schema.
-      */
-      updateData.review_notes =
-        reviewNotes.trim() || null;
-
-      let {
-        error
-      } = await supabaseClient
-        .from('books')
-        .update(updateData)
-        .eq('id',bookId)
-        .eq('status','pending');
-
-      /*
-        If the optional review_notes column is not available,
-        retry the rejection without it rather than blocking
-        the actual book rejection.
-      */
-      if(error && /review_notes/i.test(error.message || '')){
-
-        console.warn(
-          'Review notes column unavailable; retrying rejection without it.'
-        );
-
-        const retry =
-          await supabaseClient
-            .from('books')
-            .update({
-              status:'rejected',
-              reviewed_at:now,
-              reviewed_by:currentUser.id
-            })
-            .eq('id',bookId)
-            .eq('status','pending');
-
-        error =
-          retry.error || null;
-      }
-
-      if(error){
-
-        console.error(
-          'Book rejection error:',
-          error
-        );
-
-        showToast(
-          'Could not reject book: ' +
-          error.message
-        );
-
-        return;
-      }
-
-      const author =
-        book.author || {};
-
-      const authorMessage =
-        reviewNotes.trim()
-          ? `Your book "${book.title || 'submitted book'}" was rejected by Reader Reach. Review notes: ${reviewNotes.trim()}`
-          : `Your book "${book.title || 'submitted book'}" was rejected by Reader Reach. Please review the submission and resubmit when appropriate.`;
-
-      await createNotification({
-        profileId:author.profile_id,
-        type:'book_rejected',
-        title:'Book submission rejected',
-        message:authorMessage,
-        relatedBookId:book.id
-      });
-
-      showToast(
-        'Book rejected.'
-      );
-
-      await Promise.all([
-        loadPendingBooks(),
-        loadApprovedBooks(),
-        loadStats()
-      ]);
-    }
-
-
-    async function loadTrailerReview(){
-
-      const container =
-        document.getElementById('trailerReviewList');
-
-      const badge =
-        document.getElementById('trailerReviewBadge');
-
-      if(!container){
-        return;
-      }
-
-      container.innerHTML =
-        '<div class="empty">Loading trailers...</div>';
-
-      const {
-        data:trailers,
-        error:trailersError
-      } =
-        await supabaseClient
-          .from('book_trailers')
-          .select(`
-            id,
-            book_id,
-            trailer_url,
-            title,
-            description,
-            show_on_homepage,
-            created_at,
-            books (
-              id,
-              title,
-              status,
-              author_id,
-              cover_url
-            )
-          `)
-          .order(
-            'created_at',
-            {
-              ascending:false
-            }
-          );
-
-      if(trailersError){
-
-        console.error(
-          'Trailer review error:',
-          trailersError
-        );
-
-        container.innerHTML =
-          '<div class="empty">Unable to load trailer review items.</div>';
-
-        if(badge){
-          badge.textContent = '0';
-        }
-
-        showToast(
-          'Could not load trailer review.'
-        );
-
-        return;
-
-      }
-
-      const items =
-        (trailers || [])
-          .filter(item => item.books);
-
-      if(badge){
-        badge.textContent = items.length;
-      }
-
-      if(!items.length){
-
-        container.innerHTML =
-          '<div class="empty">No book trailers have been uploaded yet.</div>';
-
-        return;
-
-      }
-
-      const authorIds =
-        [
-          ...new Set(
-            items
-              .map(item => item.books && item.books.author_id)
-              .filter(Boolean)
-          )
-        ];
-
-      const {
-        data:authors,
-        error:authorsError
-      } =
-        authorIds.length
-          ? await supabaseClient
-              .from('authors')
-              .select('id,author_name')
-              .in('id',authorIds)
-          : {data:[],error:null};
-
-      if(authorsError){
-
-        console.error(
-          'Trailer review author error:',
-          authorsError
-        );
-
-        container.innerHTML =
-          '<div class="empty">Trailer information loaded, but author details could not be loaded.</div>';
-
-        return;
-
-      }
-
-      const authorMap =
-        new Map(
-          (authors || []).map(
-            author => [
-              author.id,
-              author
-            ]
-          )
-        );
-
-      container.innerHTML =
-        items.map(item => {
-
-          const book =
-            item.books || {};
-
-          const author =
-            authorMap.get(book.author_id) || {};
-
-          const isApproved =
-            book.status === 'approved';
-
-          const isVisible =
-            item.show_on_homepage === true;
-
-          return `
-            <div class="book-item">
-
-              <div class="book-top">
-
-                <div>
-                  <div class="item-title">
-                    ${escapeHtml(
-                      book.title ||
-                      'Untitled Book'
-                    )}
-                  </div>
-
-                  <div class="item-meta">
-                    Author:
-                    ${escapeHtml(
-                      author.author_name ||
-                      'Unknown author'
-                    )}
-                    <br>
-                    Book status:
-                    ${escapeHtml(
-                      book.status ||
-                      'Unknown'
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <span class="status ${
-                    isApproved
-                      ? 'complete'
-                      : 'pending'
-                  }">
-                    ${
-                      isApproved
-                        ? 'Approved Book'
-                        : 'Pending Book'
-                    }
-                  </span>
-                </div>
-
-              </div>
-
-              <div class="trailer-box">
-
-                <div class="item-title">
-                  ${escapeHtml(
-                    item.title ||
-                    'Book Trailer'
-                  )}
-                </div>
-
-                ${
-                  item.description
-                    ? `
-                      <div class="item-meta" style="margin-top:5px;">
-                        ${escapeHtml(item.description)}
-                      </div>
-                    `
-                    : ''
-                }
-
-                <video
-                  controls
-                  preload="metadata"
-                  src="${escapeHtml(item.trailer_url || '')}"
-                >
-                  Your browser does not support video playback.
-                </video>
-
-                <div class="actions">
-
-                  <a
-                    class="btn link small"
-                    href="${escapeHtml(item.trailer_url || '#')}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Watch in New Tab
-                  </a>
-
-                  ${
-                    isApproved
-                      ? `
-                        <label
-                          class="switch"
-                          title="Show trailer on homepage"
-                        >
-                          <input
-                            type="checkbox"
-                            ${
-                              isVisible
-                                ? 'checked'
-                                : ''
-                            }
-                            onchange="toggleTrailerHomepageVisibility('${item.id}', this.checked, true)"
-                          >
-                          <span class="slider"></span>
-                        </label>
-
-                        <span
-                          id="trailer-review-state-${item.id}"
-                          class="trailer-visibility-state ${
-                            isVisible
-                              ? 'visibility-on'
-                              : 'visibility-off'
-                          }"
-                        >
-                          ${
-                            isVisible
-                              ? 'ON — visible on homepage'
-                              : 'OFF — hidden from homepage'
-                          }
-                        </span>
-                      `
-                      : `
-                        <span class="message">
-                          Homepage trailer control becomes available after the book is approved.
-                        </span>
-                      `
-                  }
-
-                </div>
-
-              </div>
-
-            </div>
-          `;
-
-        }).join('');
-
-    }
-
-    async function loadFeaturedBooksAdmin(){
-
-      const container =
-        document.getElementById('featuredBookList');
-
-      const badge =
-        document.getElementById('featuredBooksBadge');
-
-      if(!container){
-        return;
-      }
-
-      container.innerHTML =
-        '<div class="empty">Loading featured books...</div>';
-
-      const {
-        data:featuredRows,
-        error:featuredError
-      } = await supabaseClient
-        .from('homepage_featured_books')
-        .select('book_id,selected_at,selected_by,created_at')
-        .order('selected_at',{ascending:false});
-
-      if(featuredError){
-        console.error('Featured books error:',featuredError);
-        container.innerHTML =
-          '<div class="empty">Unable to load Featured Books.</div>';
-        if(badge) badge.textContent = '0';
-        showToast('Could not load Featured Books.');
-        return;
-      }
-
-      const rows = featuredRows || [];
-      const featuredBooks = rows
-        .map(row => ({
-          row,
-          book:approvedBooks.find(item => item.id === row.book_id)
-        }))
-        .filter(item => item.book);
-
-      if(badge){
-        badge.textContent = featuredBooks.length;
-      }
-
-      if(!featuredBooks.length){
-        container.innerHTML = `
-          <div class="empty">
-            No books are currently featured. Use <strong>Feature</strong> on an approved book to add one to the homepage.
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = featuredBooks.map(({row,book}) => {
-        const author = book.author || {};
-        const cover = book.cover_url
-          ? `<img src="${escapeHtml(book.cover_url)}" alt="Book cover for ${escapeHtml(book.title || 'book')}">`
-          : 'No cover uploaded.';
-
-        return `
-          <div class="book-item">
-            <div class="book-top">
-              <div style="display:flex;gap:14px;align-items:flex-start;min-width:0">
-                <div class="cover-preview" style="width:82px;height:108px;flex:none">${cover}</div>
-                <div>
-                  <div class="item-title">${escapeHtml(book.title || 'Untitled book')}</div>
-                  <div class="item-meta">
-                    Author: ${escapeHtml(author.author_name || 'Unknown author')}<br>
-                    Genre: ${escapeHtml(book.genre_topic || '—')}<br>
-                    Selected: ${escapeHtml(formatAdminDateTime(row.selected_at || row.created_at))}
-                  </div>
-                </div>
-              </div>
-              <span class="status approved">Featured</span>
-            </div>
-
-            <div class="actions">
-              <button class="btn small" type="button" onclick="viewApprovedBook('${book.id}')">View</button>
-              <button class="btn danger small" type="button" onclick="removeFeaturedBook('${book.id}')">Remove from Featured</button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function formatAdminDateTime(dateValue){
-      if(!dateValue) return '—';
-      const date = new Date(dateValue);
-      if(Number.isNaN(date.getTime())) return String(dateValue);
-      return date.toLocaleString(undefined,{
-        year:'numeric',
-        month:'short',
-        day:'numeric',
-        hour:'numeric',
-        minute:'2-digit'
-      });
-    }
-
-    async function removeFeaturedBook(bookId){
-      if(!currentUser){
-        showToast('Administrator session not found.');
-        return;
-      }
-
-      const book = approvedBooks.find(item => item.id === bookId);
-      if(!book){
-        showToast('Approved book could not be found.');
-        return;
-      }
-
-      const confirmed = window.confirm(
-        `Remove "${book.title || 'this book'}" from Featured Books?\n\n` +
-        `The book will remain approved and its schedule, trailer and other records will not be deleted.`
-      );
-
-      if(!confirmed){
-        return;
-      }
-
-      const {error} = await supabaseClient
-        .from('homepage_featured_books')
-        .delete()
-        .eq('book_id',bookId);
-
-      if(error){
-        console.error('Remove featured book error:',error);
-        showToast('Could not remove book from Featured Books: ' + error.message);
-        return;
-      }
-
-      featuredBookIds.delete(bookId);
-      book.isFeatured = false;
-
-      await Promise.all([
-        loadFeaturedBooksAdmin(),
-        loadApprovedBooks(),
-        loadStats()
-      ]);
-
-      showToast('Book removed from Featured Books.');
-    }
-
-    async function loadApprovedBooks(){
-
-      approvedBookList.innerHTML =
-        '<div class="empty">Loading approved books...</div>';
-
-      const {
-        data:books,
-        error:booksError
-      } = await supabaseClient
-        .from('books')
-        .select(`
-          id,
-          title,
-          author_id,
-          description,
-          genre_topic,
-          who_its_for,
-          availability,
-          cover_url,
-          status,
-          submitted_at,
-          reviewed_at,
-          reviewed_by,
-          submission_complete,
-          missing_fields
-        `)
-        .eq('status','approved')
-        .order('title',{ascending:true});
-
-      if(booksError){
-        console.error('Approved books error:',booksError);
-        approvedBookList.innerHTML = '<div class="empty">Unable to load approved books.</div>';
-        showToast('Could not load approved books.');
-        return;
-      }
-
-      approvedBooks = books || [];
-
-      const authorIds = [...new Set(approvedBooks.map(book => book.author_id).filter(Boolean))];
-      const bookIds = [...new Set(approvedBooks.map(book => book.id).filter(Boolean))];
-
-      const [authorsResult, trailersResult, guidesResult, featuredResult] = await Promise.all([
-        authorIds.length
-          ? supabaseClient.from('authors').select('id,profile_id,author_name,bio,status').in('id',authorIds)
-          : Promise.resolve({data:[],error:null}),
-        bookIds.length
-          ? supabaseClient.from('book_trailers').select('id,book_id,trailer_url,title,description,show_on_homepage').in('book_id',bookIds)
-          : Promise.resolve({data:[],error:null}),
-        bookIds.length
-          ? supabaseClient.from('flipper_guides').select('id,book_id,title,description,content_url').in('book_id',bookIds)
-          : Promise.resolve({data:[],error:null}),
-        bookIds.length
-          ? supabaseClient.from('homepage_featured_books').select('book_id').in('book_id',bookIds)
-          : Promise.resolve({data:[],error:null})
-      ]);
-
-      if(authorsResult.error || trailersResult.error || guidesResult.error || featuredResult.error){
-        console.error('Approved book supporting data error:', authorsResult.error || trailersResult.error || guidesResult.error || featuredResult.error);
-        approvedBookList.innerHTML = '<div class="empty">Unable to load complete approved book review details.</div>';
-        showToast('Could not load all approved book details.');
-        return;
-      }
-
-      const authorMap = new Map((authorsResult.data || []).map(author => [author.id,author]));
-      const trailerMap = new Map((trailersResult.data || []).map(trailer => [trailer.book_id,trailer]));
-      const guideMap = new Map((guidesResult.data || []).map(guide => [guide.book_id,guide]));
-
-      featuredBookIds = new Set((featuredResult.data || []).map(item => item.book_id));
-
-      approvedBooks = approvedBooks.map(book => ({
-        ...book,
-        author:authorMap.get(book.author_id) || null,
-        trailer:trailerMap.get(book.id) || null,
-        guide:guideMap.get(book.id) || null,
-        isFeatured:featuredBookIds.has(book.id)
-      }));
-
-      document.getElementById('approvedBooksCount').textContent = approvedBooks.length;
-      const approvedBooksBadge = document.getElementById('approvedBooksBadge');
-      if(approvedBooksBadge) approvedBooksBadge.textContent = approvedBooks.length;
-
-      renderApprovedBooks();
-      populateBookSelect();
-    }
-
-    function renderApprovedBooks(){
-
-      if(!approvedBooks.length){
-        approvedBookList.innerHTML = '<div class="empty">No approved books yet.</div>';
-        return;
-      }
-
-      approvedBookList.innerHTML = approvedBooks.map(book => {
-        const author = book.author || {};
-        const featured = book.isFeatured === true;
-
-        return `
-          <div class="book-item">
-            <div class="book-top">
-              <div>
-                <div class="item-title">${escapeHtml(book.title || 'Untitled book')}</div>
-                <div class="item-meta">
-                  Author: ${escapeHtml(author.author_name || 'Unknown author')}<br>
-                  Genre: ${escapeHtml(book.genre_topic || '—')}
-                </div>
-              </div>
-              <span class="status approved">Approved</span>
-            </div>
-
-            <div class="actions">
-              <button class="btn small" onclick="viewApprovedBook('${book.id}')">View</button>
-              ${featured
-                ? '<button class="btn small feature-active" disabled>Featured</button>'
-                : `<button class="btn small" onclick="featureApprovedBook('${book.id}')">Feature</button>`}
-              <button class="btn danger small" onclick="removeBook('${book.id}')">Remove Book</button>
-              <button class="btn small" onclick="viewApprovedBook('${book.id}')" aria-label="More options">⋯</button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function openDetailModal(title,html){
-      document.getElementById('detailModalTitle').textContent = title;
-      document.getElementById('detailModalBody').innerHTML = html;
-      document.getElementById('detailModal').classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeDetailModal(){
-      document.getElementById('detailModal').classList.add('hidden');
-      document.getElementById('detailModalBody').innerHTML = '';
-      document.body.style.overflow = '';
-    }
-
-    async function viewApprovedAuthor(authorId){
-      const author = approvedAuthors.find(item => item.id === authorId);
-      if(!author){ showToast('Approved author could not be found.'); return; }
-      const profile = author.profiles || {};
-      const {data:books,error} = await supabaseClient
-        .from('books')
-        .select('id,title,genre_topic,status,submitted_at,reviewed_at')
-        .eq('author_id',authorId)
-        .order('created_at',{ascending:false});
-
-      if(error){
-        console.error('Author books lookup error:',error);
-        showToast("Could not load this author's books.");
-        return;
-      }
-
-      openDetailModal(author.author_name || profile.display_name || 'Approved Author', `
-        <div class="detail-list">
-          <div class="detail-block"><div class="detail-label">Author Name</div><div class="detail-value">${escapeHtml(author.author_name || profile.display_name || '—')}</div></div>
-          <div class="detail-block"><div class="detail-label">Role</div><div class="detail-value">${escapeHtml(profile.role || 'author')}</div></div>
-          <div class="detail-block"><div class="detail-label">About the Author</div><div class="detail-value">${escapeHtml(author.bio || 'No biography provided.')}</div></div>
-          <div class="detail-block"><div class="detail-label">Approved</div><div class="detail-value">${escapeHtml(formatDate(author.reviewed_at || author.created_at))}</div></div>
-        </div>
-        <div class="modal-actions">
-          <button class="btn primary small" onclick="viewAuthorBooks('${author.id}')">View Books (${(books || []).length})</button>
-          <button class="btn danger small" onclick="removeAuthor('${author.id}')">Remove Author</button>
-          <button class="btn small" onclick="closeDetailModal()">Close</button>
-        </div>
-      `);
-    }
-
-    async function viewAuthorBooks(authorId){
-      const author = approvedAuthors.find(item => item.id === authorId);
-      if(!author){ showToast('Approved author could not be found.'); return; }
-
-      const {data:books,error} = await supabaseClient
-        .from('books')
-        .select('id,title,genre_topic,status,submitted_at,reviewed_at,cover_url')
-        .eq('author_id',authorId)
-        .order('created_at',{ascending:false});
-
-      if(error){
-        console.error('Author books lookup error:',error);
-        showToast("Could not load this author's books.");
-        return;
-      }
-
-      const list = (books || []).length
-        ? (books || []).map(book => `
-            <div class="author-book-row">
-              <div>
-                <div class="item-title">${escapeHtml(book.title || 'Untitled book')}</div>
-                <div class="item-meta">${escapeHtml(book.genre_topic || 'No genre/topic')} · ${escapeHtml(book.status || '—')}</div>
-              </div>
-              <button class="btn small" onclick="viewApprovedBook('${book.id}')">View Book</button>
-            </div>
-          `).join('')
-        : '<div class="empty">This author has not submitted any books yet.</div>';
-
-      openDetailModal(`${escapeHtml(author.author_name || 'Author')} — Books`, `
-        <div class="detail-block">
-          <div class="detail-label">Author</div>
-          <div class="detail-value">${escapeHtml(author.author_name || '—')}</div>
-        </div>
-        <div class="author-book-list">${list}</div>
-      `);
-    }
-
-    async function viewApprovedBook(bookId){
-      let book = approvedBooks.find(item => item.id === bookId);
-
-      if(!book){
-        const {data,error} = await supabaseClient
-          .from('books')
-          .select('id,title,author_id,description,genre_topic,who_its_for,availability,cover_url,status,submitted_at,reviewed_at,reviewed_by,submission_complete,missing_fields')
-          .eq('id',bookId)
-          .maybeSingle();
-        if(error || !data){ showToast('Book could not be found.'); return; }
-        book = data;
-      }
-
-      if(!book.author || !book.trailer || !book.guide){
-        const [authorResult,trailerResult,guideResult,featuredResult] = await Promise.all([
-          supabaseClient.from('authors').select('id,profile_id,author_name,bio,status').eq('id',book.author_id).maybeSingle(),
-          supabaseClient.from('book_trailers').select('id,book_id,trailer_url,title,description,show_on_homepage').eq('book_id',book.id).maybeSingle(),
-          supabaseClient.from('flipper_guides').select('id,book_id,title,description,content_url').eq('book_id',book.id).maybeSingle(),
-          supabaseClient.from('homepage_featured_books').select('book_id').eq('book_id',book.id).maybeSingle()
-        ]);
-        book = {...book,author:authorResult.data || book.author || null,trailer:trailerResult.data || book.trailer || null,guide:guideResult.data || book.guide || null,isFeatured:!!featuredResult.data};
-      }
-
-      const author = book.author || {};
-      const trailer = book.trailer || {};
-      const guide = book.guide || {};
-      const featured = book.isFeatured === true || featuredBookIds.has(book.id);
-
-      openDetailModal(book.title || 'Approved Book', `
-        <div class="modal-grid">
+      <section id="authors" class="card section">
+        <div class="card-head">
           <div>
-            <div class="modal-cover">
-              ${book.cover_url ? `<img src="${escapeHtml(book.cover_url)}" alt="Book cover for ${escapeHtml(book.title || 'book')}">` : 'No book cover uploaded.'}
-            </div>
+            <h2>Authors Awaiting Approval</h2>
+            <p>Approve or reject author accounts.</p>
           </div>
-          <div class="detail-list">
-            <div class="detail-block"><div class="detail-label">Author</div><div class="detail-value">${escapeHtml(author.author_name || 'Unknown author')}</div></div>
-            <div class="detail-block"><div class="detail-label">Genre / Topic</div><div class="detail-value">${escapeHtml(book.genre_topic || 'Not provided')}</div></div>
-            <div class="detail-block"><div class="detail-label">Who Is the Book For?</div><div class="detail-value">${escapeHtml(book.who_its_for || 'Not provided')}</div></div>
-            <div class="detail-block"><div class="detail-label">Where Is the Book Currently Available?</div><div class="detail-value">${escapeHtml(book.availability || 'Not provided')}</div></div>
-            <div class="detail-block"><div class="detail-label">Book Description</div><div class="detail-value">${escapeHtml(book.description || 'No description provided.')}</div></div>
-            <div class="detail-block"><div class="detail-label">About the Author</div><div class="detail-value">${escapeHtml(author.bio || 'No author biography provided.')}</div></div>
+          <div class="count" id="authorsCount">0</div>
+        </div>
+        <div id="authorsList" class="list"></div>
+      </section>
+
+      <section id="books" class="card section">
+        <div class="card-head">
+          <div>
+            <h2>Books Awaiting Approval</h2>
+            <p>Review submitted books before publication.</p>
+          </div>
+          <div class="count" id="booksCount">0</div>
+        </div>
+        <div id="booksList" class="list"></div>
+      </section>
+
+      <section id="featured" class="card section wide">
+        <div class="card-head">
+          <div>
+            <h2>Featured Books</h2>
+            <p>Select or remove approved books from the homepage Featured section.</p>
+          </div>
+          <div class="count" id="featuredCount">0</div>
+        </div>
+        <div id="featuredList" class="list"></div>
+      </section>
+
+      <section id="trailers" class="card section wide">
+        <div class="card-head">
+          <div>
+            <h2>Upcoming Book Trailers</h2>
+            <p>
+              Turn the homepage trailer display ON or OFF independently
+              from approval and Featured status.
+            </p>
+          </div>
+        </div>
+        <div id="trailersList" class="list"></div>
+      </section>
+
+      <section id="schedule" class="card section">
+        <div class="card-head">
+          <div>
+            <h2>Feature Schedule</h2>
+            <p>Review upcoming scheduled features.</p>
+          </div>
+          <div class="count" id="scheduleCount">0</div>
+        </div>
+        <div id="scheduleList" class="list"></div>
+      </section>
+
+      <section id="readers" class="card section">
+        <div class="card-head">
+          <div>
+            <h2>Readers</h2>
+            <p>Reader accounts registered on the platform.</p>
+          </div>
+          <div class="count" id="readerCount">0</div>
+        </div>
+        <div id="readerList" class="list"></div>
+      </section>
+
+      <section id="discussions" class="card section">
+        <div class="card-head">
+          <div>
+            <h2>Discussions</h2>
+            <p>Platform discussion oversight.</p>
+          </div>
+        </div>
+        <div id="discussionList" class="list"></div>
+      </section>
+
+      <section id="notifications" class="card section">
+        <div class="card-head">
+          <div>
+            <h2>Notifications</h2>
+            <p>Recent administrative activity.</p>
+          </div>
+          <div class="count" id="notificationCount">0</div>
+        </div>
+        <div id="notificationList" class="list"></div>
+      </section>
+
+      <section id="moderators" class="card section">
+        <div class="card-head">
+          <div>
+            <h2>Moderators</h2>
+            <p>Manage moderator status.</p>
+          </div>
+        </div>
+        <div id="moderatorList" class="list"></div>
+      </section>
+
+      <section id="settings" class="card section">
+        <div class="card-head">
+          <div>
+            <h2>Platform Settings</h2>
+            <p>Administrative controls.</p>
           </div>
         </div>
 
-        <div class="trailer-box">
-          <div class="item-title">Book Trailer</div>
-          ${trailer.trailer_url
-            ? `<video controls preload="metadata" src="${escapeHtml(trailer.trailer_url)}">Your browser does not support video playback.</video><div class="actions"><a class="btn link small" href="${escapeHtml(trailer.trailer_url)}" target="_blank" rel="noopener noreferrer">Watch Trailer in New Tab</a></div>
-              <div class="trailer-visibility-row">
-                <div class="trailer-visibility-copy">
-                  <strong>Show Trailer on Homepage</strong>
-                  <span>Turn this ON to display this trailer publicly on the Reader Reach homepage.</span>
-                  <div id="trailerVisibilityState" class="trailer-visibility-state ${trailer.show_on_homepage ? 'visibility-on' : 'visibility-off'}">${trailer.show_on_homepage ? 'ON — visible on homepage' : 'OFF — hidden from homepage'}</div>
-                </div>
-                <label class="switch" title="Show trailer on homepage">
-                  <input id="trailerHomepageToggle" type="checkbox" ${trailer.show_on_homepage ? 'checked' : ''} onchange="toggleTrailerHomepageVisibility('${trailer.id}', this.checked)">
-                  <span class="slider"></span>
-                </label>
-              </div>`
-            : '<div class="message">No book trailer was uploaded. The homepage trailer control will appear after a trailer is provided.</div>'}
+        <div class="switch-row">
+          <div class="switch-copy">
+            <strong>Homepage Trailer System</strong>
+            <span>Allows approved trailer records to be displayed when individually enabled.</span>
+          </div>
+          <label class="switch">
+            <input id="trailerSystem" type="checkbox" checked>
+            <span class="slider"></span>
+          </label>
         </div>
 
-        <div class="detail-block" style="margin-top:14px;">
-          <div class="detail-label">Flipper Guide</div>
-          <div class="detail-value">${escapeHtml(guide.title || 'Flipper Guide')}</div>
-          <div class="item-meta">${escapeHtml(guide.description || 'No guide description provided.')}</div>
-          ${guide.content_url ? `<div class="actions"><a class="btn link small" href="${escapeHtml(guide.content_url)}" target="_blank" rel="noopener noreferrer">View Guide Link</a></div>` : '<div class="item-meta">No guide link provided.</div>'}
+        <div class="switch-row">
+          <div class="switch-copy">
+            <strong>Homepage Featured System</strong>
+            <span>Allows Admin-selected books to appear in Featured Books.</span>
+          </div>
+          <label class="switch">
+            <input id="featuredSystem" type="checkbox" checked>
+            <span class="slider"></span>
+          </label>
         </div>
 
-        <div class="modal-actions">
-          ${featured
-            ? '<button class="btn small feature-active" disabled>Already Featured</button>'
-            : `<button class="btn primary small" onclick="featureApprovedBook('${book.id}')">Feature This Book</button>`}
-          <button class="btn danger small" onclick="removeBook('${book.id}')">Remove Book</button>
-          <button class="btn small" onclick="closeDetailModal()">Close</button>
+        <div class="switch-row">
+          <div class="switch-copy">
+            <strong>Discussion Oversight</strong>
+            <span>Admin retains authority to remove inappropriate discussion messages.</span>
+          </div>
+          <label class="switch">
+            <input id="discussionSystem" type="checkbox" checked>
+            <span class="slider"></span>
+          </label>
         </div>
-      `);
-    }
+      </section>
 
-    async function featureApprovedBook(bookId){
-      if(!currentUser){ showToast('Administrator session not found.'); return; }
-      const book = approvedBooks.find(item => item.id === bookId);
-      if(!book){ showToast('Approved book could not be found.'); return; }
+    </div>
+  </main>
+</div>
 
-      if(featuredBookIds.has(bookId)){
-        showToast('This book is already featured.');
-        return;
-      }
+<div id="toast" class="toast"></div>
 
-      const confirmed = window.confirm(`Feature "${book.title || 'this book'}" on the Reader Reach homepage?`);
-      if(!confirmed) return;
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-      const {error} = await supabaseClient
-        .from('homepage_featured_books')
-        .insert({book_id:bookId,selected_by:currentUser.id});
+<script>
+const SUPABASE_URL = "https://bublmnfhyyrefcdkloak.supabase.co";
+const SUPABASE_KEY = "sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY";
 
-      if(error){
-        console.error('Feature book error:',error);
-        showToast('Could not feature book: ' + error.message);
-        return;
-      }
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
-      featuredBookIds.add(bookId);
-      book.isFeatured = true;
-      renderApprovedBooks();
-      await loadFeaturedBooksAdmin();
-      closeDetailModal();
-      showToast('Book added to Featured Books.');
-    }
+let currentUser = null;
+let currentProfile = null;
 
-    async function toggleTrailerHomepageVisibility(trailerId,showOnHomepage,fromTrailerReview = false){
-      if(!currentUser){
-        showToast('Administrator session not found.');
-        return;
-      }
+const $ = id => document.getElementById(id);
 
-      const {data,error} = await supabaseClient
-        .from('book_trailers')
-        .update({show_on_homepage:showOnHomepage})
-        .eq('id',trailerId)
-        .select('id,book_id,trailer_url,title,description,show_on_homepage')
-        .maybeSingle();
+function toast(message){
+  $("toast").textContent = message;
+  $("toast").classList.add("show");
+  setTimeout(() => $("toast").classList.remove("show"), 2600);
+}
 
-      if(error || !data){
-        console.error('Trailer homepage visibility error:',error);
-        const toggle = document.getElementById('trailerHomepageToggle');
-        if(toggle) toggle.checked = !showOnHomepage;
-        showToast('Could not update trailer homepage visibility.');
-        return;
-      }
+function escapeHTML(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
 
-      const book = approvedBooks.find(item => item.id === data.book_id);
-      if(book){
-        book.trailer = {...(book.trailer || {}), ...data};
-      }
+function empty(container,message){
+  $(container).innerHTML = `<div class="empty">${escapeHTML(message)}</div>`;
+}
 
-      const state = document.getElementById('trailerVisibilityState');
-      if(state){
-        state.textContent = showOnHomepage
-          ? 'ON — visible on homepage'
-          : 'OFF — hidden from homepage';
-        state.className = 'trailer-visibility-state ' + (showOnHomepage ? 'visibility-on' : 'visibility-off');
-      }
+async function requireAdmin(){
 
-      showToast(showOnHomepage
-        ? 'Book trailer is now visible on the homepage.'
-        : 'Book trailer is now hidden from the homepage.');
+  const {data:{session},error} =
+    await supabaseClient.auth.getSession();
 
-      const reviewState =
-        document.getElementById(
-          `trailer-review-state-${trailerId}`
-        );
+  if(error || !session){
+    window.location.href = "auth.html?mode=signin";
+    return false;
+  }
 
-      if(reviewState){
-        reviewState.textContent =
-          showOnHomepage
-            ? 'ON — visible on homepage'
-            : 'OFF — hidden from homepage';
+  currentUser = session.user;
 
-        reviewState.className =
-          'trailer-visibility-state ' +
-          (
-            showOnHomepage
-              ? 'visibility-on'
-              : 'visibility-off'
-          );
-      }
-    }
+  $("adminEmail").textContent = currentUser.email || "";
 
-    function populateBookSelect(){
+  const {data:profile,error:profileError} =
+    await supabaseClient
+      .from("profiles")
+      .select("id,display_name,role")
+      .eq("id",currentUser.id)
+      .maybeSingle();
 
-      const select =
-        document.getElementById(
-          'scheduleBook'
-        );
+  if(profileError || !profile || profile.role !== "admin"){
+    document.body.innerHTML = `
+      <div style="padding:60px;text-align:center;font-family:Georgia,serif">
+        <h1 style="color:#3b241b">Admin access required</h1>
+        <p style="color:#76665d;margin:15px 0">
+          This account does not have Admin permissions.
+        </p>
+        <a href="auth.html?mode=signin"
+           style="display:inline-block;padding:11px 16px;background:#6b4634;color:white;border-radius:9px;text-decoration:none">
+          Return to Sign In
+        </a>
+      </div>`;
+    return false;
+  }
 
-      select.innerHTML =
-        '<option value="">Select an approved book</option>';
+  currentProfile = profile;
 
-      approvedBooks.forEach(book => {
+  $("loading").classList.add("hidden");
+  $("app").classList.remove("hidden");
 
-        const option =
-          document.createElement('option');
+  return true;
+}
 
-        option.value = book.id;
-        option.textContent =
-          book.title;
+async function signOut(){
+  await supabaseClient.auth.signOut();
+  window.location.href = "auth.html?mode=signin";
+}
 
-        select.appendChild(option);
-      });
-    }
+async function loadStats(){
 
-    async function loadModerators(){
+  const [
+    authors,
+    books,
+    featured,
+    schedules,
+    readers,
+    notifications
+  ] = await Promise.all([
 
-      const {
-        data,
-        error
-      } = await supabaseClient
-        .from('moderators')
-        .select(`
-          id,
-          profile_id,
-          display_name,
-          active
-        `)
-        .eq('active',true)
-        .order('display_name',{
-          ascending:true
-        });
+    supabaseClient
+      .from("authors")
+      .select("id",{count:"exact",head:true})
+      .eq("status","pending"),
 
-      if(error){
+    supabaseClient
+      .from("books")
+      .select("id",{count:"exact",head:true})
+      .eq("status","pending"),
 
-        console.error(
-          'Moderators error:',
-          error
-        );
+    supabaseClient
+      .from("homepage_featured_books")
+      .select("id",{count:"exact",head:true}),
 
-        return;
-      }
+    supabaseClient
+      .from("feature_schedules")
+      .select("id",{count:"exact",head:true})
+      .eq("status","scheduled"),
 
-      moderators = data || [];
+    supabaseClient
+      .from("readers")
+      .select("id",{count:"exact",head:true}),
 
-      const select =
-        document.getElementById(
-          'scheduleModerator'
-        );
+    supabaseClient
+      .from("notifications")
+      .select("id",{count:"exact",head:true})
+      .eq("profile_id",currentUser.id)
+      .eq("is_read",false)
+  ]);
 
-      select.innerHTML =
-        '<option value="">Select a moderator</option>';
+  $("statAuthors").textContent = authors.count || 0;
+  $("statBooks").textContent = books.count || 0;
+  $("statFeatured").textContent = featured.count || 0;
+  $("statSchedules").textContent = schedules.count || 0;
+  $("statReaders").textContent = readers.count || 0;
+  $("statNotifications").textContent = notifications.count || 0;
+}
 
-      moderators.forEach(moderator => {
+async function loadAuthors(){
 
-        const option =
-          document.createElement('option');
+  const {data,error} = await supabaseClient
+    .from("authors")
+    .select("id,profile_id,author_name,bio,status,created_at")
+    .eq("status","pending")
+    .order("created_at",{ascending:false});
 
-        option.value =
-          moderator.id;
+  if(error){
+    empty("authorsList","Unable to load author requests.");
+    return;
+  }
 
-        option.textContent =
-          moderator.display_name ||
-          'Moderator';
+  $("authorsCount").textContent = data?.length || 0;
 
-        select.appendChild(option);
-      });
-    }
+  if(!data?.length){
+    empty("authorsList","No authors are awaiting approval.");
+    return;
+  }
 
-    let editingScheduleId = null;
+  $("authorsList").innerHTML = data.map(author => `
+    <div class="item">
+      <div class="item-top">
+        <div>
+          <div class="item-title">${escapeHTML(author.author_name || "Unnamed Author")}</div>
+          <div class="meta">${escapeHTML(author.bio || "No biography supplied.")}</div>
+        </div>
+        <span class="status pending">PENDING</span>
+      </div>
 
-    async function loadSchedules(){
+      <div class="actions">
+        <button class="btn green"
+          onclick="updateAuthor('${author.id}','approved')">
+          Approve
+        </button>
 
-      scheduleList.innerHTML =
-        '<div class="empty">Loading schedules...</div>';
+        <button class="btn danger"
+          onclick="updateAuthor('${author.id}','rejected')">
+          Reject
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
 
-      const {
-        data,
-        error
-      } = await supabaseClient
-        .from('feature_schedules')
-        .select(`
-          id,
-          book_id,
-          moderator_id,
-          feature_date,
-          feature_time,
-          status,
-          notes,
-          books (
-            id,
-            title,
-            authors (
-              id,
-              author_name
-            )
-          ),
-          moderators (
-            id,
-            display_name
-          )
-        `)
-        .order('feature_date',{
-          ascending:true
-        })
-        .order('feature_time',{
-          ascending:true
-        });
+async function updateAuthor(id,status){
 
-      if(error){
+  const {error} = await supabaseClient
+    .from("authors")
+    .update({
+      status,
+      reviewed_at:new Date().toISOString(),
+      reviewed_by:currentUser.id
+    })
+    .eq("id",id);
 
-        console.error(
-          'Schedules error:',
-          error
-        );
+  if(error){
+    toast("Author update failed.");
+    return;
+  }
 
-        scheduleList.innerHTML =
-          '<div class="empty">Unable to load schedules.</div>';
+  toast(`Author ${status}.`);
+  await loadAuthors();
+  await loadStats();
+}
 
-        return;
-      }
+async function loadBooks(){
 
-      renderSchedules(data || []);
+  const {data,error} = await supabaseClient
+    .from("books")
+    .select(`
+      id,
+      author_id,
+      title,
+      description,
+      genre_topic,
+      who_its_for,
+      availability,
+      cover_url,
+      submission_complete,
+      missing_fields,
+      status,
+      created_at
+    `)
+    .eq("status","pending")
+    .order("created_at",{ascending:false});
 
-      const today =
-        new Date();
+  if(error){
+    empty("booksList","Unable to load book submissions.");
+    return;
+  }
 
-      today.setHours(0,0,0,0);
+  $("booksCount").textContent = data?.length || 0;
 
-      const upcoming =
-        (data || []).filter(item => {
+  if(!data?.length){
+    empty("booksList","No books are awaiting approval.");
+    return;
+  }
 
-          if(item.status !== 'scheduled'){
-            return false;
+  $("booksList").innerHTML = data.map(book => {
+
+    const missing = Array.isArray(book.missing_fields)
+      ? book.missing_fields
+      : [];
+
+    return `
+      <div class="item">
+        <div class="book-row">
+
+          ${
+            book.cover_url
+            ? `<img class="cover" src="${escapeHTML(book.cover_url)}" alt="">`
+            : `<div class="cover"></div>`
           }
 
-          const date =
-            new Date(
-              `${item.feature_date}T00:00:00`
-            );
-
-          return date >= today;
-        });
-
-      document.getElementById(
-        'upcomingFeaturesCount'
-      ).textContent =
-        upcoming.length;
-    }
-
-    function renderSchedules(schedules){
-
-      if(!schedules.length){
-
-        scheduleList.innerHTML = `
-          <div class="empty">
-            No feature schedules yet.
-          </div>
-        `;
-
-        return;
-      }
-
-      scheduleList.innerHTML =
-        schedules.map(schedule => {
-
-          const book =
-            schedule.books || {};
-
-          const author =
-            book.authors || {};
-
-          const moderator =
-            schedule.moderators || {};
-
-          return `
-            <div class="schedule-item">
-
-              <div class="schedule-top">
-
-                <div>
-                  <div class="item-title">
-                    ${escapeHtml(
-                      book.title ||
-                      'Untitled book'
-                    )}
-                  </div>
-
-                  <div class="item-meta">
-                    Author:
-                    ${escapeHtml(
-                      author.author_name ||
-                      'Unknown'
-                    )}
-                    <br>
-                    Moderator:
-                    ${escapeHtml(
-                      moderator.display_name ||
-                      'Unknown'
-                    )}
-                    <br>
-                    Date:
-                    ${escapeHtml(
-                      schedule.feature_date ||
-                      '—'
-                    )}
-                    <br>
-                    Time:
-                    ${escapeHtml(
-                      schedule.feature_time ||
-                      '—'
-                    )}
-                  </div>
-                </div>
-
-                <span class="status">
-                  ${escapeHtml(
-                    schedule.status
-                  )}
-                </span>
-
-              </div>
-
-              ${
-                schedule.notes
-                  ? `
-                    <div class="message">
-                      ${escapeHtml(
-                        schedule.notes
-                      )}
-                    </div>
-                  `
-                  : ''
-              }
-
-              ${
-                schedule.status === 'scheduled'
-                  ? `
-                    <div class="actions">
-                      <button
-                        class="btn small"
-                        onclick="editSchedule('${schedule.id}')"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        class="btn danger small"
-                        onclick="cancelSchedule('${schedule.id}')"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  `
-                  : ''
-              }
-
-            </div>
-          `;
-
-        }).join('');
-    }
-
-    async function scheduleFeature(){
-
-      const bookId =
-        document.getElementById(
-          'scheduleBook'
-        ).value;
-
-      const moderatorId =
-        document.getElementById(
-          'scheduleModerator'
-        ).value;
-
-      const featureDate =
-        document.getElementById(
-          'scheduleDate'
-        ).value;
-
-      const featureTime =
-        document.getElementById(
-          'scheduleTime'
-        ).value;
-
-      const notes =
-        document.getElementById(
-          'scheduleNotes'
-        ).value.trim();
-
-      if(
-        !bookId ||
-        !moderatorId ||
-        !featureDate ||
-        !featureTime
-      ){
-        showToast(
-          'Please complete the book, moderator, date and time.'
-        );
-        return;
-      }
-
-      let error = null;
-
-      if(editingScheduleId){
-
-        const result = await supabaseClient
-          .from('feature_schedules')
-          .update({
-            book_id:bookId,
-            moderator_id:moderatorId,
-            feature_date:featureDate,
-            feature_time:featureTime,
-            status:'scheduled',
-            notes:notes || null
-          })
-          .eq('id',editingScheduleId);
-
-        error = result.error;
-
-      }else{
-
-        const result = await supabaseClient
-          .from('feature_schedules')
-          .insert({
-            book_id:bookId,
-            moderator_id:moderatorId,
-            feature_date:featureDate,
-            feature_time:featureTime,
-            status:'scheduled',
-            notes:notes || null
-          });
-
-        error = result.error;
-      }
-
-      if(error){
-
-        console.error(
-          'Schedule save error:',
-          error
-        );
-
-        showToast(
-          'Could not save schedule: ' +
-          error.message
-        );
-
-        return;
-      }
-
-      showToast(
-        editingScheduleId
-          ? 'Feature schedule updated successfully.'
-          : 'Feature scheduled successfully.'
-      );
-
-      editingScheduleId = null;
-
-      document.getElementById(
-        'scheduleBook'
-      ).value = '';
-
-      document.getElementById(
-        'scheduleModerator'
-      ).value = '';
-
-      document.getElementById(
-        'scheduleDate'
-      ).value = '';
-
-      document.getElementById(
-        'scheduleTime'
-      ).value = '';
-
-      document.getElementById(
-        'scheduleNotes'
-      ).value = '';
-
-      const scheduleBtn =
-        document.getElementById('scheduleBtn');
-
-      if(scheduleBtn){
-        scheduleBtn.textContent =
-          'Schedule Feature';
-      }
-
-      await loadSchedules();
-    }
-
-    async function editSchedule(scheduleId){
-
-      const {
-        data,
-        error
-      } = await supabaseClient
-        .from('feature_schedules')
-        .select(`
-          id,
-          book_id,
-          moderator_id,
-          feature_date,
-          feature_time,
-          notes,
-          status
-        `)
-        .eq('id',scheduleId)
-        .maybeSingle();
-
-      if(error || !data){
-
-        console.error(
-          'Load schedule for edit error:',
-          error
-        );
-
-        showToast(
-          'Could not load this schedule for editing.'
-        );
-
-        return;
-      }
-
-      if(data.status !== 'scheduled'){
-        showToast(
-          'Only scheduled features can be edited.'
-        );
-        return;
-      }
-
-      editingScheduleId = scheduleId;
-
-      document.getElementById(
-        'scheduleBook'
-      ).value = data.book_id || '';
-
-      document.getElementById(
-        'scheduleModerator'
-      ).value = data.moderator_id || '';
-
-      document.getElementById(
-        'scheduleDate'
-      ).value = data.feature_date || '';
-
-      document.getElementById(
-        'scheduleTime'
-      ).value = data.feature_time || '';
-
-      document.getElementById(
-        'scheduleNotes'
-      ).value = data.notes || '';
-
-      const scheduleBtn =
-        document.getElementById('scheduleBtn');
-
-      if(scheduleBtn){
-        scheduleBtn.textContent =
-          'Update Schedule';
-      }
-
-      document.getElementById(
-        'calendarSchedules'
-      ).scrollIntoView({
-        behavior:'smooth',
-        block:'start'
-      });
-
-      showToast(
-        'Schedule loaded. Update the details and save.'
-      );
-    }
-
-    async function cancelSchedule(scheduleId){
-
-      const {
-        error
-      } = await supabaseClient
-        .from('feature_schedules')
-        .update({
-          status:'cancelled'
-        })
-        .eq('id',scheduleId);
-
-      if(error){
-
-        console.error(
-          'Cancel schedule error:',
-          error
-        );
-
-        showToast(
-          'Could not cancel schedule: ' +
-          error.message
-        );
-
-        return;
-      }
-
-      showToast(
-        'Feature schedule cancelled.'
-      );
-
-      await loadSchedules();
-    }
-
-    async function loadReaders(){
-
-      readerList.innerHTML =
-        '<div class="empty">Loading reader accounts...</div>';
-
-      const {
-        data:readers,
-        error:readersError
-      } = await supabaseClient
-        .from('readers')
-        .select(`
-          id,
-          profile_id,
-          created_at,
-          updated_at
-        `)
-        .order('created_at',{
-          ascending:false
-        });
-
-      if(readersError){
-        console.error(
-          'Reader accounts error:',
-          readersError
-        );
-
-        readerList.innerHTML =
-          '<div class="empty">Unable to load reader accounts.</div>';
-
-        showToast(
-          'Could not load reader accounts.'
-        );
-
-        return;
-      }
-
-      if(!readers || readers.length === 0){
-        readerList.innerHTML = `
-          <div class="empty">
-            No reader accounts have been created yet.
-          </div>
-        `;
-
-        return;
-      }
-
-      const profileIds =
-        [...new Set(
-          readers.map(reader => reader.profile_id)
-        )];
-
-      const {
-        data:profiles,
-        error:profilesError
-      } = await supabaseClient
-        .from('profiles')
-        .select(`
-          id,
-          display_name,
-          role,
-          created_at,
-          updated_at
-        `)
-        .in('id',profileIds);
-
-      if(profilesError){
-        console.error(
-          'Reader profile error:',
-          profilesError
-        );
-
-        readerList.innerHTML =
-          '<div class="empty">Unable to load reader profile details.</div>';
-
-        showToast(
-          'Could not load reader profile details.'
-        );
-
-        return;
-      }
-
-      const profileMap =
-        new Map(
-          (profiles || []).map(profile => [
-            profile.id,
-            profile
-          ])
-        );
-
-      readerList.innerHTML =
-        readers.map(reader => {
-
-          const profile =
-            profileMap.get(reader.profile_id) || {};
-
-          const displayName =
-            profile.display_name ||
-            'Unnamed Reader';
-
-          return `
-            <div class="request-item">
-
-              <div class="request-top">
-
-                <div>
-                  <div class="item-title">
-                    ${escapeHtml(displayName)}
-                  </div>
-
-                  <div class="item-meta">
-                    Reader ID: ${escapeHtml(reader.id)}
-                    <br>
-                    Profile ID: ${escapeHtml(reader.profile_id)}
-                    <br>
-                    Joined: ${escapeHtml(formatDate(reader.created_at))}
-                    <br>
-                    Last record update: ${escapeHtml(formatDate(reader.updated_at))}
-                  </div>
-                </div>
-
-                <span class="status complete">
-                  ${escapeHtml(profile.role || 'reader')}
-                </span>
-
-              </div>
-
-              <div class="message">
-                This is the Reader Reach reader record linked to the account profile.
-                Reader passwords are never displayed to administrators.
-              </div>
-
-              <div class="actions">
-                <button
-                  class="btn danger small"
-                  onclick="removeReader('${reader.profile_id}')"
-                >
-                  Remove Reader
-                </button>
-              </div>
-
-            </div>
-          `;
-
-        }).join('');
-
-      const badge =
-        document.getElementById('readersBadge');
-
-      const stat =
-        document.getElementById('readersCount');
-
-      if(badge) badge.textContent = readers.length;
-      if(stat) stat.textContent = readers.length;
-    }
-
-    async function loadDiscussions(){
-
-      discussionList.innerHTML =
-        '<div class="empty">Loading discussions...</div>';
-
-      const {
-        data:discussions,
-        error:discussionsError
-      } = await supabaseClient
-        .from('discussions')
-        .select(`
-          id,
-          book_id,
-          created_at
-        `)
-        .order('created_at',{
-          ascending:false
-        });
-
-      if(discussionsError){
-
-        console.error(
-          'Discussions error:',
-          discussionsError
-        );
-
-        discussionList.innerHTML =
-          '<div class="empty">Unable to load discussions.</div>';
-
-        showToast(
-          'Could not load discussions.'
-        );
-
-        return;
-      }
-
-      if(!discussions || discussions.length === 0){
-
-        discussionList.innerHTML = `
-          <div class="empty">
-            No book discussions have been created yet.
-          </div>
-        `;
-
-        const badge =
-          document.getElementById('discussionsBadge');
-
-        if(badge){
-          badge.textContent = '0';
-        }
-
-        return;
-      }
-
-      const bookIds =
-        [...new Set(
-          discussions.map(
-            discussion => discussion.book_id
-          )
-        )];
-
-      const discussionIds =
-        [...new Set(
-          discussions.map(
-            discussion => discussion.id
-          )
-        )];
-
-      const [
-        booksResult,
-        messagesResult
-      ] = await Promise.all([
-
-        supabaseClient
-          .from('books')
-          .select(`
-            id,
-            title,
-            author_id,
-            status
-          `)
-          .in('id',bookIds),
-
-        supabaseClient
-          .from('discussion_messages')
-          .select(`
-            id,
-            discussion_id,
-            author_profile_id,
-            message,
-            created_at,
-            updated_at
-          `)
-          .in('discussion_id',discussionIds)
-          .order('created_at',{
-            ascending:true
-          })
-      ]);
-
-      if(booksResult.error){
-
-        console.error(
-          'Discussion books error:',
-          booksResult.error
-        );
-
-        discussionList.innerHTML =
-          '<div class="empty">Unable to load discussion book details.</div>';
-
-        return;
-      }
-
-      if(messagesResult.error){
-
-        console.error(
-          'Discussion messages error:',
-          messagesResult.error
-        );
-
-        discussionList.innerHTML =
-          '<div class="empty">Unable to load discussion messages.</div>';
-
-        return;
-      }
-
-      const authorIds =
-        [...new Set(
-          (booksResult.data || [])
-            .map(book => book.author_id)
-            .filter(Boolean)
-        )];
-
-      const profileIds =
-        [...new Set(
-          (messagesResult.data || [])
-            .map(message => message.author_profile_id)
-            .filter(Boolean)
-        )];
-
-      const [
-        authorsResult,
-        profilesResult
-      ] = await Promise.all([
-
-        authorIds.length
-          ? supabaseClient
-              .from('authors')
-              .select(`
-                id,
-                author_name,
-                profile_id
-              `)
-              .in('id',authorIds)
-          : Promise.resolve({
-              data:[],
-              error:null
-            }),
-
-        profileIds.length
-          ? supabaseClient
-              .from('profiles')
-              .select(`
-                id,
-                display_name,
-                role
-              `)
-              .in('id',profileIds)
-          : Promise.resolve({
-              data:[],
-              error:null
-            })
-      ]);
-
-      if(authorsResult.error){
-
-        console.error(
-          'Discussion authors error:',
-          authorsResult.error
-        );
-
-        discussionList.innerHTML =
-          '<div class="empty">Unable to load discussion author details.</div>';
-
-        return;
-      }
-
-      if(profilesResult.error){
-
-        console.error(
-          'Discussion message profiles error:',
-          profilesResult.error
-        );
-
-        discussionList.innerHTML =
-          '<div class="empty">Unable to load discussion participant details.</div>';
-
-        return;
-      }
-
-      const bookMap =
-        new Map(
-          (booksResult.data || []).map(
-            book => [
-              book.id,
-              book
-            ]
-          )
-        );
-
-      const authorMap =
-        new Map(
-          (authorsResult.data || []).map(
-            author => [
-              author.id,
-              author
-            ]
-          )
-        );
-
-      const profileMap =
-        new Map(
-          (profilesResult.data || []).map(
-            profile => [
-              profile.id,
-              profile
-            ]
-          )
-        );
-
-      const messageMap =
-        new Map();
-
-      for(const message of messagesResult.data || []){
-
-        if(!messageMap.has(message.discussion_id)){
-          messageMap.set(
-            message.discussion_id,
-            []
-          );
-        }
-
-        messageMap
-          .get(message.discussion_id)
-          .push(message);
-      }
-
-      discussionList.innerHTML =
-        discussions.map(discussion => {
-
-          const book =
-            bookMap.get(discussion.book_id) || {};
-
-          const author =
-            authorMap.get(book.author_id) || {};
-
-          const messages =
-            messageMap.get(discussion.id) || [];
-
-          const discussionTitle =
-            book.title ||
-            'Untitled book discussion';
-
-          return `
-            <div class="request-item">
-
-              <div class="request-top">
-
-                <div>
-                  <div class="item-title">
-                    ${escapeHtml(discussionTitle)}
-                  </div>
-
-                  <div class="item-meta">
-                    Author:
-                    ${escapeHtml(
-                      author.author_name ||
-                      'Unknown author'
-                    )}
-                    <br>
-                    Discussion created:
-                    ${escapeHtml(
-                      formatDate(discussion.created_at)
-                    )}
-                    <br>
-                    Messages:
-                    ${escapeHtml(messages.length)}
-                  </div>
-                </div>
-
-                <span class="status ${
-                  book.status === 'approved'
-                    ? 'approved'
-                    : ''
-                }">
-                  ${escapeHtml(
-                    book.status ||
-                    'discussion'
-                  )}
-                </span>
-
-              </div>
-
-              ${
-                messages.length
-                  ? `
-                    <div style="display:grid;gap:9px;margin-top:13px;">
-                      ${messages.map(message => {
-
-                        const profile =
-                          profileMap.get(
-                            message.author_profile_id
-                          ) || {};
-
-                        const displayName =
-                          profile.display_name ||
-                          'Reader Reach user';
-
-                        return `
-                          <div class="detail-block">
-
-                            <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
-                              <div>
-                                <div class="item-title">
-                                  ${escapeHtml(displayName)}
-                                </div>
-
-                                <div class="item-meta">
-                                  ${escapeHtml(
-                                    profile.role ||
-                                    'user'
-                                  )}
-                                  ·
-                                  ${escapeHtml(
-                                    formatDate(
-                                      message.created_at
-                                    )
-                                  )}
-                                </div>
-                              </div>
-
-                              <button
-                                class="btn danger small"
-                                onclick="deleteDiscussionMessage('${message.id}')"
-                              >
-                                Delete Message
-                              </button>
-                            </div>
-
-                            <div class="message">
-                              ${escapeHtml(message.message)}
-                            </div>
-
-                          </div>
-                        `;
-
-                      }).join('')}
-                    </div>
-                  `
-                  : `
-                    <div class="empty" style="margin-top:12px;">
-                      No messages have been posted in this discussion yet.
-                    </div>
-                  `
-              }
-
-            </div>
-          `;
-
-        }).join('');
-
-      const badge =
-        document.getElementById('discussionsBadge');
-
-      if(badge){
-        badge.textContent = discussions.length;
-      }
-    }
-
-    async function deleteDiscussionMessage(messageId){
-
-      if(!currentUser){
-        showToast(
-          'Administrator session not found.'
-        );
-        return;
-      }
-
-      const confirmed =
-        window.confirm(
-          'Delete this discussion message? This action cannot be undone.'
-        );
-
-      if(!confirmed){
-        return;
-      }
-
-      const {
-        error
-      } = await supabaseClient
-        .from('discussion_messages')
-        .delete()
-        .eq('id',messageId);
-
-      if(error){
-
-        console.error(
-          'Discussion message deletion error:',
-          error
-        );
-
-        showToast(
-          'Could not delete discussion message: ' +
-          error.message
-        );
-
-        return;
-      }
-
-      showToast(
-        'Discussion message deleted.'
-      );
-
-      await loadDiscussions();
-    }
-
-
-    async function loadFlipperGuides(){
-
-      const guideList =
-        document.getElementById('flipperGuideList');
-
-      if(!guideList){
-        return;
-      }
-
-      guideList.innerHTML =
-        '<div class="empty">Loading Flipper Guides...</div>';
-
-      const [
-        guidesResult,
-        booksResult,
-        authorsResult,
-        readersResult,
-        accessResult,
-        profilesResult
-      ] = await Promise.all([
-        supabaseClient
-          .from('flipper_guides')
-          .select('id,book_id,title,description,content_url,created_at,updated_at')
-          .order('created_at',{ascending:false}),
-        supabaseClient
-          .from('books')
-          .select('id,title,author_id,status'),
-        supabaseClient
-          .from('authors')
-          .select('id,author_name,profile_id,status'),
-        supabaseClient
-          .from('readers')
-          .select('id,profile_id,created_at')
-          .order('created_at',{ascending:false}),
-        supabaseClient
-          .from('flipper_guide_access')
-          .select('id,guide_id,reader_id,granted_at'),
-        supabaseClient
-          .from('profiles')
-          .select('id,display_name,role')
-      ]);
-
-      const firstError =
-        guidesResult.error ||
-        booksResult.error ||
-        authorsResult.error ||
-        readersResult.error ||
-        accessResult.error ||
-        profilesResult.error;
-
-      if(firstError){
-        console.error('Flipper Guide management load error:',firstError);
-        guideList.innerHTML =
-          '<div class="empty">Unable to load Flipper Guide controls.</div>';
-        showToast('Could not load Flipper Guide controls: ' + firstError.message);
-        return;
-      }
-
-      flipperGuides = guidesResult.data || [];
-      readerRecords = readersResult.data || [];
-      guideAccessRecords = accessResult.data || [];
-
-      const bookMap = new Map(
-        (booksResult.data || []).map(book => [book.id,book])
-      );
-      const authorMap = new Map(
-        (authorsResult.data || []).map(author => [author.id,author])
-      );
-      const profileMap = new Map(
-        (profilesResult.data || []).map(profile => [profile.id,profile])
-      );
-
-      if(!flipperGuides.length){
-        guideList.innerHTML =
-          '<div class="empty">No Flipper Guides have been submitted yet.</div>';
-        document.getElementById('flipperGuidesBadge').textContent = '0';
-        return;
-      }
-
-      guideList.innerHTML = flipperGuides.map(guide => {
-        const book = bookMap.get(guide.book_id) || {};
-        const author = authorMap.get(book.author_id) || {};
-        const accessCount = guideAccessRecords.filter(
-          item => item.guide_id === guide.id
-        ).length;
-
-        const bookStatus = book.status || 'unknown';
-
-        return `
-          <div class="request-item">
-            <div class="request-top">
+          <div style="flex:1">
+            <div class="item-top">
               <div>
-                <div class="item-title">
-                  ${escapeHtml(guide.title || book.title || 'Untitled Flipper Guide')}
-                </div>
-                <div class="item-meta">
-                  Book: ${escapeHtml(book.title || 'Unknown book')}<br>
-                  Author: ${escapeHtml(author.author_name || 'Unknown author')}<br>
-                  Book status: ${escapeHtml(bookStatus)}<br>
-                  Reader access: ${escapeHtml(accessCount)}
+                <div class="item-title">${escapeHTML(book.title || "Untitled Book")}</div>
+                <div class="meta">
+                  ${escapeHTML(book.genre_topic || "No genre/topic")}
                 </div>
               </div>
-              <span class="status ${bookStatus === 'approved' ? 'approved' : ''}">
-                Protected
-              </span>
+
+              <span class="status pending">PENDING</span>
             </div>
 
-            <div class="detail-block" style="margin-top:12px;">
-              <div class="item-meta">
-                ${escapeHtml(guide.description || 'No guide description provided.')}
-              </div>
+            <div class="description">
+              ${escapeHTML(book.description || "No description supplied.")}
             </div>
 
-            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:13px;">
-              <button class="btn small" onclick="viewFlipperGuide('${guide.id}')">View Link</button>
-              <button class="btn primary small" onclick="manageFlipperGuideAccess('${guide.id}')">Manage Access</button>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      document.getElementById('flipperGuidesBadge').textContent =
-        flipperGuides.length;
-
-      window.__flipperGuideBookMap = bookMap;
-      window.__flipperGuideAuthorMap = authorMap;
-      window.__flipperGuideProfileMap = profileMap;
-    }
-
-    function viewFlipperGuide(guideId){
-      const guide =
-        flipperGuides.find(item => item.id === guideId);
-
-      if(!guide){
-        showToast('Flipper Guide could not be found.');
-        return;
-      }
-
-      if(!guide.content_url){
-        showToast('This Flipper Guide does not have a link yet.');
-        return;
-      }
-
-      window.open(guide.content_url,'_blank','noopener,noreferrer');
-    }
-
-    function closeGuideAccessModal(){
-      const modal = document.getElementById('guideAccessModal');
-      if(modal){
-        modal.classList.add('hidden');
-      }
-      activeGuideForAccess = null;
-    }
-
-    async function manageFlipperGuideAccess(guideId){
-      const guide =
-        flipperGuides.find(item => item.id === guideId);
-
-      if(!guide){
-        showToast('Flipper Guide could not be found.');
-        return;
-      }
-
-      activeGuideForAccess = guide;
-
-      const modal = document.getElementById('guideAccessModal');
-      const body = document.getElementById('guideAccessModalBody');
-      const subtitle = document.getElementById('guideAccessModalSubtitle');
-
-      const bookMap = window.__flipperGuideBookMap || new Map();
-      const book = bookMap.get(guide.book_id) || {};
-
-      subtitle.textContent =
-        `${book.title || 'Book'} · Grant or revoke access for registered readers.`;
-
-      const accessForGuide = new Set(
-        guideAccessRecords
-          .filter(item => item.guide_id === guideId)
-          .map(item => item.reader_id)
-      );
-
-      if(!readerRecords.length){
-        body.innerHTML =
-          '<div class="empty">There are no registered reader records to manage yet.</div>';
-        modal.classList.remove('hidden');
-        return;
-      }
-
-      const profileMap = window.__flipperGuideProfileMap || new Map();
-
-      body.innerHTML = `
-        <div class="detail-block">
-          <strong>${escapeHtml(guide.title || 'Flipper Guide')}</strong>
-          <div class="item-meta" style="margin-top:4px;">
-            Readers checked below will be authorized to access this protected guide.
-          </div>
-        </div>
-
-        <div class="guide-access-list">
-          ${readerRecords.map(reader => {
-            const profile = profileMap.get(reader.profile_id) || {};
-            const name = profile.display_name || 'Reader Reach reader';
-            const checked = accessForGuide.has(reader.id) ? 'checked' : '';
-
-            return `
-              <div class="guide-access-row">
-                <label>
-                  <input
-                    type="checkbox"
-                    class="guide-reader-checkbox"
-                    value="${escapeHtml(reader.id)}"
-                    ${checked}
-                  >
-                  <span>
-                    <strong>${escapeHtml(name)}</strong>
-                    <span class="item-meta" style="display:block;margin-top:2px;">${escapeHtml(profile.id || reader.profile_id)}</span>
-                  </span>
-                </label>
-              </div>
-            `;
-          }).join('')}
-        </div>
-
-        <div class="guide-access-actions">
-          <button class="btn" type="button" onclick="closeGuideAccessModal()">Cancel</button>
-          <button class="btn primary" type="button" onclick="saveFlipperGuideAccess()">Save Access</button>
-        </div>
-      `;
-
-      modal.classList.remove('hidden');
-    }
-
-    async function saveFlipperGuideAccess(){
-      if(!activeGuideForAccess){
-        showToast('No Flipper Guide is selected.');
-        return;
-      }
-
-      const guideId = activeGuideForAccess.id;
-      const checkboxes = [
-        ...document.querySelectorAll('.guide-reader-checkbox')
-      ];
-
-      const desiredReaderIds = new Set(
-        checkboxes
-          .filter(input => input.checked)
-          .map(input => input.value)
-      );
-
-      const currentRows = guideAccessRecords.filter(
-        item => item.guide_id === guideId
-      );
-      const currentReaderIds = new Set(
-        currentRows.map(item => item.reader_id)
-      );
-
-      const toGrant = [...desiredReaderIds].filter(
-        readerId => !currentReaderIds.has(readerId)
-      );
-      const toRevoke = currentRows.filter(
-        item => !desiredReaderIds.has(item.reader_id)
-      );
-
-      const saveButton =
-        document.querySelector('#guideAccessModal .btn.primary');
-
-      if(saveButton){
-        saveButton.disabled = true;
-        saveButton.textContent = 'Saving...';
-      }
-
-      try{
-        if(toGrant.length){
-          const rows = toGrant.map(readerId => ({
-            guide_id: guideId,
-            reader_id: readerId
-          }));
-
-          const {error} = await supabaseClient
-            .from('flipper_guide_access')
-            .insert(rows);
-
-          if(error){
-            throw error;
-          }
-        }
-
-        if(toRevoke.length){
-          const ids = toRevoke.map(item => item.id);
-
-          const {error} = await supabaseClient
-            .from('flipper_guide_access')
-            .delete()
-            .in('id',ids);
-
-          if(error){
-            throw error;
-          }
-        }
-
-        showToast('Flipper Guide access updated.');
-        closeGuideAccessModal();
-        await loadFlipperGuides();
-      }catch(error){
-        console.error('Flipper Guide access save error:',error);
-        showToast('Could not update guide access: ' + error.message);
-
-        if(saveButton){
-          saveButton.disabled = false;
-          saveButton.textContent = 'Save Access';
-        }
-      }
-    }
-
-    /*
-      ADMIN REMOVAL CONTROLS
-
-      These actions call protected SECURITY DEFINER database functions.
-      They are intentionally confirmed before execution.
-    */
-
-    async function removeBook(bookId){
-      if(!currentUser){
-        showToast('Administrator session not found.');
-        return;
-      }
-
-      const book =
-        approvedBooks.find(item => item.id === bookId)
-        || pendingBooks.find(item => item.id === bookId);
-
-      if(!book){
-        showToast('Book could not be found.');
-        return;
-      }
-
-      const title =
-        book.title || 'this book';
-
-      const confirmed = window.confirm(
-        `Remove "${title}" from Reader Reach?\n\n` +
-        `This permanently removes the book and its connected ` +
-        `discussions, schedules, trailer record, Flipper Guide record, ` +
-        `reader access records and homepage Featured record.\n\n` +
-        `The author account will NOT be removed.\n\n` +
-        `This action cannot be undone.`
-      );
-
-      if(!confirmed){
-        return;
-      }
-
-      showToast('Removing book...');
-
-      const {data,error} =
-        await supabaseClient.rpc(
-          'admin_remove_book',
-          {p_book_id:bookId}
-        );
-
-      if(error){
-        console.error('Admin remove book error:',error);
-        showToast('Could not remove book: ' + error.message);
-        return;
-      }
-
-      if(!data || data.success !== true){
-        console.error('Unexpected remove book response:',data);
-        showToast('The book removal was not confirmed.');
-        return;
-      }
-
-      featuredBookIds.delete(bookId);
-      closeDetailModal();
-
-      showToast('Book removed successfully.');
-
-      await Promise.all([
-        loadPendingBooks(),
-        loadApprovedBooks(),
-        loadSchedules(),
-        loadDiscussions(),
-        loadStats(),
-        loadFeaturedBooksAdmin()
-      ]);
-    }
-
-    async function removeAuthor(authorId){
-      if(!currentUser){
-        showToast('Administrator session not found.');
-        return;
-      }
-
-      const author =
-        approvedAuthors.find(item => item.id === authorId);
-
-      if(!author){
-        showToast('Approved author could not be found.');
-        return;
-      }
-
-      const authorName =
-        author.author_name
-        || (author.profiles || {}).display_name
-        || 'this author';
-
-      const {data:authorBooks,error:booksError} =
-        await supabaseClient
-          .from('books')
-          .select('id,title')
-          .eq('author_id',authorId);
-
-      if(booksError){
-        console.error('Author book count error:',booksError);
-        showToast('Could not check this author before removal.');
-        return;
-      }
-
-      const bookCount = (authorBooks || []).length;
-
-      const confirmed = window.confirm(
-        `Remove "${authorName}" as an approved Reader Reach author?\n\n` +
-        `${bookCount} book${bookCount === 1 ? '' : 's'} belonging to this author ` +
-        `will also be removed with their connected Reader Reach content.\n\n` +
-        `The Supabase login account will NOT be deleted; the profile will return to Reader status.\n\n` +
-        `This action cannot be undone.`
-      );
-
-      if(!confirmed){
-        return;
-      }
-
-      showToast('Removing author...');
-
-      const {data,error} =
-        await supabaseClient.rpc(
-          'admin_remove_author',
-          {p_author_id:authorId}
-        );
-
-      if(error){
-        console.error('Admin remove author error:',error);
-        showToast('Could not remove author: ' + error.message);
-        return;
-      }
-
-      if(!data || data.success !== true){
-        console.error('Unexpected remove author response:',data);
-        showToast('The author removal was not confirmed.');
-        return;
-      }
-
-      closeDetailModal();
-
-      showToast('Author removed successfully.');
-
-      await Promise.all([
-        loadAuthorRequests(),
-        loadApprovedAuthors(),
-        loadPendingBooks(),
-        loadApprovedBooks(),
-        loadReaders(),
-        loadSchedules(),
-        loadDiscussions(),
-        loadStats()
-      ]);
-    }
-
-    async function removeReader(profileId){
-      if(!currentUser){
-        showToast('Administrator session not found.');
-        return;
-      }
-
-      const reader =
-        document.querySelector(
-          `[onclick="removeReader('${profileId}')"]`
-        );
-
-      const readerName =
-        reader
-          ? reader.closest('.request-item')?.querySelector('.item-title')?.textContent?.trim()
-          : 'this reader';
-
-      const confirmed = window.confirm(
-        `Remove "${readerName || 'this reader'}" from Reader Reach?\n\n` +
-        `This removes the Reader profile, reader notifications, ` +
-        `bookshelf records, Flipper Guide access and reader discussion/conversation data.\n\n` +
-        `The Supabase login account itself will NOT be deleted.\n\n` +
-        `This action cannot be undone.`
-      );
-
-      if(!confirmed){
-        return;
-      }
-
-      showToast('Removing reader...');
-
-      const {data,error} =
-        await supabaseClient.rpc(
-          'admin_remove_reader',
-          {p_profile_id:profileId}
-        );
-
-      if(error){
-        console.error('Admin remove reader error:',error);
-        showToast('Could not remove reader: ' + error.message);
-        return;
-      }
-
-      if(!data || data.success !== true){
-        console.error('Unexpected remove reader response:',data);
-        showToast('The reader removal was not confirmed.');
-        return;
-      }
-
-      showToast('Reader removed successfully.');
-
-      await Promise.all([
-        loadReaders(),
-        loadStats()
-      ]);
-    }
-
-
-    async function startAdminPresence(){
-      if(!currentUser) return;
-      try{
-        adminPresenceChannel = supabaseClient.channel('reader-reach-presence',{config:{presence:{key:currentUser.id}}});
-        adminPresenceChannel
-          .on('presence',{event:'sync'},() => {
-            const state = adminPresenceChannel.presenceState();
-            const onlineModerators = Object.values(state).flat().filter(item => item && item.role === 'moderator').length;
-            const el = document.getElementById('onlineModeratorsCount');
-            if(el) el.textContent = onlineModerators;
-          })
-          .subscribe(async status => {
-            if(status === 'SUBSCRIBED'){
-              await adminPresenceChannel.track({user_id:currentUser.id,role:'admin',display_name:adminEmail.textContent || 'Admin',online_at:new Date().toISOString()});
+            ${
+              missing.length
+              ? `<div class="meta" style="margin-top:9px;color:#7b3024">
+                   Missing: ${escapeHTML(missing.join(", "))}
+                 </div>`
+              : ""
             }
-          });
-      }catch(error){
-        console.error('Admin presence error:',error);
-      }
-    }
 
-    async function loadNotifications(){
-      const list = document.getElementById('notificationList');
-      const badge = document.getElementById('notificationsBadge');
-      if(!list || !currentUser) return;
-      list.innerHTML = '<div class="empty">Loading notifications...</div>';
+            <div class="actions">
+              <button class="btn green"
+                onclick="updateBook('${book.id}','approved')">
+                Approve
+              </button>
 
-      const {data,error} = await supabaseClient
-        .from('notifications')
-        .select('id,type,title,message,related_book_id,related_schedule_id,is_read,created_at')
-        .eq('profile_id',currentUser.id)
-        .order('created_at',{ascending:false})
-        .limit(100);
+              <button class="btn danger"
+                onclick="updateBook('${book.id}','rejected')">
+                Reject
+              </button>
 
-      if(error){
-        console.error('Admin notifications error:',error);
-        list.innerHTML = '<div class="empty">Unable to load notifications.</div>';
-        if(badge) badge.textContent = '—';
-        return;
-      }
-
-      adminNotifications = data || [];
-      const unread = adminNotifications.filter(item => !item.is_read).length;
-      if(badge) badge.textContent = unread;
-
-      if(!adminNotifications.length){
-        list.innerHTML = '<div class="empty">No administrator notifications yet.</div>';
-        return;
-      }
-
-      list.innerHTML = adminNotifications.map(item => `
-        <div class="request-item ${item.is_read ? 'notification-read' : 'notification-unread'}">
-          <div class="request-top">
-            <div>
-              <div class="item-title">${escapeHtml(item.title || item.type || 'Notification')}</div>
-              <div class="item-meta">${escapeHtml(formatDate(item.created_at))} · ${escapeHtml(item.type || 'activity')}</div>
+              ${
+                book.cover_url
+                ? `<a class="btn"
+                    href="${escapeHTML(book.cover_url)}"
+                    target="_blank">
+                    View Cover
+                   </a>`
+                : ""
+              }
             </div>
-            <span class="status ${item.is_read ? '' : 'pending'}">${item.is_read ? 'Read' : 'New'}</span>
           </div>
-          <div class="message">${escapeHtml(item.message || '')}</div>
-          <div class="actions">
-            ${item.related_book_id ? `<button class="btn small" type="button" onclick="viewBookById('${item.related_book_id}')">View Book</button>` : ''}
-            ${!item.is_read ? `<button class="btn small" type="button" onclick="markAdminNotificationRead('${item.id}')">Mark Read</button>` : ''}
+
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+async function updateBook(id,status){
+
+  const {error} = await supabaseClient
+    .from("books")
+    .update({
+      status,
+      reviewed_at:new Date().toISOString(),
+      reviewed_by:currentUser.id
+    })
+    .eq("id",id);
+
+  if(error){
+    toast("Book update failed.");
+    return;
+  }
+
+  toast(`Book ${status}.`);
+  await loadBooks();
+  await loadStats();
+}
+
+async function loadFeatured(){
+
+  const {data,error} = await supabaseClient
+    .from("homepage_featured_books")
+    .select("id,book_id,created_at")
+    .order("created_at",{ascending:false});
+
+  if(error){
+    empty("featuredList","Unable to load featured books.");
+    return;
+  }
+
+  $("featuredCount").textContent = data?.length || 0;
+
+  if(!data?.length){
+    empty("featuredList","No books are currently Featured.");
+    return;
+  }
+
+  const bookIds = data.map(x => x.book_id);
+
+  const {data:books} = await supabaseClient
+    .from("books")
+    .select("id,title,genre_topic,cover_url,author_id")
+    .in("id",bookIds);
+
+  $("featuredList").innerHTML = data.map(feature => {
+
+    const book = (books || []).find(x => x.id === feature.book_id);
+
+    if(!book) return "";
+
+    return `
+      <div class="item">
+        <div class="book-row">
+          ${
+            book.cover_url
+            ? `<img class="cover" src="${escapeHTML(book.cover_url)}" alt="">`
+            : `<div class="cover"></div>`
+          }
+
+          <div style="flex:1">
+            <div class="item-title">${escapeHTML(book.title)}</div>
+            <div class="meta">${escapeHTML(book.genre_topic || "")}</div>
+
+            <div class="actions">
+              <span class="status approved">FEATURED</span>
+              <button class="btn danger"
+                onclick="removeFeatured('${feature.id}')">
+                Remove from Featured
+              </button>
+            </div>
           </div>
         </div>
-      `).join('');
-    }
+      </div>
+    `;
+  }).join("");
+}
 
-    async function markAdminNotificationRead(notificationId){
-      const {error} = await supabaseClient
-        .from('notifications')
-        .update({is_read:true})
-        .eq('id',notificationId)
-        .eq('profile_id',currentUser.id);
-      if(error){
-        console.error('Notification update error:',error);
-        showToast('Could not update notification.');
-        return;
-      }
-      await loadNotifications();
-    }
+async function removeFeatured(id){
 
-    async function markAllAdminNotificationsRead(){
-      const {error} = await supabaseClient
-        .from('notifications')
-        .update({is_read:true})
-        .eq('profile_id',currentUser.id)
-        .eq('is_read',false);
-      if(error){
-        console.error('Mark all notifications error:',error);
-        showToast('Could not mark notifications as read.');
-        return;
-      }
-      showToast('All notifications marked as read.');
-      await loadNotifications();
-    }
+  const {error} = await supabaseClient
+    .from("homepage_featured_books")
+    .delete()
+    .eq("id",id);
 
-    async function loadModeratorsAdmin(){
-      const panel = document.getElementById('moderatorPanel');
-      const badge = document.getElementById('moderatorsBadge');
-      if(!panel) return;
-      panel.innerHTML = '<div class="empty">Loading moderators...</div>';
+  if(error){
+    toast("Could not remove Featured book.");
+    return;
+  }
 
-      const {data,error} = await supabaseClient
-        .from('moderators')
-        .select('id,profile_id,display_name,active,created_at,updated_at')
-        .order('display_name',{ascending:true});
+  toast("Removed from Featured.");
+  await loadFeatured();
+  await loadStats();
+}
 
-      if(error){
-        console.error('Admin moderators error:',error);
-        panel.innerHTML = '<div class="empty">Unable to load moderators.</div>';
-        if(badge) badge.textContent = '—';
-        return;
-      }
+async function loadTrailers(){
 
-      const rows = data || [];
-      moderators = rows.filter(item => item.active);
-      if(badge) badge.textContent = rows.length;
+  const {data,error} = await supabaseClient
+    .from("book_trailers")
+    .select("id,book_id,title,description,trailer_url,show_on_homepage")
+    .order("id",{ascending:false});
 
-      if(!rows.length){
-        panel.innerHTML = '<div class="empty">No moderator records have been created yet.</div>';
-        populateBookSelect();
-        return;
-      }
+  if(error){
+    empty("trailersList","Unable to load trailer records.");
+    return;
+  }
 
-      panel.innerHTML = rows.map(mod => `
-        <div class="request-item">
-          <div class="request-top">
-            <div>
-              <div class="item-title">${escapeHtml(mod.display_name || 'Moderator')}</div>
-              <div class="item-meta">Profile ID: ${escapeHtml(mod.profile_id)}<br>Created: ${escapeHtml(formatDate(mod.created_at))}<br>Updated: ${escapeHtml(formatDate(mod.updated_at))}</div>
-            </div>
-            <span class="status ${mod.active ? 'approved' : ''}">${mod.active ? 'Active' : 'Inactive'}</span>
+  if(!data?.length){
+    empty("trailersList","No book trailers have been submitted.");
+    return;
+  }
+
+  $("trailersList").innerHTML = data.map(trailer => `
+    <div class="item">
+
+      <div class="item-top">
+        <div>
+          <div class="item-title">
+            ${escapeHTML(trailer.title || "Book Trailer")}
           </div>
-          <div class="actions">
-            <button class="btn small ${mod.active ? 'danger' : 'primary'}" type="button" onclick="setModeratorActive('${mod.id}',${!mod.active})">${mod.active ? 'Deactivate' : 'Activate'}</button>
+          <div class="meta">
+            ${escapeHTML(trailer.description || "")}
           </div>
         </div>
-      `).join('');
 
-      populateBookSelect();
-    }
+        <span class="status ${trailer.show_on_homepage ? "on":"off"}">
+          ${trailer.show_on_homepage ? "SHOWING":"HIDDEN"}
+        </span>
+      </div>
 
-    async function setModeratorActive(moderatorId,active){
-      const {error} = await supabaseClient
-        .from('moderators')
-        .update({active})
-        .eq('id',moderatorId);
-      if(error){
-        console.error('Moderator status error:',error);
-        showToast('Could not update moderator status: ' + error.message);
-        return;
-      }
-      showToast(active ? 'Moderator activated.' : 'Moderator deactivated.');
-      await Promise.all([loadModeratorsAdmin(),loadModerators(),loadSchedules()]);
-    }
-
-    async function viewBookById(bookId){
-      const book = approvedBooks.find(item => item.id === bookId) || pendingBooks.find(item => item.id === bookId);
-      if(book){
-        viewApprovedBook(bookId);
-        return;
-      }
-      const {data,error} = await supabaseClient.from('books').select('id,title,description,genre_topic,who_its_for,availability,cover_url,status,author_id,authors(author_name)').eq('id',bookId).maybeSingle();
-      if(error || !data){
-        showToast('Book could not be loaded.');
-        return;
-      }
-      approvedBooks.push(data);
-      viewApprovedBook(bookId);
-    }
-
-    async function loadStats(){
-
-      const {
-        count:pendingAuthorsCount,
-        error:pendingAuthorsError
-      } = await supabaseClient
-        .from('access_requests')
-        .select('id',{count:'exact',head:true})
-        .eq('requested_role','author')
-        .eq('status','pending');
-
-      if(!pendingAuthorsError){
-        const value = pendingAuthorsCount || 0;
-        const countEl = document.getElementById('pendingAuthorsCount');
-        const badgeEl = document.getElementById('pendingAuthorsBadge');
-        if(countEl) countEl.textContent = value;
-        if(badgeEl) badgeEl.textContent = value;
+      ${
+        trailer.trailer_url
+        ? `
+          <video controls
+            style="width:100%;max-height:300px;margin-top:12px;border-radius:9px;background:#2f211a"
+            src="${escapeHTML(trailer.trailer_url)}">
+          </video>
+        `
+        : ""
       }
 
-      const {
-        count:pendingBooksCount,
-        error:pendingBooksError
-      } = await supabaseClient
-        .from('books')
-        .select('id',{count:'exact',head:true})
-        .eq('status','pending');
+      <div class="actions">
+        <button class="btn ${trailer.show_on_homepage ? "danger":"green"}"
+          onclick="toggleTrailer('${trailer.id}',${!trailer.show_on_homepage})">
+          ${trailer.show_on_homepage ? "Turn Show Trailer OFF":"Turn Show Trailer ON"}
+        </button>
+      </div>
 
-      if(!pendingBooksError){
-        const value = pendingBooksCount || 0;
-        const countEl = document.getElementById('pendingBooksCount');
-        const badgeEl = document.getElementById('pendingBooksBadge');
-        if(countEl) countEl.textContent = value;
-        if(badgeEl) badgeEl.textContent = value;
-      }
+    </div>
+  `).join("");
+}
 
-      const {
-        count:readersCount,
-        error:readersError
-      } = await supabaseClient
-        .from('readers')
-        .select('id',{count:'exact',head:true});
+async function toggleTrailer(id,value){
 
-      if(!readersError){
-        const value = readersCount || 0;
-        const countEl = document.getElementById('readersCount');
-        const badgeEl = document.getElementById('readersBadge');
-        if(countEl) countEl.textContent = value;
-        if(badgeEl) badgeEl.textContent = value;
-      }
+  const {error} = await supabaseClient
+    .from("book_trailers")
+    .update({show_on_homepage:value})
+    .eq("id",id);
 
-      const {
-        count:approvedBooksCount,
-        error:booksError
-      } = await supabaseClient
-        .from('books')
-        .select('id',{
-          count:'exact',
-          head:true
-        })
-        .eq('status','approved');
+  if(error){
+    toast("Trailer visibility update failed.");
+    return;
+  }
 
-      if(!booksError){
+  toast(value ? "Trailer is now ON." : "Trailer is now OFF.");
+  await loadTrailers();
+}
 
-        document.getElementById(
-          'approvedBooksCount'
-        ).textContent =
-          approvedBooksCount || 0;
-      }
+async function loadSchedules(){
 
-      const {
-        count:approvedAuthorsCount,
-        error:authorsError
-      } = await supabaseClient
-        .from('authors')
-        .select('id',{
-          count:'exact',
-          head:true
-        })
-        .eq('status','approved');
+  const {data,error} = await supabaseClient
+    .from("feature_schedules")
+    .select("id,book_id,feature_date,feature_time,status,notes")
+    .order("feature_date",{ascending:true})
+    .limit(30);
 
-      if(!authorsError){
+  if(error){
+    empty("scheduleList","Unable to load schedules.");
+    return;
+  }
 
-        document.getElementById(
-          'approvedAuthorsCount'
-        ).textContent =
-          approvedAuthorsCount || 0;
-      }
-    }
+  $("scheduleCount").textContent = data?.length || 0;
 
-    async function handleAdminLogin(event){
+  if(!data?.length){
+    empty("scheduleList","No feature schedules found.");
+    return;
+  }
 
-      event.preventDefault();
+  const bookIds = data.map(x => x.book_id);
 
-      const email =
-        document.getElementById(
-          'adminLoginEmail'
-        ).value.trim();
+  const {data:books} = await supabaseClient
+    .from("books")
+    .select("id,title")
+    .in("id",bookIds);
 
-      const password =
-        document.getElementById(
-          'adminLoginPassword'
-        ).value;
+  $("scheduleList").innerHTML = data.map(schedule => {
 
-      const loginButton =
-        document.getElementById(
-          'adminLoginBtn'
-        );
+    const book = (books || []).find(x => x.id === schedule.book_id);
 
-      const messageElement =
-        document.getElementById(
-          'adminLoginMessage'
-        );
+    return `
+      <div class="item">
+        <div class="item-title">
+          ${escapeHTML(book?.title || "Book")}
+        </div>
 
-      if(!email || !password){
-        messageElement.textContent =
-          'Please enter your email address and password.';
-        return;
-      }
+        <div class="meta">
+          ${escapeHTML(schedule.feature_date || "")}
+          ${escapeHTML(schedule.feature_time || "")}
+        </div>
 
-      loginButton.disabled = true;
-      loginButton.textContent = 'Signing In...';
-      messageElement.textContent = '';
+        <div class="actions">
+          <span class="status ${schedule.status === "scheduled" ? "approved":"off"}">
+            ${escapeHTML(schedule.status || "unknown")}
+          </span>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
 
-      const {
-        data,
-        error
-      } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
+async function loadReaders(){
 
-      if(error){
-        console.error(
-          'Admin sign-in error:',
-          error
-        );
+  const {data,error} = await supabaseClient
+    .from("readers")
+    .select("id,profile_id,created_at")
+    .order("created_at",{ascending:false})
+    .limit(30);
 
-        messageElement.textContent =
-          error.message ||
-          'Unable to sign in.';
-        loginButton.disabled = false;
-        loginButton.textContent = 'Sign In as Admin';
-        return;
-      }
+  if(error){
+    empty("readerList","Unable to load readers.");
+    return;
+  }
 
-      if(!data || !data.user){
-        messageElement.textContent =
-          'Sign-in did not return an administrator account.';
-        loginButton.disabled = false;
-        loginButton.textContent = 'Sign In as Admin';
-        return;
-      }
+  $("readerCount").textContent = data?.length || 0;
 
-      const isAdmin =
-        await checkAdmin();
+  if(!data?.length){
+    empty("readerList","No reader accounts found.");
+    return;
+  }
 
-      if(!isAdmin){
-        loginButton.disabled = false;
-        loginButton.textContent = 'Sign In as Admin';
-        return;
-      }
+  const ids = data.map(x => x.profile_id);
 
-      loginButton.disabled = false;
-      loginButton.textContent = 'Sign In as Admin';
-    }
+  const {data:profiles} = await supabaseClient
+    .from("profiles")
+    .select("id,display_name,role")
+    .in("id",ids);
 
-    async function initializeDashboard(){
+  $("readerList").innerHTML = data.map(reader => {
 
-      const isAdmin =
-        await checkAdmin();
+    const profile = (profiles || []).find(x => x.id === reader.profile_id);
 
-      if(!isAdmin){
-        return;
-      }
+    return `
+      <div class="item">
+        <div class="item-title">
+          ${escapeHTML(profile?.display_name || "Reader")}
+        </div>
 
-      await Promise.all([
-        loadAuthorRequests(),
-        loadApprovedAuthors(),
-        loadPendingBooks(),
-        loadApprovedBooks(),
-        loadReaders(),
-        loadDiscussions(),
-        loadModerators(),
-        loadModeratorsAdmin(),
-        loadNotifications(),
-        loadSchedules(),
-        loadFlipperGuides(),
-        loadTrailerReview(),
-        loadStats()
-      ]);
+        <div class="meta">
+          ${escapeHTML(profile?.role || "reader")}
+          · Joined ${reader.created_at
+            ? new Date(reader.created_at).toLocaleDateString()
+            : ""}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
 
-      await loadFeaturedBooksAdmin();
-      await startAdminPresence();
-    }
+async function loadDiscussions(){
 
-    document
-      .getElementById(
-        'adminLoginForm'
-      )
-      .addEventListener(
-        'submit',
-        handleAdminLogin
-      );
+  const {data,error} = await supabaseClient
+    .from("discussions")
+    .select("id,book_id,title,created_at")
+    .order("created_at",{ascending:false})
+    .limit(20);
 
-    document
-      .getElementById(
-        'refreshAuthorRequestsBtn'
-      )
-      .addEventListener(
-        'click',
-        loadAuthorRequests
-      );
+  if(error){
+    empty("discussionList","Unable to load discussions.");
+    return;
+  }
 
-    document
-      .getElementById(
-        'refreshApprovedAuthorsBtn'
-      )
-      .addEventListener(
-        'click',
-        loadApprovedAuthors
-      );
+  if(!data?.length){
+    empty("discussionList","No discussions found.");
+    return;
+  }
 
-    document
-      .getElementById(
-        'refreshPendingBooksBtn'
-      )
-      .addEventListener(
-        'click',
-        loadPendingBooks
-      );
+  $("discussionList").innerHTML = data.map(discussion => `
+    <div class="item">
+      <div class="item-title">
+        ${escapeHTML(discussion.title || "Book Discussion")}
+      </div>
 
-    document
-      .getElementById(
-        'refreshTrailerReviewBtn'
-      )
-      .addEventListener(
-        'click',
-        loadTrailerReview
-      );
-
-    document
-      .getElementById(
-        'refreshFeaturedBooksBtn'
-      )
-      .addEventListener(
-        'click',
-        loadFeaturedBooksAdmin
-      );
-
-    document
-      .getElementById(
-        'refreshFlipperGuidesBtn'
-      )
-      .addEventListener(
-        'click',
-        loadFlipperGuides
-      );
-
-    document
-      .getElementById(
-        'refreshReadersBtn'
-      )
-      .addEventListener(
-        'click',
-        loadReaders
-      );
-
-    document
-      .getElementById('refreshDiscussionsBtn')
-      .addEventListener('click',loadDiscussions);
-
-    document
-      .getElementById('refreshNotificationsBtn')
-      .addEventListener('click',loadNotifications);
-
-    document
-      .getElementById('markAllNotificationsBtn')
-      .addEventListener('click',markAllAdminNotificationsRead);
-
-    document
-      .getElementById('refreshModeratorsBtn')
-      .addEventListener('click',loadModeratorsAdmin);
-
-    document
-      .getElementById(
-        'scheduleBtn'
-      )
-      .addEventListener(
-        'click',
-        scheduleFeature
-      );
-
-    document
-      .getElementById('guideAccessModalClose')
-      .addEventListener('click',closeGuideAccessModal);
-
-    document
-      .getElementById('guideAccessModal')
-      .addEventListener('click',event => {
-        if(event.target.id === 'guideAccessModal'){
-          closeGuideAccessModal();
+      <div class="meta">
+        Created ${
+          discussion.created_at
+          ? new Date(discussion.created_at).toLocaleDateString()
+          : ""
         }
-      });
+      </div>
+    </div>
+  `).join("");
+}
 
-    document
-      .getElementById('detailModalClose')
-      .addEventListener('click',closeDetailModal);
+async function loadNotifications(){
 
-    document
-      .getElementById('detailModal')
-      .addEventListener('click',event => {
-        if(event.target.id === 'detailModal'){
-          closeDetailModal();
+  const {data,error} = await supabaseClient
+    .from("notifications")
+    .select("id,type,title,message,is_read,created_at")
+    .eq("profile_id",currentUser.id)
+    .order("created_at",{ascending:false})
+    .limit(20);
+
+  if(error){
+    empty("notificationList","Unable to load notifications.");
+    return;
+  }
+
+  $("notificationCount").textContent =
+    (data || []).filter(x => !x.is_read).length;
+
+  if(!data?.length){
+    empty("notificationList","No notifications.");
+    return;
+  }
+
+  $("notificationList").innerHTML = data.map(notification => `
+    <div class="item">
+      <div class="item-top">
+        <div>
+          <div class="item-title">
+            ${escapeHTML(notification.title || notification.type || "Notification")}
+          </div>
+          <div class="description">
+            ${escapeHTML(notification.message || "")}
+          </div>
+        </div>
+
+        ${
+          !notification.is_read
+          ? `<span class="status pending">NEW</span>`
+          : ""
         }
-      });
+      </div>
+    </div>
+  `).join("");
+}
 
-    document.addEventListener('keydown',event => {
-      if(event.key === 'Escape'){
-        closeDetailModal();
-        closeGuideAccessModal();
-      }
-    });
+async function loadModerators(){
 
-    document
-      .getElementById(
-        'signOutBtn'
-      )
-      .addEventListener(
-        'click',
-        async () => {
+  const {data,error} = await supabaseClient
+    .from("moderators")
+    .select("id,profile_id,display_name,active,created_at")
+    .order("created_at",{ascending:false});
 
-          await supabaseClient.auth.signOut();
+  if(error){
+    empty("moderatorList","Unable to load moderators.");
+    return;
+  }
 
-          window.location.href =
-            'auth.html?mode=signin';
-        }
-      );
+  if(!data?.length){
+    empty("moderatorList","No moderators found.");
+    return;
+  }
 
-    window.viewApprovedAuthor = viewApprovedAuthor;
-    window.viewAuthorBooks = viewAuthorBooks;
-    window.viewApprovedBook = viewApprovedBook;
-    window.featureApprovedBook = featureApprovedBook;
-    window.removeFeaturedBook = removeFeaturedBook;
-    window.markAdminNotificationRead = markAdminNotificationRead;
-    window.markAllAdminNotificationsRead = markAllAdminNotificationsRead;
-    window.setModeratorActive = setModeratorActive;
-    window.viewBookById = viewBookById;
-    window.toggleTrailerHomepageVisibility = toggleTrailerHomepageVisibility;
-    window.closeDetailModal = closeDetailModal;
-    window.removeBook = removeBook;
-    window.removeAuthor = removeAuthor;
-    window.removeReader = removeReader;
-    window.viewFlipperGuide = viewFlipperGuide;
-    window.manageFlipperGuideAccess = manageFlipperGuideAccess;
-    window.saveFlipperGuideAccess = saveFlipperGuideAccess;
-    window.closeGuideAccessModal = closeGuideAccessModal;
+  $("moderatorList").innerHTML = data.map(mod => `
+    <div class="item">
+      <div class="item-top">
+        <div>
+          <div class="item-title">
+            ${escapeHTML(mod.display_name || "Moderator")}
+          </div>
+          <div class="meta">
+            Moderator account
+          </div>
+        </div>
 
-    window.approveAuthorRequest =
-      approveAuthorRequest;
+        <span class="status ${mod.active ? "approved":"off"}">
+          ${mod.active ? "ACTIVE":"INACTIVE"}
+        </span>
+      </div>
 
-    window.rejectAuthorRequest =
-      rejectAuthorRequest;
+      <div class="actions">
+        <button class="btn ${mod.active ? "danger":"green"}"
+          onclick="toggleModerator('${mod.id}',${!mod.active})">
+          ${mod.active ? "Deactivate":"Activate"}
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
 
-    window.approveBook =
-      approveBook;
+async function toggleModerator(id,value){
 
-    window.rejectBook =
-      rejectBook;
+  const {error} = await supabaseClient
+    .from("moderators")
+    .update({active:value})
+    .eq("id",id);
 
-    window.cancelSchedule =
-      cancelSchedule;
+  if(error){
+    toast("Moderator update failed.");
+    return;
+  }
 
-    window.deleteDiscussionMessage =
-      deleteDiscussionMessage;
+  toast(value ? "Moderator activated." : "Moderator deactivated.");
+  await loadModerators();
+}
 
-    initializeDashboard();
-  </script>
+async function loadEverything(){
+
+  await Promise.all([
+    loadStats(),
+    loadAuthors(),
+    loadBooks(),
+    loadFeatured(),
+    loadTrailers(),
+    loadSchedules(),
+    loadReaders(),
+    loadDiscussions(),
+    loadNotifications(),
+    loadModerators()
+  ]);
+}
+
+async function start(){
+
+  const allowed = await requireAdmin();
+
+  if(!allowed) return;
+
+  await loadEverything();
+}
+
+start();
+</script>
 
 </body>
 </html>

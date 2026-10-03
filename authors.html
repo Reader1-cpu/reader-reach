@@ -1,0 +1,797 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Authors | Reader Reach</title>
+  <meta
+    name="description"
+    content="Discover authors and explore their books on Reader Reach."
+  />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --cream: #f8f3e9;
+      --cream-dark: #efe5d4;
+      --brown: #3f2a1f;
+      --brown-soft: #6f5443;
+      --brown-light: #8d715d;
+      --gold: #b8955a;
+      --gold-light: #d9bd84;
+      --white: #fffdf9;
+      --border: #e4d8c6;
+      --shadow: 0 14px 35px rgba(63, 42, 31, 0.09);
+      --shadow-hover: 0 20px 45px rgba(63, 42, 31, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      background: var(--cream);
+      color: var(--brown);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    /* NAVIGATION */
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(248, 243, 233, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 17px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--gold);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a {
+      color: var(--brown-soft);
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--brown);
+    }
+
+    .nav-button {
+      padding: 9px 16px;
+      border: 1px solid var(--brown);
+      border-radius: 999px;
+      background: var(--brown);
+      color: white !important;
+    }
+
+    .nav-button:hover {
+      background: #2e1e16;
+    }
+
+    /* HERO */
+
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 78px 24px 45px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 7px 14px;
+      border: 1px solid var(--gold-light);
+      border-radius: 999px;
+      color: var(--brown-soft);
+      background: rgba(255, 253, 249, 0.55);
+      font-size: 0.82rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.3rem, 6vw, 4.4rem);
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      color: var(--gold);
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin: 0 auto;
+      color: var(--brown-soft);
+      font-size: 1.08rem;
+    }
+
+    /* MAIN */
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    .directory-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin: 10px 0 28px;
+    }
+
+    .directory-title {
+      font-size: 1.55rem;
+    }
+
+    .author-count {
+      color: var(--brown-light);
+      font-size: 0.95rem;
+    }
+
+    /* SEARCH */
+
+    .search-wrap {
+      margin-bottom: 34px;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 16px 20px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--white);
+      color: var(--brown);
+      font-size: 1rem;
+      outline: none;
+      box-shadow: 0 5px 18px rgba(63, 42, 31, 0.04);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .search-box:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(184, 149, 90, 0.12);
+    }
+
+    .search-box::placeholder {
+      color: #a28e7d;
+    }
+
+    /* AUTHOR GRID */
+
+    .authors-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .author-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+    }
+
+    .author-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--gold-light);
+    }
+
+    .author-card-link {
+      display: block;
+      height: 100%;
+    }
+
+    .author-top {
+      min-height: 175px;
+      padding: 30px 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(
+          circle at top right,
+          rgba(184, 149, 90, 0.18),
+          transparent 38%
+        ),
+        linear-gradient(
+          145deg,
+          #f5ecdd,
+          #eadcc7
+        );
+    }
+
+    .author-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--brown);
+      color: #fffaf2;
+      font-size: 2.25rem;
+      font-weight: 700;
+      border: 5px solid rgba(255, 253, 249, 0.9);
+      box-shadow: 0 8px 20px rgba(63, 42, 31, 0.16);
+    }
+
+    .author-body {
+      padding: 23px 24px 25px;
+    }
+
+    .author-name {
+      font-size: 1.45rem;
+      margin-bottom: 9px;
+      line-height: 1.2;
+    }
+
+    .author-bio {
+      color: var(--brown-soft);
+      font-size: 0.94rem;
+      line-height: 1.6;
+      min-height: 72px;
+      margin-bottom: 18px;
+    }
+
+    .author-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .meta-item {
+      color: var(--brown-light);
+      font-size: 0.84rem;
+    }
+
+    .view-profile {
+      color: var(--brown);
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+
+    .view-profile span {
+      color: var(--gold);
+      margin-left: 4px;
+    }
+
+    /* STATES */
+
+    .state-box {
+      grid-column: 1 / -1;
+      padding: 55px 25px;
+      text-align: center;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      color: var(--brown-soft);
+    }
+
+    .state-box h2 {
+      color: var(--brown);
+      margin-bottom: 8px;
+      font-size: 1.4rem;
+    }
+
+    .state-box p {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .loading-spinner {
+      width: 35px;
+      height: 35px;
+      margin: 0 auto 16px;
+      border: 3px solid var(--cream-dark);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* CTA */
+
+    .author-cta {
+      margin-top: 65px;
+      padding: 48px 30px;
+      text-align: center;
+      border-radius: 25px;
+      background:
+        linear-gradient(
+          135deg,
+          #432d21,
+          #654938
+        );
+      color: #fffaf2;
+      box-shadow: var(--shadow);
+    }
+
+    .author-cta h2 {
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+      margin-bottom: 12px;
+    }
+
+    .author-cta p {
+      max-width: 620px;
+      margin: 0 auto 24px;
+      color: #eadfce;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 22px;
+      border-radius: 999px;
+      background: #fffaf2;
+      color: var(--brown);
+      font-weight: 700;
+      transition: transform 0.2s ease;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+    }
+
+    /* FOOTER */
+
+    footer {
+      border-top: 1px solid var(--border);
+      background: #eee3d2;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 35px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .footer-brand {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .footer-brand span {
+      color: var(--gold);
+    }
+
+    .footer-text {
+      color: var(--brown-light);
+      font-size: 0.85rem;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 900px) {
+      .authors-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 680px) {
+      .nav-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 13px;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 14px;
+      }
+
+      .hero {
+        padding-top: 55px;
+      }
+
+      .authors-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .directory-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">
+        Reader <span>Reach</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="authors.html" class="active">Authors</a>
+        <a href="auth.html?mode=author" class="nav-button">Sign In</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="eyebrow">The people behind the pages</div>
+
+    <h1>
+      Discover <span>Authors</span>
+    </h1>
+
+    <p>
+      Meet the writers on Reader Reach, explore their work,
+      and discover the stories behind the books you love.
+    </p>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+
+    <div class="search-wrap">
+      <input
+        type="search"
+        id="authorSearch"
+        class="search-box"
+        placeholder="Search authors by name..."
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="directory-header">
+      <h2 class="directory-title">Author Directory</h2>
+      <div id="authorCount" class="author-count">Loading authors...</div>
+    </div>
+
+    <section
+      id="authorsGrid"
+      class="authors-grid"
+      aria-live="polite"
+    >
+      <div class="state-box">
+        <div class="loading-spinner"></div>
+        <h2>Loading authors</h2>
+        <p>Please wait while we bring the author directory to you.</p>
+      </div>
+    </section>
+
+    <!-- AUTHOR CTA -->
+    <section class="author-cta">
+      <h2>Are you an author?</h2>
+
+      <p>
+        Join Reader Reach and create a place where readers can discover
+        your work, follow your journey, and connect with your books.
+      </p>
+
+      <a href="author-access.html" class="cta-button">
+        Author Access
+      </a>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        Reader <span>Reach</span>
+      </div>
+
+      <div class="footer-text">
+        Discover books. Connect with authors. Reach readers.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const SUPABASE_URL = "https://bublmnfhyyrefcdkloak.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY";
+
+    const { createClient } = supabase;
+
+    const db = createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    const authorsGrid = document.getElementById("authorsGrid");
+    const authorCount = document.getElementById("authorCount");
+    const authorSearch = document.getElementById("authorSearch");
+
+    let allAuthors = [];
+
+    function escapeHtml(value) {
+      if (value === null || value === undefined) {
+        return "";
+      }
+
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function getInitials(name) {
+      if (!name) {
+        return "?";
+      }
+
+      const words = String(name)
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+
+      if (words.length === 1) {
+        return words[0].substring(0, 2).toUpperCase();
+      }
+
+      return (
+        words[0].charAt(0) +
+        words[words.length - 1].charAt(0)
+      ).toUpperCase();
+    }
+
+    function shortenBio(bio) {
+      if (!bio) {
+        return "Author on Reader Reach.";
+      }
+
+      const clean = String(bio).trim();
+
+      if (clean.length <= 150) {
+        return clean;
+      }
+
+      return clean.substring(0, 147).trimEnd() + "...";
+    }
+
+    function renderAuthors(authors) {
+      if (!authors.length) {
+        authorsGrid.innerHTML = `
+          <div class="state-box">
+            <h2>No authors found</h2>
+            <p>
+              We couldn't find any approved authors matching your search.
+            </p>
+          </div>
+        `;
+
+        authorCount.textContent = "0 authors";
+        return;
+      }
+
+      authorCount.textContent =
+        `${authors.length} ${authors.length === 1 ? "author" : "authors"}`;
+
+      authorsGrid.innerHTML = authors.map(author => {
+        const id = encodeURIComponent(author.id);
+        const name = escapeHtml(author.author_name || "Unnamed Author");
+        const bio = escapeHtml(shortenBio(author.bio));
+        const initials = escapeHtml(
+          getInitials(author.author_name || "Author")
+        );
+
+        return `
+          <article class="author-card">
+            <a
+              href="author-profile.html?id=${id}"
+              class="author-card-link"
+              aria-label="View profile of ${name}"
+            >
+
+              <div class="author-top">
+                <div class="author-avatar">
+                  ${initials}
+                </div>
+              </div>
+
+              <div class="author-body">
+                <h3 class="author-name">
+                  ${name}
+                </h3>
+
+                <p class="author-bio">
+                  ${bio}
+                </p>
+
+                <div class="author-meta">
+                  <div class="meta-item">
+                    Reader Reach Author
+                  </div>
+
+                  <div class="view-profile">
+                    View Profile
+                    <span>→</span>
+                  </div>
+                </div>
+              </div>
+
+            </a>
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function loadAuthors() {
+      authorsGrid.innerHTML = `
+        <div class="state-box">
+          <div class="loading-spinner"></div>
+          <h2>Loading authors</h2>
+          <p>Please wait while we bring the author directory to you.</p>
+        </div>
+      `;
+
+      authorCount.textContent = "Loading authors...";
+
+      try {
+        const { data, error } = await db
+          .from("authors")
+          .select(`
+            id,
+            profile_id,
+            author_name,
+            bio,
+            website_url,
+            status,
+            created_at
+          `)
+          .eq("status", "approved")
+          .order("author_name", {
+            ascending: true
+          });
+
+        if (error) {
+          console.error("Error loading authors:", error);
+
+          authorsGrid.innerHTML = `
+            <div class="state-box">
+              <h2>Unable to load authors</h2>
+              <p>
+                We couldn't load the author directory right now.
+                Please refresh the page and try again.
+              </p>
+            </div>
+          `;
+
+          authorCount.textContent = "Unable to load";
+          return;
+        }
+
+        allAuthors = data || [];
+
+        renderAuthors(allAuthors);
+
+      } catch (error) {
+        console.error("Unexpected error loading authors:", error);
+
+        authorsGrid.innerHTML = `
+          <div class="state-box">
+            <h2>Something went wrong</h2>
+            <p>
+              Please refresh the page and try again.
+            </p>
+          </div>
+        `;
+
+        authorCount.textContent = "Unable to load";
+      }
+    }
+
+    authorSearch.addEventListener("input", function () {
+      const query = this.value
+        .trim()
+        .toLowerCase();
+
+      if (!query) {
+        renderAuthors(allAuthors);
+        return;
+      }
+
+      const filtered = allAuthors.filter(author => {
+        const name = String(
+          author.author_name || ""
+        ).toLowerCase();
+
+        const bio = String(
+          author.bio || ""
+        ).toLowerCase();
+
+        return (
+          name.includes(query) ||
+          bio.includes(query)
+        );
+      });
+
+      renderAuthors(filtered);
+    });
+
+    loadAuthors();
+  </script>
+
+</body>
+</html>
+```

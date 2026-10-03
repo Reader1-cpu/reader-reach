@@ -56,8 +56,6 @@
       font: inherit;
     }
 
-    /* NAV */
-
     .navbar {
       position: sticky;
       top: 0;
@@ -110,8 +108,6 @@
       color: white !important;
     }
 
-    /* PAGE */
-
     main {
       max-width: 1200px;
       margin: 0 auto;
@@ -130,8 +126,6 @@
     .back-link:hover {
       color: var(--brown);
     }
-
-    /* PROFILE HERO */
 
     .profile-card {
       background: var(--white);
@@ -224,8 +218,6 @@
       text-underline-offset: 4px;
     }
 
-    /* FOLLOW */
-
     .follow-area {
       flex-shrink: 0;
       min-width: 150px;
@@ -274,8 +266,6 @@
       font-size: 0.76rem;
     }
 
-    /* STATS */
-
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -307,8 +297,6 @@
       color: var(--brown-light);
       font-size: 0.84rem;
     }
-
-    /* BOOKS */
 
     .books-section {
       margin-top: 60px;
@@ -451,8 +439,6 @@
       cursor: not-allowed;
     }
 
-    /* STATES */
-
     .state-box {
       padding: 55px 25px;
       text-align: center;
@@ -482,8 +468,6 @@
         transform: rotate(360deg);
       }
     }
-
-    /* MESSAGE */
 
     .message {
       position: fixed;
@@ -515,8 +499,6 @@
       background: var(--success);
     }
 
-    /* FOOTER */
-
     footer {
       border-top: 1px solid var(--border);
       background: #eee3d2;
@@ -544,8 +526,6 @@
       color: var(--brown-light);
       font-size: 0.85rem;
     }
-
-    /* MOBILE */
 
     @media (max-width: 850px) {
       .profile-main {
@@ -623,7 +603,6 @@
 
 <body>
 
-  <!-- NAVIGATION -->
   <nav class="navbar">
     <div class="nav-inner">
 
@@ -646,14 +625,12 @@
       ← Back to Authors
     </a>
 
-    <!-- LOADING -->
     <section id="loadingState" class="state-box">
       <div class="spinner"></div>
       <h2>Loading author profile</h2>
       <p>Please wait while we load this author's profile.</p>
     </section>
 
-    <!-- ERROR -->
     <section
       id="errorState"
       class="state-box"
@@ -674,7 +651,6 @@
       </a>
     </section>
 
-    <!-- PROFILE -->
     <section
       id="profileSection"
       class="profile-card"
@@ -739,7 +715,6 @@
 
         </div>
 
-        <!-- STATS -->
         <div class="stats">
 
           <div class="stat">
@@ -786,7 +761,6 @@
       </div>
     </section>
 
-    <!-- BOOKS -->
     <section
       id="booksSection"
       class="books-section"
@@ -812,7 +786,6 @@
 
   </main>
 
-  <!-- MESSAGE -->
   <div
     id="message"
     class="message"
@@ -820,7 +793,6 @@
     aria-live="polite"
   ></div>
 
-  <!-- FOOTER -->
   <footer>
 
     <div class="footer-inner">
@@ -899,31 +871,12 @@
       document.getElementById("message");
 
 
-    /* --------------------------------
-       PAGE STATE
-    -------------------------------- */
-
     let currentAuthor = null;
     let currentUser = null;
+    let currentReader = null;
     let isFollowing = false;
-
-
-    /*
-      Stores the saved state of each approved
-      book for the currently signed-in reader.
-
-      Example:
-
-      {
-        "book-uuid": true
-      }
-    */
     let savedBooks = {};
 
-
-    /* --------------------------------
-       HELPERS
-    -------------------------------- */
 
     function escapeHtml(value) {
 
@@ -1034,10 +987,6 @@
     }
 
 
-    /* --------------------------------
-       LOAD SESSION
-    -------------------------------- */
-
     async function loadCurrentUser() {
 
       try {
@@ -1069,9 +1018,59 @@
     }
 
 
-    /* --------------------------------
-       LOAD AUTHOR
-    -------------------------------- */
+    /*
+      IMPORTANT:
+
+      The Reader Dashboard confirms that:
+
+      readers.profile_id = logged-in auth user ID
+
+      readers.id = reader_books.reader_id
+
+      So Save to My Books MUST use currentReader.id,
+      not currentUser.id.
+    */
+    async function loadReader() {
+
+      currentReader = null;
+
+      if (!currentUser) {
+        return false;
+      }
+
+      const {
+        data,
+        error
+      } = await db
+        .from("readers")
+        .select(`
+          id,
+          profile_id,
+          created_at,
+          updated_at
+        `)
+        .eq(
+          "profile_id",
+          currentUser.id
+        )
+        .maybeSingle();
+
+      if (error) {
+
+        console.error(
+          "Reader record error:",
+          error
+        );
+
+        return false;
+      }
+
+      currentReader =
+        data || null;
+
+      return !!currentReader;
+    }
+
 
     async function loadAuthor(
       authorId
@@ -1112,10 +1111,6 @@
       return data;
     }
 
-
-    /* --------------------------------
-       LOAD APPROVED BOOKS
-    -------------------------------- */
 
     async function loadBooks(
       authorId
@@ -1158,10 +1153,11 @@
     }
 
 
-    /* --------------------------------
-       LOAD SAVED BOOKS
-    -------------------------------- */
+    /*
+      Load saved books using readers.id.
 
+      This is the key fix.
+    */
     async function loadSavedBooks(
       books
     ) {
@@ -1170,6 +1166,7 @@
 
       if (
         !currentUser ||
+        !currentReader ||
         !books ||
         books.length === 0
       ) {
@@ -1196,7 +1193,7 @@
         `)
         .eq(
           "reader_id",
-          currentUser.id
+          currentReader.id
         )
         .in(
           "book_id",
@@ -1209,11 +1206,6 @@
           "Saved books loading error:",
           error
         );
-
-        /*
-          We don't block the author profile if
-          the reader shelf cannot be checked.
-        */
 
         savedBooks = {};
 
@@ -1229,10 +1221,6 @@
       });
     }
 
-
-    /* --------------------------------
-       LOAD FOLLOWERS
-    -------------------------------- */
 
     async function loadFollowerCount(
       authorId
@@ -1265,10 +1253,6 @@
       return count || 0;
     }
 
-
-    /* --------------------------------
-       LOAD FOLLOWING
-    -------------------------------- */
 
     async function loadFollowingCount(
       profileId
@@ -1305,10 +1289,6 @@
       return count || 0;
     }
 
-
-    /* --------------------------------
-       CHECK FOLLOW STATUS
-    -------------------------------- */
 
     async function checkFollowStatus(
       authorId,
@@ -1348,10 +1328,6 @@
       return !!data;
     }
 
-
-    /* --------------------------------
-       RENDER PROFILE
-    -------------------------------- */
 
     function renderProfile(
       author
@@ -1400,10 +1376,6 @@
       }
     }
 
-
-    /* --------------------------------
-       RENDER FOLLOW BUTTON
-    -------------------------------- */
 
     function renderFollowButton() {
 
@@ -1483,10 +1455,6 @@
     }
 
 
-    /* --------------------------------
-       FOLLOW AUTHOR
-    -------------------------------- */
-
     async function followAuthor() {
 
       if (!currentUser) {
@@ -1525,7 +1493,6 @@
               currentAuthor.id
           });
 
-
         if (error) {
 
           if (
@@ -1541,7 +1508,6 @@
 
           throw error;
         }
-
 
         isFollowing = true;
 
@@ -1576,10 +1542,6 @@
       }
     }
 
-
-    /* --------------------------------
-       UNFOLLOW AUTHOR
-    -------------------------------- */
 
     async function unfollowAuthor() {
 
@@ -1648,10 +1610,6 @@
     }
 
 
-    /* --------------------------------
-       FOLLOW BUTTON CLICK
-    -------------------------------- */
-
     followButton.addEventListener(
       "click",
       async function () {
@@ -1684,10 +1642,6 @@
     );
 
 
-    /* --------------------------------
-       CHECK WHETHER BOOK IS SAVED
-    -------------------------------- */
-
     function isBookSaved(
       bookId
     ) {
@@ -1695,10 +1649,6 @@
       return !!savedBooks[bookId];
     }
 
-
-    /* --------------------------------
-       SAVE BOOK TO MY BOOKS
-    -------------------------------- */
 
     async function saveBookToMyBooks(
       bookId
@@ -1710,6 +1660,22 @@
           "auth.html?mode=reader";
 
         return;
+      }
+
+      if (!currentReader) {
+
+        const readerLoaded =
+          await loadReader();
+
+        if (!readerLoaded) {
+
+          showMessage(
+            "Your Reader account could not be found.",
+            "error"
+          );
+
+          return;
+        }
       }
 
       if (!bookId) {
@@ -1749,15 +1715,10 @@
         /*
           IMPORTANT:
 
-          We intentionally do NOT send a
-          reader_books.status value here.
+          reader_books.reader_id must receive
+          readers.id.
 
-          Your database has already rejected
-          the value "reading" for the
-          reader_book_status enum.
-
-          Saving a book should mean adding
-          the reader/book relationship.
+          It must NOT receive auth.uid().
         */
 
         const {
@@ -1766,7 +1727,7 @@
           .from("reader_books")
           .insert({
             reader_id:
-              currentUser.id,
+              currentReader.id,
 
             book_id:
               bookId
@@ -1776,8 +1737,8 @@
         if (error) {
 
           /*
-            PostgreSQL unique violation means
-            the book is already saved.
+            If the book already exists in the
+            reader's shelf, treat it as saved.
           */
 
           if (
@@ -1831,30 +1792,14 @@
             "Save to My Books";
         }
 
-
-        /*
-          Give the user the actual database
-          message when Supabase rejects the
-          insert. This makes schema/RLS
-          problems visible instead of silently
-          pretending the save worked.
-        */
-
-        const errorText =
-          error?.message ||
-          "We couldn't save this book. Please try again.";
-
         showMessage(
-          errorText,
+          error?.message ||
+          "We couldn't save this book. Please try again.",
           "error"
         );
       }
     }
 
-
-    /* --------------------------------
-       UPDATE SAVE BUTTON
-    -------------------------------- */
 
     function updateBookSaveButton(
       bookId
@@ -1896,10 +1841,6 @@
       }
     }
 
-
-    /* --------------------------------
-       RENDER BOOKS
-    -------------------------------- */
 
     function renderBooks(
       books
@@ -1963,16 +1904,6 @@
             );
 
 
-          /*
-            Cover image
-
-            If Taiwo's approved book has a
-            cover_url, display it.
-
-            Otherwise show the book title
-            placeholder.
-          */
-
           let coverHTML = `
 
             <div class="book-cover-title">
@@ -2015,10 +1946,6 @@
           }
 
 
-          /*
-            External book link
-          */
-
           let bookLink = "";
 
 
@@ -2053,16 +1980,6 @@
             `;
           }
 
-
-          /*
-            Save button
-
-            Signed-out readers get a button
-            that takes them to reader sign-in.
-
-            Signed-in readers get the real
-            Save to My Books functionality.
-          */
 
           let saveButton = "";
 
@@ -2114,9 +2031,7 @@
             >
 
               <div class="book-cover">
-
                 ${coverHTML}
-
               </div>
 
 
@@ -2153,10 +2068,6 @@
 
         }).join("");
 
-
-      /*
-        Wire up save buttons after rendering.
-      */
 
       books.forEach(book => {
 
@@ -2203,10 +2114,6 @@
     }
 
 
-    /* --------------------------------
-       LOAD EVERYTHING
-    -------------------------------- */
-
     async function loadProfile() {
 
       const authorId =
@@ -2228,10 +2135,24 @@
       try {
 
         /*
-          Load session first.
+          Load logged-in account.
         */
 
         await loadCurrentUser();
+
+
+        /*
+          Load the Reader record.
+
+          This is what fixes the Save to My Books
+          reader_books relationship.
+        */
+
+        if (currentUser) {
+
+          await loadReader();
+
+        }
 
 
         /*
@@ -2260,10 +2181,6 @@
           author;
 
 
-        /*
-          Render basic profile.
-        */
-
         renderProfile(
           author
         );
@@ -2280,12 +2197,8 @@
 
 
         /*
-          Load which books this reader
-          has already saved.
-
-          This happens BEFORE rendering
-          the buttons so saved books are
-          immediately shown correctly.
+          Check which books are already
+          saved by this Reader.
         */
 
         await loadSavedBooks(
@@ -2298,10 +2211,6 @@
         );
 
 
-        /*
-          Load follower count.
-        */
-
         const followers =
           await loadFollowerCount(
             author.id
@@ -2311,11 +2220,6 @@
           followers;
 
 
-        /*
-          Load following count for
-          this author's account.
-        */
-
         const following =
           await loadFollowingCount(
             author.profile_id
@@ -2324,11 +2228,6 @@
         followingCount.textContent =
           following;
 
-
-        /*
-          Check whether the current
-          reader follows this author.
-        */
 
         if (currentUser) {
 
@@ -2347,10 +2246,6 @@
 
         renderFollowButton();
 
-
-        /*
-          Show page.
-        */
 
         loadingState.style.display =
           "none";
@@ -2375,10 +2270,6 @@
     }
 
 
-    /* --------------------------------
-       AUTH STATE CHANGES
-    -------------------------------- */
-
     db.auth.onAuthStateChange(
       async (
         event,
@@ -2395,13 +2286,16 @@
             session?.user || null;
 
 
-          /*
-            If the reader signs in while
-            already viewing the author page,
-            reload saved-book state so the
-            buttons immediately become real
-            Save buttons.
-          */
+          if (currentUser) {
+
+            await loadReader();
+
+          } else {
+
+            currentReader = null;
+
+          }
+
 
           if (
             currentAuthor &&
@@ -2445,12 +2339,6 @@
 
             savedBooks = {};
 
-            /*
-              If the user signs out while
-              viewing the page, reload the
-              approved books so the buttons
-              become sign-in buttons.
-            */
 
             if (currentAuthor) {
 
@@ -2481,10 +2369,6 @@
       }
     );
 
-
-    /* --------------------------------
-       START
-    -------------------------------- */
 
     loadProfile();
 

@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
 <title>Reader Reach | Every Book Has Its Readers</title>
 
 <style>
@@ -17,17 +16,12 @@
   --muted:#76665d;
   --line:#e7dbcf;
   --white:#fff;
-  --success:#54734c;
-  --danger:#9a5147;
+  --shadow:0 14px 40px rgba(59,36,27,.08);
 }
 
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
-html{
-  scroll-behavior:smooth;
-}
+html{scroll-behavior:smooth}
 
 body{
   margin:0;
@@ -37,32 +31,19 @@ body{
   line-height:1.65;
 }
 
-body.modal-open{
-  overflow:hidden;
-}
+body.modal-open{overflow:hidden}
 
 a{
-  color:inherit;
   text-decoration:none;
+  color:inherit;
 }
 
-button,
-input,
-textarea,
-select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
+button,input,textarea,select{font:inherit}
 
 .wrap{
   width:min(1160px,92%);
   margin:auto;
 }
-
-/* TOP BAR */
 
 .top{
   background:var(--brown);
@@ -74,17 +55,14 @@ button{
 .top .wrap{
   display:flex;
   justify-content:space-between;
-  gap:20px;
 }
-
-/* NAVIGATION */
 
 nav{
   position:sticky;
   top:0;
-  z-index:30;
-  background:#fffdf8ee;
-  backdrop-filter:blur(12px);
+  z-index:20;
+  background:rgba(255,253,248,.94);
+  backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line);
 }
 
@@ -113,89 +91,50 @@ nav{
 
 .links{
   display:flex;
-  align-items:center;
-  gap:20px;
+  gap:22px;
   font:13px Arial,sans-serif;
   color:#594940;
+  align-items:center;
 }
 
-.links a:hover{
-  color:var(--brown);
-}
+.links a:hover{color:var(--brown)}
 
 .navActions{
   display:flex;
-  align-items:center;
   gap:8px;
+  align-items:center;
 }
-
-.mobileMenuButton{
-  display:none;
-  border:1px solid var(--line);
-  background:#fff;
-  color:var(--brown);
-  border-radius:10px;
-  width:42px;
-  height:42px;
-}
-
-.mobileMenu{
-  display:none;
-  border-top:1px solid var(--line);
-  background:var(--cream);
-}
-
-.mobileMenu.open{
-  display:block;
-}
-
-.mobileMenu .wrap{
-  display:grid;
-  gap:4px;
-  padding:12px 0 18px;
-}
-
-.mobileMenu a{
-  padding:11px 4px;
-  color:var(--brown);
-  font:14px Arial,sans-serif;
-}
-
-/* BUTTONS */
 
 .btn{
   display:inline-block;
   border:1px solid var(--brown);
   border-radius:999px;
-  padding:11px 18px;
+  padding:12px 19px;
   font:bold 13px Arial,sans-serif;
+  cursor:pointer;
   background:transparent;
   color:var(--brown);
   transition:.2s ease;
 }
 
-.btn:hover{
-  transform:translateY(-1px);
-}
+.btn:hover{transform:translateY(-1px)}
 
 .btn.primary{
   background:var(--brown);
   color:#fff;
 }
 
-.btn.primary:hover{
-  background:#4d2e22;
-}
-
-.btn.gold{
-  background:var(--butter);
-  border-color:var(--butter);
-  color:var(--brown);
-}
+.btn.primary:hover{background:#4d2e22}
 
 .btn.small{
-  padding:8px 13px;
+  padding:9px 14px;
   font-size:12px;
+}
+
+.btn.light{
+  background:#fff;
+  border-color:#fff;
+  color:var(--brown);
 }
 
 .btn:disabled{
@@ -204,7 +143,28 @@ nav{
   transform:none;
 }
 
-/* HERO */
+.mobileMenu{
+  display:none;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--brown);
+  border-radius:10px;
+  padding:9px 12px;
+  cursor:pointer;
+}
+
+.mobileLinks{
+  display:none;
+  padding:12px 0 18px;
+  border-top:1px solid var(--line);
+}
+
+.mobileLinks a{
+  display:block;
+  padding:10px 0;
+  font:14px Arial,sans-serif;
+  color:var(--brown);
+}
 
 .hero{
   min-height:680px;
@@ -216,32 +176,24 @@ nav{
   overflow:hidden;
 }
 
-.hero::before{
+.hero:before{
   content:"";
   position:absolute;
   inset:0;
-  background:
-    url("https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1800&q=85")
-    center/cover no-repeat;
+  background:url("https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1800&q=85") center/cover no-repeat;
   z-index:-2;
 }
 
-.hero::after{
+.hero:after{
   content:"";
   position:absolute;
   inset:0;
-  background:
-    linear-gradient(
-      90deg,
-      #3b241bf5,
-      #3b241bc0,
-      #3b241b45
-    );
+  background:linear-gradient(90deg,#3b241bf2,#3b241bb8,#3b241b35);
   z-index:-1;
 }
 
 .hero .content{
-  max-width:760px;
+  max-width:730px;
   padding:105px 0 80px;
 }
 
@@ -253,9 +205,7 @@ nav{
   color:#76513e;
 }
 
-.hero .eyebrow{
-  color:#f5e8bb;
-}
+.hero .eyebrow{color:#f5e8bb}
 
 .hero h1{
   font-size:clamp(48px,7vw,84px);
@@ -276,18 +226,23 @@ nav{
   margin-top:28px;
 }
 
-/* GENERAL SECTIONS */
-
-section{
-  padding:90px 0;
+.hero .primary{
+  background:var(--butter);
+  color:var(--brown);
+  border-color:var(--butter);
 }
 
-.soft{
-  background:var(--soft);
+.hero .outline{
+  color:#fff;
+  border-color:#fff;
 }
+
+section{padding:90px 0}
+
+.soft{background:var(--soft)}
 
 .head{
-  max-width:760px;
+  max-width:720px;
   margin-bottom:38px;
 }
 
@@ -300,137 +255,133 @@ section{
 
 .head p{
   color:var(--muted);
-  font-size:17px;
 }
 
-/* TRAILER SECTION */
-
-.trailerSection{
-  background:#2d1b14;
-  color:#fff;
-}
-
-.trailerSection .head h2{
-  color:#fff;
-}
-
-.trailerSection .head p{
-  color:#dfd0c8;
-}
-
-.trailerGrid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:22px;
-}
-
-.trailerCard{
-  background:#fff;
-  color:var(--text);
-  border-radius:24px;
-  overflow:hidden;
-  border:1px solid #ffffff1a;
-  box-shadow:0 18px 45px #00000028;
-}
-
-.trailerVideo{
-  position:relative;
-  min-height:300px;
-  background:#17100d;
-  display:grid;
-  place-items:center;
-}
-
-.trailerVideo video{
-  width:100%;
-  height:300px;
-  display:block;
-  object-fit:cover;
-  background:#17100d;
-}
-
-.trailerPoster{
-  width:100%;
-  height:300px;
-  object-fit:cover;
-  display:block;
-}
-
-.trailerFallback{
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  color:#fff;
-  text-align:center;
-  padding:25px;
-  background:
-    radial-gradient(circle at center,#76513e,#24150f);
-}
-
-.trailerFallback strong{
-  display:block;
-  font-size:22px;
-  margin-bottom:8px;
-}
-
-.playBadge{
-  position:absolute;
-  left:20px;
-  bottom:20px;
-  width:52px;
-  height:52px;
-  border-radius:50%;
-  border:1px solid #ffffff55;
-  background:#ffffffdf;
-  color:var(--brown);
-  display:grid;
-  place-items:center;
-  font-size:19px;
-}
-
-.trailerInfo{
-  padding:22px;
-}
-
-.trailerInfo h3{
-  color:var(--brown);
-  margin:0 0 5px;
-  font-size:25px;
-}
-
-.trailerAuthor{
-  font:12px Arial,sans-serif;
-  color:#76513e;
-  margin-bottom:10px;
-}
-
-.trailerInfo p{
-  color:var(--muted);
-  margin:8px 0;
-}
-
-.trailerActions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:17px;
-}
-
-/* BOOKS */
-
-.books{
+.grid3,
+.books,
+.features,
+.authorsGrid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:22px;
 }
 
-.book{
+.card,
+.book,
+.feature,
+.authorCard{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
+  box-shadow:var(--shadow);
+}
+
+.card{padding:26px}
+
+.card h3,
+.feature h3{
+  color:var(--brown);
+  margin:12px 0 7px;
+}
+
+.card p,
+.feature p{
+  color:var(--muted);
+}
+
+.num{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#f5e8bb;
+  color:var(--brown);
+  font-weight:bold;
+}
+
+.trailerGrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+}
+
+.trailerCard{
   background:#fff;
   border:1px solid var(--line);
   border-radius:22px;
   overflow:hidden;
-  box-shadow:0 14px 40px #3b241b12;
+  box-shadow:var(--shadow);
+}
+
+.videoBox{
+  position:relative;
+  aspect-ratio:16/9;
+  background:#24150f;
+  overflow:hidden;
+}
+
+.videoBox video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.videoPlaceholder{
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  padding:25px;
+  text-align:center;
+  background:
+    radial-gradient(circle at 50% 40%,#79553f,#24150f 70%);
+}
+
+.playBadge{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:var(--butter);
+  color:var(--brown);
+  font-weight:bold;
+  font-size:21px;
+  pointer-events:none;
+}
+
+.trailerInfo{
+  padding:21px;
+}
+
+.trailerInfo h3{
+  color:var(--brown);
+  margin:0 0 5px;
+}
+
+.trailerInfo p{
+  color:var(--muted);
+  font-size:14px;
+  margin:8px 0;
+}
+
+.meta{
+  color:#76513e;
+  font:11px Arial,sans-serif;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+.book{
+  padding:0;
+  overflow:hidden;
 }
 
 .cover{
@@ -445,7 +396,7 @@ section{
   width:100%;
   height:100%;
   object-fit:cover;
-  border-radius:5px;
+  border-radius:4px;
 }
 
 .coverInner{
@@ -471,9 +422,7 @@ section{
   text-transform:uppercase;
 }
 
-.bookInfo{
-  padding:22px;
-}
+.bookInfo{padding:22px}
 
 .tag{
   display:inline-block;
@@ -486,18 +435,12 @@ section{
 
 .bookInfo h3{
   color:var(--brown);
-  font-size:22px;
-  margin:12px 0 5px;
+  margin:12px 0 6px;
 }
 
 .bookInfo p{
   color:var(--muted);
   font-size:14px;
-}
-
-.bookAuthor{
-  font:12px Arial,sans-serif;
-  color:#76513e;
 }
 
 .bookActions{
@@ -506,71 +449,6 @@ section{
   gap:8px;
   margin-top:16px;
 }
-
-/* AUTHORS */
-
-.authorGrid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:22px;
-}
-
-.authorCard{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:22px;
-  padding:26px;
-  box-shadow:0 14px 40px #3b241b12;
-}
-
-.authorTop{
-  display:flex;
-  align-items:center;
-  gap:15px;
-}
-
-.authorAvatar{
-  width:64px;
-  height:64px;
-  flex:none;
-  border-radius:50%;
-  background:var(--soft);
-  display:grid;
-  place-items:center;
-  overflow:hidden;
-  color:var(--brown);
-  font-size:24px;
-  font-weight:bold;
-}
-
-.authorAvatar img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.authorCard h3{
-  margin:0;
-  color:var(--brown);
-  font-size:21px;
-}
-
-.authorCard .bio{
-  color:var(--muted);
-  font-size:14px;
-  margin:17px 0;
-}
-
-.authorStats{
-  display:flex;
-  gap:16px;
-  flex-wrap:wrap;
-  color:#76513e;
-  font:11px Arial,sans-serif;
-  margin-bottom:15px;
-}
-
-/* EMPTY */
 
 .emptyState{
   grid-column:1/-1;
@@ -591,7 +469,46 @@ section{
   margin:0;
 }
 
-/* DISCUSSIONS */
+.authorCard{
+  padding:25px;
+}
+
+.authorAvatar{
+  width:72px;
+  height:72px;
+  border-radius:18px;
+  background:var(--soft);
+  display:grid;
+  place-items:center;
+  color:var(--brown);
+  font-size:28px;
+  font-weight:bold;
+  overflow:hidden;
+}
+
+.authorAvatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.authorCard h3{
+  color:var(--brown);
+  margin:15px 0 5px;
+}
+
+.authorCard p{
+  color:var(--muted);
+  font-size:14px;
+}
+
+.authorStats{
+  display:flex;
+  gap:18px;
+  font:11px Arial,sans-serif;
+  color:#76513e;
+  margin:12px 0 17px;
+}
 
 .discussions{
   display:grid;
@@ -624,15 +541,6 @@ section{
   min-width:220px;
 }
 
-.sessionStatus{
-  background:var(--soft);
-  border-radius:12px;
-  padding:12px 14px;
-  font:12px Arial,sans-serif;
-  color:var(--brown);
-  margin-bottom:15px;
-}
-
 .messageList{
   max-height:360px;
   overflow:auto;
@@ -644,9 +552,7 @@ section{
   border-bottom:1px solid var(--line);
 }
 
-.message strong{
-  color:var(--brown);
-}
+.message strong{color:var(--brown)}
 
 .message small{
   display:block;
@@ -659,18 +565,6 @@ section{
   margin:7px 0 0;
   color:var(--muted);
 }
-
-.discussionLogin{
-  background:#fff8e4;
-  border:1px solid #ead79b;
-  border-radius:14px;
-  padding:15px;
-  margin-top:15px;
-  font:12px Arial,sans-serif;
-  color:var(--brown);
-}
-
-/* CALENDAR */
 
 .eventList{
   display:grid;
@@ -699,34 +593,11 @@ section{
   font:12px Arial,sans-serif;
 }
 
-.eventDate{
-  min-width:115px;
-  text-align:center;
-  padding:12px;
-  background:var(--soft);
-  border-radius:13px;
-  color:var(--brown);
-  font:bold 12px Arial,sans-serif;
-}
-
-/* ABOUT */
-
 .about{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:50px;
   align-items:center;
-}
-
-.about h2{
-  color:var(--brown);
-  font-size:clamp(34px,5vw,54px);
-  line-height:1.1;
-}
-
-.aboutText{
-  color:var(--muted);
-  font-size:17px;
 }
 
 .aboutPanel{
@@ -740,25 +611,13 @@ section{
   justify-content:center;
 }
 
-.aboutPanel h3{
-  font-size:34px;
-  margin-top:0;
-}
+.aboutPanel h3{font-size:34px}
 
-.aboutPanel p{
-  color:#e9ddd6;
-}
-
-/* CTA */
+.aboutPanel p{color:#e9ddd6}
 
 .cta{
   background:#f5e8bb;
   text-align:center;
-}
-
-.cta h2{
-  color:var(--brown);
-  font-size:42px;
 }
 
 .cta p{
@@ -766,8 +625,6 @@ section{
   margin:0 auto 22px;
   color:var(--muted);
 }
-
-/* FOOTER */
 
 footer{
   background:var(--brown);
@@ -782,9 +639,7 @@ footer{
   padding-bottom:35px;
 }
 
-.foot h3{
-  font-size:24px;
-}
+.foot h3{font-size:24px}
 
 .foot h4{
   font:700 11px Arial,sans-serif;
@@ -807,101 +662,87 @@ footer{
   color:#bbaaa1;
 }
 
-/* LIVE CHAT */
-
 .chatLauncher{
   position:fixed;
   right:22px;
   bottom:22px;
   z-index:40;
+  width:62px;
+  height:62px;
   border:0;
-  border-radius:999px;
+  border-radius:50%;
   background:var(--brown);
   color:#fff;
-  padding:14px 19px;
-  box-shadow:0 12px 35px #00000025;
-  font:bold 13px Arial,sans-serif;
-}
-
-.chatLauncher:hover{
-  background:#4d2e22;
+  box-shadow:0 12px 30px rgba(0,0,0,.2);
+  cursor:pointer;
+  font-size:24px;
 }
 
 .chatPanel{
   position:fixed;
   right:22px;
-  bottom:78px;
-  width:min(380px,calc(100vw - 30px));
+  bottom:96px;
+  width:min(380px,calc(100% - 32px));
   background:#fff;
   border:1px solid var(--line);
   border-radius:22px;
-  box-shadow:0 20px 60px #00000025;
-  z-index:39;
+  box-shadow:0 20px 60px rgba(59,36,27,.2);
+  z-index:41;
   display:none;
   overflow:hidden;
 }
 
-.chatPanel.open{
-  display:block;
-}
+.chatPanel.show{display:block}
 
 .chatHeader{
   background:var(--brown);
   color:#fff;
-  padding:17px 18px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  padding:18px 20px;
 }
 
 .chatHeader strong{
-  font-size:17px;
+  display:block;
+  font-size:18px;
 }
 
-.chatClose{
-  border:0;
-  background:#ffffff18;
-  color:#fff;
-  width:32px;
-  height:32px;
-  border-radius:50%;
+.chatHeader span{
+  font:11px Arial,sans-serif;
+  color:#eadfd8;
 }
 
-.chatBody{
-  padding:16px;
-}
+.chatBody{padding:18px}
 
 .chatMessages{
-  height:230px;
+  max-height:220px;
   overflow:auto;
+  margin-bottom:15px;
+}
+
+.chatMessage{
   background:var(--soft);
-  border-radius:13px;
-  padding:12px;
-  margin-bottom:12px;
-}
-
-.chatBubble{
-  background:#fff;
+  padding:10px 12px;
   border-radius:12px;
-  padding:9px 11px;
   margin-bottom:8px;
-  color:var(--muted);
-  font:12px Arial,sans-serif;
 }
 
-.chatBubble.visitor{
-  background:var(--brown);
-  color:#fff;
-  margin-left:20px;
+.chatMessage.admin{
+  background:#f5e8bb;
 }
 
-.chatBubble.moderator{
-  margin-right:20px;
+.chatMessage small{
+  display:block;
+  font:10px Arial,sans-serif;
+  color:#76513e;
+}
+
+.chatMessage p{
+  margin:4px 0 0;
+  font-size:13px;
 }
 
 .chatForm{
   display:grid;
-  gap:8px;
+  gap:9px;
 }
 
 .chatForm input,
@@ -910,104 +751,13 @@ footer{
 }
 
 .chatForm textarea{
-  min-height:70px;
+  min-height:75px;
 }
-
-.chatNote{
-  font:10px Arial,sans-serif;
-  color:var(--muted);
-  margin-top:8px;
-}
-
-/* MODALS */
-
-.modal{
-  position:fixed;
-  inset:0;
-  background:#24150fcf;
-  z-index:50;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-
-.modal.show{
-  display:flex;
-}
-
-.modalBox{
-  background:var(--cream);
-  width:min(920px,100%);
-  max-height:90vh;
-  overflow:auto;
-  border-radius:26px;
-  padding:35px;
-  position:relative;
-}
-
-.modalClose{
-  position:absolute;
-  right:18px;
-  top:15px;
-  width:38px;
-  height:38px;
-  border:0;
-  border-radius:50%;
-  background:var(--soft);
-  color:var(--brown);
-  cursor:pointer;
-  font-size:20px;
-}
-
-.bookModalGrid{
-  display:grid;
-  grid-template-columns:230px 1fr;
-  gap:30px;
-}
-
-.bookModalCover{
-  min-height:300px;
-  border-radius:16px;
-  overflow:hidden;
-  background:linear-gradient(145deg,#eadcc7,#79553f);
-}
-
-.bookModalCover img{
-  width:100%;
-  height:100%;
-  min-height:300px;
-  object-fit:cover;
-}
-
-.bookModalInfo h2{
-  color:var(--brown);
-  font-size:38px;
-  line-height:1.1;
-  margin:0 0 8px;
-}
-
-.bookModalInfo h3{
-  color:var(--brown);
-}
-
-.bookModalInfo p{
-  color:var(--muted);
-}
-
-.modalActions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:22px;
-}
-
-/* TOAST */
 
 .toast{
   position:fixed;
   right:20px;
-  bottom:80px;
+  bottom:20px;
   background:var(--brown);
   color:#fff;
   padding:14px 17px;
@@ -1015,14 +765,8 @@ footer{
   display:none;
   font:13px Arial,sans-serif;
   z-index:100;
-  max-width:360px;
+  max-width:350px;
 }
-
-.toast.show{
-  display:block;
-}
-
-/* LOADING */
 
 .loading{
   color:var(--muted);
@@ -1030,117 +774,81 @@ footer{
   padding:25px;
 }
 
-/* RESPONSIVE */
-
 @media(max-width:1050px){
-
-  .links{
-    gap:12px;
-  }
-
-  .links a{
-    font-size:12px;
-  }
-
+  .links{gap:13px}
+  .navActions .btn.small{display:none}
 }
 
 @media(max-width:900px){
+  .links{display:none}
 
-  .links{
-    display:none;
-  }
+  .mobileMenu{display:block}
 
-  .mobileMenuButton{
-    display:block;
-  }
+  .mobileLinks.open{display:block}
 
-  .navActions .btn{
-    display:none;
-  }
+  .navActions{margin-left:auto}
 
-  .trailerGrid,
+  .navActions .btn.small{display:inline-block}
+
+  .grid3,
   .books,
-  .authorGrid,
+  .trailerGrid,
+  .authorsGrid,
   .discussions,
   .about,
   .foot{
     grid-template-columns:1fr;
   }
 
-  .hero{
-    min-height:620px;
-  }
+  .hero{min-height:620px}
 
-  .hero .content{
-    padding-top:70px;
-  }
+  .hero .content{padding-top:70px}
 
   .top .wrap{
     display:block;
   }
 
-  .top span+span{
-    display:none;
-  }
+  .top span+span{display:none}
 
   .eventItem{
     align-items:flex-start;
     flex-direction:column;
   }
-
-  .eventDate{
-    width:100%;
-  }
-
-  .bookModalGrid{
-    grid-template-columns:1fr;
-  }
-
 }
 
-@media(max-width:600px){
-
-  section{
-    padding:65px 0;
+@media(max-width:560px){
+  .nav{
+    min-height:70px;
   }
 
-  .hero h1{
-    font-size:48px;
-  }
+  .logo{font-size:21px}
 
-  .hero p{
-    font-size:17px;
-  }
+  .logo small{font-size:8px}
 
-  .logo{
-    font-size:21px;
-  }
+  .navActions .btn.small{padding:8px 10px}
 
-  .logo small{
-    font-size:8px;
-  }
+  section{padding:65px 0}
+
+  .hero h1{font-size:48px}
+
+  .hero p{font-size:17px}
 
   .chatLauncher{
+    width:55px;
+    height:55px;
     right:15px;
     bottom:15px;
   }
 
   .chatPanel{
     right:15px;
-    bottom:70px;
+    bottom:82px;
   }
-
-  .modalBox{
-    padding:24px 18px;
-  }
-
 }
 </style>
 </head>
 
 <body>
-
-<!-- TOP BAR -->
 
 <div class="top">
   <div class="wrap">
@@ -1149,1668 +857,707 @@ footer{
   </div>
 </div>
 
-
-<!-- NAVIGATION -->
-
 <nav>
-
   <div class="wrap nav">
 
-    <a class="logo" href="index.html">
+    <a class="logo" href="#home">
       Reader Reach
       <small>Every Book Has Its Readers</small>
     </a>
 
     <div class="links">
-
-      <a href="index.html">Home</a>
-
-      <a href="authors.html">
-        Authors
-      </a>
-
-      <a href="index.html#featured">
-        Featured
-      </a>
-
-      <a href="index.html#about">
-        About Us
-      </a>
-
-      <a href="contact.html">
-        Contact Us
-      </a>
-
+      <a href="authors.html">Authors</a>
+      <a href="#featured">Featured</a>
+      <a href="#about">About Us</a>
+      <a href="contact.html">Contact Us</a>
     </div>
 
     <div class="navActions">
-
-      <a
-        class="btn small"
-        href="auth.html?mode=signin">
-        Sign In
-      </a>
-
-      <a
-        class="btn primary small"
-        href="auth.html?mode=signup">
-        Sign Up
-      </a>
-
-      <button
-        id="mobileMenuButton"
-        class="mobileMenuButton"
-        aria-label="Open menu">
-        ☰
-      </button>
-
+      <a class="btn small" href="auth.html?mode=signin">Sign In</a>
+      <a class="btn small primary" href="auth.html?mode=signup">Sign Up</a>
+      <button class="mobileMenu" id="mobileMenu" type="button" aria-label="Open menu">☰</button>
     </div>
 
   </div>
 
-  <div
-    id="mobileMenu"
-    class="mobileMenu">
-
-    <div class="wrap">
-
-      <a href="index.html">
-        Home
-      </a>
-
-      <a href="authors.html">
-        Authors
-      </a>
-
-      <a href="index.html#featured">
-        Featured
-      </a>
-
-      <a href="index.html#about">
-        About Us
-      </a>
-
-      <a href="contact.html">
-        Contact Us
-      </a>
-
-      <a href="auth.html?mode=signin">
-        Sign In
-      </a>
-
-      <a href="auth.html?mode=signup">
-        Sign Up
-      </a>
-
-    </div>
-
+  <div class="wrap mobileLinks" id="mobileLinks">
+    <a href="authors.html">Authors</a>
+    <a href="#featured">Featured</a>
+    <a href="#about">About Us</a>
+    <a href="contact.html">Contact Us</a>
+    <a href="auth.html?mode=signin">Sign In</a>
+    <a href="auth.html?mode=signup">Sign Up</a>
   </div>
-
 </nav>
 
+<main>
 
-<!-- HERO -->
-
-<section
-  id="home"
-  class="hero">
-
+<section class="hero" id="home">
   <div class="wrap">
-
     <div class="content">
 
-      <div class="eyebrow">
-        Reader Reach
-      </div>
+      <div class="eyebrow">Reader Reach</div>
 
-      <h1>
-        Every Book Has Its Readers.
-      </h1>
+      <h1>Every Book Has Its Readers.</h1>
 
       <p>
-        Discover books, meet authors, join meaningful conversations,
-        and find the stories that belong with you.
+        Discover meaningful books, meet the people behind them,
+        and find stories worth carrying with you.
       </p>
 
       <div class="actions">
-
-        <a
-          class="btn gold"
-          href="#featured">
-          Explore Featured Books
-        </a>
-
-        <a
-          class="btn outline"
-          href="authors.html">
-          Meet the Authors
-        </a>
-
+        <a class="btn primary" href="#featured">Explore Featured Books</a>
+        <a class="btn outline" href="authors.html">Meet Our Authors</a>
       </div>
 
     </div>
-
   </div>
-
 </section>
 
 
-<!-- UPCOMING FEATURED BOOK TRAILERS -->
+<!-- =========================================================
+     UPCOMING BOOK TRAILERS
+     Admin-controlled Show Trailer flag.
+     ========================================================= -->
 
-<section
-  id="trailers"
-  class="trailerSection">
-
+<section id="trailers">
   <div class="wrap">
 
     <div class="head">
-
-      <div class="kicker" style="color:#ead79b;">
-        Upcoming Featured Books
-      </div>
-
-      <h2>
-        Watch the books coming into focus.
-      </h2>
-
+      <div class="kicker">Watch</div>
+      <h2>Upcoming Featured Books</h2>
       <p>
-        Authors and books selected for trailer visibility appear here
-        when the Admin has enabled their homepage trailer.
+        Watch book trailers selected for the Reader Reach homepage.
+        Trailer visibility is controlled by the platform and does not
+        replace the separate book approval or Featured Books systems.
       </p>
-
     </div>
 
-    <div
-      id="trailerGrid"
-      class="trailerGrid">
-
-      <div class="loading">
-        Loading upcoming book trailers...
+    <div class="trailerGrid" id="trailerGrid">
+      <div class="emptyState">
+        <h3>Loading trailers…</h3>
+        <p>Please wait while Reader Reach loads current trailer content.</p>
       </div>
-
     </div>
 
   </div>
-
 </section>
 
 
-<!-- FEATURED BOOKS -->
+<!-- =========================================================
+     FEATURED BOOKS
+     ========================================================= -->
 
-<section
-  id="featured"
-  class="soft">
-
+<section class="soft" id="featured">
   <div class="wrap">
 
     <div class="head">
-
-      <div class="kicker">
-        Featured Books
-      </div>
-
-      <h2>
-        Books selected for the Reader Reach spotlight.
-      </h2>
-
+      <div class="kicker">Featured</div>
+      <h2>Featured Books</h2>
       <p>
-        Explore books that have been selected for the public
-        Reader Reach Featured collection.
+        Books selected for homepage visibility by Reader Reach.
       </p>
-
     </div>
 
-    <div
-      id="featuredBookGrid"
-      class="books">
-
-      <div class="loading">
-        Loading featured books...
+    <div class="books" id="featuredBookGrid">
+      <div class="emptyState">
+        <h3>Loading featured books…</h3>
+        <p>Reader Reach is checking the current featured collection.</p>
       </div>
-
     </div>
 
   </div>
-
 </section>
 
 
-<!-- EXPLORE AUTHORS -->
+<!-- =========================================================
+     EXPLORE AUTHORS
+     ========================================================= -->
 
-<section
-  id="authors">
-
+<section id="authors">
   <div class="wrap">
 
     <div class="head">
-
-      <div class="kicker">
-        Explore Authors
-      </div>
-
-      <h2>
-        Discover the people behind the books.
-      </h2>
-
+      <div class="kicker">Authors</div>
+      <h2>Explore Authors</h2>
       <p>
-        Browse approved Reader Reach authors and explore their books,
-        profiles, followers, and upcoming features.
+        Discover approved authors and explore the books they have shared
+        with the Reader Reach community.
       </p>
-
     </div>
 
-    <div
-      id="authorGrid"
-      class="authorGrid">
-
-      <div class="loading">
-        Loading authors...
+    <div class="authorsGrid" id="authorGrid">
+      <div class="emptyState">
+        <h3>Loading authors…</h3>
+        <p>Approved author profiles will appear here.</p>
       </div>
-
     </div>
 
-    <div style="margin-top:25px;">
-
-      <a
-        class="btn primary"
-        href="authors.html">
-        View All Authors
-      </a>
-
+    <div style="margin-top:28px;text-align:center">
+      <a class="btn primary" href="authors.html">View All Authors</a>
     </div>
 
   </div>
-
 </section>
 
 
-<!-- DISCUSSIONS -->
+<!-- =========================================================
+     COMMUNITY / DISCUSSIONS
+     ========================================================= -->
 
-<section
-  id="discussions"
-  class="soft">
-
+<section class="soft" id="discussions">
   <div class="wrap">
 
     <div class="head">
-
-      <div class="kicker">
-        Book Discussions
-      </div>
-
-      <h2>
-        Conversations around real books.
-      </h2>
-
+      <div class="kicker">Community</div>
+      <h2>Book Discussions</h2>
       <p>
-        Scheduled Reader Reach discussions give readers a place
-        to participate in conversations around featured books.
+        Follow conversations around books and discover what readers
+        and authors are talking about.
       </p>
-
     </div>
 
     <div class="discussions">
 
       <div class="discussion">
 
-        <h3>
-          Upcoming Discussions
-        </h3>
+        <h3>Recent Discussions</h3>
 
         <div class="discussionControls">
-
-          <select
-            id="discussionBookSelect">
-
-            <option value="">
-              Select a scheduled book
-            </option>
-
+          <select id="discussionBookSelect">
+            <option value="">Select a book</option>
           </select>
 
+          <button class="btn small" id="refreshDiscussions" type="button">
+            Refresh
+          </button>
         </div>
 
-        <div
-          id="discussionStatus"
-          class="sessionStatus">
-          Loading discussion sessions...
-        </div>
-
-        <div
-          id="discussionMessages"
-          class="messageList">
-
+        <div class="messageList" id="discussionList">
           <div class="loading">
-            Select a scheduled discussion to view its status.
+            Select a book to view its discussion.
           </div>
-
         </div>
 
-        <div
-          id="discussionLogin"
-          class="discussionLogin"
-          style="display:none;">
-
-          Sign in as a Reader to participate in protected
-          discussion conversations.
-
-          <div style="margin-top:10px;">
-
-            <a
-              class="btn primary small"
-              href="auth.html?mode=signin">
-              Sign In
-            </a>
-
-          </div>
-
+        <div style="margin-top:16px">
+          <a class="btn small primary" href="auth.html?mode=signin">
+            Sign In to Participate
+          </a>
         </div>
 
       </div>
 
+      <div class="card">
 
-      <div class="discussion">
+        <div class="num">01</div>
 
-        <h3>
-          Community Guidelines
-        </h3>
+        <h3>Meaningful conversation</h3>
 
-        <div class="rule">
-          <strong>Respect readers.</strong>
-          <div>
-            Keep conversations constructive and welcoming.
-          </div>
-        </div>
+        <p>
+          Reader Reach provides book-based discussions so readers and
+          authors can connect around the books they care about.
+        </p>
 
-        <div class="rule">
-          <strong>No spam.</strong>
-          <div>
-            Do not flood discussions with repeated,
-            irrelevant, or promotional messages.
-          </div>
-        </div>
+        <div class="num" style="margin-top:25px">02</div>
 
-        <div class="rule">
-          <strong>Respect authors.</strong>
-          <div>
-            Questions and criticism are welcome when expressed constructively.
-          </div>
-        </div>
+        <h3>Your account, your participation</h3>
 
-        <div class="rule">
-          <strong>Protect private information.</strong>
-          <div>
-            Do not post another person's private contact information
-            or personal details.
-          </div>
-        </div>
-
-        <div class="rule">
-          <strong>Follow the session time.</strong>
-          <div>
-            Scheduled discussion sessions follow their published
-            Reader Reach schedule.
-          </div>
-        </div>
+        <p>
+          Sign in to participate in discussions. Public visitors can
+          browse available discussion content without receiving access
+          to private account information.
+        </p>
 
       </div>
 
     </div>
 
   </div>
-
 </section>
 
 
-<!-- CALENDAR -->
+<!-- =========================================================
+     FEATURE CALENDAR
+     ========================================================= -->
 
-<section
-  id="calendar">
-
+<section id="calendar">
   <div class="wrap">
 
     <div class="head">
-
-      <div class="kicker">
-        Events & Calendar
-      </div>
-
-      <h2>
-        See what is coming up.
-      </h2>
-
+      <div class="kicker">Calendar</div>
+      <h2>Upcoming Features</h2>
       <p>
-        Approved book features and scheduled Reader Reach events.
+        Keep track of scheduled Reader Reach features and book events.
       </p>
-
     </div>
 
-    <div
-      id="calendarList"
-      class="eventList">
-
-      <div class="loading">
-        Loading upcoming events...
+    <div class="eventList" id="eventList">
+      <div class="emptyState">
+        <h3>Loading calendar…</h3>
+        <p>Upcoming scheduled features will appear here.</p>
       </div>
-
     </div>
 
   </div>
-
 </section>
 
 
-<!-- ABOUT -->
+<!-- =========================================================
+     ABOUT
+     ========================================================= -->
 
-<section
-  id="about"
-  class="soft">
-
+<section class="soft" id="about">
   <div class="wrap about">
 
     <div>
 
-      <div class="kicker">
-        About Reader Reach
-      </div>
+      <div class="kicker">About Us</div>
 
-      <h2>
-        A place built around books and the people who read them.
+      <h2 style="font-size:clamp(34px,5vw,54px);line-height:1.1;color:var(--brown);margin:8px 0 14px">
+        A platform built around books and the people who bring them to readers.
       </h2>
 
-      <p class="aboutText">
-        Reader Reach brings books, authors, readers, discussions,
-        features, schedules, and protected reading experiences
-        into one connected space.
+      <p style="color:var(--muted)">
+        Reader Reach connects readers, authors, moderators and administrators
+        through a structured platform for discovering books, sharing conversations,
+        coordinating features and building meaningful reader communities.
       </p>
 
-      <p class="aboutText">
-        The platform is designed around real books and real authors,
-        with approval and moderation systems supporting the public
-        experience.
+      <p style="color:var(--muted)">
+        Authors can build approved profiles and submit multiple books.
+        Readers can discover authors and books, follow authors and participate
+        in discussions.
       </p>
 
     </div>
 
     <div class="aboutPanel">
 
-      <div class="kicker" style="color:#ead79b;">
-        Reader Reach
-      </div>
+      <div class="kicker" style="color:var(--butter)">Reader Reach</div>
 
-      <h3>
-        Built around discovery.
-      </h3>
+      <h3>Books deserve to be discovered.</h3>
 
       <p>
-        Find a book. Meet its author. Follow their work.
-        Join a discussion. Discover where the story takes you next.
+        Our focus is simple: create a polished place where books,
+        authors and readers can find one another.
       </p>
+
+      <div style="margin-top:15px">
+        <a class="btn light" href="authors.html">Explore Authors</a>
+      </div>
 
     </div>
 
   </div>
-
 </section>
 
 
-<!-- CTA -->
+<!-- =========================================================
+     CTA
+     ========================================================= -->
 
 <section class="cta">
-
   <div class="wrap">
 
-    <div class="kicker">
-      Reader Reach
-    </div>
+    <div class="kicker">Join Reader Reach</div>
 
-    <h2>
-      Find the books meant for you.
+    <h2 style="font-size:clamp(34px,5vw,54px);line-height:1.1;color:var(--brown);margin:8px 0 14px">
+      Find your next meaningful read.
     </h2>
 
     <p>
-      Explore approved books, learn about their authors,
-      follow authors you enjoy, and join book conversations.
+      Create an account to follow authors, save books, participate
+      in discussions and receive Reader Reach notifications.
     </p>
 
-    <a
-      class="btn primary"
-      href="#featured">
-      Explore Featured Books
-    </a>
+    <div class="actions" style="justify-content:center">
+      <a class="btn primary" href="auth.html?mode=signup">Create an Account</a>
+      <a class="btn" href="auth.html?mode=signin">Sign In</a>
+    </div>
 
   </div>
-
 </section>
 
+</main>
 
-<!-- FOOTER -->
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
 
 <footer>
 
-  <div class="wrap">
+  <div class="wrap foot">
 
-    <div class="foot">
-
-      <div>
-
-        <h3>
-          Reader Reach
-        </h3>
-
-        <p>
-          Every Book Has Its Readers.
-        </p>
-
-        <p>
-          A connected space for books, authors and readers.
-        </p>
-
-      </div>
-
-      <div>
-
-        <h4>
-          Explore
-        </h4>
-
-        <a href="index.html">
-          Home
-        </a>
-
-        <a href="authors.html">
-          Authors
-        </a>
-
-        <a href="index.html#featured">
-          Featured Books
-        </a>
-
-        <a href="index.html#discussions">
-          Discussions
-        </a>
-
-        <a href="index.html#calendar">
-          Calendar
-        </a>
-
-      </div>
-
-      <div>
-
-        <h4>
-          Reader Reach
-        </h4>
-
-        <a href="index.html#about">
-          About Us
-        </a>
-
-        <a href="contact.html">
-          Contact Us
-        </a>
-
-        <a href="auth.html?mode=signin">
-          Sign In
-        </a>
-
-        <a href="auth.html?mode=signup">
-          Create Account
-        </a>
-
-      </div>
-
+    <div>
+      <h3>Reader Reach</h3>
+      <p>
+        Every Book Has Its Readers.
+      </p>
+      <p>
+        A place for meaningful book discovery and community.
+      </p>
     </div>
 
-    <div class="copy">
-      © 2026 Reader Reach. All rights reserved.
+    <div>
+      <h4>Explore</h4>
+      <a href="authors.html">Authors</a>
+      <a href="#featured">Featured Books</a>
+      <a href="#trailers">Book Trailers</a>
+      <a href="#calendar">Calendar</a>
     </div>
 
+    <div>
+      <h4>Reader Reach</h4>
+      <a href="#about">About Us</a>
+      <a href="contact.html">Contact Us</a>
+      <a href="auth.html?mode=signin">Sign In</a>
+      <a href="auth.html?mode=signup">Sign Up</a>
+    </div>
+
+  </div>
+
+  <div class="wrap copy">
+    © <span id="year"></span> Reader Reach. All rights reserved.
   </div>
 
 </footer>
 
 
-<!-- LIVE CHAT -->
+<!-- =========================================================
+     LIVE CHAT
+     ========================================================= -->
 
 <button
-  id="chatLauncher"
   class="chatLauncher"
-  type="button">
-  Live Chat
+  id="chatLauncher"
+  type="button"
+  aria-label="Open Live Chat"
+  title="Live Chat"
+>
+  💬
 </button>
 
-
-<div
-  id="chatPanel"
-  class="chatPanel"
-  aria-hidden="true">
+<div class="chatPanel" id="chatPanel">
 
   <div class="chatHeader">
-
-    <strong>
-      Reader Reach Live Chat
-    </strong>
-
-    <button
-      id="chatClose"
-      class="chatClose"
-      type="button"
-      aria-label="Close">
-      ×
-    </button>
-
+    <strong>Reader Reach Live Chat</strong>
+    <span>Message the Reader Reach support team.</span>
   </div>
 
   <div class="chatBody">
 
-    <div
-      id="chatMessages"
-      class="chatMessages">
-
-      <div class="chatBubble moderator">
-        Hello. Leave a message and the Reader Reach
-        moderation team can respond.
+    <div class="chatMessages" id="chatMessages">
+      <div class="loading">
+        Start a conversation with Reader Reach.
       </div>
-
     </div>
 
-    <form
-      id="chatForm"
-      class="chatForm">
+    <form class="chatForm" id="chatForm">
 
       <input
         id="chatName"
         type="text"
         placeholder="Your name"
-        maxlength="120"
-        required>
+        autocomplete="name"
+        required
+      >
 
       <input
         id="chatEmail"
         type="email"
         placeholder="Your email"
-        maxlength="180"
-        required>
+        autocomplete="email"
+        required
+      >
 
       <textarea
         id="chatMessage"
         placeholder="How can we help?"
-        maxlength="2000"
-        required></textarea>
+        required
+      ></textarea>
 
-      <button
-        class="btn primary"
-        type="submit">
+      <button class="btn primary" type="submit">
         Send Message
       </button>
 
     </form>
 
-    <div class="chatNote">
-      Messages are handled through Reader Reach's support system.
-      Please do not send passwords or sensitive personal information.
-    </div>
-
   </div>
 
 </div>
 
 
-<!-- BOOK MODAL -->
+<div class="toast" id="toast"></div>
 
-<div
-  id="bookModal"
-  class="modal"
-  role="dialog"
-  aria-modal="true">
-
-  <div class="modalBox">
-
-    <button
-      class="modalClose"
-      type="button"
-      onclick="closeModal('bookModal')"
-      aria-label="Close">
-      ×
-    </button>
-
-    <div id="bookModalContent"></div>
-
-  </div>
-
-</div>
-
-
-<!-- TOAST -->
-
-<div
-  id="toast"
-  class="toast">
-</div>
-
-
-<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-
-/* ============================================================
-   READER REACH HOMEPAGE
-   ============================================================ */
+/* =========================================================
+   READER REACH — HOMEPAGE
+   ========================================================= */
 
 const SUPABASE_URL =
-  'https://bublmnfhyyrefcdkloak.supabase.co';
+  "https://bublmnfhyyrefcdkloak.supabase.co";
 
-const SUPABASE_ANON_KEY =
-  'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY";
 
 const supabaseClient =
   window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_ANON_KEY
+    SUPABASE_PUBLISHABLE_KEY
   );
 
 
-/* ============================================================
-   STATE
-   ============================================================ */
-
-let approvedBooks = [];
-let approvedAuthors = [];
-let featuredBooks = [];
-let trailerBooks = [];
-let discussionSessions = [];
-let selectedDiscussionSession = null;
-
-let chatConversationId = null;
-let chatRealtimeChannel = null;
-
-
-/* ============================================================
+/* =========================================================
    HELPERS
-   ============================================================ */
+   ========================================================= */
+
+const $ = (id) => document.getElementById(id);
 
 function escapeHtml(value){
 
-  return String(value ?? '')
-    .replaceAll('&','&amp;')
-    .replaceAll('<','&lt;')
-    .replaceAll('>','&gt;')
-    .replaceAll('"','&quot;')
-    .replaceAll("'","&#039;");
+  if(value === null || value === undefined){
+    return "";
+  }
 
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+function truncate(value,length=150){
+
+  const text = String(value || "");
+
+  if(text.length <= length){
+    return text;
+  }
+
+  return text.slice(0,length).trim() + "…";
 }
 
 
 function showToast(message){
 
-  const toast =
-    document.getElementById('toast');
+  const toast = $("toast");
 
-  toast.textContent =
-    message;
+  toast.textContent = message;
+  toast.style.display = "block";
 
-  toast.classList.add('show');
+  clearTimeout(window.__toastTimer);
 
-  window.clearTimeout(
-    showToast.timeout
-  );
-
-  showToast.timeout =
-    window.setTimeout(
-      () => {
-        toast.classList.remove('show');
-      },
-      4000
-    );
-
+  window.__toastTimer = setTimeout(() => {
+    toast.style.display = "none";
+  },4000);
 }
 
 
 function formatDate(value){
 
   if(!value){
-    return 'Date unavailable';
+    return "";
   }
 
-  const date =
-    new Date(value);
+  const date = new Date(value);
 
   if(Number.isNaN(date.getTime())){
-    return 'Date unavailable';
+    return String(value);
   }
 
-  return new Intl.DateTimeFormat(
+  return date.toLocaleDateString(
     undefined,
     {
-      year:'numeric',
-      month:'short',
-      day:'numeric'
+      year:"numeric",
+      month:"short",
+      day:"numeric"
     }
-  ).format(date);
-
+  );
 }
 
 
-function formatDateTime(value){
+function formatDateTime(dateValue,timeValue){
 
-  if(!value){
-    return 'Time unavailable';
-  }
+  const combined =
+    timeValue
+      ? `${dateValue}T${timeValue}`
+      : dateValue;
 
-  const date =
-    new Date(value);
+  const date = new Date(combined);
 
   if(Number.isNaN(date.getTime())){
-    return 'Time unavailable';
+    return `${formatDate(dateValue)}${timeValue ? " • " + timeValue : ""}`;
   }
 
-  return new Intl.DateTimeFormat(
+  return date.toLocaleString(
     undefined,
     {
-      year:'numeric',
-      month:'short',
-      day:'numeric',
-      hour:'numeric',
-      minute:'2-digit'
+      year:"numeric",
+      month:"short",
+      day:"numeric",
+      hour:"numeric",
+      minute:"2-digit"
     }
-  ).format(date);
-
+  );
 }
 
 
 function initials(name){
 
-  const value =
-    String(name || '')
-      .trim();
-
-  if(!value){
-    return 'RR';
-  }
-
   const parts =
-    value
+    String(name || "Author")
+      .trim()
       .split(/\s+/)
       .filter(Boolean);
 
-  if(parts.length === 1){
-    return parts[0]
-      .slice(0,2)
-      .toUpperCase();
+  if(!parts.length){
+    return "A";
   }
 
-  return (
-    parts[0][0] +
-    parts[parts.length - 1][0]
-  ).toUpperCase();
-
+  return parts
+    .slice(0,2)
+    .map(part => part.charAt(0).toUpperCase())
+    .join("");
 }
 
 
-function getCover(book){
+function authorName(author){
+
+  if(!author){
+    return "Reader Reach Author";
+  }
 
   return (
-    book.cover_image_url ||
-    book.cover_url ||
-    book.book_cover_url ||
-    ''
+    author.display_name ||
+    author.name ||
+    author.full_name ||
+    "Reader Reach Author"
   );
-
 }
 
 
-function getTrailerUrl(book){
+function bookTitle(book){
 
-  if(book.trailer_url){
-    return book.trailer_url;
-  }
-
-  if(book.video_url){
-    return book.video_url;
-  }
-
-  if(book.book_trailer_url){
-    return book.book_trailer_url;
-  }
-
-  return '';
-
+  return book?.title || "Untitled Book";
 }
 
 
-function getAuthorName(author){
+function bookCover(book){
 
   return (
-    author?.author_name ||
-    author?.display_name ||
-    'Reader Reach Author'
+    book?.cover_image_url ||
+    book?.cover_url ||
+    book?.book_cover_url ||
+    ""
   );
-
 }
 
 
-function goToAuthor(authorId){
+function authorIdFromBook(book){
 
-  if(!authorId){
+  return (
+    book?.author_id ||
+    book?.author?.id ||
+    ""
+  );
+}
+
+
+function goToBook(id){
+
+  if(!id){
     return;
   }
 
   window.location.href =
-    'author-profile.html?id=' +
-    encodeURIComponent(authorId);
-
+    "book.html?id=" +
+    encodeURIComponent(id);
 }
 
 
-function goToBook(bookId){
+function goToAuthor(id){
 
-  if(!bookId){
+  if(!id){
     return;
   }
 
   window.location.href =
-    'book.html?id=' +
-    encodeURIComponent(bookId);
-
+    "author-profile.html?id=" +
+    encodeURIComponent(id);
 }
 
 
-/* ============================================================
+/* =========================================================
    MOBILE MENU
-   ============================================================ */
+   ========================================================= */
 
-document
-  .getElementById('mobileMenuButton')
-  .addEventListener(
-    'click',
-    () => {
+$("mobileMenu").addEventListener("click",() => {
 
-      const menu =
-        document.getElementById(
-          'mobileMenu'
-        );
+  $("mobileLinks").classList.toggle("open");
 
-      menu.classList.toggle(
-        'open'
-      );
-
-    }
-  );
+});
 
 
-document
-  .querySelectorAll(
-    '#mobileMenu a'
-  )
-  .forEach(link => {
+document.querySelectorAll("#mobileLinks a").forEach(link => {
 
-    link.addEventListener(
-      'click',
-      () => {
+  link.addEventListener("click",() => {
 
-        document
-          .getElementById(
-            'mobileMenu'
-          )
-          .classList.remove(
-            'open'
-          );
-
-      }
-    );
+    $("mobileLinks").classList.remove("open");
 
   });
 
+});
 
-/* ============================================================
-   LOAD APPROVED AUTHORS
-   ============================================================ */
 
-async function loadApprovedAuthors(){
+/* =========================================================
+   LOAD UPCOMING BOOK TRAILERS
+   ========================================================= */
 
-  const grid =
-    document.getElementById(
-      'authorGrid'
-    );
+async function loadHomepageTrailers(){
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from('authors')
-      .select(`
-        id,
-        author_name,
-        bio,
-        profile_id,
-        status
-      `)
-      .eq(
-        'status',
-        'approved'
-      )
-      .order(
-        'author_name',
-        {
-          ascending:true
-        }
-      )
-      .limit(6);
+  const grid = $("trailerGrid");
 
-  if(error){
-
-    console.error(
-      'Authors load error:',
-      error
-    );
-
-    grid.innerHTML = `
-      <div class="emptyState">
-        <h3>Authors are temporarily unavailable.</h3>
-        <p>
-          Please try again shortly.
-        </p>
-      </div>
-    `;
-
-    return;
-  }
-
-  approvedAuthors =
-    data || [];
-
-  if(!approvedAuthors.length){
-
-    grid.innerHTML = `
-      <div class="emptyState">
-        <h3>No approved authors yet.</h3>
-        <p>
-          Approved Reader Reach authors will appear here.
-        </p>
-      </div>
-    `;
-
-    return;
-  }
-
-  /*
-    Get book counts separately so that the homepage does not
-    depend on a specific PostgREST relationship name.
-  */
-
-  const authorIds =
-    approvedAuthors
-      .map(author => author.id)
-      .filter(Boolean);
-
-  let bookCounts = {};
-
-  if(authorIds.length){
-
-    const {
-      data:books,
-      error:bookError
-    } =
-      await supabaseClient
-        .from('books')
-        .select(`
-          id,
-          author_id
-        `)
-        .eq(
-          'status',
-          'approved'
-        )
-        .in(
-          'author_id',
-          authorIds
-        );
-
-    if(!bookError){
-
-      (books || [])
-        .forEach(book => {
-
-          bookCounts[book.author_id] =
-            (bookCounts[book.author_id] || 0) + 1;
-
-        });
-
-    }
-
-  }
-
-  grid.innerHTML =
-    approvedAuthors
-      .map(author => {
-
-        const name =
-          getAuthorName(author);
-
-        return `
-          <article class="authorCard">
-
-            <div class="authorTop">
-
-              <div class="authorAvatar">
-                ${escapeHtml(
-                  initials(name)
-                )}
-              </div>
-
-              <div>
-
-                <h3>
-                  ${escapeHtml(name)}
-                </h3>
-
-              </div>
-
-            </div>
-
-            <div class="bio">
-
-              ${escapeHtml(
-                author.bio ||
-                'Author biography available on the author profile.'
-              )}
-
-            </div>
-
-            <div class="authorStats">
-
-              <span>
-                ${bookCounts[author.id] || 0}
-                approved book(s)
-              </span>
-
-            </div>
-
-            <button
-              class="btn primary small"
-              type="button"
-              onclick="goToAuthor('${author.id}')">
-
-              View Author Profile
-
-            </button>
-
-          </article>
-        `;
-
-      })
-      .join('');
-
-}
-
-
-/* ============================================================
-   LOAD APPROVED BOOKS
-   ============================================================ */
-
-async function loadApprovedBooks(){
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from('books')
-      .select(`
-        id,
-        author_id,
-        title,
-        genre,
-        description,
-        availability,
-        status,
-        cover_image_url,
-        cover_url,
-        book_cover_url,
-        trailer_url,
-        video_url,
-        book_trailer_url
-      `)
-      .eq(
-        'status',
-        'approved'
-      )
-      .order(
-        'created_at',
-        {
-          ascending:false
-        }
-      );
-
-  if(error){
-
-    console.error(
-      'Approved books load error:',
-      error
-    );
-
-    approvedBooks = [];
-
-    return;
-
-  }
-
-  approvedBooks =
-    data || [];
-
-}
-
-
-/* ============================================================
-   AUTHOR MAP
-   ============================================================ */
-
-async function getAuthorsForBooks(
-  books
-){
-
-  const ids =
-    [
-      ...new Set(
-        books
-          .map(book => book.author_id)
-          .filter(Boolean)
-      )
-    ];
-
-  if(!ids.length){
-    return new Map();
-  }
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from('authors')
-      .select(`
-        id,
-        author_name,
-        bio
-      `)
-      .in(
-        'id',
-        ids
-      );
-
-  if(error){
-
-    console.error(
-      'Book authors load error:',
-      error
-    );
-
-    return new Map();
-
-  }
-
-  return new Map(
-    (data || [])
-      .map(author => [
-        author.id,
-        author
-      ])
-  );
-
-}
-
-
-/* ============================================================
-   RENDER BOOK CARD
-   ============================================================ */
-
-function renderBookCard(
-  book,
-  authorMap
-){
-
-  const author =
-    authorMap.get(
-      book.author_id
-    ) || {};
-
-  const authorName =
-    getAuthorName(author);
-
-  const cover =
-    getCover(book);
-
-  return `
-    <article class="book">
-
-      <div class="cover">
-
-        ${
-          cover
-          ? `
-            <img
-              src="${escapeHtml(cover)}"
-              alt="${escapeHtml(
-                book.title || 'Book cover'
-              )}">
-          `
-          : `
-            <div class="coverInner">
-
-              <small>
-                Reader Reach
-              </small>
-
-              <strong>
-                ${escapeHtml(
-                  book.title ||
-                  'Untitled Book'
-                )}
-              </strong>
-
-              <small>
-                ${escapeHtml(
-                  book.genre ||
-                  'Book'
-                )}
-              </small>
-
-            </div>
-          `
-        }
-
-      </div>
-
-      <div class="bookInfo">
-
-        ${
-          book.genre
-          ? `
-            <span class="tag">
-              ${escapeHtml(book.genre)}
-            </span>
-          `
-          : ''
-        }
-
-        <h3>
-          ${escapeHtml(
-            book.title ||
-            'Untitled Book'
-          )}
-        </h3>
-
-        <div class="bookAuthor">
-          By ${escapeHtml(authorName)}
-        </div>
-
-        <p>
-          ${escapeHtml(
-            book.description ||
-            'Book description available on the book details page.'
-          )}
-        </p>
-
-        <div class="bookActions">
-
-          <button
-            class="btn primary small"
-            type="button"
-            onclick="goToBook('${book.id}')">
-            View Book
-          </button>
-
-          <button
-            class="btn small"
-            type="button"
-            onclick="goToAuthor('${book.author_id}')">
-            View Author Profile
-          </button>
-
-        </div>
-
-      </div>
-
-    </article>
+  grid.innerHTML = `
+    <div class="emptyState">
+      <h3>Loading trailers…</h3>
+      <p>Checking current trailer visibility.</p>
+    </div>
   `;
 
-}
-
-
-/* ============================================================
-   LOAD FEATURED BOOKS
-   ============================================================ */
-
-async function loadFeaturedBooks(){
-
-  const grid =
-    document.getElementById(
-      'featuredBookGrid'
-    );
-
-  const {
-    data:featuredRows,
-    error:featuredError
-  } =
-    await supabaseClient
-      .from('homepage_featured_books')
-      .select(`
-        book_id,
-        selected,
-        created_at
-      `)
-      .eq(
-        'selected',
-        true
-      )
-      .order(
-        'created_at',
-        {
-          ascending:false
-        }
-      );
-
-  if(featuredError){
-
-    console.error(
-      'Featured records error:',
-      featuredError
-    );
-
-    grid.innerHTML = `
-      <div class="emptyState">
-        <h3>Featured books are temporarily unavailable.</h3>
-        <p>
-          Please try again shortly.
-        </p>
-      </div>
-    `;
-
-    return;
-  }
-
-  const ids =
-    (featuredRows || [])
-      .map(row => row.book_id)
-      .filter(Boolean);
-
-  if(!ids.length){
-
-    grid.innerHTML = `
-      <div class="emptyState">
-        <h3>No featured books yet.</h3>
-        <p>
-          Books selected by the Reader Reach Admin will appear here.
-        </p>
-      </div>
-    `;
-
-    return;
-  }
-
-  const {
-    data:books,
-    error:bookError
-  } =
-    await supabaseClient
-      .from('books')
-      .select(`
-        id,
-        author_id,
-        title,
-        genre,
-        description,
-        availability,
-        status,
-        cover_image_url,
-        cover_url,
-        book_cover_url,
-        trailer_url,
-        video_url,
-        book_trailer_url
-      `)
-      .eq(
-        'status',
-        'approved'
-      )
-      .in(
-        'id',
-        ids
-      );
-
-  if(bookError){
-
-    console.error(
-      'Featured books load error:',
-      bookError
-    );
-
-    grid.innerHTML = `
-      <div class="emptyState">
-        <h3>Featured books are temporarily unavailable.</h3>
-        <p>
-          Please try again shortly.
-        </p>
-      </div>
-    `;
-
-    return;
-  }
-
-  featuredBooks =
-    books || [];
-
-  const authorMap =
-    await getAuthorsForBooks(
-      featuredBooks
-    );
-
-  if(!featuredBooks.length){
-
-    grid.innerHTML = `
-      <div class="emptyState">
-        <h3>No approved featured books yet.</h3>
-        <p>
-          Featured books will appear once the selected books are approved.
-        </p>
-      </div>
-    `;
-
-    return;
-  }
-
   /*
-    Preserve Admin Featured ordering.
-  */
+   * Trailer visibility is controlled separately from:
+   * - homepage featured books
+   * - feature scheduling
+   *
+   * The homepage only requests records explicitly marked
+   * for homepage trailer visibility.
+   */
 
-  const order =
-    new Map(
-      ids.map(
-        (id,index) => [
-          id,
-          index
-        ]
-      )
-    );
-
-  featuredBooks.sort(
-    (a,b) =>
-      (order.get(a.id) ?? 9999) -
-      (order.get(b.id) ?? 9999)
-  );
-
-  grid.innerHTML =
-    featuredBooks
-      .map(book =>
-        renderBookCard(
-          book,
-          authorMap
-        )
-      )
-      .join('');
-
-}
-
-
-/* ============================================================
-   TRAILER DATA
-   ============================================================ */
-
-async function loadTrailerBooks(){
-
-  const grid =
-    document.getElementById(
-      'trailerGrid'
-    );
-
-  /*
-    Trailer visibility is controlled independently from
-    Featured Books.
-
-    The trailer record must explicitly have show_on_homepage=true.
-  */
-
-  const {
-    data:trailerRows,
-    error:trailerError
-  } =
+  const { data, error } =
     await supabaseClient
-      .from('book_trailers')
-      .select(`
-        id,
-        book_id,
-        trailer_url,
-        video_url,
-        show_on_homepage,
-        created_at
-      `)
-      .eq(
-        'show_on_homepage',
-        true
-      )
-      .order(
-        'created_at',
-        {
-          ascending:false
-        }
-      );
+      .from("book_trailers")
+      .select("*")
+      .eq("show_on_homepage",true)
+      .order("created_at",{ascending:false});
 
-  if(trailerError){
+  if(error){
 
     console.error(
-      'Trailer load error:',
-      trailerError
+      "Homepage trailer query failed:",
+      error
     );
 
     grid.innerHTML = `
       <div class="emptyState">
-        <h3>Book trailers are temporarily unavailable.</h3>
+        <h3>No trailers available</h3>
         <p>
-          Please try again shortly.
+          Trailer content is not currently available on the public homepage.
         </p>
       </div>
     `;
@@ -2818,16 +1565,13 @@ async function loadTrailerBooks(){
     return;
   }
 
-  if(!trailerRows || !trailerRows.length){
-
-    trailerBooks = [];
+  if(!data || !data.length){
 
     grid.innerHTML = `
       <div class="emptyState">
-        <h3>No upcoming trailers right now.</h3>
+        <h3>No upcoming trailers</h3>
         <p>
-          When the Admin turns homepage trailer visibility on,
-          the corresponding book trailer will appear here.
+          There are no book trailers currently selected for homepage display.
         </p>
       </div>
     `;
@@ -2836,51 +1580,265 @@ async function loadTrailerBooks(){
   }
 
   const bookIds =
-    [
-      ...new Set(
-        trailerRows
-          .map(row => row.book_id)
-          .filter(Boolean)
+    data
+      .map(row =>
+        row.book_id ||
+        row.bookId
       )
-    ];
+      .filter(Boolean);
 
-  const {
-    data:books,
-    error:booksError
-  } =
-    await supabaseClient
-      .from('books')
-      .select(`
-        id,
-        author_id,
-        title,
-        genre,
-        description,
-        availability,
-        cover_image_url,
-        cover_url,
-        book_cover_url,
-        trailer_url,
-        video_url,
-        book_trailer_url
-      `)
-      .in(
-        'id',
-        bookIds
+  let booksById = {};
+
+  if(bookIds.length){
+
+    const { data: books } =
+      await supabaseClient
+        .from("books")
+        .select("*")
+        .in("id",bookIds);
+
+    if(books){
+
+      booksById =
+        Object.fromEntries(
+          books.map(book => [book.id,book])
+        );
+
+    }
+
+  }
+
+  grid.innerHTML =
+    data.map(trailer => {
+
+      const book =
+        booksById[
+          trailer.book_id ||
+          trailer.bookId
+        ];
+
+      if(!book){
+        return "";
+      }
+
+      const title = bookTitle(book);
+
+      const videoUrl =
+        trailer.video_url ||
+        trailer.trailer_url ||
+        trailer.url ||
+        "";
+
+      const cover = bookCover(book);
+
+      return `
+        <article class="trailerCard">
+
+          <div class="videoBox">
+
+            ${
+              videoUrl
+              ? `
+                <video
+                  controls
+                  preload="metadata"
+                  ${cover ? `poster="${escapeHtml(cover)}"` : ""}
+                >
+                  <source
+                    src="${escapeHtml(videoUrl)}"
+                  >
+                </video>
+              `
+              : `
+                <div class="videoPlaceholder">
+                  <div>
+                    <strong>${escapeHtml(title)}</strong>
+                    <br>
+                    Trailer video unavailable.
+                  </div>
+                </div>
+              `
+            }
+
+            ${
+              videoUrl
+              ? `<div class="playBadge">▶</div>`
+              : ""
+            }
+
+          </div>
+
+          <div class="trailerInfo">
+
+            <div class="meta">Book Trailer</div>
+
+            <h3>${escapeHtml(title)}</h3>
+
+            <p>
+              ${escapeHtml(
+                truncate(
+                  book.description ||
+                  book.book_description ||
+                  "",
+                  125
+                )
+              )}
+            </p>
+
+            <div class="bookActions">
+
+              <button
+                class="btn small primary"
+                type="button"
+                data-book-id="${escapeHtml(book.id)}"
+              >
+                View Book
+              </button>
+
+              ${
+                authorIdFromBook(book)
+                ? `
+                  <button
+                    class="btn small"
+                    type="button"
+                    data-author-id="${escapeHtml(authorIdFromBook(book))}"
+                  >
+                    View Author
+                  </button>
+                `
+                : ""
+              }
+
+            </div>
+
+          </div>
+
+        </article>
+      `;
+
+    }).join("");
+
+
+  grid.querySelectorAll("[data-book-id]").forEach(button => {
+
+    button.addEventListener("click",() => {
+
+      goToBook(
+        button.dataset.bookId
       );
+
+    });
+
+  });
+
+
+  grid.querySelectorAll("[data-author-id]").forEach(button => {
+
+    button.addEventListener("click",() => {
+
+      goToAuthor(
+        button.dataset.authorId
+      );
+
+    });
+
+  });
+
+}
+
+
+/* =========================================================
+   LOAD FEATURED BOOKS
+   ========================================================= */
+
+async function loadFeaturedBooks(){
+
+  const grid = $("featuredBookGrid");
+
+  grid.innerHTML = `
+    <div class="emptyState">
+      <h3>Loading featured books…</h3>
+      <p>Checking the current Reader Reach collection.</p>
+    </div>
+  `;
+
+  const { data: featured, error } =
+    await supabaseClient
+      .from("homepage_featured_books")
+      .select("*")
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    console.error(
+      "Featured books query failed:",
+      error
+    );
+
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>Featured books unavailable</h3>
+        <p>
+          The featured collection could not be loaded right now.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  if(!featured || !featured.length){
+
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>No featured books yet</h3>
+        <p>
+          Featured books selected by the Reader Reach team will appear here.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  const bookIds =
+    featured
+      .map(row => row.book_id)
+      .filter(Boolean);
+
+  if(!bookIds.length){
+
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>No featured books yet</h3>
+        <p>
+          No books are currently attached to the featured collection.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  const { data: books, error: booksError } =
+    await supabaseClient
+      .from("books")
+      .select("*")
+      .in("id",bookIds)
+      .eq("status","approved");
 
   if(booksError){
 
     console.error(
-      'Trailer book load error:',
+      "Approved featured books query failed:",
       booksError
     );
 
     grid.innerHTML = `
       <div class="emptyState">
-        <h3>Trailer books are temporarily unavailable.</h3>
+        <h3>Featured books unavailable</h3>
         <p>
-          Please try again shortly.
+          The featured books could not be loaded.
         </p>
       </div>
     `;
@@ -2888,48 +1846,23 @@ async function loadTrailerBooks(){
     return;
   }
 
-  const authorMap =
-    await getAuthorsForBooks(
-      books || []
+  const byId =
+    Object.fromEntries(
+      (books || []).map(book => [book.id,book])
     );
 
-  const bookMap =
-    new Map(
-      (books || [])
-        .map(book => [
-          book.id,
-          book
-        ])
-    );
-
-  trailerBooks =
-    trailerRows
-      .map(row => {
-
-        const book =
-          bookMap.get(
-            row.book_id
-          );
-
-        if(!book){
-          return null;
-        }
-
-        return {
-          ...row,
-          book
-        };
-
-      })
+  const ordered =
+    featured
+      .map(row => byId[row.book_id])
       .filter(Boolean);
 
-  if(!trailerBooks.length){
+  if(!ordered.length){
 
     grid.innerHTML = `
       <div class="emptyState">
-        <h3>No visible trailers right now.</h3>
+        <h3>No approved featured books</h3>
         <p>
-          Trailer visibility is controlled by the Admin.
+          Featured selections will appear when their associated books are approved.
         </p>
       </div>
     `;
@@ -2938,1401 +1871,1008 @@ async function loadTrailerBooks(){
   }
 
   grid.innerHTML =
-    trailerBooks
-      .map(item => {
+    ordered.map(book => {
 
-        const book =
-          item.book;
+      const cover = bookCover(book);
 
-        const author =
-          authorMap.get(
-            book.author_id
-          ) || {};
+      const authorId =
+        authorIdFromBook(book);
 
-        const authorName =
-          getAuthorName(author);
+      return `
+        <article class="book">
 
-        const cover =
-          getCover(book);
+          <div class="cover">
 
-        const trailer =
-          item.trailer_url ||
-          item.video_url ||
-          getTrailerUrl(book);
+            ${
+              cover
+              ? `
+                <img
+                  src="${escapeHtml(cover)}"
+                  alt="${escapeHtml(bookTitle(book))} cover"
+                  loading="lazy"
+                >
+              `
+              : `
+                <div class="coverInner">
+                  <small>${escapeHtml(book.genre || "Featured Book")}</small>
+                  <strong>${escapeHtml(bookTitle(book))}</strong>
+                  <small>Reader Reach</small>
+                </div>
+              `
+            }
 
-        return `
-          <article class="trailerCard">
+          </div>
 
-            <div class="trailerVideo">
+          <div class="bookInfo">
+
+            ${
+              book.genre
+              ? `<span class="tag">${escapeHtml(book.genre)}</span>`
+              : ""
+            }
+
+            <h3>${escapeHtml(bookTitle(book))}</h3>
+
+            <p>
+              ${escapeHtml(
+                truncate(
+                  book.description ||
+                  book.book_description ||
+                  "",
+                  150
+                )
+              )}
+            </p>
+
+            <div class="bookActions">
+
+              <button
+                class="btn small primary"
+                type="button"
+                data-book-id="${escapeHtml(book.id)}"
+              >
+                View Book
+              </button>
 
               ${
-                trailer
+                authorId
                 ? `
-                  <video
-                    controls
-                    preload="metadata"
-                    poster="${escapeHtml(cover)}">
-
-                    <source
-                      src="${escapeHtml(trailer)}">
-
-                    Your browser does not support video playback.
-
-                  </video>
+                  <button
+                    class="btn small"
+                    type="button"
+                    data-author-id="${escapeHtml(authorId)}"
+                  >
+                    View Author Profile
+                  </button>
                 `
-                : `
-                  <div class="trailerFallback">
-
-                    <div>
-
-                      <strong>
-                        ${escapeHtml(
-                          book.title ||
-                          'Book Trailer'
-                        )}
-                      </strong>
-
-                      <span>
-                        Trailer available on the book page.
-                      </span>
-
-                    </div>
-
-                  </div>
-                `
+                : ""
               }
-
-              <div class="playBadge">
-                ▶
-              </div>
 
             </div>
 
-            <div class="trailerInfo">
+          </div>
 
-              <h3>
-                ${escapeHtml(
-                  book.title ||
-                  'Untitled Book'
-                )}
-              </h3>
+        </article>
+      `;
 
-              <div class="trailerAuthor">
-                By ${escapeHtml(authorName)}
-              </div>
-
-              <p>
-                ${escapeHtml(
-                  book.description ||
-                  'Discover this book on Reader Reach.'
-                )}
-              </p>
-
-              <div class="trailerActions">
-
-                <button
-                  class="btn primary small"
-                  type="button"
-                  onclick="goToBook('${book.id}')">
-                  View Book
-                </button>
-
-                <button
-                  class="btn small"
-                  type="button"
-                  onclick="goToAuthor('${book.author_id}')">
-                  View Author Profile
-                </button>
-
-              </div>
-
-            </div>
-
-          </article>
-        `;
-
-      })
-      .join('');
-
-}
+    }).join("");
 
 
-/* ============================================================
-   DISCUSSION SESSIONS
-   ============================================================ */
+  grid.querySelectorAll("[data-book-id]").forEach(button => {
 
-async function loadDiscussionSessions(){
+    button.addEventListener("click",() => {
 
-  const select =
-    document.getElementById(
-      'discussionBookSelect'
-    );
-
-  const status =
-    document.getElementById(
-      'discussionStatus'
-    );
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from('discussions')
-      .select(`
-        id,
-        book_id,
-        created_at
-      `)
-      .order(
-        'created_at',
-        {
-          ascending:false
-        }
-      );
-
-  /*
-    The original homepage used reader_discussion_sessions.
-    The project brief's core table is discussions.
-
-    If the core table is unavailable in the current database,
-    fall back to the existing discussion-session table.
-  */
-
-  if(error){
-
-    const fallback =
-      await supabaseClient
-        .from('reader_discussion_sessions')
-        .select('*')
-        .order(
-          'start_at',
-          {
-            ascending:true
-          }
-        );
-
-    if(fallback.error){
-
-      console.error(
-        'Discussion sessions load error:',
-        error,
-        fallback.error
-      );
-
-      status.textContent =
-        'Discussion sessions are temporarily unavailable.';
-
-      return;
-    }
-
-    discussionSessions =
-      fallback.data || [];
-
-    renderDiscussionOptions(
-      discussionSessions
-    );
-
-    return;
-
-  }
-
-  discussionSessions =
-    data || [];
-
-  /*
-    The core discussions table does not necessarily contain
-    schedule fields. Try feature_schedules for the public schedule.
-  */
-
-  if(discussionSessions.length){
-
-    const bookIds =
-      discussionSessions
-        .map(item => item.book_id)
-        .filter(Boolean);
-
-    if(bookIds.length){
-
-      const {
-        data:schedules
-      } =
-        await supabaseClient
-          .from('feature_schedules')
-          .select(`
-            id,
-            book_id,
-            scheduled_date,
-            scheduled_time,
-            status
-          `)
-          .eq(
-            'status',
-            'scheduled'
-          )
-          .in(
-            'book_id',
-            bookIds
-          );
-
-      if(schedules){
-
-        discussionSessions =
-          discussionSessions.map(
-            session => {
-
-              const schedule =
-                schedules.find(
-                  item =>
-                    item.book_id ===
-                    session.book_id
-                );
-
-              if(!schedule){
-                return session;
-              }
-
-              const start =
-                schedule.scheduled_date &&
-                schedule.scheduled_time
-                ? `${schedule.scheduled_date}T${schedule.scheduled_time}`
-                : null;
-
-              return {
-                ...session,
-                start_at:
-                  session.start_at ||
-                  start,
-                end_at:
-                  session.end_at ||
-                  (
-                    start
-                    ? new Date(
-                        new Date(start).getTime() +
-                        30 * 60 * 1000
-                      ).toISOString()
-                    : null
-                  )
-              };
-
-            }
-          );
-
-      }
-
-    }
-
-  }
-
-  renderDiscussionOptions(
-    discussionSessions
-  );
-
-}
-
-
-function renderDiscussionOptions(
-  sessions
-){
-
-  const select =
-    document.getElementById(
-      'discussionBookSelect'
-    );
-
-  const status =
-    document.getElementById(
-      'discussionStatus'
-    );
-
-  select.innerHTML = `
-    <option value="">
-      Select a scheduled book
-    </option>
-  `;
-
-  const bookMap =
-    new Map(
-      approvedBooks.map(
-        book => [
-          book.id,
-          book
-        ]
-      )
-    );
-
-  const visibleSessions =
-    sessions
-      .filter(
-        session =>
-          bookMap.has(
-            session.book_id
-          )
-      );
-
-  visibleSessions
-    .forEach(session => {
-
-      const book =
-        bookMap.get(
-          session.book_id
-        );
-
-      const option =
-        document.createElement(
-          'option'
-        );
-
-      option.value =
-        session.id;
-
-      option.textContent =
-        `${book.title} — ${
-          formatDateTime(
-            session.start_at
-          )
-        }`;
-
-      select.appendChild(
-        option
+      goToBook(
+        button.dataset.bookId
       );
 
     });
 
-  if(!visibleSessions.length){
+  });
 
-    status.textContent =
-      'There are no scheduled reader discussion sessions right now.';
 
-  }else{
+  grid.querySelectorAll("[data-author-id]").forEach(button => {
 
-    status.textContent =
-      'Select a scheduled book to view its discussion status.';
+    button.addEventListener("click",() => {
 
-  }
+      goToAuthor(
+        button.dataset.authorId
+      );
+
+    });
+
+  });
 
 }
 
 
-function getSessionState(
-  session
-){
+/* =========================================================
+   LOAD APPROVED AUTHORS
+   ========================================================= */
 
-  if(!session){
-    return 'none';
-  }
+async function loadAuthors(){
 
-  if(!session.start_at){
-    return 'unknown';
-  }
+  const grid = $("authorGrid");
 
-  const now =
-    new Date();
+  grid.innerHTML = `
+    <div class="emptyState">
+      <h3>Loading authors…</h3>
+      <p>Checking approved author profiles.</p>
+    </div>
+  `;
 
-  const start =
-    new Date(
-      session.start_at
-    );
-
-  if(Number.isNaN(
-    start.getTime()
-  )){
-    return 'unknown';
-  }
-
-  let end;
-
-  if(session.end_at){
-
-    end =
-      new Date(
-        session.end_at
-      );
-
-  }else{
-
-    end =
-      new Date(
-        start.getTime() +
-        30 * 60 * 1000
-      );
-
-  }
-
-  if(now < start){
-    return 'upcoming';
-  }
-
-  if(now >= start && now < end){
-    return 'active';
-  }
-
-  return 'expired';
-
-}
-
-
-async function loadDiscussionMessages(
-  sessionId
-){
-
-  const list =
-    document.getElementById(
-      'discussionMessages'
-    );
-
-  const login =
-    document.getElementById(
-      'discussionLogin'
-    );
-
-  const session =
-    discussionSessions.find(
-      item =>
-        item.id === sessionId
-    );
-
-  if(!session){
-
-    list.innerHTML = `
-      <div class="loading">
-        Select a scheduled discussion.
-      </div>
-    `;
-
-    login.style.display =
-      'none';
-
-    return;
-  }
-
-  const state =
-    getSessionState(
-      session
-    );
-
-  if(
-    state === 'upcoming'
-  ){
-
-    list.innerHTML = `
-      <div class="loading">
-        Messages will appear when the discussion opens.
-      </div>
-    `;
-
-    login.style.display =
-      'none';
-
-    return;
-
-  }
-
-  if(
-    state === 'expired'
-  ){
-
-    list.innerHTML = `
-      <div class="loading">
-        This discussion session has ended.
-      </div>
-    `;
-
-    login.style.display =
-      'none';
-
-    return;
-
-  }
-
-  if(
-    state === 'unknown'
-  ){
-
-    list.innerHTML = `
-      <div class="loading">
-        Discussion timing is not currently available.
-      </div>
-    `;
-
-    login.style.display =
-      'none';
-
-    return;
-
-  }
-
-  /*
-    Current project discussion messages use discussion_messages.
-  */
-
-  const {
-    data,
-    error
-  } =
+  const { data, error } =
     await supabaseClient
-      .from('discussion_messages')
-      .select(`
-        id,
-        discussion_id,
-        author_profile_id,
-        message,
-        created_at,
-        updated_at
-      `)
-      .eq(
-        'discussion_id',
-        sessionId
-      )
-      .order(
-        'created_at',
-        {
-          ascending:true
-        }
-      );
+      .from("authors")
+      .select("*")
+      .eq("status","approved")
+      .order("created_at",{ascending:false})
+      .limit(6);
 
   if(error){
 
     console.error(
-      'Discussion messages load error:',
+      "Authors query failed:",
       error
     );
 
-    list.innerHTML = `
-      <div class="loading">
-        Sign in as a Reader to participate in this discussion.
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>Authors unavailable</h3>
+        <p>
+          Approved author profiles could not be loaded right now.
+        </p>
       </div>
     `;
 
-    login.style.display =
-      'block';
-
     return;
-
   }
-
-  login.style.display =
-    'none';
 
   if(!data || !data.length){
 
-    list.innerHTML = `
-      <div class="loading">
-        No messages yet.
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>No approved authors yet</h3>
+        <p>
+          Approved author profiles will appear here.
+        </p>
       </div>
     `;
 
     return;
-
   }
 
-  /*
-    Load participant display names.
-  */
+  grid.innerHTML =
+    data.map(author => {
 
-  const profileIds =
-    data
-      .map(message =>
-        message.author_profile_id
-      )
-      .filter(Boolean);
+      const name =
+        authorName(author);
 
-  let profileMap =
-    new Map();
+      const avatar =
+        author.avatar_url ||
+        author.profile_image_url ||
+        author.photo_url ||
+        "";
 
-  if(profileIds.length){
+      return `
+        <article class="authorCard">
 
-    const {
-      data:profiles
-    } =
-      await supabaseClient
-        .from('profiles')
-        .select(`
-          id,
-          display_name,
-          role
-        `)
-        .in(
-          'id',
-          profileIds
-        );
+          <div class="authorAvatar">
 
-    profileMap =
-      new Map(
-        (profiles || [])
-          .map(profile => [
-            profile.id,
-            profile
-          ])
-      );
-
-  }
-
-  list.innerHTML =
-    data
-      .map(message => {
-
-        const profile =
-          profileMap.get(
-            message.author_profile_id
-          ) || {};
-
-        return `
-          <div class="message">
-
-            <strong>
-              ${escapeHtml(
-                profile.display_name ||
-                'Reader Reach User'
-              )}
-            </strong>
-
-            <small>
-              ${escapeHtml(
-                formatDateTime(
-                  message.created_at
-                )
-              )}
-            </small>
-
-            <p>
-              ${escapeHtml(
-                message.message
-              )}
-            </p>
+            ${
+              avatar
+              ? `
+                <img
+                  src="${escapeHtml(avatar)}"
+                  alt="${escapeHtml(name)}"
+                  loading="lazy"
+                >
+              `
+              : escapeHtml(initials(name))
+            }
 
           </div>
-        `;
 
-      })
-      .join('');
+          <h3>${escapeHtml(name)}</h3>
+
+          <p>
+            ${escapeHtml(
+              truncate(
+                author.bio ||
+                author.about ||
+                "",
+                130
+              )
+            )}
+          </p>
+
+          <div class="authorStats">
+
+            <span>
+              ${Number(author.follower_count || 0)} followers
+            </span>
+
+            <span>
+              ${Number(author.following_count || 0)} following
+            </span>
+
+          </div>
+
+          <button
+            class="btn small primary"
+            type="button"
+            data-author-id="${escapeHtml(author.id)}"
+          >
+            View Author Profile
+          </button>
+
+        </article>
+      `;
+
+    }).join("");
+
+
+  grid.querySelectorAll("[data-author-id]").forEach(button => {
+
+    button.addEventListener("click",() => {
+
+      goToAuthor(
+        button.dataset.authorId
+      );
+
+    });
+
+  });
 
 }
 
 
-document
-  .getElementById(
-    'discussionBookSelect'
-  )
+/* =========================================================
+   LOAD APPROVED BOOKS FOR DISCUSSION SELECTOR
+   ========================================================= */
+
+async function loadDiscussionBooks(){
+
+  const select =
+    $("discussionBookSelect");
+
+  const { data, error } =
+    await supabaseClient
+      .from("books")
+      .select("id,title")
+      .eq("status","approved")
+      .order("title",{ascending:true});
+
+  if(error){
+
+    console.error(
+      "Discussion books query failed:",
+      error
+    );
+
+    return;
+  }
+
+  select.innerHTML =
+    `<option value="">Select a book</option>` +
+    (data || [])
+      .map(book => `
+        <option value="${escapeHtml(book.id)}">
+          ${escapeHtml(book.title)}
+        </option>
+      `)
+      .join("");
+
+}
+
+
+/* =========================================================
+   LOAD DISCUSSION MESSAGES
+   ========================================================= */
+
+async function loadDiscussionMessages(){
+
+  const bookId =
+    $("discussionBookSelect").value;
+
+  const list =
+    $("discussionList");
+
+  if(!bookId){
+
+    list.innerHTML = `
+      <div class="loading">
+        Select a book to view its discussion.
+      </div>
+    `;
+
+    return;
+  }
+
+  list.innerHTML = `
+    <div class="loading">
+      Loading discussion…
+    </div>
+  `;
+
+  /*
+   * The current project brief defines the public discussion
+   * system through discussions and discussion_messages.
+   *
+   * We first locate the discussion belonging to the selected book.
+   */
+
+  const { data: discussions, error: discussionError } =
+    await supabaseClient
+      .from("discussions")
+      .select("*")
+      .eq("book_id",bookId)
+      .order("created_at",{ascending:false})
+      .limit(1);
+
+  if(discussionError){
+
+    console.error(
+      "Discussion query failed:",
+      discussionError
+    );
+
+    list.innerHTML = `
+      <div class="loading">
+        Discussion content is not available right now.
+      </div>
+    `;
+
+    return;
+  }
+
+  if(!discussions || !discussions.length){
+
+    list.innerHTML = `
+      <div class="loading">
+        No discussion has been started for this book yet.
+      </div>
+    `;
+
+    return;
+  }
+
+  const discussion =
+    discussions[0];
+
+  const { data: messages, error: messageError } =
+    await supabaseClient
+      .from("discussion_messages")
+      .select("*")
+      .eq("discussion_id",discussion.id)
+      .order("created_at",{ascending:true});
+
+  if(messageError){
+
+    console.error(
+      "Discussion messages query failed:",
+      messageError
+    );
+
+    list.innerHTML = `
+      <div class="loading">
+        Discussion messages are not available right now.
+      </div>
+    `;
+
+    return;
+  }
+
+  if(!messages || !messages.length){
+
+    list.innerHTML = `
+      <div class="loading">
+        This discussion has no messages yet.
+      </div>
+    `;
+
+    return;
+  }
+
+  list.innerHTML =
+    messages.map(message => {
+
+      const name =
+        message.display_name ||
+        message.author_name ||
+        message.sender_name ||
+        "Reader";
+
+      return `
+        <div class="message">
+
+          <strong>
+            ${escapeHtml(name)}
+          </strong>
+
+          <small>
+            ${escapeHtml(
+              formatDate(message.created_at)
+            )}
+          </small>
+
+          <p>
+            ${escapeHtml(
+              message.message ||
+              message.content ||
+              ""
+            )}
+          </p>
+
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+$("discussionBookSelect")
   .addEventListener(
-    'change',
-    async event => {
-
-      const sessionId =
-        event.target.value;
-
-      selectedDiscussionSession =
-        discussionSessions.find(
-          session =>
-            session.id ===
-            sessionId
-        ) || null;
-
-      const status =
-        document.getElementById(
-          'discussionStatus'
-        );
-
-      if(!selectedDiscussionSession){
-
-        status.textContent =
-          'Select a scheduled book to view its discussion.';
-
-        await loadDiscussionMessages(
-          ''
-        );
-
-        return;
-
-      }
-
-      const state =
-        getSessionState(
-          selectedDiscussionSession
-        );
-
-      const book =
-        approvedBooks.find(
-          item =>
-            item.id ===
-            selectedDiscussionSession.book_id
-        );
-
-      if(state === 'upcoming'){
-
-        status.textContent =
-          `Discussion for "${book?.title || 'this book'}" starts ${
-            formatDateTime(
-              selectedDiscussionSession.start_at
-            )
-          }.`;
-
-      }else if(state === 'active'){
-
-        status.textContent =
-          `Discussion for "${book?.title || 'this book'}" is currently open.`;
-
-      }else if(state === 'expired'){
-
-        status.textContent =
-          'This discussion session has ended.';
-
-      }else{
-
-        status.textContent =
-          'Discussion timing is currently unavailable.';
-
-      }
-
-      await loadDiscussionMessages(
-        sessionId
-      );
-
-    }
+    "change",
+    loadDiscussionMessages
   );
 
 
-/* ============================================================
-   CALENDAR
-   ============================================================ */
+$("refreshDiscussions")
+  .addEventListener(
+    "click",
+    loadDiscussionMessages
+  );
+
+
+/* =========================================================
+   LOAD FEATURE CALENDAR
+   ========================================================= */
 
 async function loadCalendar(){
 
-  const list =
-    document.getElementById(
-      'calendarList'
-    );
+  const container =
+    $("eventList");
 
   const today =
-    new Date();
+    new Date()
+      .toISOString()
+      .slice(0,10);
 
-  const {
-    data,
-    error
-  } =
+  const { data, error } =
     await supabaseClient
-      .from('feature_schedules')
-      .select(`
-        id,
-        book_id,
-        scheduled_date,
-        scheduled_time,
-        status,
-        notes
-      `)
-      .eq(
-        'status',
-        'scheduled'
-      )
-      .order(
-        'scheduled_date',
-        {
-          ascending:true
-        }
-      )
+      .from("feature_schedules")
+      .select("*")
+      .eq("status","scheduled")
+      .gte("scheduled_date",today)
+      .order("scheduled_date",{ascending:true})
+      .order("scheduled_time",{ascending:true})
       .limit(12);
 
   if(error){
 
     console.error(
-      'Calendar load error:',
+      "Calendar query failed:",
       error
     );
 
-    list.innerHTML = `
+    container.innerHTML = `
       <div class="emptyState">
-        <h3>Calendar temporarily unavailable.</h3>
+        <h3>Calendar unavailable</h3>
         <p>
-          Please try again shortly.
+          Upcoming scheduled features could not be loaded.
         </p>
       </div>
     `;
 
     return;
+  }
+
+  if(!data || !data.length){
+
+    container.innerHTML = `
+      <div class="emptyState">
+        <h3>No upcoming features</h3>
+        <p>
+          New scheduled Reader Reach features will appear here.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  const bookIds =
+    data
+      .map(item => item.book_id)
+      .filter(Boolean);
+
+  let booksById = {};
+
+  if(bookIds.length){
+
+    const { data: books } =
+      await supabaseClient
+        .from("books")
+        .select("id,title")
+        .in("id",bookIds);
+
+    booksById =
+      Object.fromEntries(
+        (books || []).map(book => [book.id,book])
+      );
 
   }
 
-  const rows =
-    (data || [])
-      .filter(item => {
+  container.innerHTML =
+    data.map(item => {
 
-        if(!item.scheduled_date){
-          return true;
-        }
+      const book =
+        booksById[item.book_id];
 
-        const date =
-          new Date(
-            `${item.scheduled_date}T${
-              item.scheduled_time ||
-              '00:00:00'
-            }`
-          );
+      const title =
+        book?.title ||
+        item.title ||
+        "Reader Reach Feature";
 
-        return (
-          Number.isNaN(date.getTime()) ||
-          date >= today
+      return `
+        <div class="eventItem">
+
+          <div>
+
+            <strong>
+              ${escapeHtml(title)}
+            </strong>
+
+            <span>
+              ${escapeHtml(
+                formatDateTime(
+                  item.scheduled_date,
+                  item.scheduled_time
+                )
+              )}
+            </span>
+
+          </div>
+
+          ${
+            item.book_id
+            ? `
+              <button
+                class="btn small"
+                type="button"
+                data-book-id="${escapeHtml(item.book_id)}"
+              >
+                View Book
+              </button>
+            `
+            : ""
+          }
+
+        </div>
+      `;
+
+    }).join("");
+
+
+  container
+    .querySelectorAll("[data-book-id]")
+    .forEach(button => {
+
+      button.addEventListener("click",() => {
+
+        goToBook(
+          button.dataset.bookId
         );
 
       });
 
-  if(!rows.length){
-
-    list.innerHTML = `
-      <div class="emptyState">
-
-        <h3>
-          No upcoming features yet.
-        </h3>
-
-        <p>
-          When a real Reader Reach feature is scheduled,
-          it will appear here.
-        </p>
-
-      </div>
-    `;
-
-    return;
-
-  }
-
-  const bookIds =
-    rows
-      .map(row =>
-        row.book_id
-      )
-      .filter(Boolean);
-
-  const {
-    data:books
-  } =
-    bookIds.length
-    ? await supabaseClient
-        .from('books')
-        .select(`
-          id,
-          title,
-          status
-        `)
-        .in(
-          'id',
-          bookIds
-        )
-    : {
-        data:[]
-      };
-
-  const bookMap =
-    new Map(
-      (books || [])
-        .map(book => [
-          book.id,
-          book
-        ])
-    );
-
-  list.innerHTML =
-    rows
-      .map(row => {
-
-        const book =
-          bookMap.get(
-            row.book_id
-          );
-
-        const title =
-          book?.title ||
-          'Reader Reach Feature';
-
-        const dateLabel =
-          row.scheduled_date
-          ? formatDate(
-              `${row.scheduled_date}T${
-                row.scheduled_time ||
-                '00:00:00'
-              }`
-            )
-          : 'Date to be announced';
-
-        return `
-          <div class="eventItem">
-
-            <div>
-
-              <strong>
-                ${escapeHtml(title)}
-              </strong>
-
-              <span>
-                ${escapeHtml(
-                  row.notes ||
-                  'Scheduled Reader Reach feature.'
-                )}
-              </span>
-
-            </div>
-
-            <div class="eventDate">
-
-              ${escapeHtml(
-                dateLabel
-              )}
-
-              ${
-                row.scheduled_time
-                ? `
-                  <br>
-                  ${escapeHtml(
-                    row.scheduled_time
-                  )}
-                `
-                : ''
-              }
-
-            </div>
-
-            ${
-              book
-              ? `
-                <button
-                  class="btn small"
-                  type="button"
-                  onclick="goToBook('${book.id}')">
-                  View Book
-                </button>
-              `
-              : ''
-            }
-
-          </div>
-        `;
-
-      })
-      .join('');
+    });
 
 }
 
 
-/* ============================================================
-   BOOK MODAL
-   ============================================================ */
-
-async function openBookModal(
-  bookId
-){
-
-  const modal =
-    document.getElementById(
-      'bookModal'
-    );
-
-  const content =
-    document.getElementById(
-      'bookModalContent'
-    );
-
-  const book =
-    approvedBooks.find(
-      item =>
-        item.id === bookId
-    );
-
-  if(!book){
-
-    content.innerHTML = `
-      <div class="loading">
-        Book could not be found.
-      </div>
-    `;
-
-    modal.classList.add(
-      'show'
-    );
-
-    document.body.classList.add(
-      'modal-open'
-    );
-
-    return;
-
-  }
-
-  const authorMap =
-    await getAuthorsForBooks([
-      book
-    ]);
-
-  const author =
-    authorMap.get(
-      book.author_id
-    ) || {};
-
-  const cover =
-    getCover(book);
-
-  const trailer =
-    getTrailerUrl(book);
-
-  content.innerHTML = `
-
-    <div class="bookModalGrid">
-
-      <div class="bookModalCover">
-
-        ${
-          cover
-          ? `
-            <img
-              src="${escapeHtml(cover)}"
-              alt="${escapeHtml(
-                book.title
-              )}">
-          `
-          : `
-            <div class="coverInner">
-
-              <small>
-                Reader Reach
-              </small>
-
-              <strong>
-                ${escapeHtml(
-                  book.title
-                )}
-              </strong>
-
-            </div>
-          `
-        }
-
-      </div>
-
-      <div class="bookModalInfo">
-
-        ${
-          book.genre
-          ? `
-            <span class="tag">
-              ${escapeHtml(book.genre)}
-            </span>
-          `
-          : ''
-        }
-
-        <h2>
-          ${escapeHtml(
-            book.title
-          )}
-        </h2>
-
-        <p>
-          By
-          <strong>
-            ${escapeHtml(
-              getAuthorName(author)
-            )}
-          </strong>
-        </p>
-
-        <h3>
-          About the Book
-        </h3>
-
-        <p>
-          ${escapeHtml(
-            book.description ||
-            'No description has been published yet.'
-          )}
-        </p>
-
-        ${
-          book.availability
-          ? `
-            <h3>
-              Availability
-            </h3>
-
-            <p>
-              ${escapeHtml(
-                book.availability
-              )}
-            </p>
-          `
-          : ''
-        }
-
-        ${
-          trailer
-          ? `
-            <h3>
-              Trailer
-            </h3>
-
-            <video
-              controls
-              style="width:100%;max-height:360px;background:#17100d;border-radius:12px;">
-
-              <source
-                src="${escapeHtml(trailer)}">
-
-            </video>
-          `
-          : ''
-        }
-
-        <div class="modalActions">
-
-          <button
-            class="btn primary"
-            type="button"
-            onclick="goToBook('${book.id}')">
-            Open Book Details
-          </button>
-
-          <button
-            class="btn"
-            type="button"
-            onclick="goToAuthor('${book.author_id}')">
-            View Author Profile
-          </button>
-
-        </div>
-
-      </div>
-
-    </div>
-  `;
-
-  modal.classList.add(
-    'show'
-  );
-
-  document.body.classList.add(
-    'modal-open'
-  );
-
-}
-
-
-function closeModal(
-  id
-){
-
-  const modal =
-    document.getElementById(
-      id
-    );
-
-  if(!modal){
-    return;
-  }
-
-  modal.classList.remove(
-    'show'
-  );
-
-  document.body.classList.remove(
-    'modal-open'
-  );
-
-}
-
-
-document
-  .getElementById(
-    'bookModal'
-  )
-  .addEventListener(
-    'click',
-    event => {
-
-      if(
-        event.target.id ===
-        'bookModal'
-      ){
-
-        closeModal(
-          'bookModal'
-        );
-
-      }
-
-    }
-  );
-
-
-/* ============================================================
+/* =========================================================
    LIVE CHAT
-   ============================================================ */
+   ========================================================= */
 
-const chatLauncher =
-  document.getElementById(
-    'chatLauncher'
-  );
-
-const chatPanel =
-  document.getElementById(
-    'chatPanel'
-  );
-
-const chatClose =
-  document.getElementById(
-    'chatClose'
-  );
+let activeConversationId = null;
 
 
-chatLauncher.addEventListener(
-  'click',
-  () => {
-
-    chatPanel.classList.toggle(
-      'open'
-    );
-
-    chatPanel.setAttribute(
-      'aria-hidden',
-      chatPanel.classList.contains(
-        'open'
-      )
-      ? 'false'
-      : 'true'
-    );
-
-  }
-);
+function chatStorageKey(){
+  return "reader_reach_chat_identity";
+}
 
 
-chatClose.addEventListener(
-  'click',
-  () => {
+function loadSavedChatIdentity(){
 
-    chatPanel.classList.remove(
-      'open'
-    );
+  try{
 
-    chatPanel.setAttribute(
-      'aria-hidden',
-      'true'
-    );
+    const raw =
+      localStorage.getItem(
+        chatStorageKey()
+      );
 
-  }
-);
-
-
-/*
-  The current project contains conversations/messages tables,
-  but the homepage source does not establish a verified public
-  anonymous schema for those tables.
-
-  Therefore the homepage does NOT invent a database schema here.
-
-  Contact messages remain routed through contact.html and the
-  Moderator Messages workflow.
-
-  The launcher is still present so the public UI is ready for
-  the connected live-chat implementation.
-*/
-
-
-document
-  .getElementById(
-    'chatForm'
-  )
-  .addEventListener(
-    'submit',
-    async event => {
-
-      event.preventDefault();
-
-      const name =
-        document.getElementById(
-          'chatName'
-        ).value.trim();
-
-      const email =
-        document.getElementById(
-          'chatEmail'
-        ).value.trim();
-
-      const message =
-        document.getElementById(
-          'chatMessage'
-        ).value.trim();
-
-      if(
-        !name ||
-        !email ||
-        !message
-      ){
-
-        showToast(
-          'Please complete all live chat fields.'
-        );
-
-        return;
-
-      }
-
-      /*
-        Use the dedicated Contact page until the exact anonymous
-        live-chat table schema and RLS policies are connected.
-
-        No visitor message is silently written into a guessed table.
-      */
-
-      const params =
-        new URLSearchParams({
-          name,
-          email,
-          subject:'Live Chat',
-          message
-        });
-
-      window.location.href =
-        'contact.html?' +
-        params.toString();
-
+    if(!raw){
+      return;
     }
-  );
+
+    const identity =
+      JSON.parse(raw);
+
+    if(identity.name){
+      $("chatName").value =
+        identity.name;
+    }
+
+    if(identity.email){
+      $("chatEmail").value =
+        identity.email;
+    }
+
+  }catch(error){
+
+    console.warn(
+      "Unable to restore chat identity:",
+      error
+    );
+
+  }
+
+}
 
 
-/* ============================================================
-   INITIAL LOAD
-   ============================================================ */
+function saveChatIdentity(){
 
-async function init(){
+  const identity = {
+    name:$("chatName").value.trim(),
+    email:$("chatEmail").value.trim()
+  };
+
+  try{
+
+    localStorage.setItem(
+      chatStorageKey(),
+      JSON.stringify(identity)
+    );
+
+  }catch(error){
+
+    console.warn(
+      "Unable to save chat identity:",
+      error
+    );
+
+  }
+
+}
+
+
+async function findExistingConversation(){
+
+  const email =
+    $("chatEmail").value.trim();
+
+  if(!email){
+    return null;
+  }
 
   /*
-    Load books first because several homepage sections
-    depend on the approved-book list.
-  */
+   * The public visitor chat uses a dedicated conversations/messages
+   * system. We do not expose private author or reader conversations here.
+   */
 
-  await loadApprovedBooks();
+  const { data, error } =
+    await supabaseClient
+      .from("conversations")
+      .select("*")
+      .eq("visitor_email",email)
+      .eq("channel","live_chat")
+      .order("created_at",{ascending:false})
+      .limit(1);
 
-  await Promise.all([
-    loadApprovedAuthors(),
+  if(error){
+
+    console.warn(
+      "Conversation lookup unavailable:",
+      error
+    );
+
+    return null;
+  }
+
+  return data?.[0] || null;
+
+}
+
+
+async function loadChatMessages(){
+
+  const list =
+    $("chatMessages");
+
+  if(!activeConversationId){
+
+    list.innerHTML = `
+      <div class="loading">
+        Start a conversation with Reader Reach.
+      </div>
+    `;
+
+    return;
+  }
+
+  const { data, error } =
+    await supabaseClient
+      .from("messages")
+      .select("*")
+      .eq("conversation_id",activeConversationId)
+      .order("created_at",{ascending:true});
+
+  if(error){
+
+    console.warn(
+      "Chat messages unavailable:",
+      error
+    );
+
+    return;
+  }
+
+  if(!data || !data.length){
+
+    list.innerHTML = `
+      <div class="loading">
+        Your message has not received a reply yet.
+      </div>
+    `;
+
+    return;
+  }
+
+  list.innerHTML =
+    data.map(message => {
+
+      const fromStaff =
+        message.sender_type === "moderator" ||
+        message.sender_type === "admin" ||
+        message.role === "moderator" ||
+        message.role === "admin";
+
+      return `
+        <div class="chatMessage ${fromStaff ? "admin" : ""}">
+
+          <small>
+            ${fromStaff ? "Reader Reach" : "You"}
+          </small>
+
+          <p>
+            ${escapeHtml(
+              message.message ||
+              message.content ||
+              ""
+            )}
+          </p>
+
+        </div>
+      `;
+
+    }).join("");
+
+  list.scrollTop =
+    list.scrollHeight;
+
+}
+
+
+async function openChatConversation(){
+
+  const email =
+    $("chatEmail").value.trim();
+
+  if(!email){
+    return;
+  }
+
+  const existing =
+    await findExistingConversation();
+
+  if(existing){
+
+    activeConversationId =
+      existing.id;
+
+    await loadChatMessages();
+
+  }
+
+}
+
+
+$("chatLauncher")
+  .addEventListener("click",async () => {
+
+    $("chatPanel")
+      .classList
+      .toggle("show");
+
+    if(
+      $("chatPanel")
+        .classList
+        .contains("show")
+    ){
+
+      loadSavedChatIdentity();
+
+      if($("chatEmail").value.trim()){
+        await openChatConversation();
+      }
+
+    }
+
+  });
+
+
+$("chatForm")
+  .addEventListener("submit",async event => {
+
+    event.preventDefault();
+
+    const name =
+      $("chatName").value.trim();
+
+    const email =
+      $("chatEmail").value.trim();
+
+    const messageText =
+      $("chatMessage").value.trim();
+
+    if(!name || !email || !messageText){
+      showToast("Please complete the chat form.");
+      return;
+    }
+
+    saveChatIdentity();
+
+    const button =
+      event.submitter ||
+      $("chatForm").querySelector("button");
+
+    button.disabled = true;
+    button.textContent = "Sending…";
+
+    try{
+
+      if(!activeConversationId){
+
+        const { data: conversation, error } =
+          await supabaseClient
+            .from("conversations")
+            .insert({
+              visitor_name:name,
+              visitor_email:email,
+              channel:"live_chat",
+              subject:"Website Live Chat",
+              status:"open"
+            })
+            .select()
+            .single();
+
+        if(error){
+          throw error;
+        }
+
+        activeConversationId =
+          conversation.id;
+
+      }
+
+      const { error: messageError } =
+        await supabaseClient
+          .from("messages")
+          .insert({
+            conversation_id:activeConversationId,
+            sender_type:"visitor",
+            sender_name:name,
+            sender_email:email,
+            message:messageText
+          });
+
+      if(messageError){
+        throw messageError;
+      }
+
+      $("chatMessage").value = "";
+
+      await loadChatMessages();
+
+      showToast(
+        "Your message has been sent."
+      );
+
+    }catch(error){
+
+      console.error(
+        "Live chat send failed:",
+        error
+      );
+
+      showToast(
+        "The message could not be sent right now. Please try Contact Us."
+      );
+
+    }finally{
+
+      button.disabled = false;
+      button.textContent = "Send Message";
+
+    }
+
+  });
+
+
+/* =========================================================
+   REALTIME CHAT
+   ========================================================= */
+
+try{
+
+  supabaseClient
+    .channel("reader-reach-public-live-chat")
+    .on(
+      "postgres_changes",
+      {
+        event:"*",
+        schema:"public",
+        table:"messages"
+      },
+      async payload => {
+
+        if(
+          activeConversationId &&
+          payload.new?.conversation_id === activeConversationId
+        ){
+
+          await loadChatMessages();
+
+        }
+
+      }
+    )
+    .subscribe();
+
+}catch(error){
+
+  console.warn(
+    "Live chat realtime subscription unavailable:",
+    error
+  );
+
+}
+
+
+/* =========================================================
+   INITIAL LOAD
+   ========================================================= */
+
+async function initializeHomepage(){
+
+  $("year").textContent =
+    new Date().getFullYear();
+
+  await Promise.allSettled([
+    loadHomepageTrailers(),
     loadFeaturedBooks(),
-    loadTrailerBooks(),
-    loadDiscussionSessions(),
+    loadAuthors(),
+    loadDiscussionBooks(),
     loadCalendar()
   ]);
 
 }
 
 
-/* ============================================================
-   START
-   ============================================================ */
-
-init()
-  .catch(error => {
-
-    console.error(
-      'Reader Reach homepage initialization error:',
-      error
-    );
-
-  });
+initializeHomepage();
 
 </script>
 

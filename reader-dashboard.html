@@ -339,7 +339,7 @@
 
     .stats{
       display:grid;
-      grid-template-columns:repeat(5,1fr);
+      grid-template-columns:repeat(4,1fr);
       gap:13px;
       margin-bottom:25px;
     }
@@ -472,46 +472,6 @@
     .book-actions .btn{
       flex:1;
       min-width:110px;
-    }
-
-    .author-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:16px;
-    }
-
-    .author-card{
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:18px;
-      box-shadow:0 8px 24px rgba(59,36,27,.05);
-    }
-
-    .author-card h3{
-      color:var(--brown);
-      font-size:20px;
-      margin-bottom:3px;
-    }
-
-    .author-card .author-meta{
-      color:#92715a;
-      font-size:12px;
-      margin-bottom:9px;
-    }
-
-    .author-card p{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.55;
-      min-height:62px;
-      margin-bottom:14px;
-    }
-
-    .author-actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
     }
 
     .empty{
@@ -816,16 +776,6 @@
       justify-content:flex-end;
     }
 
-    @media(max-width:1100px){
-      .stats{
-        grid-template-columns:repeat(3,1fr);
-      }
-
-      .author-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-    }
-
     @media(max-width:1050px){
       .dashboard-layout{
         grid-template-columns:190px minmax(0,1fr);
@@ -833,6 +783,10 @@
 
       .books-grid{
         grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .stats{
+        grid-template-columns:repeat(2,1fr);
       }
 
       .nav-links{
@@ -898,10 +852,6 @@
       }
 
       .books-grid{
-        grid-template-columns:1fr;
-      }
-
-      .author-grid{
         grid-template-columns:1fr;
       }
 
@@ -1010,8 +960,8 @@
 
         <p>
           Keep track of the books you are exploring, return to books you
-          are currently reading, see what you have completed, follow authors
-          you enjoy, and stay connected with Reader Reach.
+          are currently reading, see what you have completed, and stay
+          connected with Reader Reach notifications.
         </p>
 
       </div>
@@ -1054,10 +1004,6 @@
             Completed
           </button>
 
-          <button data-target="followingAuthors">
-            Following Authors
-          </button>
-
           <button data-target="notifications">
             Notifications
           </button>
@@ -1070,10 +1016,7 @@
 
         <div class="sidebar-divider"></div>
 
-        <button
-          class="btn danger"
-          style="width:100%;"
-          id="signOutSidebar">
+        <button class="btn danger" id="signOutSide" style="width:100%;">
           Sign Out
         </button>
 
@@ -1083,9 +1026,9 @@
       <div class="content">
 
 
-        <section
-          id="overview"
-          class="section">
+        <!-- OVERVIEW -->
+
+        <section id="overview" class="section">
 
           <div class="section-header">
 
@@ -1099,7 +1042,7 @@
               </h2>
 
               <p class="section-description">
-                A quick look at your Reader Reach activity.
+                A quick view of your Reader Reach activity.
               </p>
             </div>
 
@@ -1113,10 +1056,8 @@
                 Books Saved
               </div>
 
-              <div
-                class="stat-value"
-                id="savedCount">
-                0
+              <div class="stat-value" id="savedCount">
+                —
               </div>
 
               <div class="stat-note">
@@ -1130,10 +1071,8 @@
                 Currently Reading
               </div>
 
-              <div
-                class="stat-value"
-                id="readingCount">
-                0
+              <div class="stat-value" id="readingCount">
+                —
               </div>
 
               <div class="stat-note">
@@ -1147,10 +1086,8 @@
                 Completed
               </div>
 
-              <div
-                class="stat-value"
-                id="completedCount">
-                0
+              <div class="stat-value" id="completedCount">
+                —
               </div>
 
               <div class="stat-note">
@@ -1164,10 +1101,8 @@
                 Notifications
               </div>
 
-              <div
-                class="stat-value"
-                id="notificationCount">
-                0
+              <div class="stat-value" id="notificationCount">
+                —
               </div>
 
               <div class="stat-note">
@@ -1175,21 +1110,39 @@
               </div>
             </div>
 
+          </div>
 
-            <div class="stat-card">
-              <div class="stat-label">
-                Following
+
+          <div class="card">
+
+            <div class="section-header" style="margin-bottom:10px;">
+
+              <div>
+                <div class="section-kicker">
+                  Start exploring
+                </div>
+
+                <h3 class="section-title" style="font-size:21px;">
+                  Find your next book.
+                </h3>
+
+                <p class="section-description">
+                  Browse approved books and discover the authors behind them.
+                </p>
               </div>
 
-              <div
-                class="stat-value"
-                id="followingCount">
-                —
-              </div>
+            </div>
 
-              <div class="stat-note">
-                Authors you follow
-              </div>
+            <div class="profile-actions">
+
+              <a class="btn primary" href="index.html#featured">
+                Explore Featured Books
+              </a>
+
+              <a class="btn" href="authors.html">
+                Explore Authors
+              </a>
+
             </div>
 
           </div>
@@ -1197,15 +1150,15 @@
         </section>
 
 
-        <section
-          id="featured"
-          class="section">
+        <!-- FEATURED -->
+
+        <section id="featured" class="section">
 
           <div class="section-header">
 
             <div>
               <div class="section-kicker">
-                Discover
+                Featured
               </div>
 
               <h2 class="section-title">
@@ -1213,22 +1166,17 @@
               </h2>
 
               <p class="section-description">
-                Books currently highlighted by Reader Reach.
+                Books currently selected for the Reader Reach homepage.
               </p>
             </div>
 
-            <span
-              class="section-count"
-              id="featuredCount">
+            <span class="section-count" id="featuredCount">
               —
             </span>
 
           </div>
 
-
-          <div
-            id="featuredBooksGrid"
-            class="books-grid">
+          <div id="featuredBooksGrid" class="books-grid">
 
             <div class="loading">
               Loading featured books...
@@ -1239,15 +1187,15 @@
         </section>
 
 
-        <section
-          id="myBooks"
-          class="section">
+        <!-- MY BOOKS -->
+
+        <section id="myBooks" class="section">
 
           <div class="section-header">
 
             <div>
               <div class="section-kicker">
-                Your Shelf
+                My Shelf
               </div>
 
               <h2 class="section-title">
@@ -1255,22 +1203,17 @@
               </h2>
 
               <p class="section-description">
-                Books you have saved to your reading space.
+                Books you have added to your Reader Reach shelf.
               </p>
             </div>
 
-            <span
-              class="section-count"
-              id="myBooksCount">
+            <span class="section-count" id="myBooksCount">
               —
             </span>
 
           </div>
 
-
-          <div
-            id="myBooksGrid"
-            class="books-grid">
+          <div id="myBooksGrid" class="books-grid">
 
             <div class="loading">
               Loading your books...
@@ -1281,15 +1224,15 @@
         </section>
 
 
-        <section
-          id="reading"
-          class="section">
+        <!-- CURRENTLY READING -->
+
+        <section id="reading" class="section">
 
           <div class="section-header">
 
             <div>
               <div class="section-kicker">
-                In Progress
+                Reading
               </div>
 
               <h2 class="section-title">
@@ -1297,25 +1240,20 @@
               </h2>
 
               <p class="section-description">
-                Return to books you are currently reading.
+                Books you have marked as currently being read.
               </p>
             </div>
 
-            <span
-              class="section-count"
-              id="readingSectionCount">
+            <span class="section-count" id="readingSectionCount">
               —
             </span>
 
           </div>
 
-
-          <div
-            id="readingGrid"
-            class="books-grid">
+          <div id="readingGrid" class="books-grid">
 
             <div class="loading">
-              Loading currently reading books...
+              Loading your current reading list...
             </div>
 
           </div>
@@ -1323,9 +1261,9 @@
         </section>
 
 
-        <section
-          id="completed"
-          class="section">
+        <!-- COMPLETED -->
+
+        <section id="completed" class="section">
 
           <div class="section-header">
 
@@ -1339,22 +1277,17 @@
               </h2>
 
               <p class="section-description">
-                Books you have finished reading.
+                Books you have marked as completed.
               </p>
             </div>
 
-            <span
-              class="section-count"
-              id="completedSectionCount">
+            <span class="section-count" id="completedSectionCount">
               —
             </span>
 
           </div>
 
-
-          <div
-            id="completedGrid"
-            class="books-grid">
+          <div id="completedGrid" class="books-grid">
 
             <div class="loading">
               Loading completed books...
@@ -1365,51 +1298,9 @@
         </section>
 
 
-        <section
-          id="followingAuthors"
-          class="section">
+        <!-- NOTIFICATIONS -->
 
-          <div class="section-header">
-
-            <div>
-              <div class="section-kicker">
-                Your Network
-              </div>
-
-              <h2 class="section-title">
-                Authors You Follow
-              </h2>
-
-              <p class="section-description">
-                Keep up with authors whose books you enjoy.
-              </p>
-            </div>
-
-            <span
-              class="section-count"
-              id="followingSectionCount">
-              —
-            </span>
-
-          </div>
-
-
-          <div
-            id="followingAuthorsGrid"
-            class="author-grid">
-
-            <div class="loading">
-              Loading authors you follow...
-            </div>
-
-          </div>
-
-        </section>
-
-
-        <section
-          id="notifications"
-          class="section">
+        <section id="notifications" class="section">
 
           <div class="section-header">
 
@@ -1423,19 +1314,24 @@
               </h2>
 
               <p class="section-description">
-                Important updates from Reader Reach.
+                Important Reader Reach updates connected to your account.
               </p>
             </div>
 
+            <button class="btn" id="refreshNotifications">
+              Refresh
+            </button>
+
           </div>
 
+          <div class="card">
 
-          <div
-            id="notificationList"
-            class="notification-list">
+            <div id="notificationList" class="notification-list">
 
-            <div class="loading">
-              Loading notifications...
+              <div class="loading">
+                Loading notifications...
+              </div>
+
             </div>
 
           </div>
@@ -1443,106 +1339,96 @@
         </section>
 
 
-        <section
-          id="account"
-          class="section">
+        <!-- ACCOUNT -->
+
+        <section id="account" class="section">
 
           <div class="section-header">
 
             <div>
               <div class="section-kicker">
-                Your Account
+                Account
               </div>
 
               <h2 class="section-title">
-                Account
+                My Account
               </h2>
 
               <p class="section-description">
-                Your Reader Reach account details.
+                Your Reader Reach account information.
               </p>
             </div>
 
           </div>
-
 
           <div class="card">
 
             <div class="account-grid">
 
               <div class="account-item">
-
                 <div class="account-label">
-                  Name
+                  Display Name
                 </div>
 
-                <div
-                  class="account-value"
-                  id="accountName">
+                <div class="account-value" id="accountDisplayName">
                   —
                 </div>
-
               </div>
 
 
               <div class="account-item">
-
                 <div class="account-label">
                   Email
                 </div>
 
-                <div
-                  class="account-value"
-                  id="accountEmail">
+                <div class="account-value" id="accountEmail">
                   —
                 </div>
-
               </div>
 
 
               <div class="account-item">
-
                 <div class="account-label">
-                  Role
+                  Account Role
                 </div>
 
-                <div
-                  class="account-value"
-                  id="accountRole">
-                  —
+                <div class="account-value" id="accountRole">
+                  Reader
                 </div>
-
               </div>
 
 
               <div class="account-item">
-
                 <div class="account-label">
-                  Profile ID
+                  Member Since
                 </div>
 
-                <div
-                  class="account-value"
-                  id="accountProfileId">
+                <div class="account-value" id="accountCreated">
                   —
                 </div>
-
               </div>
 
             </div>
 
 
             <div class="security-note">
-              Your Reader Reach account uses Supabase authentication.
-              Keep your login details private.
+              Your private account information is protected by Supabase
+              authentication and database access policies. Private location
+              information is not displayed on public Reader Reach pages.
             </div>
 
 
             <div class="profile-actions">
 
-              <button
-                class="btn danger"
-                id="signOutAccount">
+              <a class="btn" href="reset-password.html">
+                Reset Password
+              </a>
+
+              <a class="btn" href="contact.html">
+                Contact Reader Reach
+              </a>
+
+              <button class="btn danger" id="accountSignOut">
                 Sign Out
               </button>
 
@@ -1551,6 +1437,7 @@
           </div>
 
         </section>
+
 
       </div>
 
@@ -1591,7 +1478,7 @@
         </a>
 
         <a href="contact.html">
-          Contact
+          Contact Us
         </a>
 
       </div>
@@ -1600,16 +1487,19 @@
 
 
     <div class="footer-bottom">
-      Reader Reach
+      © 2026 Reader Reach. All rights reserved.
     </div>
 
   </footer>
 
 
+  <!-- LIVE CHAT -->
+
   <button
     class="chat-button"
-    id="chatButton">
-    Message Reader Reach
+    id="chatButton"
+    type="button">
+    Live Chat
   </button>
 
 
@@ -1620,12 +1510,14 @@
     <div class="chat-header">
 
       <strong>
-        Message Reader Reach
+        Reader Reach Support
       </strong>
 
       <button
         class="chat-close"
-        id="chatClose">
+        id="chatClose"
+        type="button"
+        aria-label="Close chat">
         ×
       </button>
 
@@ -1635,13 +1527,13 @@
     <div class="chat-body">
 
       <p>
-        Send a message to the Reader Reach team.
+        Need help with your Reader Reach account or reading experience?
+        Contact the Reader Reach support team.
       </p>
 
       <textarea
         id="chatMessage"
-        placeholder="Write your message..."></textarea>
-
+        placeholder="How can we help?"></textarea>
 
       <div class="chat-actions">
 
@@ -1658,10 +1550,7 @@
   </div>
 
 
-  <div
-    id="toast"
-    class="toast">
-  </div>
+  <div id="toast" class="toast"></div>
 
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1671,14 +1560,13 @@
     const SUPABASE_URL =
       'https://bublmnfhyyrefcdkloak.supabase.co';
 
-    const SUPABASE_PUBLISHABLE_KEY =
+    const SUPABASE_KEY =
       'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
-
 
     const supabaseClient =
       window.supabase.createClient(
         SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
+        SUPABASE_KEY
       );
 
 
@@ -1694,58 +1582,16 @@
 
     function escapeHtml(value){
 
-      return String(value ?? '')
+      if(value === null || value === undefined){
+        return '';
+      }
+
+      return String(value)
         .replace(/&/g,'&amp;')
         .replace(/</g,'&lt;')
         .replace(/>/g,'&gt;')
         .replace(/"/g,'&quot;')
         .replace(/'/g,'&#039;');
-
-    }
-
-
-    function formatRelativeDate(dateValue){
-
-      if(!dateValue){
-        return '';
-      }
-
-      const date =
-        new Date(dateValue);
-
-      if(Number.isNaN(date.getTime())){
-        return '';
-      }
-
-      const diff =
-        Date.now() - date.getTime();
-
-      const minutes =
-        Math.floor(diff / 60000);
-
-      if(minutes < 1){
-        return 'Just now';
-      }
-
-      if(minutes < 60){
-        return minutes + ' min ago';
-      }
-
-      const hours =
-        Math.floor(minutes / 60);
-
-      if(hours < 24){
-        return hours + ' hr ago';
-      }
-
-      const days =
-        Math.floor(hours / 24);
-
-      if(days < 7){
-        return days + ' day' + (days === 1 ? '' : 's') + ' ago';
-      }
-
-      return date.toLocaleDateString();
 
     }
 
@@ -1760,17 +1606,279 @@
 
       toast.classList.add('show');
 
-      clearTimeout(
-        window.__readerToastTimer
+      setTimeout(() => {
+        toast.classList.remove('show');
+      },3500);
+
+    }
+
+
+    function formatDate(value){
+
+      if(!value){
+        return '—';
+      }
+
+      const date =
+        new Date(value);
+
+      if(Number.isNaN(date.getTime())){
+        return '—';
+      }
+
+      return date.toLocaleDateString(
+        undefined,
+        {
+          year:'numeric',
+          month:'short',
+          day:'numeric'
+        }
       );
 
-      window.__readerToastTimer =
-        setTimeout(
-          () => {
-            toast.classList.remove('show');
-          },
-          3200
+    }
+
+
+    function formatRelativeDate(value){
+
+      if(!value){
+        return '';
+      }
+
+      const date =
+        new Date(value);
+
+      if(Number.isNaN(date.getTime())){
+        return '';
+      }
+
+      const now =
+        new Date();
+
+      const difference =
+        now.getTime() -
+        date.getTime();
+
+      const minutes =
+        Math.floor(
+          difference /
+          60000
         );
+
+      if(minutes < 1){
+        return 'Just now';
+      }
+
+      if(minutes < 60){
+        return minutes +
+          ' minute' +
+          (minutes === 1 ? '' : 's') +
+          ' ago';
+      }
+
+      const hours =
+        Math.floor(minutes / 60);
+
+      if(hours < 24){
+        return hours +
+          ' hour' +
+          (hours === 1 ? '' : 's') +
+          ' ago';
+      }
+
+      const days =
+        Math.floor(hours / 24);
+
+      if(days < 7){
+        return days +
+          ' day' +
+          (days === 1 ? '' : 's') +
+          ' ago';
+      }
+
+      return formatDate(value);
+
+    }
+
+
+    function getBookCover(book){
+
+      return (
+        book.cover_url ||
+        book.cover_image_url ||
+        book.cover ||
+        ''
+      );
+
+    }
+
+
+    function getBookAuthor(book){
+
+      return (
+        book.author_name ||
+        book.author ||
+        'Reader Reach Author'
+      );
+
+    }
+
+
+    function renderBookCard(book, options = {}){
+
+      const cover =
+        getBookCover(book);
+
+      const author =
+        getBookAuthor(book);
+
+      const title =
+        book.title ||
+        'Untitled Book';
+
+      const description =
+        book.description ||
+        'No book description is available yet.';
+
+      const status =
+        options.status ||
+        book.reading_status ||
+        '';
+
+      const bookId =
+        book.id;
+
+      return `
+
+        <article class="book-card">
+
+          <div class="book-cover">
+
+            ${
+              cover
+              ?
+
+              `<img
+                src="${escapeHtml(cover)}"
+                alt="${escapeHtml(title)} book cover"
+                loading="lazy"
+                onerror="this.parentElement.innerHTML='<div class=&quot;book-cover-placeholder&quot;>Book cover unavailable</div>';">`
+
+              :
+
+              `<div class="book-cover-placeholder">
+                Book cover unavailable
+              </div>`
+            }
+
+          </div>
+
+
+          <div class="book-body">
+
+            ${
+              status
+              ?
+
+              `<span class="book-status">
+                ${escapeHtml(status)}
+              </span>`
+
+              :
+
+              ''
+            }
+
+
+            <h3 class="book-title">
+              ${escapeHtml(title)}
+            </h3>
+
+
+            <div class="book-author">
+              ${escapeHtml(author)}
+            </div>
+
+
+            <p class="book-description">
+              ${escapeHtml(description)}
+            </p>
+
+
+            <div class="book-actions">
+
+              <a
+                class="btn primary"
+                href="book.html?id=${encodeURIComponent(bookId)}">
+                View Book
+              </a>
+
+              ${
+                book.author_id
+                ?
+
+                `<a
+                  class="btn"
+                  href="author-profile.html?id=${encodeURIComponent(book.author_id)}">
+                  Author
+                </a>`
+
+                :
+
+                ''
+              }
+
+            </div>
+
+          </div>
+
+        </article>
+
+      `;
+
+    }
+
+
+    function renderBooks(containerId, books, emptyTitle, emptyMessage){
+
+      const container =
+        document.getElementById(containerId);
+
+      if(!container){
+        return;
+      }
+
+      if(!books || books.length === 0){
+
+        container.innerHTML = `
+
+          <div class="empty" style="grid-column:1/-1;">
+
+            <strong>
+              ${escapeHtml(emptyTitle)}
+            </strong>
+
+            <div>
+              ${escapeHtml(emptyMessage)}
+            </div>
+
+            <a
+              class="btn primary"
+              href="index.html#featured">
+              Explore Books
+            </a>
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+      container.innerHTML =
+        books.map(book =>
+          renderBookCard(book)
+        ).join('');
 
     }
 
@@ -1793,27 +1901,24 @@
         );
 
         showAccessError(
-          'Your Reader Reach session could not be loaded.'
+          'We could not verify your Reader Reach session.'
         );
 
         return false;
 
       }
 
-      const session =
-        data?.session;
-
-      if(!session){
+      if(!data.session){
 
         window.location.href =
-          'auth.html?mode=signin';
+          'auth.html?mode=reader';
 
         return false;
 
       }
 
       currentUser =
-        session.user;
+        data.session.user;
 
       return true;
 
@@ -1830,10 +1935,9 @@
           .from('profiles')
           .select(`
             id,
-            role,
             display_name,
-            created_at,
-            updated_at
+            role,
+            created_at
           `)
           .eq('id',currentUser.id)
           .maybeSingle();
@@ -1841,12 +1945,12 @@
       if(error){
 
         console.error(
-          'Profile error:',
+          'Profile loading error:',
           error
         );
 
         showAccessError(
-          'Your Reader Reach profile could not be loaded.'
+          'Your account could not be loaded.'
         );
 
         return false;
@@ -1854,25 +1958,30 @@
       }
 
       currentProfile =
-        data;
+        data || {};
 
-      if(!currentProfile){
+      if(
+        currentProfile.role &&
+        currentProfile.role !== 'reader'
+      ){
 
-        showAccessError(
-          'No Reader Reach profile was found for this account.'
-        );
+        if(currentProfile.role === 'author'){
+          window.location.href =
+            'author-dashboard.html';
+          return false;
+        }
 
-        return false;
+        if(currentProfile.role === 'moderator'){
+          window.location.href =
+            'moderator-dashboard.html';
+          return false;
+        }
 
-      }
-
-      if(currentProfile.role !== 'reader'){
-
-        showAccessError(
-          'This dashboard is for Reader accounts.'
-        );
-
-        return false;
+        if(currentProfile.role === 'admin'){
+          window.location.href =
+            'admin.html';
+          return false;
+        }
 
       }
 
@@ -1883,53 +1992,48 @@
 
     async function loadReader(){
 
-      /*
-        The existing Reader Reach project may have a readers
-        table. We attempt to use it if available.
-
-        If it is unavailable, the authenticated profile is
-        still sufficient for this dashboard.
-      */
-
       const {
         data,
         error
       } =
         await supabaseClient
           .from('readers')
-          .select('*')
+          .select(`
+            id,
+            profile_id,
+            created_at,
+            updated_at
+          `)
           .eq('profile_id',currentUser.id)
           .maybeSingle();
 
       if(error){
 
-        console.warn(
-          'Reader record could not be loaded:',
+        console.error(
+          'Reader record error:',
           error
         );
 
-        currentReader = {
-          id:currentUser.id,
-          profile_id:currentUser.id
-        };
+        showAccessError(
+          'Your Reader account record could not be loaded.'
+        );
 
-        return true;
-
-      }
-
-      if(data){
-
-        currentReader =
-          data;
-
-        return true;
+        return false;
 
       }
 
-      currentReader = {
-        id:currentUser.id,
-        profile_id:currentUser.id
-      };
+      currentReader =
+        data || null;
+
+      if(!currentReader){
+
+        showAccessError(
+          'A Reader account record was not found for this account.'
+        );
+
+        return false;
+
+      }
 
       return true;
 
@@ -1938,7 +2042,7 @@
 
     function populateAccount(){
 
-      const name =
+      const displayName =
         currentProfile?.display_name ||
         currentUser?.user_metadata?.display_name ||
         'Reader';
@@ -1946,12 +2050,12 @@
       document.getElementById(
         'headerReaderName'
       ).textContent =
-        name;
+        displayName;
 
       document.getElementById(
-        'accountName'
+        'accountDisplayName'
       ).textContent =
-        name;
+        displayName;
 
       document.getElementById(
         'accountEmail'
@@ -1962,200 +2066,16 @@
       document.getElementById(
         'accountRole'
       ).textContent =
-        currentProfile?.role ||
-        'reader';
+        'Reader';
 
       document.getElementById(
-        'accountProfileId'
+        'accountCreated'
       ).textContent =
-        currentUser?.id ||
-        '—';
-
-    }
-
-
-    function renderBooks(
-      containerId,
-      books,
-      emptyTitle,
-      emptyMessage
-    ){
-
-      const container =
-        document.getElementById(
-          containerId
+        formatDate(
+          currentProfile?.created_at ||
+          currentReader?.created_at ||
+          currentUser?.created_at
         );
-
-      if(!container){
-        return;
-      }
-
-      if(!books || books.length === 0){
-
-        container.innerHTML = `
-
-          <div
-            class="empty"
-            style="grid-column:1/-1;">
-
-            <strong>
-              ${escapeHtml(emptyTitle)}
-            </strong>
-
-            ${escapeHtml(emptyMessage)}
-
-          </div>
-
-        `;
-
-        return;
-
-      }
-
-
-      container.innerHTML =
-        books.map(book => {
-
-          const cover =
-            book.cover_url;
-
-          const title =
-            book.title ||
-            'Untitled Book';
-
-          const author =
-            book.author_name ||
-            'Reader Reach Author';
-
-          const description =
-            book.description ||
-            'No book description is available yet.';
-
-          const status =
-            book.reading_status ||
-            book.status ||
-            '';
-
-          const bookLink =
-            book.book_link;
-
-          return `
-
-            <article class="book-card">
-
-              <div class="book-cover">
-
-                ${
-                  cover
-                  ? `
-                    <img
-                      src="${escapeHtml(cover)}"
-                      alt="${escapeHtml(title)} cover">
-                  `
-                  : `
-                    <div class="book-cover-placeholder">
-                      ${escapeHtml(title)}
-                    </div>
-                  `
-                }
-
-              </div>
-
-
-              <div class="book-body">
-
-                ${
-                  status
-                  ? `
-                    <span class="book-status">
-                      ${escapeHtml(
-                        displayReadingStatus(status)
-                      )}
-                    </span>
-                  `
-                  : ''
-                }
-
-
-                <h3 class="book-title">
-                  ${escapeHtml(title)}
-                </h3>
-
-
-                <div class="book-author">
-                  By ${escapeHtml(author)}
-                </div>
-
-
-                <div class="book-description">
-                  ${escapeHtml(description)}
-                </div>
-
-
-                <div class="book-actions">
-
-                  ${
-                    bookLink
-                    ? `
-                      <a
-                        class="btn primary"
-                        href="${escapeHtml(bookLink)}"
-                        target="_blank"
-                        rel="noopener">
-                        View Book
-                      </a>
-                    `
-                    : ''
-                  }
-
-                  ${
-                    book.author_id
-                    ? `
-                      <a
-                        class="btn"
-                        href="author-profile.html?id=${encodeURIComponent(book.author_id)}">
-                        Author
-                      </a>
-                    `
-                    : ''
-                  }
-
-                </div>
-
-              </div>
-
-            </article>
-
-          `;
-
-        }).join('');
-
-    }
-
-
-    function displayReadingStatus(status){
-
-      const value =
-        String(status || '')
-          .trim()
-          .toLowerCase();
-
-      const labels = {
-        saved:'Saved',
-        reading:'Currently Reading',
-        currently_reading:'Currently Reading',
-        in_progress:'Currently Reading',
-        current:'Currently Reading',
-        completed:'Completed',
-        complete:'Completed',
-        finished:'Completed'
-      };
-
-      return (
-        labels[value] ||
-        String(status || '')
-          .replace(/_/g,' ')
-      );
 
     }
 
@@ -2170,15 +2090,15 @@
       container.innerHTML =
         '<div class="loading">Loading featured books...</div>';
 
-
       const {
         data:featuredRows,
         error:featuredError
       } =
         await supabaseClient
           .from('homepage_featured_books')
-          .select('book_id');
-
+          .select(`
+            book_id
+          `);
 
       if(featuredError){
 
@@ -2188,31 +2108,20 @@
         );
 
         container.innerHTML = `
-
-          <div
-            class="empty"
-            style="grid-column:1/-1;">
-
-            <strong>
-              Featured books unavailable
-            </strong>
-
+          <div class="empty" style="grid-column:1/-1;">
+            <strong>Featured books unavailable</strong>
             Reader Reach could not load the current featured selection.
-
           </div>
-
         `;
 
         return;
 
       }
 
-
       const ids =
         (featuredRows || [])
           .map(row => row.book_id)
           .filter(Boolean);
-
 
       if(ids.length === 0){
 
@@ -2222,7 +2131,7 @@
           'featuredBooksGrid',
           [],
           'No featured books yet',
-          'Featured books will appear here when they are published.'
+          'There are no books currently selected for the Reader Reach homepage.'
         );
 
         updateCount(
@@ -2233,7 +2142,6 @@
         return;
 
       }
-
 
       const {
         data:books,
@@ -2248,14 +2156,12 @@
             description,
             genre_topic,
             availability,
-            book_link,
             cover_url,
             status,
             created_at
           `)
           .in('id',ids)
           .eq('status','approved');
-
 
       if(booksError){
 
@@ -2275,7 +2181,6 @@
 
       }
 
-
       featuredBooks =
         books || [];
 
@@ -2283,14 +2188,12 @@
         featuredBooks
       );
 
-
       renderBooks(
         'featuredBooksGrid',
         featuredBooks,
         'No featured books yet',
-        'Featured books will appear here when they are published.'
+        'There are no books currently selected for the Reader Reach homepage.'
       );
-
 
       updateCount(
         'featuredCount',
@@ -2309,11 +2212,9 @@
             .filter(Boolean)
         )];
 
-
       if(authorIds.length === 0){
         return books;
       }
-
 
       const {
         data:authors,
@@ -2327,7 +2228,6 @@
           `)
           .in('id',authorIds);
 
-
       if(error){
 
         console.warn(
@@ -2339,7 +2239,6 @@
 
       }
 
-
       const map =
         new Map(
           (authors || []).map(author => [
@@ -2348,7 +2247,6 @@
           ])
         );
 
-
       books.forEach(book => {
 
         book.author_name =
@@ -2356,7 +2254,6 @@
           'Reader Reach Author';
 
       });
-
 
       return books;
 
@@ -2373,19 +2270,6 @@
       container.innerHTML =
         '<div class="loading">Loading your books...</div>';
 
-
-      /*
-        IMPORTANT:
-
-        reader_books does NOT have a reading_status column.
-
-        We therefore read only the columns that are actually
-        part of the existing reader_books structure.
-
-        This function is READ ONLY.
-        It does not insert or update reader_books.
-      */
-
       const {
         data:readerBooks,
         error
@@ -2397,7 +2281,6 @@
             reader_id,
             book_id,
             status,
-            progress,
             created_at,
             updated_at
           `)
@@ -2405,7 +2288,6 @@
           .order('created_at',{
             ascending:false
           });
-
 
       if(error){
 
@@ -2416,51 +2298,22 @@
 
         container.innerHTML = `
 
-          <div
-            class="empty"
-            style="grid-column:1/-1;">
+          <div class="empty" style="grid-column:1/-1;">
 
             <strong>
               Your shelf could not be loaded
             </strong>
 
-            ${escapeHtml(
-              error.message ||
-              'Reader Reach could not load your saved books.'
-            )}
+            Reader Reach could not load your saved books.
+            Please try refreshing the page.
 
           </div>
 
         `;
 
-        updateCount(
-          'myBooksCount',
-          0
-        );
-
-        updateCount(
-          'savedCount',
-          0
-        );
-
-        renderBooks(
-          'readingGrid',
-          [],
-          'Currently reading could not be loaded',
-          'There are no currently reading books to display.'
-        );
-
-        renderBooks(
-          'completedGrid',
-          [],
-          'Completed books could not be loaded',
-          'There are no completed books to display.'
-        );
-
         return;
 
       }
-
 
       if(!readerBooks || readerBooks.length === 0){
 
@@ -2493,16 +2346,6 @@
           0
         );
 
-        updateCount(
-          'readingSectionCount',
-          0
-        );
-
-        updateCount(
-          'completedSectionCount',
-          0
-        );
-
         renderBooks(
           'readingGrid',
           [],
@@ -2521,12 +2364,10 @@
 
       }
 
-
       const bookIds =
         readerBooks
           .map(row => row.book_id)
           .filter(Boolean);
-
 
       const {
         data:books,
@@ -2541,14 +2382,12 @@
             description,
             genre_topic,
             availability,
-            book_link,
             cover_url,
             status,
             created_at
           `)
           .in('id',bookIds)
           .eq('status','approved');
-
 
       if(bookError){
 
@@ -2557,29 +2396,9 @@
           bookError
         );
 
-        container.innerHTML = `
-
-          <div
-            class="empty"
-            style="grid-column:1/-1;">
-
-            <strong>
-              Your shelf could not be loaded
-            </strong>
-
-            ${escapeHtml(
-              bookError.message ||
-              'The saved book information could not be loaded.'
-            )}
-
-          </div>
-
-        `;
-
         return;
 
       }
-
 
       const bookMap =
         new Map(
@@ -2588,7 +2407,6 @@
             book
           ])
         );
-
 
       allMyBooks =
         readerBooks
@@ -2603,36 +2421,20 @@
 
             return {
               ...book,
-
-              reader_book_id:
-                row.id,
-
-              /*
-                Use the existing reader_books.status column.
-                There is no reader_books.reading_status column.
-              */
-              reading_status:
-                row.status || '',
-
-              reader_progress:
-                row.progress,
-
+              reader_book_id:row.id,
+              reading_status:row.status || '',
               reader_created_at:
                 row.created_at,
-
               reader_updated_at:
                 row.updated_at
-
             };
 
           })
           .filter(Boolean);
 
-
       await attachAuthorNames(
         allMyBooks
       );
-
 
       renderBooks(
         'myBooksGrid',
@@ -2641,12 +2443,10 @@
         'When you add an approved book to your Reader shelf, it will appear here.'
       );
 
-
       updateCount(
         'myBooksCount',
         allMyBooks.length
       );
-
 
       updateCount(
         'savedCount',
@@ -2658,7 +2458,6 @@
         allMyBooks.filter(book =>
           isReadingBook(book)
         );
-
 
       const completed =
         allMyBooks.filter(book =>
@@ -2676,7 +2475,6 @@
         'Books you mark as currently reading will appear here.'
       );
 
-
       renderBooks(
         'completedGrid',
         completed.map(book => ({
@@ -2693,18 +2491,15 @@
         currentlyReading.length
       );
 
-
       updateCount(
         'completedCount',
         completed.length
       );
 
-
       updateCount(
         'readingSectionCount',
         currentlyReading.length
       );
-
 
       updateCount(
         'completedSectionCount',
@@ -2720,10 +2515,7 @@
         String(
           book.reading_status ||
           ''
-        )
-        .trim()
-        .toLowerCase();
-
+        ).toLowerCase();
 
       return (
         status === 'reading' ||
@@ -2741,329 +2533,13 @@
         String(
           book.reading_status ||
           ''
-        )
-        .trim()
-        .toLowerCase();
-
+        ).toLowerCase();
 
       return (
         status === 'completed' ||
         status === 'complete' ||
         status === 'finished'
       );
-
-    }
-
-
-    async function loadFollowingAuthors(){
-
-      const container =
-        document.getElementById(
-          'followingAuthorsGrid'
-        );
-
-      container.innerHTML =
-        '<div class="loading">Loading authors you follow...</div>';
-
-
-      const {
-        data:follows,
-        error:followError
-      } =
-        await supabaseClient
-          .from('author_follows')
-          .select(`
-            id,
-            author_id,
-            created_at
-          `)
-          .eq(
-            'follower_profile_id',
-            currentUser.id
-          )
-          .order('created_at',{
-            ascending:false
-          });
-
-
-      if(followError){
-
-        console.error(
-          'Following authors error:',
-          followError
-        );
-
-        container.innerHTML = `
-
-          <div
-            class="empty"
-            style="grid-column:1/-1;">
-
-            <strong>
-              Following authors could not be loaded
-            </strong>
-
-            ${escapeHtml(
-              followError.message ||
-              'Reader Reach could not load your followed authors.'
-            )}
-
-          </div>
-
-        `;
-
-        updateCount(
-          'followingCount',
-          0
-        );
-
-        updateCount(
-          'followingSectionCount',
-          0
-        );
-
-        return;
-
-      }
-
-
-      const authorIds =
-        (follows || [])
-          .map(item => item.author_id)
-          .filter(Boolean);
-
-
-      if(authorIds.length === 0){
-
-        renderFollowingAuthors([]);
-
-        return;
-
-      }
-
-
-      const {
-        data:authors,
-        error:authorError
-      } =
-        await supabaseClient
-          .from('authors')
-          .select(`
-            id,
-            profile_id,
-            author_name,
-            bio,
-            website_url,
-            status
-          `)
-          .in('id',authorIds)
-          .eq('status','approved');
-
-
-      if(authorError){
-
-        console.error(
-          'Followed author details error:',
-          authorError
-        );
-
-        container.innerHTML = `
-
-          <div
-            class="empty"
-            style="grid-column:1/-1;">
-
-            <strong>
-              Authors could not be loaded
-            </strong>
-
-            ${escapeHtml(
-              authorError.message ||
-              'Reader Reach could not load the author details.'
-            )}
-
-          </div>
-
-        `;
-
-        return;
-
-      }
-
-
-      const followMap =
-        new Map(
-          (follows || []).map(item => [
-            item.author_id,
-            item
-          ])
-        );
-
-
-      const rows =
-        (authors || []).map(author => ({
-          ...author,
-          follow_id:
-            followMap.get(author.id)?.id ||
-            null
-        }));
-
-
-      renderFollowingAuthors(rows);
-
-    }
-
-
-    function renderFollowingAuthors(authors){
-
-      const container =
-        document.getElementById(
-          'followingAuthorsGrid'
-        );
-
-
-      updateCount(
-        'followingCount',
-        authors.length
-      );
-
-
-      updateCount(
-        'followingSectionCount',
-        authors.length
-      );
-
-
-      if(authors.length === 0){
-
-        container.innerHTML = `
-
-          <div
-            class="empty"
-            style="grid-column:1/-1;">
-
-            <strong>
-              You are not following any authors yet
-            </strong>
-
-            Discover authors on Reader Reach and follow
-            the ones whose work you enjoy.
-
-            <br>
-
-            <a
-              class="btn primary"
-              href="authors.html">
-              Explore Authors
-            </a>
-
-          </div>
-
-        `;
-
-        return;
-
-      }
-
-
-      container.innerHTML =
-        authors.map(author => {
-
-          const name =
-            author.author_name ||
-            'Reader Reach Author';
-
-          const bio =
-            author.bio ||
-            'This author has not added a biography yet.';
-
-
-          return `
-
-            <article class="author-card">
-
-              <h3>
-                ${escapeHtml(name)}
-              </h3>
-
-              <div class="author-meta">
-                Reader Reach Author
-              </div>
-
-              <p>
-                ${escapeHtml(bio)}
-              </p>
-
-              <div class="author-actions">
-
-                <a
-                  class="btn primary"
-                  href="author-profile.html?id=${encodeURIComponent(author.id)}">
-                  View Profile
-                </a>
-
-                <button
-                  class="btn danger"
-                  onclick="unfollowFromDashboard('${escapeHtml(author.id)}')">
-                  Unfollow
-                </button>
-
-              </div>
-
-            </article>
-
-          `;
-
-        }).join('');
-
-    }
-
-
-    async function unfollowFromDashboard(authorId){
-
-      if(!currentUser || !authorId){
-        return;
-      }
-
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .from('author_follows')
-          .delete()
-          .eq(
-            'follower_profile_id',
-            currentUser.id
-          )
-          .eq(
-            'author_id',
-            authorId
-          );
-
-
-      if(error){
-
-        console.error(
-          'Unfollow error:',
-          error
-        );
-
-        showToast(
-          'Could not unfollow this author.'
-        );
-
-        return;
-
-      }
-
-
-      showToast(
-        'Author unfollowed.'
-      );
-
-
-      await loadFollowingAuthors();
 
     }
 
@@ -3077,7 +2553,6 @@
 
       list.innerHTML =
         '<div class="loading">Loading notifications...</div>';
-
 
       const {
         data,
@@ -3095,15 +2570,11 @@
             is_read,
             created_at
           `)
-          .eq(
-            'profile_id',
-            currentUser.id
-          )
+          .eq('profile_id',currentUser.id)
           .order('created_at',{
             ascending:false
           })
           .limit(50);
-
 
       if(error){
 
@@ -3130,16 +2601,13 @@
 
       }
 
-
       const notifications =
         data || [];
-
 
       const unread =
         notifications.filter(
           item => !item.is_read
         ).length;
-
 
       updateCount(
         'notificationCount',
@@ -3154,7 +2622,7 @@
           <div class="empty">
 
             <strong>
-              No notifications
+              No notifications yet
             </strong>
 
             Important Reader Reach account and book updates
@@ -3218,10 +2686,8 @@
         document.getElementById(id);
 
       if(element){
-
         element.textContent =
           String(value);
-
       }
 
     }
@@ -3252,7 +2718,6 @@
           .auth
           .signOut();
 
-
       if(error){
 
         console.error(
@@ -3268,9 +2733,37 @@
 
       }
 
-
       window.location.href =
         'auth.html?mode=signin';
+
+    }
+
+
+    async function markNotificationsRead(){
+
+      const {
+        error
+      } =
+        await supabaseClient
+          .from('notifications')
+          .update({
+            is_read:true
+          })
+          .eq('profile_id',currentUser.id)
+          .eq('is_read',false);
+
+      if(error){
+
+        console.warn(
+          'Could not mark notifications read:',
+          error
+        );
+
+        return;
+
+      }
+
+      await loadNotifications();
 
     }
 
@@ -3281,7 +2774,6 @@
         document.querySelectorAll(
           '.sidebar-nav button'
         );
-
 
       buttons.forEach(button => {
 
@@ -3295,21 +2787,17 @@
               )
             );
 
-
             button.classList.add(
               'active'
             );
 
-
             const targetId =
               button.dataset.target;
-
 
             const target =
               document.getElementById(
                 targetId
               );
-
 
             if(target){
 
@@ -3345,7 +2833,6 @@
           'chatClose'
         );
 
-
       button.addEventListener(
         'click',
         () => {
@@ -3356,7 +2843,6 @@
 
         }
       );
-
 
       close.addEventListener(
         'click',
@@ -3371,9 +2857,7 @@
 
 
       document
-        .getElementById(
-          'sendChatMessage'
-        )
+        .getElementById('sendChatMessage')
         .addEventListener(
           'click',
           sendChatMessage
@@ -3389,10 +2873,8 @@
           'chatMessage'
         );
 
-
       const message =
         input.value.trim();
-
 
       if(!message){
 
@@ -3404,12 +2886,10 @@
 
       }
 
-
       const sendButton =
         document.getElementById(
           'sendChatMessage'
         );
-
 
       sendButton.disabled =
         true;
@@ -3432,27 +2912,22 @@
                 visitor_name:
                   currentProfile?.display_name ||
                   'Reader',
-
                 visitor_email:
                   currentUser?.email ||
                   null,
-
                 subject:
                   'Reader Dashboard Support',
-
                 status:
                   'open'
               })
               .select('id')
               .single();
 
-
           if(conversationError){
 
             throw conversationError;
 
           }
-
 
           chatConversationId =
             conversation.id;
@@ -3468,14 +2943,11 @@
             .insert({
               conversation_id:
                 chatConversationId,
-
               sender_type:
                 'reader',
-
               message:
                 message
             });
-
 
         if(error){
 
@@ -3483,15 +2955,12 @@
 
         }
 
-
         input.value =
           '';
-
 
         showToast(
           'Your message was sent to Reader Reach support.'
         );
-
 
       }catch(error){
 
@@ -3503,7 +2972,6 @@
         showToast(
           'Your message could not be sent right now. Please use Contact Us.'
         );
-
 
       }finally{
 
@@ -3523,7 +2991,6 @@
       if(!currentUser){
         return;
       }
-
 
       supabaseClient
         .channel(
@@ -3557,13 +3024,8 @@
 
     async function initialize(){
 
-      setupNavigation();
-      setupChat();
-
-
       const sessionLoaded =
         await loadSession();
-
 
       if(!sessionLoaded){
         return;
@@ -3573,7 +3035,6 @@
       const profileLoaded =
         await loadProfile();
 
-
       if(!profileLoaded){
         return;
       }
@@ -3581,7 +3042,6 @@
 
       const readerLoaded =
         await loadReader();
-
 
       if(!readerLoaded){
         return;
@@ -3596,10 +3056,8 @@
           'pageMessage'
         );
 
-
       pageMessage.className =
         'message-box success';
-
 
       pageMessage.textContent =
         'Your Reader Reach dashboard is ready.';
@@ -3608,7 +3066,6 @@
       await Promise.all([
         loadFeaturedBooks(),
         loadMyBooks(),
-        loadFollowingAuthors(),
         loadNotifications()
       ]);
 
@@ -3635,7 +3092,7 @@
 
 
     document
-      .getElementById('signOutSidebar')
+      .getElementById('signOutSide')
       .addEventListener(
         'click',
         signOut
@@ -3643,12 +3100,32 @@
 
 
     document
-      .getElementById('signOutAccount')
+      .getElementById('accountSignOut')
       .addEventListener(
         'click',
         signOut
       );
 
+
+    document
+      .getElementById('refreshNotifications')
+      .addEventListener(
+        'click',
+        async () => {
+
+          await loadNotifications();
+
+          showToast(
+            'Notifications refreshed.'
+          );
+
+        }
+      );
+
+
+    setupNavigation();
+
+    setupChat();
 
     initialize();
 

@@ -339,7 +339,7 @@
 
     .stats{
       display:grid;
-      grid-template-columns:repeat(4,1fr);
+      grid-template-columns:repeat(5,1fr);
       gap:13px;
       margin-bottom:25px;
     }
@@ -392,70 +392,6 @@
       box-shadow:0 8px 24px rgba(59,36,27,.05);
       display:flex;
       flex-direction:column;
-    }
-
-    .following-author-card{
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:18px;
-      box-shadow:0 8px 24px rgba(59,36,27,.05);
-      display:flex;
-      flex-direction:column;
-    }
-
-    .following-author-top{
-      display:flex;
-      align-items:center;
-      gap:13px;
-      margin-bottom:13px;
-    }
-
-    .following-author-avatar{
-      width:58px;
-      height:58px;
-      flex:0 0 58px;
-      border-radius:50%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:var(--brown);
-      color:#fff;
-      font-weight:700;
-      font-size:17px;
-    }
-
-    .following-author-name{
-      color:var(--brown);
-      font-size:18px;
-      line-height:1.2;
-    }
-
-    .following-author-label{
-      color:#92715a;
-      font-size:11px;
-      margin-top:3px;
-    }
-
-    .following-author-bio{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.55;
-      display:-webkit-box;
-      -webkit-line-clamp:3;
-      -webkit-box-orient:vertical;
-      overflow:hidden;
-      margin-bottom:15px;
-    }
-
-    .following-author-actions{
-      display:flex;
-      gap:7px;
-      margin-top:auto;
-    }
-
-    .following-author-actions .btn{
-      flex:1;
     }
 
     .book-cover{
@@ -1060,7 +996,7 @@
             My Books
           </button>
 
-          <button data-target="following">
+          <button data-target="followingAuthors">
             Following Authors
           </button>
 
@@ -1309,7 +1245,7 @@
 
         <!-- FOLLOWING AUTHORS -->
 
-        <section id="following" class="section">
+        <section id="followingAuthors" class="section">
 
           <div class="section-header">
 
@@ -1319,11 +1255,11 @@
               </div>
 
               <h2 class="section-title">
-                Following Authors
+                Authors You Follow
               </h2>
 
               <p class="section-description">
-                Authors you follow and the latest books from their profiles.
+                Keep up with authors whose books you enjoy.
               </p>
             </div>
 
@@ -2671,58 +2607,6 @@
     }
 
 
-    function getAuthorInitials(name){
-
-      if(!name){
-        return '?';
-      }
-
-      const words =
-        String(name)
-          .trim()
-          .split(/\s+/)
-          .filter(Boolean);
-
-      if(words.length === 1){
-        return words[0]
-          .substring(0,2)
-          .toUpperCase();
-      }
-
-      return (
-        words[0].charAt(0) +
-        words[words.length - 1].charAt(0)
-      ).toUpperCase();
-
-    }
-
-
-    function shortenFollowingBio(
-      bio,
-      maxLength = 150
-    ){
-
-      const text =
-        String(bio || '').trim();
-
-      if(!text){
-        return 'Discover this author on Reader Reach.';
-      }
-
-      if(text.length <= maxLength){
-        return text;
-      }
-
-      return (
-        text
-          .substring(0,maxLength - 3)
-          .trimEnd() +
-        '...'
-      );
-
-    }
-
-
     async function loadFollowingAuthors(){
 
       const container =
@@ -2730,178 +2614,149 @@
           'followingAuthorsGrid'
         );
 
-      if(!container || !currentUser){
+      if(!container){
+        console.error(
+          'followingAuthorsGrid element not found.'
+        );
         return;
       }
 
       container.innerHTML =
         '<div class="loading">Loading authors you follow...</div>';
 
+      try{
 
-      const {
-        data:followRows,
-        error:followError
-      } =
-        await supabaseClient
+        if(!currentUser){
+
+          container.innerHTML = `
+            <div class="empty" style="grid-column:1/-1;">
+              <strong>Reader session not found</strong>
+              Please sign in again.
+            </div>
+          `;
+
+          return;
+        }
+
+
+        const {
+          data: follows,
+          error: followsError
+        } = await supabaseClient
           .from('author_follows')
           .select(`
             id,
             author_id,
             created_at
           `)
-          .eq(
-            'follower_profile_id',
-            currentUser.id
-          )
-          .order(
-            'created_at',
-            {
-              ascending:false
-            }
+          .eq('follower_profile_id',currentUser.id)
+          .order('created_at',{
+            ascending:false
+          });
+
+
+        if(followsError){
+
+          console.error(
+            'Following authors error:',
+            followsError
           );
 
+          container.innerHTML = `
+            <div class="empty" style="grid-column:1/-1;">
+              <strong>Could not load followed authors</strong>
+              <div>${escapeHtml(followsError.message)}</div>
+            </div>
+          `;
 
-      if(followError){
-
-        console.error(
-          'Following authors error:',
-          followError
-        );
-
-        container.innerHTML = `
-
-          <div
-            class="empty"
-            style="grid-column:1/-1;"
-          >
-
-            <strong>
-              Following information unavailable
-            </strong>
-
-            Reader Reach could not load the authors
-            you follow right now.
-
-          </div>
-
-        `;
-
-        updateCount(
-          'followingCount',
-          0
-        );
-
-        updateCount(
-          'followingSectionCount',
-          0
-        );
-
-        return;
-
-      }
+          updateCount('followingCount',0);
+          updateCount('followingSectionCount',0);
+          return;
+        }
 
 
-      const authorIds =
-        (followRows || [])
-          .map(row => row.author_id)
-          .filter(Boolean);
+        if(!follows || follows.length === 0){
+
+          container.innerHTML = `
+            <div class="empty" style="grid-column:1/-1;">
+              <strong>You are not following any authors yet.</strong>
+              <div>
+                Explore Reader Reach authors and follow the ones
+                whose books you want to keep up with.
+              </div>
+              <a class="btn primary" href="authors.html">
+                Explore Authors
+              </a>
+            </div>
+          `;
+
+          updateCount('followingCount',0);
+          updateCount('followingSectionCount',0);
+          return;
+        }
 
 
-      updateCount(
-        'followingCount',
-        authorIds.length
-      );
-
-      updateCount(
-        'followingSectionCount',
-        authorIds.length
-      );
+        const authorIds = [
+          ...new Set(
+            follows
+              .map(row => row.author_id)
+              .filter(Boolean)
+          )
+        ];
 
 
-      if(authorIds.length === 0){
+        if(authorIds.length === 0){
 
-        container.innerHTML = `
+          container.innerHTML = `
+            <div class="empty" style="grid-column:1/-1;">
+              <strong>No followed authors found</strong>
+            </div>
+          `;
 
-          <div
-            class="empty"
-            style="grid-column:1/-1;"
-          >
-
-            <strong>
-              You are not following any authors yet
-            </strong>
-
-            Discover authors and follow the ones
-            whose work you want to keep up with.
-
-            <a
-              class="btn primary"
-              href="authors.html">
-              Explore Authors
-            </a>
-
-          </div>
-
-        `;
-
-        return;
-
-      }
+          updateCount('followingCount',0);
+          updateCount('followingSectionCount',0);
+          return;
+        }
 
 
-      const {
-        data:authors,
-        error:authorError
-      } =
-        await supabaseClient
+        const {
+          data: authors,
+          error: authorsError
+        } = await supabaseClient
           .from('authors')
           .select(`
             id,
+            profile_id,
             author_name,
             bio,
+            website_url,
             status
           `)
-          .in(
-            'id',
-            authorIds
-          )
-          .eq(
-            'status',
-            'approved'
+          .in('id',authorIds)
+          .eq('status','approved');
+
+
+        if(authorsError){
+
+          console.error(
+            'Followed author details error:',
+            authorsError
           );
 
+          container.innerHTML = `
+            <div class="empty" style="grid-column:1/-1;">
+              <strong>Could not load author profiles</strong>
+              <div>${escapeHtml(authorsError.message)}</div>
+            </div>
+          `;
 
-      if(authorError){
-
-        console.error(
-          'Followed author details error:',
-          authorError
-        );
-
-        container.innerHTML = `
-
-          <div
-            class="empty"
-            style="grid-column:1/-1;"
-          >
-
-            <strong>
-              Author profiles unavailable
-            </strong>
-
-            We could not load the followed author profiles.
-
-          </div>
-
-        `;
-
-        return;
-
-      }
+          updateCount('followingCount',0);
+          updateCount('followingSectionCount',0);
+          return;
+        }
 
 
-      const authorMap =
-        new Map(
+        const authorMap = new Map(
           (authors || []).map(author => [
             author.id,
             author
@@ -2909,324 +2764,167 @@
         );
 
 
-      const orderedAuthors =
-        authorIds
-          .map(id => authorMap.get(id))
+        const followedAuthors = follows
+          .map(follow => {
+
+            const author =
+              authorMap.get(follow.author_id);
+
+            if(!author){
+              return null;
+            }
+
+            return {
+              ...author,
+              follow_id:follow.id,
+              followed_at:follow.created_at
+            };
+
+          })
           .filter(Boolean);
 
 
-      if(orderedAuthors.length === 0){
-
-        container.innerHTML = `
-
-          <div
-            class="empty"
-            style="grid-column:1/-1;"
-          >
-
-            <strong>
-              No approved followed authors found
-            </strong>
-
-            The authors you followed may not currently be public.
-
-          </div>
-
-        `;
-
-        return;
-
-      }
-
-
-      container.innerHTML =
-        orderedAuthors.map(author => {
-
-          const name =
-            author.author_name ||
-            'Reader Reach Author';
-
-          const bio =
-            shortenFollowingBio(
-              author.bio
-            );
-
-          const initials =
-            getAuthorInitials(name);
-
-
-          return `
-
-            <article class="following-author-card">
-
-              <div class="following-author-top">
-
-                <div class="following-author-avatar">
-                  ${escapeHtml(initials)}
-                </div>
-
-                <div>
-
-                  <h3 class="following-author-name">
-                    ${escapeHtml(name)}
-                  </h3>
-
-                  <div class="following-author-label">
-                    Reader Reach Author
-                  </div>
-
-                </div>
-
-              </div>
-
-
-              <p class="following-author-bio">
-                ${escapeHtml(bio)}
-              </p>
-
-
-              <div class="following-author-actions">
-
-                <a
-                  class="btn primary"
-                  href="author-profile.html?id=${encodeURIComponent(author.id)}">
-                  View Profile
-                </a>
-
-                <button
-                  class="btn"
-                  type="button"
-                  data-unfollow-author="${escapeHtml(author.id)}">
-                  Unfollow
-                </button>
-
-              </div>
-
-            </article>
-
-          `;
-
-        }).join('');
-
-
-      container
-        .querySelectorAll(
-          '[data-unfollow-author]'
-        )
-        .forEach(button => {
-
-          button.addEventListener(
-            'click',
-            async () => {
-
-              await unfollowFromDashboard(
-                button.dataset.unfollowAuthor
-              );
-
-            }
-          );
-
-        });
-
-
-      await loadFollowedAuthorBooks(
-        authorIds
-      );
-
-    }
-
-
-    async function loadFollowedAuthorBooks(
-      authorIds
-    ){
-
-      if(
-        !authorIds ||
-        authorIds.length === 0
-      ){
-        return;
-      }
-
-
-      const container =
-        document.getElementById(
-          'followingAuthorsGrid'
+        updateCount(
+          'followingCount',
+          followedAuthors.length
         );
 
-      if(!container){
-        return;
-      }
+        updateCount(
+          'followingSectionCount',
+          followedAuthors.length
+        );
 
 
-      const {
-        data:books,
-        error
-      } =
-        await supabaseClient
-          .from('books')
-          .select(`
-            id,
-            author_id,
-            title,
-            description,
-            genre_topic,
-            availability,
-            cover_url,
-            status,
-            created_at
-          `)
-          .in(
-            'author_id',
-            authorIds
-          )
-          .eq(
-            'status',
-            'approved'
-          )
-          .order(
-            'created_at',
-            {
-              ascending:false
-            }
-          )
-          .limit(6);
+        if(followedAuthors.length === 0){
+
+          container.innerHTML = `
+            <div class="empty" style="grid-column:1/-1;">
+              <strong>Your followed authors are unavailable.</strong>
+              <div>
+                The authors you followed may no longer be approved.
+              </div>
+            </div>
+          `;
+
+          return;
+        }
 
 
-      if(error){
+        container.innerHTML =
+          followedAuthors.map(author => {
+
+            const authorName =
+              author.author_name ||
+              'Reader Reach Author';
+
+            const bio =
+              author.bio ||
+              'Discover books from this Reader Reach author.';
+
+            return `
+              <article class="card">
+
+                <div class="section-kicker">
+                  Author
+                </div>
+
+                <h3
+                  class="section-title"
+                  style="font-size:21px;margin-bottom:7px;">
+                  ${escapeHtml(authorName)}
+                </h3>
+
+                <p
+                  class="section-description"
+                  style="margin-bottom:15px;">
+                  ${escapeHtml(bio)}
+                </p>
+
+                <div class="profile-actions">
+
+                  <a
+                    class="btn primary"
+                    href="author-profile.html?id=${encodeURIComponent(author.id)}">
+                    View Profile
+                  </a>
+
+                  <button
+                    class="btn danger"
+                    type="button"
+                    onclick="unfollowFromDashboard('${author.id}')">
+                    Unfollow
+                  </button>
+
+                </div>
+
+              </article>
+            `;
+
+          }).join('');
+
+
+      }catch(error){
 
         console.error(
-          'Followed author books error:',
+          'Unexpected following authors error:',
           error
         );
 
-        return;
+        container.innerHTML = `
+          <div class="empty" style="grid-column:1/-1;">
+            <strong>Something went wrong</strong>
+            <div>
+              ${escapeHtml(
+                error.message ||
+                'Could not load followed authors.'
+              )}
+            </div>
+          </div>
+        `;
 
       }
-
-
-      if(
-        !books ||
-        books.length === 0
-      ){
-        return;
-      }
-
-
-      await attachAuthorNames(
-        books
-      );
-
-
-      const heading =
-        document.createElement(
-          'div'
-        );
-
-      heading.style.gridColumn =
-        '1 / -1';
-
-      heading.style.marginTop =
-        '8px';
-
-      heading.innerHTML = `
-
-        <div
-          style="
-            font-size:11px;
-            color:#92734e;
-            text-transform:uppercase;
-            letter-spacing:1.2px;
-            font-weight:700;
-          "
-        >
-          Latest Books From Authors You Follow
-        </div>
-
-      `;
-
-
-      container.appendChild(
-        heading
-      );
-
-
-      books.forEach(book => {
-
-        const wrapper =
-          document.createElement(
-            'div'
-          );
-
-        wrapper.innerHTML =
-          renderBookCard(book);
-
-        const card =
-          wrapper.firstElementChild;
-
-        if(card){
-          container.appendChild(card);
-        }
-
-      });
 
     }
 
 
-    async function unfollowFromDashboard(
-      authorId
-    ){
+    async function unfollowFromDashboard(authorId){
 
-      if(
-        !currentUser ||
-        !authorId
-      ){
+      if(!currentUser || !authorId){
         return;
       }
 
-
       const {
         error
-      } =
-        await supabaseClient
-          .from('author_follows')
-          .delete()
-          .eq(
-            'follower_profile_id',
-            currentUser.id
-          )
-          .eq(
-            'author_id',
-            authorId
-          );
-
+      } = await supabaseClient
+        .from('author_follows')
+        .delete()
+        .eq('follower_profile_id',currentUser.id)
+        .eq('author_id',authorId);
 
       if(error){
 
         console.error(
-          'Dashboard unfollow error:',
+          'Unfollow error:',
           error
         );
 
         showToast(
-          'We could not unfollow this author.'
+          'Could not unfollow this author. Please try again.'
         );
 
         return;
-
       }
 
-
       showToast(
-        'Author unfollowed.'
+        'You are no longer following this author.'
       );
-
 
       await loadFollowingAuthors();
 
     }
 
 
-    async function loadNotifications(){
+        async function loadNotifications(){
 
       const list =
         document.getElementById(
@@ -3252,16 +2950,10 @@
             is_read,
             created_at
           `)
-          .eq(
-            'profile_id',
-            currentUser.id
-          )
-          .order(
-            'created_at',
-            {
-              ascending:false
-            }
-          )
+          .eq('profile_id',currentUser.id)
+          .order('created_at',{
+            ascending:false
+          })
           .limit(50);
 
       if(error){
@@ -3326,71 +3018,62 @@
 
 
       list.innerHTML =
-        notifications.map(
-          notification => `
+        notifications.map(notification => `
 
-            <article
-              class="notification ${
-                notification.is_read
-                ? ''
-                : 'unread'
-              }">
+          <article
+            class="notification ${
+              notification.is_read
+              ? ''
+              : 'unread'
+            }">
 
-              <div class="notification-main">
+            <div class="notification-main">
 
-                <div class="notification-title">
-                  ${escapeHtml(
-                    notification.title ||
-                    'Reader Reach Notification'
-                  )}
-                </div>
-
-                <div class="notification-message">
-                  ${escapeHtml(
-                    notification.message ||
-                    ''
-                  )}
-                </div>
-
-              </div>
-
-              <div class="notification-time">
+              <div class="notification-title">
                 ${escapeHtml(
-                  formatRelativeDate(
-                    notification.created_at
-                  )
+                  notification.title ||
+                  'Reader Reach Notification'
                 )}
               </div>
 
-            </article>
+              <div class="notification-message">
+                ${escapeHtml(
+                  notification.message ||
+                  ''
+                )}
+              </div>
 
-          `
-        ).join('');
+            </div>
+
+            <div class="notification-time">
+              ${escapeHtml(
+                formatRelativeDate(
+                  notification.created_at
+                )
+              )}
+            </div>
+
+          </article>
+
+        `).join('');
 
     }
 
 
-    function updateCount(
-      id,
-      value
-    ){
+    function updateCount(id,value){
 
       const element =
         document.getElementById(id);
 
       if(element){
-
         element.textContent =
           String(value);
-
       }
 
     }
 
 
-    function showAccessError(
-      message
-    ){
+    function showAccessError(message){
 
       const pageMessage =
         document.getElementById(
@@ -3446,14 +3129,8 @@
           .update({
             is_read:true
           })
-          .eq(
-            'profile_id',
-            currentUser.id
-          )
-          .eq(
-            'is_read',
-            false
-          );
+          .eq('profile_id',currentUser.id)
+          .eq('is_read',false);
 
       if(error){
 
@@ -3560,9 +3237,7 @@
 
 
       document
-        .getElementById(
-          'sendChatMessage'
-        )
+        .getElementById('sendChatMessage')
         .addEventListener(
           'click',
           sendChatMessage
@@ -3617,14 +3292,11 @@
                 visitor_name:
                   currentProfile?.display_name ||
                   'Reader',
-
                 visitor_email:
                   currentUser?.email ||
                   null,
-
                 subject:
                   'Reader Dashboard Support',
-
                 status:
                   'open'
               })
@@ -3651,10 +3323,8 @@
             .insert({
               conversation_id:
                 chatConversationId,
-
               sender_type:
                 'reader',
-
               message:
                 message
             });
@@ -3776,8 +3446,8 @@
       await Promise.all([
         loadFeaturedBooks(),
         loadMyBooks(),
-        loadFollowingAuthors(),
-        loadNotifications()
+        loadNotifications(),
+        loadFollowingAuthors()
       ]);
 
 

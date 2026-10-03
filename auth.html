@@ -20,9 +20,13 @@
   --success:#356b48;
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
-html{scroll-behavior:smooth}
+html{
+  scroll-behavior:smooth;
+}
 
 body{
   margin:0;
@@ -31,7 +35,8 @@ body{
   color:var(--text);
 }
 
-button,input,select{
+button,
+input{
   font:inherit;
 }
 
@@ -49,13 +54,13 @@ a{
   margin:auto;
 }
 
-/* NAV */
+/* NAVIGATION */
 
 nav{
   position:sticky;
   top:0;
   z-index:100;
-  background:rgba(255,253,248,.96);
+  background:rgba(255,253,248,.97);
   border-bottom:1px solid var(--line);
   backdrop-filter:blur(10px);
 }
@@ -127,12 +132,6 @@ nav{
   color:var(--white);
 }
 
-.btn.gold{
-  background:var(--butter);
-  border-color:var(--butter);
-  color:var(--brown);
-}
-
 .btn.full{
   width:100%;
 }
@@ -143,7 +142,11 @@ nav{
   min-height:calc(100vh - 82px);
   padding:70px 0 90px;
   background:
-    radial-gradient(circle at 10% 10%,rgba(234,215,155,.24),transparent 28%),
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(234,215,155,.24),
+      transparent 28%
+    ),
     var(--cream);
 }
 
@@ -312,8 +315,7 @@ nav{
   font-weight:700;
 }
 
-.field input,
-.field select{
+.field input{
   width:100%;
   height:49px;
   padding:0 14px;
@@ -324,8 +326,7 @@ nav{
   color:var(--text);
 }
 
-.field input:focus,
-.field select:focus{
+.field input:focus{
   border-color:var(--brown2);
   box-shadow:0 0 0 3px rgba(90,56,41,.08);
 }
@@ -389,6 +390,7 @@ nav{
 .status{
   display:none;
   padding:13px 15px;
+  margin-bottom:18px;
   border-radius:12px;
   font-size:14px;
   line-height:1.5;
@@ -410,6 +412,14 @@ nav{
   border:1px solid #c8dfcf;
 }
 
+.signupOnly{
+  display:none;
+}
+
+.signupOnly.show{
+  display:grid;
+}
+
 .authFooter{
   margin-top:22px;
   padding-top:20px;
@@ -429,20 +439,6 @@ nav{
 
 .authFooter button:hover{
   text-decoration:underline;
-}
-
-/* SIGNUP ONLY */
-
-.signupOnly{
-  display:none;
-}
-
-.signupOnly.show{
-  display:grid;
-}
-
-.signinOnly.hide{
-  display:none;
 }
 
 /* FOOTER */
@@ -474,6 +470,7 @@ footer{
 /* RESPONSIVE */
 
 @media(max-width:900px){
+
   .links{
     display:none;
   }
@@ -493,6 +490,7 @@ footer{
 }
 
 @media(max-width:600px){
+
   .nav{
     min-height:72px;
   }
@@ -505,7 +503,7 @@ footer{
     display:none;
   }
 
-  .navActions .btn:first-child{
+  .navActions .btn{
     display:none;
   }
 
@@ -542,6 +540,7 @@ footer{
 <body>
 
 <nav>
+
   <div class="wrap nav">
 
     <a class="logo" href="index.html">
@@ -561,6 +560,7 @@ footer{
     </div>
 
   </div>
+
 </nav>
 
 <main class="page">
@@ -569,30 +569,40 @@ footer{
 
     <section class="intro">
 
-      <div class="eyebrow">Reader Reach Access</div>
+      <div class="eyebrow">
+        Reader Reach Access
+      </div>
 
-      <h1>Welcome back to Reader Reach.</h1>
+      <h1>
+        Welcome back to Reader Reach.
+      </h1>
 
       <p>
-        Sign in to continue to your Reader, Author, Moderator,
-        or Administrator account.
+        Sign in to continue to your Reader,
+        Author, Moderator, or Administrator account.
       </p>
 
       <div class="points">
 
         <div class="point">
           <div class="pointIcon">✓</div>
-          <div>Discover approved books and authors.</div>
+          <div>
+            Discover approved books and authors.
+          </div>
         </div>
 
         <div class="point">
           <div class="pointIcon">✓</div>
-          <div>Manage your Reader Reach account securely.</div>
+          <div>
+            Manage your Reader Reach account securely.
+          </div>
         </div>
 
         <div class="point">
           <div class="pointIcon">✓</div>
-          <div>Access role-specific dashboards and protected content.</div>
+          <div>
+            Access role-specific dashboards and protected content.
+          </div>
         </div>
 
       </div>
@@ -602,10 +612,15 @@ footer{
     <section class="card">
 
       <div class="cardHeader">
-        <h2 id="cardTitle">Sign In</h2>
+
+        <h2 id="cardTitle">
+          Sign In
+        </h2>
+
         <p id="cardSubtitle">
           Enter your Reader Reach account details.
         </p>
+
       </div>
 
       <div class="modeSwitch">
@@ -634,7 +649,9 @@ footer{
 
       <!-- SIGN IN -->
 
-      <form id="signinForm" class="form signinOnly">
+      <form
+        id="signinForm"
+        class="form">
 
         <div class="field">
 
@@ -680,11 +697,14 @@ footer{
         <div class="formOptions">
 
           <label class="remember">
+
             <input
               id="rememberMe"
               type="checkbox"
               checked>
+
             Remember me
+
           </label>
 
           <a
@@ -706,7 +726,9 @@ footer{
 
       <!-- SIGN UP -->
 
-      <form id="signupForm" class="form signupOnly">
+      <form
+        id="signupForm"
+        class="form signupOnly">
 
         <div class="roleSwitch">
 
@@ -910,6 +932,7 @@ footer{
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+
 const SUPABASE_URL =
   'https://bublmnfhyyrefcdkloak.supabase.co';
 
@@ -931,11 +954,16 @@ const supabaseClient =
     }
   );
 
+
 const params =
-  new URLSearchParams(window.location.search);
+  new URLSearchParams(
+    window.location.search
+  );
+
 
 let currentMode =
   params.get('mode') || 'signin';
+
 
 if(
   currentMode !== 'signin' &&
@@ -946,48 +974,88 @@ if(
   currentMode = 'signin';
 }
 
+
+/* MODE SWITCH */
+
 function setMode(mode){
 
-  currentMode = mode === 'author' || mode === 'reader'
-    ? 'signup'
-    : mode;
+  if(
+    mode !== 'signin' &&
+    mode !== 'signup' &&
+    mode !== 'reader' &&
+    mode !== 'author'
+  ){
+    mode = 'signin';
+  }
 
-  document
-    .getElementById('signinMode')
-    .classList.toggle(
-      'active',
-      currentMode === 'signin'
+  currentMode = mode;
+
+  const isSignin =
+    currentMode === 'signin';
+
+  const isSignup =
+    !isSignin;
+
+  const signinMode =
+    document.getElementById(
+      'signinMode'
     );
 
-  document
-    .getElementById('signupMode')
-    .classList.toggle(
-      'active',
-      currentMode === 'signup'
+  const signupMode =
+    document.getElementById(
+      'signupMode'
     );
 
   const signinForm =
-    document.getElementById('signinForm');
+    document.getElementById(
+      'signinForm'
+    );
 
   const signupForm =
-    document.getElementById('signupForm');
+    document.getElementById(
+      'signupForm'
+    );
 
   const cardTitle =
-    document.getElementById('cardTitle');
+    document.getElementById(
+      'cardTitle'
+    );
 
   const cardSubtitle =
-    document.getElementById('cardSubtitle');
+    document.getElementById(
+      'cardSubtitle'
+    );
 
   const footerPrompt =
-    document.getElementById('footerPrompt');
+    document.getElementById(
+      'footerPrompt'
+    );
 
   const footerAction =
-    document.getElementById('footerAction');
+    document.getElementById(
+      'footerAction'
+    );
 
-  if(currentMode === 'signin'){
 
-    signinForm.style.display = 'grid';
-    signupForm.classList.remove('show');
+  signinMode.classList.toggle(
+    'active',
+    isSignin
+  );
+
+  signupMode.classList.toggle(
+    'active',
+    isSignup
+  );
+
+
+  if(isSignin){
+
+    signinForm.style.display =
+      'grid';
+
+    signupForm.classList.remove(
+      'show'
+    );
 
     cardTitle.textContent =
       'Sign In';
@@ -1002,22 +1070,44 @@ function setMode(mode){
       'Create one';
 
     footerAction.onclick =
-      () => setMode('signup');
+      function(){
+        setMode('signup');
+      };
 
   }else{
 
-    signinForm.style.display = 'none';
-    signupForm.classList.add('show');
+    signinForm.style.display =
+      'none';
 
-    cardTitle.textContent =
-      currentMode === 'author'
-        ? 'Create Author Account'
-        : 'Create Account';
+    signupForm.classList.add(
+      'show'
+    );
 
-    cardSubtitle.textContent =
-      currentMode === 'author'
-        ? 'Create your Author account and submit your work for approval.'
-        : 'Create your Reader Reach account.';
+    if(currentMode === 'author'){
+
+      cardTitle.textContent =
+        'Create Author Account';
+
+      cardSubtitle.textContent =
+        'Create your Author account and submit your work for approval.';
+
+      document.getElementById(
+        'authorRole'
+      ).checked = true;
+
+    }else{
+
+      cardTitle.textContent =
+        'Create Account';
+
+      cardSubtitle.textContent =
+        'Create your Reader Reach account.';
+
+      document.getElementById(
+        'readerRole'
+      ).checked = true;
+    }
+
 
     footerPrompt.textContent =
       'Already have an account?';
@@ -1026,32 +1116,23 @@ function setMode(mode){
       'Sign in';
 
     footerAction.onclick =
-      () => setMode('signin');
-
-    if(currentMode === 'author'){
-      document.getElementById('authorRole').checked = true;
-    }
-
-    if(currentMode === 'reader'){
-      document.getElementById('readerRole').checked = true;
-    }
+      function(){
+        setMode('signin');
+      };
   }
+
 
   clearStatus();
 
-  const url =
-    currentMode === 'signup'
-      ? 'auth.html?mode=signup'
-      : currentMode === 'author'
-        ? 'auth.html?mode=author'
-        : currentMode === 'reader'
-          ? 'auth.html?mode=reader'
-          : 'auth.html?mode=signin';
-
-  window.history.replaceState({},'',url);
 }
 
-function togglePassword(id,button){
+
+/* PASSWORD VISIBILITY */
+
+function togglePassword(
+  id,
+  button
+){
 
   const input =
     document.getElementById(id);
@@ -1059,153 +1140,185 @@ function togglePassword(id,button){
   if(input.type === 'password'){
 
     input.type = 'text';
-    button.textContent = 'Hide';
+
+    button.textContent =
+      'Hide';
 
   }else{
 
     input.type = 'password';
-    button.textContent = 'Show';
 
+    button.textContent =
+      'Show';
   }
+
 }
 
-function showStatus(message,type='error'){
+
+/* STATUS */
+
+function showStatus(
+  message,
+  type='error'
+){
 
   const element =
-    document.getElementById('statusMessage');
+    document.getElementById(
+      'statusMessage'
+    );
 
-  element.textContent = message;
+  element.textContent =
+    message;
+
   element.className =
     'status show ' + type;
 }
 
+
 function clearStatus(){
 
   const element =
-    document.getElementById('statusMessage');
+    document.getElementById(
+      'statusMessage'
+    );
 
-  element.textContent = '';
-  element.className = 'status';
+  element.textContent =
+    '';
+
+  element.className =
+    'status';
 }
 
-function safeNextPage(){
 
-  const requested =
-    params.get('next');
+/* PROFILE */
 
-  if(!requested){
-    return null;
-  }
-
-  const allowedPages = [
-    'reader-dashboard.html',
-    'author-dashboard.html',
-    'moderator-dashboard.html',
-    'admin.html'
-  ];
-
-  if(
-    allowedPages.some(
-      page => requested === page
-    )
-  ){
-    return requested;
-  }
-
-  return null;
-}
-
-async function getProfile(userId){
+async function getProfile(
+  userId
+){
 
   const {
     data,
     error
-  } = await supabaseClient
-    .from('profiles')
-    .select('id,display_name,role,created_at')
-    .eq('id',userId)
-    .maybeSingle();
+  } =
+    await supabaseClient
+      .from('profiles')
+      .select(
+        'id,display_name,role,created_at'
+      )
+      .eq(
+        'id',
+        userId
+      )
+      .maybeSingle();
+
 
   if(error){
+
     console.error(
       'Profile lookup error:',
       error
     );
+
     return null;
   }
+
 
   return data;
 }
 
-async function redirectByRole(user){
+
+/* ROLE REDIRECT */
+
+async function redirectByRole(
+  user
+){
 
   if(!user){
     return;
   }
 
-  const requested =
-    safeNextPage();
-
-  if(requested){
-    window.location.href =
-      requested;
-
-    return;
-  }
 
   const profile =
-    await getProfile(user.id);
+    await getProfile(
+      user.id
+    );
+
 
   if(!profile){
 
     showStatus(
-      'Your account was authenticated, but your Reader Reach profile could not be found. Please contact support.',
-      'error'
+      'Your account was authenticated, but your Reader Reach profile could not be found. Please contact support.'
     );
 
     return;
   }
 
+
   const role =
-    String(profile.role || '').toLowerCase();
+    String(
+      profile.role || ''
+    ).toLowerCase();
+
 
   if(role === 'admin'){
+
     window.location.href =
       'admin.html';
 
-  }else if(role === 'moderator'){
+    return;
+  }
+
+
+  if(role === 'moderator'){
+
     window.location.href =
       'moderator-dashboard.html';
 
-  }else if(role === 'author'){
+    return;
+  }
+
+
+  if(role === 'author'){
+
     window.location.href =
       'author-dashboard.html';
 
-  }else{
-    window.location.href =
-      'reader-dashboard.html';
+    return;
   }
+
+
+  window.location.href =
+    'reader-dashboard.html';
 }
 
-async function handleSignIn(event){
+
+/* SIGN IN */
+
+async function handleSignIn(
+  event
+){
 
   event.preventDefault();
 
   clearStatus();
 
+
   const email =
     document
-      .getElementById('signinEmail')
+      .getElementById(
+        'signinEmail'
+      )
       .value
       .trim();
 
+
   const password =
     document
-      .getElementById('signinPassword')
+      .getElementById(
+        'signinPassword'
+      )
       .value;
 
-  const button =
-    document.getElementById('signinButton');
 
   if(!email || !password){
 
@@ -1216,22 +1329,35 @@ async function handleSignIn(event){
     return;
   }
 
+
+  const button =
+    document.getElementById(
+      'signinButton'
+    );
+
+
   button.disabled = true;
+
   button.textContent =
     'Signing In...';
+
 
   const {
     data,
     error
   } =
-    await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
+    await supabaseClient.auth
+      .signInWithPassword({
+        email:email,
+        password:password
+      });
+
 
   button.disabled = false;
+
   button.textContent =
     'Sign In';
+
 
   if(error){
 
@@ -1242,13 +1368,14 @@ async function handleSignIn(event){
 
     showStatus(
       error.message ||
-      'Sign in failed. Please check your details and try again.'
+      'Sign in failed. Please check your email and password.'
     );
 
     return;
   }
 
-  if(!data.user){
+
+  if(!data || !data.user){
 
     showStatus(
       'Sign in did not return an account.'
@@ -1257,65 +1384,101 @@ async function handleSignIn(event){
     return;
   }
 
+
   showStatus(
     'Signed in successfully. Opening your dashboard...',
     'success'
   );
 
-  await redirectByRole(data.user);
+
+  /*
+   * Redirect happens ONLY after
+   * the user actually presses Sign In.
+   */
+  await redirectByRole(
+    data.user
+  );
+
 }
 
-async function handleSignUp(event){
+
+/* SIGN UP */
+
+async function handleSignUp(
+  event
+){
 
   event.preventDefault();
 
   clearStatus();
 
+
   const displayName =
     document
-      .getElementById('signupName')
+      .getElementById(
+        'signupName'
+      )
       .value
       .trim();
+
 
   const email =
     document
-      .getElementById('signupEmail')
+      .getElementById(
+        'signupEmail'
+      )
       .value
       .trim();
+
 
   const password =
     document
-      .getElementById('signupPassword')
+      .getElementById(
+        'signupPassword'
+      )
       .value;
+
 
   const confirmPassword =
     document
-      .getElementById('signupPasswordConfirm')
+      .getElementById(
+        'signupPasswordConfirm'
+      )
       .value;
+
 
   const country =
     document
-      .getElementById('signupCountry')
+      .getElementById(
+        'signupCountry'
+      )
       .value
       .trim();
 
+
   const city =
     document
-      .getElementById('signupCity')
+      .getElementById(
+        'signupCity'
+      )
       .value
       .trim();
+
 
   const role =
     document.querySelector(
       'input[name="signupRole"]:checked'
     )?.value || 'reader';
 
-  if(!displayName ||
-     !email ||
-     !password ||
-     !confirmPassword ||
-     !country ||
-     !city){
+
+  if(
+    !displayName ||
+    !email ||
+    !password ||
+    !confirmPassword ||
+    !country ||
+    !city
+  ){
 
     showStatus(
       'Please complete all required fields.'
@@ -1323,6 +1486,7 @@ async function handleSignUp(event){
 
     return;
   }
+
 
   if(password.length < 8){
 
@@ -1333,6 +1497,7 @@ async function handleSignUp(event){
     return;
   }
 
+
   if(password !== confirmPassword){
 
     showStatus(
@@ -1342,29 +1507,44 @@ async function handleSignUp(event){
     return;
   }
 
+
   const button =
-    document.getElementById('signupButton');
+    document.getElementById(
+      'signupButton'
+    );
+
 
   button.disabled = true;
+
   button.textContent =
     'Creating Account...';
+
 
   const {
     data,
     error
   } =
-    await supabaseClient.auth.signUp({
-      email,
-      password,
-      options:{
-        data:{
-          display_name:displayName,
-          role:role,
-          location_country:country,
-          location_city_region:city
+    await supabaseClient.auth
+      .signUp({
+        email:email,
+        password:password,
+        options:{
+          data:{
+            display_name:
+              displayName,
+
+            role:
+              role,
+
+            location_country:
+              country,
+
+            location_city_region:
+              city
+          }
         }
-      }
-    });
+      });
+
 
   if(error){
 
@@ -1374,6 +1554,7 @@ async function handleSignUp(event){
     );
 
     button.disabled = false;
+
     button.textContent =
       'Create Account';
 
@@ -1385,69 +1566,92 @@ async function handleSignUp(event){
     return;
   }
 
+
   /*
-   * The database should create the profile/role records
-   * through the existing Supabase signup trigger/policies.
-   *
-   * We do not expose private location publicly.
+   * If email confirmation is disabled,
+   * Supabase may return an active session.
    */
 
-  if(data.user && data.session){
+  if(
+    data &&
+    data.user &&
+    data.session
+  ){
 
     showStatus(
       'Account created successfully. Opening your dashboard...',
       'success'
     );
 
-    await redirectByRole(data.user);
+    await redirectByRole(
+      data.user
+    );
 
     return;
   }
 
+
+  /*
+   * If email confirmation is enabled,
+   * keep the user on the auth page.
+   */
+
   button.disabled = false;
+
   button.textContent =
     'Create Account';
+
 
   showStatus(
     'Account created. Please check your email to confirm your account before signing in.',
     'success'
   );
 
+
   setMode('signin');
 }
 
+
+/* FORM EVENTS */
+
 document
-  .getElementById('signinForm')
+  .getElementById(
+    'signinForm'
+  )
   .addEventListener(
     'submit',
     handleSignIn
   );
 
+
 document
-  .getElementById('signupForm')
+  .getElementById(
+    'signupForm'
+  )
   .addEventListener(
     'submit',
     handleSignUp
   );
 
-supabaseClient.auth.onAuthStateChange(
-  async(event,session) => {
 
-    if(
-      event === 'SIGNED_IN' &&
-      session?.user &&
-      currentMode === 'signin'
-    ){
+/*
+ * IMPORTANT:
+ * There is intentionally NO
+ * onAuthStateChange redirect here.
+ *
+ * This prevents an existing Supabase
+ * session from instantly redirecting
+ * the auth page to a dashboard that
+ * may not yet be deployed.
+ */
 
-      await redirectByRole(
-        session.user
-      );
-    }
 
-  }
+/* INITIAL PAGE */
+
+setMode(
+  currentMode
 );
 
-setMode(currentMode);
 </script>
 
 </body>

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>Reader Reach | Every Book Has Its Readers</title>
-<meta name="description" content="Reader Reach connects readers with approved books, authors, featured book trailers, discussions, and scheduled features.">
 
 <style>
 :root{
@@ -17,11 +17,17 @@
   --muted:#76665d;
   --line:#e7dbcf;
   --white:#fff;
+  --success:#54734c;
+  --danger:#9a5147;
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
-html{scroll-behavior:smooth}
+html{
+  scroll-behavior:smooth;
+}
 
 body{
   margin:0;
@@ -31,15 +37,24 @@ body{
   line-height:1.65;
 }
 
-body.modal-open{overflow:hidden}
-
-a{
-  text-decoration:none;
-  color:inherit;
+body.modal-open{
+  overflow:hidden;
 }
 
-button,input,textarea,select{
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button,
+input,
+textarea,
+select{
   font:inherit;
+}
+
+button{
+  cursor:pointer;
 }
 
 .wrap{
@@ -47,24 +62,29 @@ button,input,textarea,select{
   margin:auto;
 }
 
+/* TOP BAR */
+
 .top{
   background:var(--brown);
   color:#fff;
   padding:9px 0;
-  font:12px Arial;
+  font:12px Arial,sans-serif;
 }
 
 .top .wrap{
   display:flex;
   justify-content:space-between;
+  gap:20px;
 }
+
+/* NAVIGATION */
 
 nav{
   position:sticky;
   top:0;
-  z-index:10;
+  z-index:30;
   background:#fffdf8ee;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(12px);
   border-bottom:1px solid var(--line);
 }
 
@@ -80,11 +100,12 @@ nav{
   font-size:25px;
   font-weight:bold;
   color:var(--brown);
+  white-space:nowrap;
 }
 
 .logo small{
   display:block;
-  font:10px Arial;
+  font:10px Arial,sans-serif;
   letter-spacing:2px;
   text-transform:uppercase;
   color:#76513e;
@@ -92,8 +113,9 @@ nav{
 
 .links{
   display:flex;
-  gap:22px;
-  font:13px Arial;
+  align-items:center;
+  gap:20px;
+  font:13px Arial,sans-serif;
   color:#594940;
 }
 
@@ -101,13 +123,52 @@ nav{
   color:var(--brown);
 }
 
+.navActions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.mobileMenuButton{
+  display:none;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--brown);
+  border-radius:10px;
+  width:42px;
+  height:42px;
+}
+
+.mobileMenu{
+  display:none;
+  border-top:1px solid var(--line);
+  background:var(--cream);
+}
+
+.mobileMenu.open{
+  display:block;
+}
+
+.mobileMenu .wrap{
+  display:grid;
+  gap:4px;
+  padding:12px 0 18px;
+}
+
+.mobileMenu a{
+  padding:11px 4px;
+  color:var(--brown);
+  font:14px Arial,sans-serif;
+}
+
+/* BUTTONS */
+
 .btn{
   display:inline-block;
   border:1px solid var(--brown);
   border-radius:999px;
-  padding:12px 19px;
-  font:bold 13px Arial;
-  cursor:pointer;
+  padding:11px 18px;
+  font:bold 13px Arial,sans-serif;
   background:transparent;
   color:var(--brown);
   transition:.2s ease;
@@ -126,8 +187,14 @@ nav{
   background:#4d2e22;
 }
 
+.btn.gold{
+  background:var(--butter);
+  border-color:var(--butter);
+  color:var(--brown);
+}
+
 .btn.small{
-  padding:9px 14px;
+  padding:8px 13px;
   font-size:12px;
 }
 
@@ -136,6 +203,8 @@ nav{
   cursor:not-allowed;
   transform:none;
 }
+
+/* HERO */
 
 .hero{
   min-height:680px;
@@ -151,7 +220,9 @@ nav{
   content:"";
   position:absolute;
   inset:0;
-  background:url("https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1800&q=85") center/cover no-repeat;
+  background:
+    url("https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1800&q=85")
+    center/cover no-repeat;
   z-index:-2;
 }
 
@@ -159,18 +230,24 @@ nav{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(90deg,#3b241bf2,#3b241bb8,#3b241b35);
+  background:
+    linear-gradient(
+      90deg,
+      #3b241bf5,
+      #3b241bc0,
+      #3b241b45
+    );
   z-index:-1;
 }
 
 .hero .content{
-  max-width:730px;
+  max-width:760px;
   padding:105px 0 80px;
 }
 
 .eyebrow,
 .kicker{
-  font:700 11px Arial;
+  font:700 11px Arial,sans-serif;
   letter-spacing:2.5px;
   text-transform:uppercase;
   color:#76513e;
@@ -199,16 +276,7 @@ nav{
   margin-top:28px;
 }
 
-.hero .primary{
-  background:var(--butter);
-  color:var(--brown);
-  border-color:var(--butter);
-}
-
-.hero .outline{
-  color:#fff;
-  border-color:#fff;
-}
+/* GENERAL SECTIONS */
 
 section{
   padding:90px 0;
@@ -219,7 +287,7 @@ section{
 }
 
 .head{
-  max-width:720px;
+  max-width:760px;
   margin-bottom:38px;
 }
 
@@ -230,60 +298,139 @@ section{
   margin:8px 0 14px;
 }
 
-.head p,
-.card p,
-.feature p,
-.book p{
+.head p{
   color:var(--muted);
+  font-size:17px;
 }
 
-.grid3,
-.books,
-.features,
-.access{
+/* TRAILER SECTION */
+
+.trailerSection{
+  background:#2d1b14;
+  color:#fff;
+}
+
+.trailerSection .head h2{
+  color:#fff;
+}
+
+.trailerSection .head p{
+  color:#dfd0c8;
+}
+
+.trailerGrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:22px;
+}
+
+.trailerCard{
+  background:#fff;
+  color:var(--text);
+  border-radius:24px;
+  overflow:hidden;
+  border:1px solid #ffffff1a;
+  box-shadow:0 18px 45px #00000028;
+}
+
+.trailerVideo{
+  position:relative;
+  min-height:300px;
+  background:#17100d;
+  display:grid;
+  place-items:center;
+}
+
+.trailerVideo video{
+  width:100%;
+  height:300px;
+  display:block;
+  object-fit:cover;
+  background:#17100d;
+}
+
+.trailerPoster{
+  width:100%;
+  height:300px;
+  object-fit:cover;
+  display:block;
+}
+
+.trailerFallback{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  color:#fff;
+  text-align:center;
+  padding:25px;
+  background:
+    radial-gradient(circle at center,#76513e,#24150f);
+}
+
+.trailerFallback strong{
+  display:block;
+  font-size:22px;
+  margin-bottom:8px;
+}
+
+.playBadge{
+  position:absolute;
+  left:20px;
+  bottom:20px;
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  border:1px solid #ffffff55;
+  background:#ffffffdf;
+  color:var(--brown);
+  display:grid;
+  place-items:center;
+  font-size:19px;
+}
+
+.trailerInfo{
+  padding:22px;
+}
+
+.trailerInfo h3{
+  color:var(--brown);
+  margin:0 0 5px;
+  font-size:25px;
+}
+
+.trailerAuthor{
+  font:12px Arial,sans-serif;
+  color:#76513e;
+  margin-bottom:10px;
+}
+
+.trailerInfo p{
+  color:var(--muted);
+  margin:8px 0;
+}
+
+.trailerActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:17px;
+}
+
+/* BOOKS */
+
+.books{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:22px;
 }
 
-.card,
-.book,
-.feature,
-.accessCard{
+.book{
   background:#fff;
   border:1px solid var(--line);
   border-radius:22px;
-  padding:26px;
-  box-shadow:0 14px 40px #3b241b12;
-}
-
-.num{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:#f5e8bb;
-  color:var(--brown);
-  font-weight:bold;
-}
-
-.card h3,
-.book h3,
-.feature h3,
-.accessCard h3{
-  color:var(--brown);
-  font-size:22px;
-  margin:15px 0 7px;
-}
-
-.books{
-  grid-template-columns:repeat(3,1fr);
-}
-
-.book{
-  padding:0;
   overflow:hidden;
+  box-shadow:0 14px 40px #3b241b12;
 }
 
 .cover{
@@ -298,7 +445,7 @@ section{
   width:100%;
   height:100%;
   object-fit:cover;
-  border-radius:4px;
+  border-radius:5px;
 }
 
 .coverInner{
@@ -319,7 +466,7 @@ section{
 }
 
 .coverInner small{
-  font:10px Arial;
+  font:10px Arial,sans-serif;
   letter-spacing:2px;
   text-transform:uppercase;
 }
@@ -333,12 +480,24 @@ section{
   background:var(--soft);
   border-radius:999px;
   padding:5px 9px;
-  font:10px Arial;
+  font:10px Arial,sans-serif;
   color:var(--brown);
 }
 
+.bookInfo h3{
+  color:var(--brown);
+  font-size:22px;
+  margin:12px 0 5px;
+}
+
 .bookInfo p{
+  color:var(--muted);
   font-size:14px;
+}
+
+.bookAuthor{
+  font:12px Arial,sans-serif;
+  color:#76513e;
 }
 
 .bookActions{
@@ -347,6 +506,71 @@ section{
   gap:8px;
   margin-top:16px;
 }
+
+/* AUTHORS */
+
+.authorGrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+}
+
+.authorCard{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:26px;
+  box-shadow:0 14px 40px #3b241b12;
+}
+
+.authorTop{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.authorAvatar{
+  width:64px;
+  height:64px;
+  flex:none;
+  border-radius:50%;
+  background:var(--soft);
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  color:var(--brown);
+  font-size:24px;
+  font-weight:bold;
+}
+
+.authorAvatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.authorCard h3{
+  margin:0;
+  color:var(--brown);
+  font-size:21px;
+}
+
+.authorCard .bio{
+  color:var(--muted);
+  font-size:14px;
+  margin:17px 0;
+}
+
+.authorStats{
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+  color:#76513e;
+  font:11px Arial,sans-serif;
+  margin-bottom:15px;
+}
+
+/* EMPTY */
 
 .emptyState{
   grid-column:1/-1;
@@ -367,167 +591,7 @@ section{
   margin:0;
 }
 
-.flipper{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:40px;
-  align-items:center;
-}
-
-.reader{
-  background:var(--brown);
-  padding:24px;
-  border-radius:26px;
-}
-
-.page{
-  background:#fff;
-  border-radius:15px;
-  padding:38px;
-  min-height:350px;
-}
-
-.page small{
-  font:700 10px Arial;
-  letter-spacing:2px;
-  color:#76513e;
-}
-
-.page h3{
-  font-size:31px;
-  color:var(--brown);
-}
-
-.page p{
-  color:var(--muted);
-}
-
-.controls{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.controls button{
-  border:0;
-  border-radius:50%;
-  width:38px;
-  height:38px;
-  background:var(--butter);
-  color:var(--brown);
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.features{
-  grid-template-columns:repeat(2,1fr);
-}
-
-.feature{
-  display:flex;
-  gap:16px;
-}
-
-.icon{
-  width:44px;
-  height:44px;
-  flex:none;
-  border-radius:13px;
-  background:#f5e8bb;
-  display:grid;
-  place-items:center;
-  font-weight:bold;
-  color:var(--brown);
-}
-
-.feature h3{
-  margin-top:0;
-}
-
-.feature p{
-  display:none;
-}
-
-.accessSection{
-  background:var(--brown);
-  color:#fff;
-}
-
-.accessSection h2{
-  color:#fff;
-}
-
-.accessSection .head p{
-  color:#e9ddd6;
-}
-
-.access{
-  grid-template-columns:1fr 1fr;
-}
-
-.accessCard h3{
-  font-size:27px;
-}
-
-.accessCard p{
-  color:var(--muted);
-}
-
-.formShell{
-  background:var(--soft);
-  border:1px solid var(--line);
-  border-radius:28px;
-  padding:32px;
-}
-
-.form{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:17px;
-}
-
-.field{
-  display:flex;
-  flex-direction:column;
-  gap:7px;
-}
-
-.full{
-  grid-column:1/-1;
-}
-
-label{
-  font:700 11px Arial;
-  color:var(--brown);
-}
-
-input,
-textarea,
-select{
-  border:1px solid #d9cabc;
-  border-radius:11px;
-  padding:12px;
-  background:#fff;
-  outline:none;
-  color:var(--text);
-}
-
-input:focus,
-textarea:focus,
-select:focus{
-  border-color:var(--brown2);
-}
-
-textarea{
-  min-height:110px;
-  resize:vertical;
-}
-
-.formNote{
-  color:var(--muted);
-  font:12px Arial;
-  margin-top:5px;
-}
+/* DISCUSSIONS */
 
 .discussions{
   display:grid;
@@ -564,7 +628,7 @@ textarea{
   background:var(--soft);
   border-radius:12px;
   padding:12px 14px;
-  font:12px Arial;
+  font:12px Arial,sans-serif;
   color:var(--brown);
   margin-bottom:15px;
 }
@@ -587,7 +651,7 @@ textarea{
 .message small{
   display:block;
   color:var(--muted);
-  font:11px Arial;
+  font:11px Arial,sans-serif;
   margin-top:3px;
 }
 
@@ -596,37 +660,17 @@ textarea{
   color:var(--muted);
 }
 
-.messageForm{
-  display:none;
-  margin-top:18px;
-}
-
-.messageForm textarea{
-  min-height:90px;
-  width:100%;
-  margin-bottom:10px;
-}
-
-.rule{
-  padding:13px 0;
-  border-bottom:1px solid var(--line);
-}
-
-.rule:last-child{
-  border:0;
-}
-
-.rule strong{
+.discussionLogin{
+  background:#fff8e4;
+  border:1px solid #ead79b;
+  border-radius:14px;
+  padding:15px;
+  margin-top:15px;
+  font:12px Arial,sans-serif;
   color:var(--brown);
 }
 
-.event{
-  min-height:220px;
-  border:1px dashed #cbb9a9;
-  border-radius:22px;
-  background:#fff;
-  padding:30px;
-}
+/* CALENDAR */
 
 .eventList{
   display:grid;
@@ -652,14 +696,37 @@ textarea{
 
 .eventItem span{
   color:var(--muted);
-  font:12px Arial;
+  font:12px Arial,sans-serif;
 }
+
+.eventDate{
+  min-width:115px;
+  text-align:center;
+  padding:12px;
+  background:var(--soft);
+  border-radius:13px;
+  color:var(--brown);
+  font:bold 12px Arial,sans-serif;
+}
+
+/* ABOUT */
 
 .about{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:50px;
   align-items:center;
+}
+
+.about h2{
+  color:var(--brown);
+  font-size:clamp(34px,5vw,54px);
+  line-height:1.1;
+}
+
+.aboutText{
+  color:var(--muted);
+  font-size:17px;
 }
 
 .aboutPanel{
@@ -675,15 +742,23 @@ textarea{
 
 .aboutPanel h3{
   font-size:34px;
+  margin-top:0;
 }
 
 .aboutPanel p{
   color:#e9ddd6;
 }
 
+/* CTA */
+
 .cta{
   background:#f5e8bb;
   text-align:center;
+}
+
+.cta h2{
+  color:var(--brown);
+  font-size:42px;
 }
 
 .cta p{
@@ -691,6 +766,8 @@ textarea{
   margin:0 auto 22px;
   color:var(--muted);
 }
+
+/* FOOTER */
 
 footer{
   background:var(--brown);
@@ -710,14 +787,14 @@ footer{
 }
 
 .foot h4{
-  font:700 11px Arial;
+  font:700 11px Arial,sans-serif;
   letter-spacing:1px;
   color:var(--butter);
 }
 
 .foot a,
 .foot p{
-  font:13px Arial;
+  font:13px Arial,sans-serif;
   color:#d9ccc5;
   display:block;
   margin:7px 0;
@@ -726,22 +803,123 @@ footer{
 .copy{
   border-top:1px solid #ffffff22;
   padding-top:18px;
-  font:11px Arial;
+  font:11px Arial,sans-serif;
   color:#bbaaa1;
 }
 
-.toast{
+/* LIVE CHAT */
+
+.chatLauncher{
   position:fixed;
-  right:20px;
-  bottom:20px;
+  right:22px;
+  bottom:22px;
+  z-index:40;
+  border:0;
+  border-radius:999px;
   background:var(--brown);
   color:#fff;
-  padding:14px 17px;
-  border-radius:11px;
-  display:none;
-  font:13px Arial;
-  z-index:100;
+  padding:14px 19px;
+  box-shadow:0 12px 35px #00000025;
+  font:bold 13px Arial,sans-serif;
 }
+
+.chatLauncher:hover{
+  background:#4d2e22;
+}
+
+.chatPanel{
+  position:fixed;
+  right:22px;
+  bottom:78px;
+  width:min(380px,calc(100vw - 30px));
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
+  box-shadow:0 20px 60px #00000025;
+  z-index:39;
+  display:none;
+  overflow:hidden;
+}
+
+.chatPanel.open{
+  display:block;
+}
+
+.chatHeader{
+  background:var(--brown);
+  color:#fff;
+  padding:17px 18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.chatHeader strong{
+  font-size:17px;
+}
+
+.chatClose{
+  border:0;
+  background:#ffffff18;
+  color:#fff;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+}
+
+.chatBody{
+  padding:16px;
+}
+
+.chatMessages{
+  height:230px;
+  overflow:auto;
+  background:var(--soft);
+  border-radius:13px;
+  padding:12px;
+  margin-bottom:12px;
+}
+
+.chatBubble{
+  background:#fff;
+  border-radius:12px;
+  padding:9px 11px;
+  margin-bottom:8px;
+  color:var(--muted);
+  font:12px Arial,sans-serif;
+}
+
+.chatBubble.visitor{
+  background:var(--brown);
+  color:#fff;
+  margin-left:20px;
+}
+
+.chatBubble.moderator{
+  margin-right:20px;
+}
+
+.chatForm{
+  display:grid;
+  gap:8px;
+}
+
+.chatForm input,
+.chatForm textarea{
+  width:100%;
+}
+
+.chatForm textarea{
+  min-height:70px;
+}
+
+.chatNote{
+  font:10px Arial,sans-serif;
+  color:var(--muted);
+  margin-top:8px;
+}
+
+/* MODALS */
 
 .modal{
   position:fixed;
@@ -760,7 +938,7 @@ footer{
 
 .modalBox{
   background:var(--cream);
-  width:min(900px,100%);
+  width:min(920px,100%);
   max-height:90vh;
   overflow:auto;
   border-radius:26px;
@@ -780,59 +958,6 @@ footer{
   color:var(--brown);
   cursor:pointer;
   font-size:20px;
-}
-
-.profileHeader{
-  display:grid;
-  grid-template-columns:150px 1fr;
-  gap:28px;
-  align-items:start;
-}
-
-.authorAvatar{
-  width:150px;
-  height:150px;
-  border-radius:20px;
-  background:var(--soft);
-  display:grid;
-  place-items:center;
-  color:var(--brown);
-  font-size:45px;
-  font-weight:bold;
-  overflow:hidden;
-}
-
-.authorAvatar img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.profileHeader h2{
-  margin:0 0 8px;
-  color:var(--brown);
-  font-size:38px;
-}
-
-.profileBio{
-  color:var(--muted);
-}
-
-.authorBooks{
-  margin-top:30px;
-}
-
-.authorBooks h3{
-  color:var(--brown);
-}
-
-.authorBook{
-  border-top:1px solid var(--line);
-  padding:18px 0;
-}
-
-.authorBook strong{
-  color:var(--brown);
 }
 
 .bookModalGrid{
@@ -877,44 +1002,27 @@ footer{
   margin-top:22px;
 }
 
-.guideAccessPanel{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:20px;
-  padding:24px;
-  margin-top:22px;
-}
+/* TOAST */
 
-.guideAccessPanel h3{
-  color:var(--brown);
-  margin-top:0;
-}
-
-.guideMeta{
-  display:grid;
-  gap:8px;
-  margin:15px 0;
-}
-
-.guideMeta div{
-  padding:11px 13px;
-  background:var(--soft);
+.toast{
+  position:fixed;
+  right:20px;
+  bottom:80px;
+  background:var(--brown);
+  color:#fff;
+  padding:14px 17px;
   border-radius:11px;
-  color:var(--muted);
-  font-size:13px;
+  display:none;
+  font:13px Arial,sans-serif;
+  z-index:100;
+  max-width:360px;
 }
 
-.guideProtected{
-  border-left:3px solid var(--butter);
-  padding-left:14px;
-  color:var(--muted);
+.toast.show{
+  display:block;
 }
 
-.guideContent{
-  white-space:pre-wrap;
-  line-height:1.75;
-  color:var(--muted);
-}
+/* LOADING */
 
 .loading{
   color:var(--muted);
@@ -922,328 +1030,41 @@ footer{
   padding:25px;
 }
 
+/* RESPONSIVE */
 
-.navActions{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex:none;
-}
+@media(max-width:1050px){
 
-.upcomingSection{
-  border-top:1px solid var(--line);
-}
+  .links{
+    gap:12px;
+  }
 
-.trailerGrid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:22px;
-}
+  .links a{
+    font-size:12px;
+  }
 
-.trailerCard{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:24px;
-  overflow:hidden;
-  box-shadow:0 14px 40px #3b241b12;
-}
-
-.trailerMedia{
-  position:relative;
-  min-height:330px;
-  background:#2b1a13;
-}
-
-.trailerMedia video{
-  width:100%;
-  height:330px;
-  display:block;
-  object-fit:cover;
-  background:#2b1a13;
-}
-
-.trailerPoster{
-  min-height:330px;
-  display:grid;
-  place-items:center;
-  padding:28px;
-  background:linear-gradient(145deg,#eadcc7,#79553f);
-  color:#fff;
-  text-align:center;
-}
-
-.trailerPoster strong{
-  display:block;
-  font-size:30px;
-  margin-bottom:8px;
-}
-
-.trailerInfo{
-  padding:23px;
-}
-
-.trailerInfo h3{
-  color:var(--brown);
-  font-size:26px;
-  margin:8px 0;
-}
-
-.trailerMeta{
-  color:var(--muted);
-  font:12px Arial;
-}
-
-.authorGrid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:22px;
-}
-
-.authorCard{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:22px;
-  padding:24px;
-}
-
-.authorMini{
-  width:72px;
-  height:72px;
-  border-radius:18px;
-  background:var(--soft);
-  display:grid;
-  place-items:center;
-  overflow:hidden;
-  color:var(--brown);
-  font-weight:bold;
-  font-size:24px;
-  margin-bottom:15px;
-}
-
-.authorMini img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.authorCard h3{
-  color:var(--brown);
-  margin:0 0 7px;
-}
-
-.authorCard p{
-  color:var(--muted);
-  font-size:14px;
-  min-height:68px;
-}
-
-.sectionAction{
-  margin-top:24px;
-  text-align:center;
-}
-
-.flipperInfo{
-  display:grid;
-  grid-template-columns:1.2fr .8fr;
-  gap:35px;
-  align-items:center;
-}
-
-.guideInfoCard{
-  background:var(--brown);
-  color:#fff;
-  border-radius:25px;
-  padding:30px;
-  display:flex;
-  gap:18px;
-  align-items:center;
-}
-
-.guideInfoCard strong{
-  font-size:22px;
-}
-
-.guideInfoCard p{
-  color:#e9ddd6;
-  margin-bottom:0;
-}
-
-.guideSeal{
-  width:58px;
-  height:58px;
-  border-radius:18px;
-  background:var(--butter);
-  color:var(--brown);
-  display:grid;
-  place-items:center;
-  font-weight:bold;
-  font-size:24px;
-  flex:none;
-}
-
-.authorAccessPanel{
-  background:var(--soft);
-  border:1px solid var(--line);
-  border-radius:24px;
-  padding:25px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:20px;
-}
-
-.authorAccessPanel h3{
-  color:var(--brown);
-  margin:0 0 5px;
-}
-
-.authorAccessPanel p{
-  color:var(--muted);
-  margin:0;
-}
-
-.contactFloat,
-.chatFloat{
-  position:fixed;
-  right:20px;
-  z-index:20;
-  border:1px solid var(--brown);
-  box-shadow:0 12px 35px #3b241b22;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  border-radius:999px;
-  padding:11px 15px;
-  font:bold 12px Arial;
-}
-
-.contactFloat{
-  top:50%;
-  transform:translateY(-50%);
-  background:#fff;
-  color:var(--brown);
-}
-
-.chatFloat{
-  bottom:20px;
-  background:var(--brown);
-  color:#fff;
-  cursor:pointer;
-}
-
-.contactFloat:hover,
-.chatFloat:hover{
-  transform:translateY(-2px);
-}
-
-.contactFloat:hover{
-  transform:translateY(calc(-50% - 2px));
-}
-
-.chatPanel{
-  position:fixed;
-  right:20px;
-  bottom:76px;
-  width:min(360px,calc(100% - 40px));
-  background:var(--cream);
-  border:1px solid var(--line);
-  border-radius:20px;
-  box-shadow:0 18px 50px #3b241b33;
-  z-index:30;
-  display:none;
-  overflow:hidden;
-}
-
-.chatPanel.show{
-  display:block;
-}
-
-.chatPanelHead{
-  background:var(--brown);
-  color:#fff;
-  padding:16px 18px;
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-}
-
-.chatPanelHead small{
-  display:block;
-  color:#eadcd4;
-  font:11px Arial;
-  margin-top:2px;
-}
-
-.chatPanelHead button{
-  border:0;
-  background:transparent;
-  color:#fff;
-  font-size:22px;
-  cursor:pointer;
-}
-
-.chatPanelBody{
-  padding:20px;
-}
-
-.chatPanelBody p{
-  color:var(--muted);
-}
-
-.chatPanelNote{
-  font:12px Arial;
-  background:var(--soft);
-  border-radius:12px;
-  padding:11px;
 }
 
 @media(max-width:900px){
-  .links{display:none}
 
-  .grid3,
-  .books,
-  .flipper,
-  .flipperInfo,
+  .links{
+    display:none;
+  }
+
+  .mobileMenuButton{
+    display:block;
+  }
+
+  .navActions .btn{
+    display:none;
+  }
+
   .trailerGrid,
+  .books,
   .authorGrid,
-  .features,
-  .access,
   .discussions,
   .about,
   .foot{
     grid-template-columns:1fr;
-  }
-
-  .form{
-    grid-template-columns:1fr;
-  }
-
-  .navActions .btn:first-child{
-    display:none;
-  }
-
-  .authorAccessPanel{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-  .contactFloat{
-    top:auto;
-    bottom:76px;
-    right:20px;
-    transform:none;
-  }
-
-  .contactFloat:hover{
-    transform:translateY(-2px);
-  }
-
-  .chatFloat{
-    bottom:20px;
-  }
-
-  .full{
-    grid-column:auto;
   }
 
   .hero{
@@ -1262,25 +1083,64 @@ footer{
     display:none;
   }
 
-  .profileHeader,
-  .bookModalGrid{
-    grid-template-columns:1fr;
-  }
-
-  .authorAvatar{
-    width:110px;
-    height:110px;
-  }
-
   .eventItem{
     align-items:flex-start;
     flex-direction:column;
   }
+
+  .eventDate{
+    width:100%;
+  }
+
+  .bookModalGrid{
+    grid-template-columns:1fr;
+  }
+
+}
+
+@media(max-width:600px){
+
+  section{
+    padding:65px 0;
+  }
+
+  .hero h1{
+    font-size:48px;
+  }
+
+  .hero p{
+    font-size:17px;
+  }
+
+  .logo{
+    font-size:21px;
+  }
+
+  .logo small{
+    font-size:8px;
+  }
+
+  .chatLauncher{
+    right:15px;
+    bottom:15px;
+  }
+
+  .chatPanel{
+    right:15px;
+    bottom:70px;
+  }
+
+  .modalBox{
+    padding:24px 18px;
+  }
+
 }
 </style>
 </head>
 
 <body>
+
+<!-- TOP BAR -->
 
 <div class="top">
   <div class="wrap">
@@ -1289,76 +1149,185 @@ footer{
   </div>
 </div>
 
+
+<!-- NAVIGATION -->
+
 <nav>
+
   <div class="wrap nav">
 
-    <a class="logo" href="#home">
+    <a class="logo" href="index.html">
       Reader Reach
       <small>Every Book Has Its Readers</small>
     </a>
 
     <div class="links">
-      <a href="index.html#home">Home</a>
-      <a href="authors.html">Authors</a>
-      <a href="index.html#featured">Featured</a>
-      <a href="index.html#about">About Us</a>
-      <a href="contact.html">Contact Us</a>
+
+      <a href="index.html">Home</a>
+
+      <a href="authors.html">
+        Authors
+      </a>
+
+      <a href="index.html#featured">
+        Featured
+      </a>
+
+      <a href="index.html#about">
+        About Us
+      </a>
+
+      <a href="contact.html">
+        Contact Us
+      </a>
+
     </div>
 
     <div class="navActions">
-      <a class="btn" href="auth.html?mode=signin">Sign In</a>
-      <a class="btn primary" href="auth.html?mode=author">For Authors</a>
+
+      <a
+        class="btn small"
+        href="auth.html?mode=signin">
+        Sign In
+      </a>
+
+      <a
+        class="btn primary small"
+        href="auth.html?mode=signup">
+        Sign Up
+      </a>
+
+      <button
+        id="mobileMenuButton"
+        class="mobileMenuButton"
+        aria-label="Open menu">
+        ☰
+      </button>
+
     </div>
 
   </div>
+
+  <div
+    id="mobileMenu"
+    class="mobileMenu">
+
+    <div class="wrap">
+
+      <a href="index.html">
+        Home
+      </a>
+
+      <a href="authors.html">
+        Authors
+      </a>
+
+      <a href="index.html#featured">
+        Featured
+      </a>
+
+      <a href="index.html#about">
+        About Us
+      </a>
+
+      <a href="contact.html">
+        Contact Us
+      </a>
+
+      <a href="auth.html?mode=signin">
+        Sign In
+      </a>
+
+      <a href="auth.html?mode=signup">
+        Sign Up
+      </a>
+
+    </div>
+
+  </div>
+
 </nav>
 
-<header id="home" class="hero">
+
+<!-- HERO -->
+
+<section
+  id="home"
+  class="hero">
+
   <div class="wrap">
+
     <div class="content">
 
-      <div class="eyebrow">Books • Authors • Readers</div>
+      <div class="eyebrow">
+        Reader Reach
+      </div>
 
-      <h1>Every Book Has Its Readers.</h1>
+      <h1>
+        Every Book Has Its Readers.
+      </h1>
 
       <p>
-        Reader Reach creates a place where books can be discovered,
-        authors can present their work, and readers can find stories
-        and ideas that speak to them.
+        Discover books, meet authors, join meaningful conversations,
+        and find the stories that belong with you.
       </p>
 
       <div class="actions">
-        <a class="btn primary" href="#books">Discover Books →</a>
-        <a class="btn outline" href="authors.html">Explore Authors</a>
+
+        <a
+          class="btn gold"
+          href="#featured">
+          Explore Featured Books
+        </a>
+
+        <a
+          class="btn outline"
+          href="authors.html">
+          Meet the Authors
+        </a>
+
       </div>
 
     </div>
+
   </div>
-</header>
+
+</section>
 
 
 <!-- UPCOMING FEATURED BOOK TRAILERS -->
 
-<section id="upcoming" class="soft upcomingSection">
+<section
+  id="trailers"
+  class="trailerSection">
 
   <div class="wrap">
 
     <div class="head">
-      <div class="kicker">Upcoming Featured Books</div>
-      <h2>Watch the books scheduled to meet readers next.</h2>
+
+      <div class="kicker" style="color:#ead79b;">
+        Upcoming Featured Books
+      </div>
+
+      <h2>
+        Watch the books coming into focus.
+      </h2>
+
       <p>
-        These trailers come only from approved books that have been scheduled by Reader Reach.
-        Admin controls whether each approved trailer is visible here.
+        Authors and books selected for trailer visibility appear here
+        when the Admin has enabled their homepage trailer.
       </p>
+
     </div>
 
-    <div class="trailerGrid" id="upcomingTrailerGrid">
-      <div class="emptyState">
-        <h3>No upcoming featured books yet.</h3>
-        <p>
-          When a real approved book is scheduled and its trailer is switched on for the homepage, it will appear here.
-        </p>
+    <div
+      id="trailerGrid"
+      class="trailerGrid">
+
+      <div class="loading">
+        Loading upcoming book trailers...
       </div>
+
     </div>
 
   </div>
@@ -1368,166 +1337,36 @@ footer{
 
 <!-- FEATURED BOOKS -->
 
-<section id="featured">
+<section
+  id="featured"
+  class="soft">
 
   <div class="wrap">
 
     <div class="head">
 
-      <div class="kicker">Featured Books</div>
-
-      <h2>Books selected for the Reader Reach homepage.</h2>
-
-      <p>
-        Featured books are selected by the Reader Reach Admin and remain connected to their approved book profiles.
-      </p>
-
-    </div>
-
-    <div class="books" id="featuredBookGrid">
-      <div class="loading">Loading featured books...</div>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- AUTHORS -->
-
-<section id="authors" class="authorsSection">
-
-  <div class="wrap">
-
-    <div class="head">
-      <div class="kicker">Authors</div>
-      <h2>Meet the approved authors behind the books.</h2>
-      <p>
-        Author profiles are connected to real approved Reader Reach accounts and their approved books.
-      </p>
-    </div>
-
-    <div class="authorGrid" id="authorGrid">
-      <div class="emptyState">
-        <h3>Authors will appear here.</h3>
-        <p>
-          Approved author profiles will be shown when they are available.
-        </p>
+      <div class="kicker">
+        Featured Books
       </div>
-    </div>
 
-    <div class="sectionAction">
-      <a class="btn primary" href="authors.html">View All Authors</a>
-    </div>
+      <h2>
+        Books selected for the Reader Reach spotlight.
+      </h2>
 
-  </div>
-
-</section>
-
-
-<!-- BOOKS -->
-
-<section id="books" class="soft">
-
-  <div class="wrap">
-
-    <div class="head">
-      <div class="kicker">Books</div>
-      <h2>Books waiting to meet their readers.</h2>
-      <p id="booksIntro">
-        Approved books from Reader Reach.
+      <p>
+        Explore books that have been selected for the public
+        Reader Reach Featured collection.
       </p>
+
     </div>
 
-    <div class="books" id="bookGrid">
+    <div
+      id="featuredBookGrid"
+      class="books">
+
       <div class="loading">
-        Loading approved books...
+        Loading featured books...
       </div>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- FLIPPER GUIDE -->
-
-<section id="flipper">
-
-  <div class="wrap flipperInfo">
-
-    <div>
-      <div class="kicker">Flipper Guide</div>
-      <h2>A protected reading companion connected to approved books.</h2>
-      <p style="color:var(--muted);font-size:17px">
-        Reader Reach does not publish fake guide examples on the homepage.
-        Authorized Flipper Guide content becomes available through the appropriate Reader account and access controls.
-      </p>
-      <a class="btn primary" href="auth.html?mode=reader">Reader Sign In</a>
-    </div>
-
-    <div class="guideInfoCard">
-      <div class="guideSeal">F</div>
-      <div>
-        <strong>Protected content</strong>
-        <p>
-          Guide access is controlled by the Reader Reach account and database permissions.
-        </p>
-      </div>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- PLATFORM -->
-
-<section class="soft">
-
-  <div class="wrap">
-
-    <div class="head">
-      <div class="kicker">The Platform</div>
-      <h2>Everything centered around books.</h2>
-    </div>
-
-    <div class="features">
-
-      <article class="feature">
-        <div class="icon">B</div>
-        <div>
-          <h3>Book Profiles</h3>
-        </div>
-      </article>
-
-      <article class="feature">
-        <div class="icon">A</div>
-        <div>
-          <h3>Author Profiles</h3>
-        </div>
-      </article>
-
-      <article class="feature">
-        <div class="icon">F</div>
-        <div>
-          <h3>Flipper Guides</h3>
-        </div>
-      </article>
-
-      <article class="feature">
-        <div class="icon">D</div>
-        <div>
-          <h3>Book Discussions</h3>
-        </div>
-      </article>
-
-      <article class="feature">
-        <div class="icon">C</div>
-        <div>
-          <h3>Feature Calendar</h3>
-        </div>
-      </article>
 
     </div>
 
@@ -1536,85 +1375,48 @@ footer{
 </section>
 
 
-<!-- ACCESS -->
+<!-- EXPLORE AUTHORS -->
 
-<section id="access" class="accessSection">
+<section
+  id="authors">
 
   <div class="wrap">
 
     <div class="head">
 
-      <div class="kicker" style="color:#ead79b">
-        Access
+      <div class="kicker">
+        Explore Authors
       </div>
 
-      <h2>Choose how you want to enter Reader Reach.</h2>
+      <h2>
+        Discover the people behind the books.
+      </h2>
 
       <p>
-        Reader and Author access are available separately.
+        Browse approved Reader Reach authors and explore their books,
+        profiles, followers, and upcoming features.
       </p>
 
     </div>
 
-    <div class="access">
+    <div
+      id="authorGrid"
+      class="authorGrid">
 
-      <div class="accessCard">
-
-        <h3>Reader</h3>
-
-        <p>
-          Explore approved books, author profiles, discussions,
-          features, and Reader Reach content.
-        </p>
-
-        <a class="btn primary" href="auth.html?mode=reader">
-          Continue as Reader
-        </a>
-
-      </div>
-
-      <div class="accessCard">
-
-        <h3>Author</h3>
-
-        <p>
-          Present your books and your author profile to Reader Reach readers.
-        </p>
-
-        <a class="btn primary" href="auth.html?mode=author">
-          Continue as Author
-        </a>
-
+      <div class="loading">
+        Loading authors...
       </div>
 
     </div>
 
-  </div>
+    <div style="margin-top:25px;">
 
-</section>
+      <a
+        class="btn primary"
+        href="authors.html">
+        View All Authors
+      </a>
 
-
-<!-- AUTHOR ACCESS -->
-
-<section id="submit">
-
-  <div class="wrap">
-
-    <div class="head">
-      <div class="kicker">For Authors</div>
-      <h2>Submit your book through your approved Author account.</h2>
-      <p>
-        Real book submissions, cover uploads, trailer uploads, and Flipper Guide links are handled through the Reader Reach Author workflow.
-        Approved authors can submit multiple books for Admin review and later scheduling.
-      </p>
-    </div>
-
-    <div class="authorAccessPanel">
-      <div>
-        <h3>Already an approved Author?</h3>
-        <p>Open your Author dashboard to submit or manage your books.</p>
-      </div>
-      <a class="btn primary" href="auth.html?mode=author">Author Access</a>
     </div>
 
   </div>
@@ -1624,19 +1426,25 @@ footer{
 
 <!-- DISCUSSIONS -->
 
-<section id="discussions">
+<section
+  id="discussions"
+  class="soft">
 
   <div class="wrap">
 
     <div class="head">
 
-      <div class="kicker">Discussions</div>
+      <div class="kicker">
+        Book Discussions
+      </div>
 
-      <h2>Talk about the book while the session is open.</h2>
+      <h2>
+        Conversations around real books.
+      </h2>
 
       <p>
-        Reader discussions are scheduled around individual approved books.
-        Each session lasts 30 minutes.
+        Scheduled Reader Reach discussions give readers a place
+        to participate in conversations around featured books.
       </p>
 
     </div>
@@ -1645,29 +1453,27 @@ footer{
 
       <div class="discussion">
 
-        <h3>Book Discussion</h3>
+        <h3>
+          Upcoming Discussions
+        </h3>
 
         <div class="discussionControls">
 
-          <select id="discussionBookSelect">
+          <select
+            id="discussionBookSelect">
+
             <option value="">
               Select a scheduled book
             </option>
-          </select>
 
-          <button
-            class="btn small"
-            id="refreshDiscussionBtn"
-            type="button">
-            Refresh
-          </button>
+          </select>
 
         </div>
 
         <div
           id="discussionStatus"
           class="sessionStatus">
-          No discussion session selected.
+          Loading discussion sessions...
         </div>
 
         <div
@@ -1675,67 +1481,76 @@ footer{
           class="messageList">
 
           <div class="loading">
-            Select a scheduled book to view its discussion.
+            Select a scheduled discussion to view its status.
           </div>
 
         </div>
 
-        <form
-          id="discussionMessageForm"
-          class="messageForm">
+        <div
+          id="discussionLogin"
+          class="discussionLogin"
+          style="display:none;">
 
-          <textarea
-            id="discussionMessageInput"
-            placeholder="Write your message..."></textarea>
+          Sign in as a Reader to participate in protected
+          discussion conversations.
 
-          <button
-            class="btn primary"
-            type="submit">
-            Send Message
-          </button>
+          <div style="margin-top:10px;">
 
-        </form>
+            <a
+              class="btn primary small"
+              href="auth.html?mode=signin">
+              Sign In
+            </a>
+
+          </div>
+
+        </div>
 
       </div>
 
 
       <div class="discussion">
 
-        <h3>Community Rules</h3>
+        <h3>
+          Community Guidelines
+        </h3>
 
         <div class="rule">
-          <strong>1. Stay connected to the book.</strong>
-          <div>Keep discussion relevant to the selected book and its subject.</div>
+          <strong>Respect readers.</strong>
+          <div>
+            Keep conversations constructive and welcoming.
+          </div>
         </div>
 
         <div class="rule">
-          <strong>2. Respect other readers.</strong>
-          <div>Disagree with ideas without attacking or insulting other people.</div>
+          <strong>No spam.</strong>
+          <div>
+            Do not flood discussions with repeated,
+            irrelevant, or promotional messages.
+          </div>
         </div>
 
         <div class="rule">
-          <strong>3. No harassment.</strong>
-          <div>Do not threaten, target, intimidate, or repeatedly disturb another participant.</div>
+          <strong>Respect authors.</strong>
+          <div>
+            Questions and criticism are welcome when expressed constructively.
+          </div>
         </div>
 
         <div class="rule">
-          <strong>4. No spam.</strong>
-          <div>Do not flood the discussion with repeated, irrelevant, or promotional messages.</div>
+          <strong>Protect private information.</strong>
+          <div>
+            Do not post another person's private contact information
+            or personal details.
+          </div>
         </div>
 
         <div class="rule">
-          <strong>5. Respect authors.</strong>
-          <div>Questions and criticism are welcome when expressed constructively.</div>
-        </div>
-
-        <div class="rule">
-          <strong>6. Protect private information.</strong>
-          <div>Do not post another person's private contact information or personal details.</div>
-        </div>
-
-        <div class="rule">
-          <strong>7. Follow the session time.</strong>
-          <div>Each scheduled book discussion closes automatically after 30 minutes.</div>
+          <strong>Follow the session time.</strong>
+          <div>
+            Scheduled discussion sessions follow their published
+            Reader Reach schedule.
+          </div>
         </div>
 
       </div>
@@ -1749,15 +1564,20 @@ footer{
 
 <!-- CALENDAR -->
 
-<section id="calendar" class="soft">
+<section
+  id="calendar">
 
   <div class="wrap">
 
     <div class="head">
 
-      <div class="kicker">Events & Calendar</div>
+      <div class="kicker">
+        Events & Calendar
+      </div>
 
-      <h2>See what is coming up.</h2>
+      <h2>
+        See what is coming up.
+      </h2>
 
       <p>
         Approved book features and scheduled Reader Reach events.
@@ -1765,15 +1585,12 @@ footer{
 
     </div>
 
-    <div id="calendarList" class="eventList">
+    <div
+      id="calendarList"
+      class="eventList">
 
-      <div class="event">
-        <div>
-          <strong>No upcoming events yet</strong>
-          <span>
-            When a real Reader Reach event is scheduled, it will appear here.
-          </span>
-        </div>
+      <div class="loading">
+        Loading upcoming events...
       </div>
 
     </div>
@@ -1785,32 +1602,49 @@ footer{
 
 <!-- ABOUT -->
 
-<section id="about">
+<section
+  id="about"
+  class="soft">
 
   <div class="wrap about">
 
     <div>
 
-      <div class="kicker">About Reader Reach</div>
+      <div class="kicker">
+        About Reader Reach
+      </div>
 
       <h2>
         A place built around books and the people who read them.
       </h2>
 
-      <p style="color:var(--muted);font-size:17px">
+      <p class="aboutText">
         Reader Reach brings books, authors, readers, discussions,
-        features, and protected reading experiences into one connected space.
+        features, schedules, and protected reading experiences
+        into one connected space.
+      </p>
+
+      <p class="aboutText">
+        The platform is designed around real books and real authors,
+        with approval and moderation systems supporting the public
+        experience.
       </p>
 
     </div>
 
     <div class="aboutPanel">
 
-      <h3>Built for real books.</h3>
+      <div class="kicker" style="color:#ead79b;">
+        Reader Reach
+      </div>
+
+      <h3>
+        Built around discovery.
+      </h3>
 
       <p>
-        Reader Reach uses approved authors, approved books,
-        real schedules, real discussions, and protected content.
+        Find a book. Meet its author. Follow their work.
+        Join a discussion. Discover where the story takes you next.
       </p>
 
     </div>
@@ -1826,17 +1660,23 @@ footer{
 
   <div class="wrap">
 
-    <div class="kicker">Reader Reach</div>
+    <div class="kicker">
+      Reader Reach
+    </div>
 
-    <h2>Find the books meant for you.</h2>
+    <h2>
+      Find the books meant for you.
+    </h2>
 
     <p>
       Explore approved books, learn about their authors,
-      discover Flipper Guides, and join book conversations.
+      follow authors you enjoy, and join book conversations.
     </p>
 
-    <a class="btn primary" href="#books">
-      Explore Books
+    <a
+      class="btn primary"
+      href="#featured">
+      Explore Featured Books
     </a>
 
   </div>
@@ -1853,25 +1693,71 @@ footer{
     <div class="foot">
 
       <div>
-        <h3>Reader Reach</h3>
-        <p>Every Book Has Its Readers.</p>
+
+        <h3>
+          Reader Reach
+        </h3>
+
+        <p>
+          Every Book Has Its Readers.
+        </p>
+
+        <p>
+          A connected space for books, authors and readers.
+        </p>
+
       </div>
 
       <div>
-        <h4>Explore</h4>
-        <a href="#books">Books</a>
-        <a href="authors.html">Authors</a>
-        <a href="#featured">Featured</a>
-        <a href="#discussions">Discussions</a>
-        <a href="#calendar">Calendar</a>
-        <a href="contact.html">Contact Us</a>
+
+        <h4>
+          Explore
+        </h4>
+
+        <a href="index.html">
+          Home
+        </a>
+
+        <a href="authors.html">
+          Authors
+        </a>
+
+        <a href="index.html#featured">
+          Featured Books
+        </a>
+
+        <a href="index.html#discussions">
+          Discussions
+        </a>
+
+        <a href="index.html#calendar">
+          Calendar
+        </a>
+
       </div>
 
       <div>
-        <h4>For Authors</h4>
-        <a href="#submit">Author Access</a>
-        <a href="auth.html?mode=author">Author Sign In / Sign Up</a>
-        <a href="#about">About Reader Reach</a>
+
+        <h4>
+          Reader Reach
+        </h4>
+
+        <a href="index.html#about">
+          About Us
+        </a>
+
+        <a href="contact.html">
+          Contact Us
+        </a>
+
+        <a href="auth.html?mode=signin">
+          Sign In
+        </a>
+
+        <a href="auth.html?mode=signup">
+          Create Account
+        </a>
+
       </div>
 
     </div>
@@ -1883,6 +1769,92 @@ footer{
   </div>
 
 </footer>
+
+
+<!-- LIVE CHAT -->
+
+<button
+  id="chatLauncher"
+  class="chatLauncher"
+  type="button">
+  Live Chat
+</button>
+
+
+<div
+  id="chatPanel"
+  class="chatPanel"
+  aria-hidden="true">
+
+  <div class="chatHeader">
+
+    <strong>
+      Reader Reach Live Chat
+    </strong>
+
+    <button
+      id="chatClose"
+      class="chatClose"
+      type="button"
+      aria-label="Close">
+      ×
+    </button>
+
+  </div>
+
+  <div class="chatBody">
+
+    <div
+      id="chatMessages"
+      class="chatMessages">
+
+      <div class="chatBubble moderator">
+        Hello. Leave a message and the Reader Reach
+        moderation team can respond.
+      </div>
+
+    </div>
+
+    <form
+      id="chatForm"
+      class="chatForm">
+
+      <input
+        id="chatName"
+        type="text"
+        placeholder="Your name"
+        maxlength="120"
+        required>
+
+      <input
+        id="chatEmail"
+        type="email"
+        placeholder="Your email"
+        maxlength="180"
+        required>
+
+      <textarea
+        id="chatMessage"
+        placeholder="How can we help?"
+        maxlength="2000"
+        required></textarea>
+
+      <button
+        class="btn primary"
+        type="submit">
+        Send Message
+      </button>
+
+    </form>
+
+    <div class="chatNote">
+      Messages are handled through Reader Reach's support system.
+      Please do not send passwords or sensitive personal information.
+    </div>
+
+  </div>
+
+</div>
 
 
 <!-- BOOK MODAL -->
@@ -1897,6 +1869,7 @@ footer{
 
     <button
       class="modalClose"
+      type="button"
       onclick="closeModal('bookModal')"
       aria-label="Close">
       ×
@@ -1909,80 +1882,12 @@ footer{
 </div>
 
 
-<!-- AUTHOR MODAL -->
+<!-- TOAST -->
 
 <div
-  id="authorModal"
-  class="modal"
-  role="dialog"
-  aria-modal="true">
-
-  <div class="modalBox">
-
-    <button
-      class="modalClose"
-      onclick="closeModal('authorModal')"
-      aria-label="Close">
-      ×
-    </button>
-
-    <div id="authorModalContent"></div>
-
-  </div>
-
+  id="toast"
+  class="toast">
 </div>
-
-
-<!-- FLIPPER GUIDE MODAL -->
-
-<div
-  id="flipperModal"
-  class="modal"
-  role="dialog"
-  aria-modal="true">
-
-  <div class="modalBox">
-
-    <button
-      class="modalClose"
-      onclick="closeModal('flipperModal')"
-      aria-label="Close">
-      ×
-    </button>
-
-    <div id="flipperModalContent"></div>
-
-  </div>
-
-</div>
-
-
-<a class="contactFloat" href="contact.html" aria-label="Contact Reader Reach">
-  <span>✉</span>
-  <strong>Contact</strong>
-</a>
-
-<button class="chatFloat" id="liveChatLauncher" type="button" aria-label="Open Live Chat">
-  <span>◌</span>
-  <strong>Live Chat</strong>
-</button>
-
-<div class="chatPanel" id="liveChatPanel" aria-hidden="true">
-  <div class="chatPanelHead">
-    <div>
-      <strong>Reader Reach Live Chat</strong>
-      <small>Moderator support</small>
-    </div>
-    <button type="button" id="liveChatClose" aria-label="Close chat">×</button>
-  </div>
-  <div class="chatPanelBody">
-    <p>Send a message to Reader Reach support.</p>
-    <p class="chatPanelNote">The conversation and moderator reply system will be connected when the Contact / Live Chat page is built.</p>
-    <a class="btn primary" href="contact.html">Open Contact & Support</a>
-  </div>
-</div>
-
-<div id="toast" class="toast"></div>
 
 
 <!-- SUPABASE -->
@@ -1991,527 +1896,118 @@ footer{
 
 <script>
 
+/* ============================================================
+   READER REACH HOMEPAGE
+   ============================================================ */
+
 const SUPABASE_URL =
   'https://bublmnfhyyrefcdkloak.supabase.co';
 
-const SUPABASE_PUBLISHABLE_KEY =
+const SUPABASE_ANON_KEY =
   'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
 
 const supabaseClient =
   window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
+    SUPABASE_ANON_KEY
   );
 
 
 /* ============================================================
-   BASIC UI
-============================================================ */
-
-function toast(message){
-
-  const element =
-    document.getElementById('toast');
-
-  element.textContent = message;
-  element.style.display = 'block';
-
-  clearTimeout(window.readerReachToastTimer);
-
-  window.readerReachToastTimer =
-    setTimeout(() => {
-      element.style.display = 'none';
-    },3000);
-}
-
-
-function openModal(id){
-
-  const modal =
-    document.getElementById(id);
-
-  if(!modal) return;
-
-  modal.classList.add('show');
-  document.body.classList.add('modal-open');
-
-}
-
-
-function closeModal(id){
-
-  const modal =
-    document.getElementById(id);
-
-  if(!modal) return;
-
-  modal.classList.remove('show');
-  document.body.classList.remove('modal-open');
-
-}
-
-
-document.querySelectorAll('.modal').forEach(modal => {
-
-  modal.addEventListener('click',event => {
-
-    if(event.target === modal){
-      closeModal(modal.id);
-    }
-
-  });
-
-});
-
-
-document.addEventListener('keydown',event => {
-
-  if(event.key === 'Escape'){
-
-    document.querySelectorAll('.modal.show').forEach(modal => {
-      closeModal(modal.id);
-    });
-
-  }
-
-});
-
-
-/* ============================================================
-   PROTECTED FLIPPER GUIDES
-============================================================ */
-
-function guideValue(guide,keys){
-
-  for(const key of keys){
-    if(
-      guide &&
-      guide[key] !== null &&
-      guide[key] !== undefined &&
-      String(guide[key]).trim() !== ''
-    ){
-      return String(guide[key]).trim();
-    }
-  }
-
-  return '';
-
-}
-
-
-async function getCurrentReader(){
-
-  const {
-    data: { user },
-    error
-  } = await supabaseClient.auth.getUser();
-
-  if(error || !user){
-    return null;
-  }
-
-  const {
-    data,
-    error: readerError
-  } = await supabaseClient
-    .from('readers')
-    .select('*')
-    .eq('profile_id',user.id)
-    .maybeSingle();
-
-  if(readerError){
-    console.error('Unable to load reader profile:',readerError);
-    return null;
-  }
-
-  return data || null;
-
-}
-
-
-async function openFlipperGuides(){
-
-  const content =
-    document.getElementById('flipperModalContent');
-
-  if(!content) return;
-
-  content.innerHTML = `
-    <div class="kicker">Protected Flipper Guides</div>
-    <h2>Choose a book.</h2>
-    <p class="guideProtected">
-      Flipper Guide content is protected. Reader Reach checks your signed-in
-      reader account and its authorized guide access before showing guide content.
-    </p>
-  `;
-
-  openModal('flipperModal');
-
-  const reader = await getCurrentReader();
-
-  if(!reader){
-    content.innerHTML += `
-      <div class="guideAccessPanel">
-        <h3>Reader access required.</h3>
-        <p>
-          Sign in with an authorized Reader account to open protected Flipper Guides.
-        </p>
-      </div>
-    `;
-    return;
-  }
-
-  const {
-    data: accessRows,
-    error: accessError
-  } = await supabaseClient
-    .from('flipper_guide_access')
-    .select('guide_id,granted_at')
-    .eq('reader_id',reader.id);
-
-  if(accessError){
-    console.error('Unable to load Flipper Guide access:',accessError);
-    content.innerHTML += `
-      <div class="guideAccessPanel">
-        <h3>Guide access is temporarily unavailable.</h3>
-        <p>Please try again shortly.</p>
-      </div>
-    `;
-    return;
-  }
-
-  const guideIds =
-    (accessRows || [])
-      .map(row => row.guide_id)
-      .filter(Boolean);
-
-  if(!guideIds.length){
-    content.innerHTML += `
-      <div class="guideAccessPanel">
-        <h3>No authorized guides yet.</h3>
-        <p>
-          An authorized Flipper Guide will appear here when access has been granted.
-        </p>
-      </div>
-    `;
-    return;
-  }
-
-  const {
-    data: guides,
-    error: guideError
-  } = await supabaseClient
-    .from('flipper_guides')
-    .select('*')
-    .in('id',guideIds);
-
-  if(guideError){
-    console.error('Unable to load protected Flipper Guides:',guideError);
-    content.innerHTML += `
-      <div class="guideAccessPanel">
-        <h3>Guide content is temporarily unavailable.</h3>
-        <p>Please try again shortly.</p>
-      </div>
-    `;
-    return;
-  }
-
-  const authorizedGuides = (guides || []).filter(guide =>
-    approvedBooks.some(book => book.id === guide.book_id)
-  );
-
-  if(!authorizedGuides.length){
-    content.innerHTML += `
-      <div class="guideAccessPanel">
-        <h3>No approved book guide is available.</h3>
-        <p>
-          Your authorized guide access will appear here when its connected book is approved.
-        </p>
-      </div>
-    `;
-    return;
-  }
-
-  content.innerHTML += `
-    <div class="guideAccessPanel">
-      <h3>Your authorized guides</h3>
-      <div class="bookActions">
-        ${authorizedGuides.map(guide => {
-          const book = approvedBooks.find(item => item.id === guide.book_id);
-          const title = guideValue(guide,['title','name']) ||
-            (book ? book.title : 'Flipper Guide');
-          return `
-            <button
-              class="btn small"
-              type="button"
-              onclick="openProtectedGuide('${guide.id}')">
-              ${escapeHtml(title)}
-            </button>
-          `;
-        }).join('')}
-      </div>
-    </div>
-  `;
-
-}
-
-
-async function openProtectedGuide(guideId){
-
-  const content =
-    document.getElementById('flipperModalContent');
-
-  if(!content) return;
-
-  content.innerHTML = `
-    <div class="kicker">Protected Flipper Guide</div>
-    <div class="loading">Checking guide access...</div>
-  `;
-
-  const reader = await getCurrentReader();
-
-  if(!reader){
-    content.innerHTML = `
-      <div class="kicker">Protected Flipper Guide</div>
-      <div class="guideAccessPanel">
-        <h3>Reader access required.</h3>
-        <p>Sign in with an authorized Reader account to open this guide.</p>
-      </div>
-    `;
-    return;
-  }
-
-  const {
-    data: access,
-    error: accessError
-  } = await supabaseClient
-    .from('flipper_guide_access')
-    .select('guide_id,granted_at')
-    .eq('reader_id',reader.id)
-    .eq('guide_id',guideId)
-    .maybeSingle();
-
-  if(accessError || !access){
-    content.innerHTML = `
-      <div class="kicker">Protected Flipper Guide</div>
-      <div class="guideAccessPanel">
-        <h3>Access denied.</h3>
-        <p>
-          This guide is protected and your Reader account does not have access to it.
-        </p>
-      </div>
-    `;
-    return;
-  }
-
-  const {
-    data: guide,
-    error: guideError
-  } = await supabaseClient
-    .from('flipper_guides')
-    .select('*')
-    .eq('id',guideId)
-    .maybeSingle();
-
-  if(guideError || !guide){
-    content.innerHTML = `
-      <div class="kicker">Protected Flipper Guide</div>
-      <div class="guideAccessPanel">
-        <h3>Guide unavailable.</h3>
-        <p>Please try again shortly.</p>
-      </div>
-    `;
-    return;
-  }
-
-  const book =
-    approvedBooks.find(item => item.id === guide.book_id);
-
-  if(!book){
-    content.innerHTML = `
-      <div class="kicker">Protected Flipper Guide</div>
-      <div class="guideAccessPanel">
-        <h3>Guide unavailable.</h3>
-        <p>The connected book is not currently available as an approved book.</p>
-      </div>
-    `;
-    return;
-  }
-
-  const title =
-    guideValue(guide,['title','name']) || 'Flipper Guide';
-
-  const description =
-    guideValue(guide,['description','summary']);
-
-  const guideContent =
-    guideValue(guide,['content','guide_content','body','text']);
-
-  const guideLink =
-    guideValue(guide,['guide_link','guide_url','content_url','url','link']);
-
-  currentFlipperGuide = guide;
-
-  content.innerHTML = `
-    <div class="kicker">Protected Flipper Guide</div>
-    <h2>${escapeHtml(title)}</h2>
-
-    <div class="guideMeta">
-      <div><strong>Book:</strong> ${escapeHtml(book.title)}</div>
-      <div><strong>Access:</strong> Authorized Reader access confirmed</div>
-    </div>
-
-    ${
-      description
-      ? `<p>${escapeHtml(description)}</p>`
-      : ''
-    }
-
-    ${
-      guideContent
-      ? `
-        <div class="guideAccessPanel">
-          <h3>Guide Content</h3>
-          <div class="guideContent">${escapeHtml(guideContent)}</div>
-        </div>
-      `
-      : ''
-    }
-
-    ${
-      guideLink
-      ? `
-        <div class="modalActions">
-          <a
-            class="btn primary"
-            href="${escapeHtml(guideLink)}"
-            target="_blank"
-            rel="noopener">
-            Open Authorized Guide
-          </a>
-        </div>
-      `
-      : ''
-    }
-
-    ${
-      !guideContent && !guideLink
-      ? `
-        <div class="guideAccessPanel">
-          <h3>Guide access confirmed.</h3>
-          <p>
-            This guide is authorized for your Reader account, but no guide content
-            or link has been published yet.
-          </p>
-        </div>
-      `
-      : ''
-    }
-  `;
-
-}
-
-
-/* ============================================================
-   FLIPPER DEMO
-============================================================ */
-
-const pages = [
-
-  [
-    'Flipper Guide',
-    'Approved Flipper Guide content will appear here when connected to an authorized book.'
-  ],
-
-  [
-    'Explore the Story',
-    'Readers can use a connected Flipper Guide to explore approved book content.'
-  ],
-
-  [
-    'Continue Reading',
-    'Protected guide access is controlled through Reader Reach permissions.'
-  ]
-
-];
-
-let currentPage = 0;
-
-
-function flip(direction){
-
-  currentPage =
-    Math.max(
-      0,
-      Math.min(
-        pages.length - 1,
-        currentPage + direction
-      )
-    );
-
-  document.getElementById('ft').textContent =
-    pages[currentPage][0];
-
-  document.getElementById('fp').textContent =
-    pages[currentPage][1];
-
-  document.getElementById('pn').textContent =
-    'Page ' +
-    (currentPage + 1) +
-    ' of ' +
-    pages.length;
-
-}
-
-
-/* ============================================================
-   BOOKS
-============================================================ */
+   STATE
+   ============================================================ */
 
 let approvedBooks = [];
 let approvedAuthors = [];
+let featuredBooks = [];
+let trailerBooks = [];
 let discussionSessions = [];
 let selectedDiscussionSession = null;
-let currentFlipperGuide = null;
 
+let chatConversationId = null;
+let chatRealtimeChannel = null;
+
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
 
 function escapeHtml(value){
 
-  if(value === null || value === undefined){
-    return '';
-  }
-
-  return String(value)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#039;');
+  return String(value ?? '')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'","&#039;");
 
 }
 
 
-function formatDate(dateValue){
+function showToast(message){
 
-  if(!dateValue) return '';
+  const toast =
+    document.getElementById('toast');
 
-  return new Date(dateValue).toLocaleDateString(
+  toast.textContent =
+    message;
+
+  toast.classList.add('show');
+
+  window.clearTimeout(
+    showToast.timeout
+  );
+
+  showToast.timeout =
+    window.setTimeout(
+      () => {
+        toast.classList.remove('show');
+      },
+      4000
+    );
+
+}
+
+
+function formatDate(value){
+
+  if(!value){
+    return 'Date unavailable';
+  }
+
+  const date =
+    new Date(value);
+
+  if(Number.isNaN(date.getTime())){
+    return 'Date unavailable';
+  }
+
+  return new Intl.DateTimeFormat(
     undefined,
     {
       year:'numeric',
-      month:'long',
+      month:'short',
       day:'numeric'
     }
-  );
+  ).format(date);
 
 }
 
 
-function formatDateTime(dateValue){
+function formatDateTime(value){
 
-  if(!dateValue) return '';
+  if(!value){
+    return 'Time unavailable';
+  }
 
-  return new Date(dateValue).toLocaleString(
+  const date =
+    new Date(value);
+
+  if(Number.isNaN(date.getTime())){
+    return 'Time unavailable';
+  }
+
+  return new Intl.DateTimeFormat(
     undefined,
     {
       year:'numeric',
@@ -2520,662 +2016,1050 @@ function formatDateTime(dateValue){
       hour:'numeric',
       minute:'2-digit'
     }
-  );
+  ).format(date);
 
 }
 
 
-function authorName(author){
+function initials(name){
 
-  if(!author) return 'Author';
+  const value =
+    String(name || '')
+      .trim();
+
+  if(!value){
+    return 'RR';
+  }
+
+  const parts =
+    value
+      .split(/\s+/)
+      .filter(Boolean);
+
+  if(parts.length === 1){
+    return parts[0]
+      .slice(0,2)
+      .toUpperCase();
+  }
 
   return (
-    author.author_name ||
-    author.display_name ||
-    author.name ||
-    'Author'
+    parts[0][0] +
+    parts[parts.length - 1][0]
+  ).toUpperCase();
+
+}
+
+
+function getCover(book){
+
+  return (
+    book.cover_image_url ||
+    book.cover_url ||
+    book.book_cover_url ||
+    ''
   );
 
 }
 
 
-async function loadApprovedAuthors(){
+function getTrailerUrl(book){
 
-  const {
-    data,
-    error
-  } = await supabaseClient
-    .from('authors')
-    .select('*')
-    .eq('status','approved');
-
-  if(error){
-
-    console.error(
-      'Unable to load approved authors:',
-      error
-    );
-
-    approvedAuthors = [];
-    return;
-
+  if(book.trailer_url){
+    return book.trailer_url;
   }
 
-  approvedAuthors = data || [];
+  if(book.video_url){
+    return book.video_url;
+  }
+
+  if(book.book_trailer_url){
+    return book.book_trailer_url;
+  }
+
+  return '';
 
 }
 
 
-function renderAuthorGrid(){
+function getAuthorName(author){
 
-  const grid = document.getElementById('authorGrid');
-  if(!grid) return;
-
-  if(!approvedAuthors.length){
-    grid.innerHTML = `
-      <div class="emptyState">
-        <h3>No approved authors yet.</h3>
-        <p>Approved author profiles will appear here when available.</p>
-      </div>`;
-    return;
-  }
-
-  grid.innerHTML = '';
-
-  approvedAuthors.slice(0,6).forEach(author => {
-    const name = authorName(author);
-    const initials = name.split(' ').map(part => part.charAt(0)).join('').slice(0,2).toUpperCase();
-    const photo = author.profile_image_url || author.photo_url || author.avatar_url || '';
-    const bookCount = approvedBooks.filter(book => book.author_id === author.id).length;
-
-    const card = document.createElement('article');
-    card.className = 'authorCard';
-    card.innerHTML = `
-      <div class="authorMini">
-        ${photo ? `<img src="${escapeHtml(photo)}" alt="${escapeHtml(name)}">` : escapeHtml(initials)}
-      </div>
-      <h3>${escapeHtml(name)}</h3>
-      <p>${escapeHtml(author.bio || author.about || 'Approved Reader Reach author.')}</p>
-      <div class="trailerMeta">${bookCount} approved ${bookCount === 1 ? 'book' : 'books'}</div>
-      <div class="bookActions">
-        <a class="btn small" href="author-profile.html?id=${encodeURIComponent(author.id)}">View Author Profile</a>
-      </div>`;
-    grid.appendChild(card);
-  });
+  return (
+    author?.author_name ||
+    author?.display_name ||
+    'Reader Reach Author'
+  );
 
 }
 
 
-async function loadFeaturedBooks(){
+function goToAuthor(authorId){
 
-  const grid = document.getElementById('featuredBookGrid');
-  if(!grid) return;
-
-  grid.innerHTML = '<div class="loading">Loading featured books...</div>';
-
-  const {data,error} = await supabaseClient
-    .from('homepage_featured_books')
-    .select('book_id,selected_at')
-    .order('selected_at',{ascending:false});
-
-  if(error){
-    console.error('Unable to load featured books:',error);
-    grid.innerHTML = `
-      <div class="emptyState">
-        <h3>Featured books are temporarily unavailable.</h3>
-        <p>Please try again shortly.</p>
-      </div>`;
+  if(!authorId){
     return;
   }
 
-  const featuredBooks = (data || [])
-    .map(row => approvedBooks.find(book => book.id === row.book_id))
-    .filter(Boolean);
-
-  if(!featuredBooks.length){
-    grid.innerHTML = `
-      <div class="emptyState">
-        <h3>No featured books yet.</h3>
-        <p>Books selected by the Reader Reach Admin will appear here.</p>
-      </div>`;
-    return;
-  }
-
-  grid.innerHTML = '';
-
-  featuredBooks.forEach(book => {
-    const author = approvedAuthors.find(item => item.id === book.author_id);
-    const cover = book.cover_url
-      ? `<img src="${escapeHtml(book.cover_url)}" alt="${escapeHtml(book.title)} cover">`
-      : `<div class="coverInner"><small>Reader Reach</small><strong>${escapeHtml(book.title)}</strong><small>${escapeHtml(authorName(author))}</small></div>`;
-
-    const article = document.createElement('article');
-    article.className = 'book';
-    article.innerHTML = `
-      <div class="cover">${cover}</div>
-      <div class="bookInfo">
-        <span class="tag">Featured</span>
-        <h3>${escapeHtml(book.title)}</h3>
-        <p>${escapeHtml(book.description || 'No description provided.')}</p>
-        <div class="bookActions">
-          <a class="btn small" href="book.html?id=${encodeURIComponent(book.id)}">View Book</a>
-          ${author ? `<a class="btn small" href="author-profile.html?id=${encodeURIComponent(author.id)}">View Author Profile</a>` : ''}
-        </div>
-      </div>`;
-    grid.appendChild(article);
-  });
+  window.location.href =
+    'author-profile.html?id=' +
+    encodeURIComponent(authorId);
 
 }
 
 
-async function loadUpcomingTrailers(){
+function goToBook(bookId){
 
-  const grid = document.getElementById('upcomingTrailerGrid');
-  if(!grid) return;
-
-  grid.innerHTML = '<div class="loading">Checking scheduled featured books...</div>';
-
-  const {data:schedules,error:scheduleError} = await supabaseClient
-    .from('feature_schedules')
-    .select('id,book_id,feature_date,feature_time,status,notes')
-    .eq('status','scheduled')
-    .order('feature_date',{ascending:true})
-    .order('feature_time',{ascending:true});
-
-  if(scheduleError){
-    console.error('Unable to load upcoming feature schedules:',scheduleError);
-    grid.innerHTML = `
-      <div class="emptyState">
-        <h3>Upcoming features are temporarily unavailable.</h3>
-        <p>Please try again shortly.</p>
-      </div>`;
+  if(!bookId){
     return;
   }
 
-  const bookIds = [...new Set((schedules || []).map(item => item.book_id).filter(Boolean))];
-
-  if(!bookIds.length){
-    grid.innerHTML = `
-      <div class="emptyState">
-        <h3>No upcoming featured books yet.</h3>
-        <p>A real scheduled book will appear here when its approved trailer is switched on for the homepage.</p>
-      </div>`;
-    return;
-  }
-
-  const {data:trailers,error:trailerError} = await supabaseClient
-    .from('book_trailers')
-    .select('id,book_id,trailer_url,title,description,show_on_homepage')
-    .in('book_id',bookIds);
-
-  if(trailerError){
-    console.error('Unable to load book trailers:',trailerError);
-    grid.innerHTML = `
-      <div class="emptyState">
-        <h3>Upcoming trailers are temporarily unavailable.</h3>
-        <p>Please try again shortly.</p>
-      </div>`;
-    return;
-  }
-
-  const trailerMap = new Map((trailers || []).map(trailer => [trailer.book_id,trailer]));
-  const now = new Date();
-
-  const visible = (schedules || []).filter(schedule => {
-    const book = approvedBooks.find(item => item.id === schedule.book_id);
-    const trailer = trailerMap.get(schedule.book_id);
-    if(!book || !trailer || trailer.show_on_homepage !== true) return false;
-
-    const dateText = `${schedule.feature_date}T${schedule.feature_time || '00:00'}`;
-    const start = new Date(dateText);
-    return Number.isNaN(start.getTime()) ? true : start >= now;
-  });
-
-  if(!visible.length){
-    grid.innerHTML = `
-      <div class="emptyState">
-        <h3>No upcoming featured trailers are visible right now.</h3>
-        <p>Admin can make an approved scheduled trailer visible here with the homepage trailer toggle.</p>
-      </div>`;
-    return;
-  }
-
-  grid.innerHTML = '';
-
-  visible.forEach(schedule => {
-    const book = approvedBooks.find(item => item.id === schedule.book_id);
-    const author = approvedAuthors.find(item => item.id === book.author_id);
-    const trailer = trailerMap.get(schedule.book_id);
-    const trailerTitle = trailer.title || `${book.title} — Book Trailer`;
-    const scheduleText = `${formatCalendarDate(schedule.feature_date)}${schedule.feature_time ? ' • ' + formatCalendarTime(schedule.feature_time) : ''}`;
-
-    const card = document.createElement('article');
-    card.className = 'trailerCard';
-    card.innerHTML = `
-      <div class="trailerMedia">
-        ${trailer.trailer_url
-          ? `<video controls preload="metadata" src="${escapeHtml(trailer.trailer_url)}"></video>`
-          : `<div class="trailerPoster"><div><strong>${escapeHtml(book.title)}</strong><span>Trailer coming soon</span></div></div>`}
-      </div>
-      <div class="trailerInfo">
-        <span class="tag">Upcoming Featured Book</span>
-        <h3>${escapeHtml(trailerTitle)}</h3>
-        <div class="trailerMeta">Scheduled: ${escapeHtml(scheduleText)}</div>
-        ${author ? `<div class="trailerMeta">Author: ${escapeHtml(authorName(author))}</div>` : ''}
-        ${trailer.description ? `<p>${escapeHtml(trailer.description)}</p>` : ''}
-        <div class="bookActions">
-          <a class="btn small" href="book.html?id=${encodeURIComponent(book.id)}">View Book</a>
-          ${author ? `<a class="btn small" href="author-profile.html?id=${encodeURIComponent(author.id)}">View Author Profile</a>` : ''}
-        </div>
-      </div>`;
-    grid.appendChild(card);
-  });
-
-}
-
-
-async function loadApprovedBooks(){
-
-  const grid =
-    document.getElementById('bookGrid');
-
-  grid.innerHTML =
-    '<div class="loading">Loading approved books...</div>';
-
-  const {
-    data,
-    error
-  } = await supabaseClient
-    .from('books')
-    .select('*')
-    .eq('status','approved')
-    .order('created_at',{ascending:false});
-
-  if(error){
-
-    console.error(
-      'Unable to load approved books:',
-      error
-    );
-
-    grid.innerHTML = `
-      <div class="emptyState">
-        <h3>Books are temporarily unavailable.</h3>
-        <p>Please try again shortly.</p>
-      </div>
-    `;
-
-    return;
-
-  }
-
-  approvedBooks = data || [];
-
-  if(!approvedBooks.length){
-
-    grid.innerHTML = `
-      <div class="emptyState">
-        <h3>No approved books yet.</h3>
-        <p>
-          Approved books will appear here when they are available.
-        </p>
-      </div>
-    `;
-
-    return;
-
-  }
-
-  grid.innerHTML = '';
-
-  approvedBooks.forEach(book => {
-
-    const author =
-      approvedAuthors.find(
-        item => item.id === book.author_id
-      );
-
-    const cover = book.cover_url
-      ? `
-        <img
-          src="${escapeHtml(book.cover_url)}"
-          alt="${escapeHtml(book.title)} cover">
-      `
-      : `
-        <div class="coverInner">
-          <small>Reader Reach</small>
-          <strong>${escapeHtml(book.title)}</strong>
-          <small>${escapeHtml(authorName(author))}</small>
-        </div>
-      `;
-
-    const article =
-      document.createElement('article');
-
-    article.className = 'book';
-
-    article.innerHTML = `
-
-      <div class="cover">
-        ${cover}
-      </div>
-
-      <div class="bookInfo">
-
-        <span class="tag">
-          Approved
-        </span>
-
-        <h3>
-          ${escapeHtml(book.title)}
-        </h3>
-
-        <p>
-          ${escapeHtml(
-            book.description ||
-            'No description provided.'
-          )}
-        </p>
-
-        <div class="bookActions">
-
-          <a
-            class="btn small"
-            href="book.html?id=${encodeURIComponent(book.id)}">
-            View Book
-          </a>
-
-          ${
-            author
-            ? `
-              <a
-                class="btn small"
-                href="author-profile.html?id=${encodeURIComponent(author.id)}">
-                View Author Profile
-              </a>
-            `
-            : ''
-          }
-
-        </div>
-
-      </div>
-    `;
-
-    grid.appendChild(article);
-
-  });
-
-}
-
-
-async function openBook(bookId){
-
-  const book =
-    approvedBooks.find(
-      item => item.id === bookId
-    );
-
-  if(!book) return;
-
-  const author =
-    approvedAuthors.find(
-      item => item.id === book.author_id
-    );
-
-  const content =
-    document.getElementById('bookModalContent');
-
-  const cover = book.cover_url
-    ? `
-      <img
-        src="${escapeHtml(book.cover_url)}"
-        alt="${escapeHtml(book.title)} cover">
-    `
-    : `
-      <div class="coverInner">
-        <small>Reader Reach</small>
-        <strong>${escapeHtml(book.title)}</strong>
-        <small>${escapeHtml(authorName(author))}</small>
-      </div>
-    `;
-
-  content.innerHTML = `
-
-    <div class="bookModalGrid">
-
-      <div class="bookModalCover">
-        ${cover}
-      </div>
-
-      <div class="bookModalInfo">
-
-        <div class="kicker">Approved Book</div>
-
-        <h2>
-          ${escapeHtml(book.title)}
-        </h2>
-
-        <p>
-          <strong>Author:</strong>
-          ${escapeHtml(authorName(author))}
-        </p>
-
-        ${
-          book.genre_topic
-          ? `
-            <p>
-              <strong>Genre / Topic:</strong>
-              ${escapeHtml(book.genre_topic)}
-            </p>
-          `
-          : ''
-        }
-
-        <h3>About the Book</h3>
-
-        <p>
-          ${escapeHtml(
-            book.description ||
-            'No description provided.'
-          )}
-        </p>
-
-        ${
-          book.who_its_for
-          ? `
-            <h3>Who It Is For</h3>
-            <p>
-              ${escapeHtml(book.who_its_for)}
-            </p>
-          `
-          : ''
-        }
-
-        ${
-          book.availability
-          ? `
-            <h3>Availability</h3>
-            <p>
-              ${escapeHtml(book.availability)}
-            </p>
-          `
-          : ''
-        }
-
-        <div class="modalActions">
-
-          ${
-            book.book_link
-            ? `
-              <a
-                class="btn primary"
-                href="${escapeHtml(book.book_link)}"
-                target="_blank"
-                rel="noopener">
-                Open Book Link
-              </a>
-            `
-            : ''
-          }
-
-          ${
-            author
-            ? `
-              <button
-                class="btn"
-                type="button"
-                onclick="closeModal('bookModal');openAuthor('${author.id}')">
-                View Author Profile
-              </button>
-            `
-            : ''
-          }
-
-        </div>
-
-      </div>
-
-    </div>
-  `;
-
-  openModal('bookModal');
+  window.location.href =
+    'book.html?id=' +
+    encodeURIComponent(bookId);
 
 }
 
 
 /* ============================================================
-   FULL AUTHOR PROFILE
-============================================================ */
+   MOBILE MENU
+   ============================================================ */
 
-async function openAuthor(authorId){
+document
+  .getElementById('mobileMenuButton')
+  .addEventListener(
+    'click',
+    () => {
+
+      const menu =
+        document.getElementById(
+          'mobileMenu'
+        );
+
+      menu.classList.toggle(
+        'open'
+      );
+
+    }
+  );
+
+
+document
+  .querySelectorAll(
+    '#mobileMenu a'
+  )
+  .forEach(link => {
+
+    link.addEventListener(
+      'click',
+      () => {
+
+        document
+          .getElementById(
+            'mobileMenu'
+          )
+          .classList.remove(
+            'open'
+          );
+
+      }
+    );
+
+  });
+
+
+/* ============================================================
+   LOAD APPROVED AUTHORS
+   ============================================================ */
+
+async function loadApprovedAuthors(){
+
+  const grid =
+    document.getElementById(
+      'authorGrid'
+    );
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from('authors')
+      .select(`
+        id,
+        author_name,
+        bio,
+        profile_id,
+        status
+      `)
+      .eq(
+        'status',
+        'approved'
+      )
+      .order(
+        'author_name',
+        {
+          ascending:true
+        }
+      )
+      .limit(6);
+
+  if(error){
+
+    console.error(
+      'Authors load error:',
+      error
+    );
+
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>Authors are temporarily unavailable.</h3>
+        <p>
+          Please try again shortly.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  approvedAuthors =
+    data || [];
+
+  if(!approvedAuthors.length){
+
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>No approved authors yet.</h3>
+        <p>
+          Approved Reader Reach authors will appear here.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  /*
+    Get book counts separately so that the homepage does not
+    depend on a specific PostgREST relationship name.
+  */
+
+  const authorIds =
+    approvedAuthors
+      .map(author => author.id)
+      .filter(Boolean);
+
+  let bookCounts = {};
+
+  if(authorIds.length){
+
+    const {
+      data:books,
+      error:bookError
+    } =
+      await supabaseClient
+        .from('books')
+        .select(`
+          id,
+          author_id
+        `)
+        .eq(
+          'status',
+          'approved'
+        )
+        .in(
+          'author_id',
+          authorIds
+        );
+
+    if(!bookError){
+
+      (books || [])
+        .forEach(book => {
+
+          bookCounts[book.author_id] =
+            (bookCounts[book.author_id] || 0) + 1;
+
+        });
+
+    }
+
+  }
+
+  grid.innerHTML =
+    approvedAuthors
+      .map(author => {
+
+        const name =
+          getAuthorName(author);
+
+        return `
+          <article class="authorCard">
+
+            <div class="authorTop">
+
+              <div class="authorAvatar">
+                ${escapeHtml(
+                  initials(name)
+                )}
+              </div>
+
+              <div>
+
+                <h3>
+                  ${escapeHtml(name)}
+                </h3>
+
+              </div>
+
+            </div>
+
+            <div class="bio">
+
+              ${escapeHtml(
+                author.bio ||
+                'Author biography available on the author profile.'
+              )}
+
+            </div>
+
+            <div class="authorStats">
+
+              <span>
+                ${bookCounts[author.id] || 0}
+                approved book(s)
+              </span>
+
+            </div>
+
+            <button
+              class="btn primary small"
+              type="button"
+              onclick="goToAuthor('${author.id}')">
+
+              View Author Profile
+
+            </button>
+
+          </article>
+        `;
+
+      })
+      .join('');
+
+}
+
+
+/* ============================================================
+   LOAD APPROVED BOOKS
+   ============================================================ */
+
+async function loadApprovedBooks(){
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from('books')
+      .select(`
+        id,
+        author_id,
+        title,
+        genre,
+        description,
+        availability,
+        status,
+        cover_image_url,
+        cover_url,
+        book_cover_url,
+        trailer_url,
+        video_url,
+        book_trailer_url
+      `)
+      .eq(
+        'status',
+        'approved'
+      )
+      .order(
+        'created_at',
+        {
+          ascending:false
+        }
+      );
+
+  if(error){
+
+    console.error(
+      'Approved books load error:',
+      error
+    );
+
+    approvedBooks = [];
+
+    return;
+
+  }
+
+  approvedBooks =
+    data || [];
+
+}
+
+
+/* ============================================================
+   AUTHOR MAP
+   ============================================================ */
+
+async function getAuthorsForBooks(
+  books
+){
+
+  const ids =
+    [
+      ...new Set(
+        books
+          .map(book => book.author_id)
+          .filter(Boolean)
+      )
+    ];
+
+  if(!ids.length){
+    return new Map();
+  }
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from('authors')
+      .select(`
+        id,
+        author_name,
+        bio
+      `)
+      .in(
+        'id',
+        ids
+      );
+
+  if(error){
+
+    console.error(
+      'Book authors load error:',
+      error
+    );
+
+    return new Map();
+
+  }
+
+  return new Map(
+    (data || [])
+      .map(author => [
+        author.id,
+        author
+      ])
+  );
+
+}
+
+
+/* ============================================================
+   RENDER BOOK CARD
+   ============================================================ */
+
+function renderBookCard(
+  book,
+  authorMap
+){
 
   const author =
-    approvedAuthors.find(
-      item => item.id === authorId
-    );
+    authorMap.get(
+      book.author_id
+    ) || {};
 
-  if(!author) return;
+  const authorName =
+    getAuthorName(author);
 
-  const content =
-    document.getElementById('authorModalContent');
+  const cover =
+    getCover(book);
 
-  const authorBooks =
-    approvedBooks.filter(
-      book => book.author_id === authorId
-    );
+  return `
+    <article class="book">
 
-  const displayName =
-    authorName(author);
-
-  const initials =
-    displayName
-      .split(' ')
-      .map(part => part.charAt(0))
-      .join('')
-      .slice(0,2)
-      .toUpperCase();
-
-  const photoUrl =
-    author.profile_image_url ||
-    author.photo_url ||
-    author.avatar_url ||
-    '';
-
-  content.innerHTML = `
-
-    <div class="profileHeader">
-
-      <div class="authorAvatar">
+      <div class="cover">
 
         ${
-          photoUrl
+          cover
           ? `
             <img
-              src="${escapeHtml(photoUrl)}"
-              alt="${escapeHtml(displayName)}">
+              src="${escapeHtml(cover)}"
+              alt="${escapeHtml(
+                book.title || 'Book cover'
+              )}">
           `
           : `
-            ${escapeHtml(initials)}
+            <div class="coverInner">
+
+              <small>
+                Reader Reach
+              </small>
+
+              <strong>
+                ${escapeHtml(
+                  book.title ||
+                  'Untitled Book'
+                )}
+              </strong>
+
+              <small>
+                ${escapeHtml(
+                  book.genre ||
+                  'Book'
+                )}
+              </small>
+
+            </div>
           `
         }
 
       </div>
 
-      <div>
+      <div class="bookInfo">
 
-        <div class="kicker">Author Profile</div>
+        ${
+          book.genre
+          ? `
+            <span class="tag">
+              ${escapeHtml(book.genre)}
+            </span>
+          `
+          : ''
+        }
 
-        <h2>
-          ${escapeHtml(displayName)}
-        </h2>
+        <h3>
+          ${escapeHtml(
+            book.title ||
+            'Untitled Book'
+          )}
+        </h3>
 
-        <div class="profileBio">
-          ${
-            escapeHtml(
-              author.bio ||
-              author.about ||
-              'No author biography has been provided.'
-            )
-          }
+        <div class="bookAuthor">
+          By ${escapeHtml(authorName)}
+        </div>
+
+        <p>
+          ${escapeHtml(
+            book.description ||
+            'Book description available on the book details page.'
+          )}
+        </p>
+
+        <div class="bookActions">
+
+          <button
+            class="btn primary small"
+            type="button"
+            onclick="goToBook('${book.id}')">
+            View Book
+          </button>
+
+          <button
+            class="btn small"
+            type="button"
+            onclick="goToAuthor('${book.author_id}')">
+            View Author Profile
+          </button>
+
         </div>
 
       </div>
 
-    </div>
-
-    <div class="authorBooks">
-
-      <h3>
-        Approved Books by ${escapeHtml(displayName)}
-      </h3>
-
-      ${
-        authorBooks.length
-        ? authorBooks.map(book => `
-
-          <div class="authorBook">
-
-            <strong>
-              ${escapeHtml(book.title)}
-            </strong>
-
-            <div style="color:var(--muted);margin:5px 0 10px">
-              ${escapeHtml(
-                book.description ||
-                'No description provided.'
-              )}
-            </div>
-
-            <button
-              class="btn small"
-              type="button"
-              onclick="closeModal('authorModal');openBook('${book.id}')">
-              View Book
-            </button>
-
-          </div>
-
-        `).join('')
-        : `
-          <p style="color:var(--muted)">
-            This author does not currently have another approved book
-            available publicly.
-          </p>
-        `
-      }
-
-    </div>
+    </article>
   `;
 
-  openModal('authorModal');
+}
+
+
+/* ============================================================
+   LOAD FEATURED BOOKS
+   ============================================================ */
+
+async function loadFeaturedBooks(){
+
+  const grid =
+    document.getElementById(
+      'featuredBookGrid'
+    );
+
+  const {
+    data:featuredRows,
+    error:featuredError
+  } =
+    await supabaseClient
+      .from('homepage_featured_books')
+      .select(`
+        book_id,
+        selected,
+        created_at
+      `)
+      .eq(
+        'selected',
+        true
+      )
+      .order(
+        'created_at',
+        {
+          ascending:false
+        }
+      );
+
+  if(featuredError){
+
+    console.error(
+      'Featured records error:',
+      featuredError
+    );
+
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>Featured books are temporarily unavailable.</h3>
+        <p>
+          Please try again shortly.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  const ids =
+    (featuredRows || [])
+      .map(row => row.book_id)
+      .filter(Boolean);
+
+  if(!ids.length){
+
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>No featured books yet.</h3>
+        <p>
+          Books selected by the Reader Reach Admin will appear here.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  const {
+    data:books,
+    error:bookError
+  } =
+    await supabaseClient
+      .from('books')
+      .select(`
+        id,
+        author_id,
+        title,
+        genre,
+        description,
+        availability,
+        status,
+        cover_image_url,
+        cover_url,
+        book_cover_url,
+        trailer_url,
+        video_url,
+        book_trailer_url
+      `)
+      .eq(
+        'status',
+        'approved'
+      )
+      .in(
+        'id',
+        ids
+      );
+
+  if(bookError){
+
+    console.error(
+      'Featured books load error:',
+      bookError
+    );
+
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>Featured books are temporarily unavailable.</h3>
+        <p>
+          Please try again shortly.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  featuredBooks =
+    books || [];
+
+  const authorMap =
+    await getAuthorsForBooks(
+      featuredBooks
+    );
+
+  if(!featuredBooks.length){
+
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>No approved featured books yet.</h3>
+        <p>
+          Featured books will appear once the selected books are approved.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  /*
+    Preserve Admin Featured ordering.
+  */
+
+  const order =
+    new Map(
+      ids.map(
+        (id,index) => [
+          id,
+          index
+        ]
+      )
+    );
+
+  featuredBooks.sort(
+    (a,b) =>
+      (order.get(a.id) ?? 9999) -
+      (order.get(b.id) ?? 9999)
+  );
+
+  grid.innerHTML =
+    featuredBooks
+      .map(book =>
+        renderBookCard(
+          book,
+          authorMap
+        )
+      )
+      .join('');
+
+}
+
+
+/* ============================================================
+   TRAILER DATA
+   ============================================================ */
+
+async function loadTrailerBooks(){
+
+  const grid =
+    document.getElementById(
+      'trailerGrid'
+    );
+
+  /*
+    Trailer visibility is controlled independently from
+    Featured Books.
+
+    The trailer record must explicitly have show_on_homepage=true.
+  */
+
+  const {
+    data:trailerRows,
+    error:trailerError
+  } =
+    await supabaseClient
+      .from('book_trailers')
+      .select(`
+        id,
+        book_id,
+        trailer_url,
+        video_url,
+        show_on_homepage,
+        created_at
+      `)
+      .eq(
+        'show_on_homepage',
+        true
+      )
+      .order(
+        'created_at',
+        {
+          ascending:false
+        }
+      );
+
+  if(trailerError){
+
+    console.error(
+      'Trailer load error:',
+      trailerError
+    );
+
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>Book trailers are temporarily unavailable.</h3>
+        <p>
+          Please try again shortly.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  if(!trailerRows || !trailerRows.length){
+
+    trailerBooks = [];
+
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>No upcoming trailers right now.</h3>
+        <p>
+          When the Admin turns homepage trailer visibility on,
+          the corresponding book trailer will appear here.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  const bookIds =
+    [
+      ...new Set(
+        trailerRows
+          .map(row => row.book_id)
+          .filter(Boolean)
+      )
+    ];
+
+  const {
+    data:books,
+    error:booksError
+  } =
+    await supabaseClient
+      .from('books')
+      .select(`
+        id,
+        author_id,
+        title,
+        genre,
+        description,
+        availability,
+        cover_image_url,
+        cover_url,
+        book_cover_url,
+        trailer_url,
+        video_url,
+        book_trailer_url
+      `)
+      .in(
+        'id',
+        bookIds
+      );
+
+  if(booksError){
+
+    console.error(
+      'Trailer book load error:',
+      booksError
+    );
+
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>Trailer books are temporarily unavailable.</h3>
+        <p>
+          Please try again shortly.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  const authorMap =
+    await getAuthorsForBooks(
+      books || []
+    );
+
+  const bookMap =
+    new Map(
+      (books || [])
+        .map(book => [
+          book.id,
+          book
+        ])
+    );
+
+  trailerBooks =
+    trailerRows
+      .map(row => {
+
+        const book =
+          bookMap.get(
+            row.book_id
+          );
+
+        if(!book){
+          return null;
+        }
+
+        return {
+          ...row,
+          book
+        };
+
+      })
+      .filter(Boolean);
+
+  if(!trailerBooks.length){
+
+    grid.innerHTML = `
+      <div class="emptyState">
+        <h3>No visible trailers right now.</h3>
+        <p>
+          Trailer visibility is controlled by the Admin.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  grid.innerHTML =
+    trailerBooks
+      .map(item => {
+
+        const book =
+          item.book;
+
+        const author =
+          authorMap.get(
+            book.author_id
+          ) || {};
+
+        const authorName =
+          getAuthorName(author);
+
+        const cover =
+          getCover(book);
+
+        const trailer =
+          item.trailer_url ||
+          item.video_url ||
+          getTrailerUrl(book);
+
+        return `
+          <article class="trailerCard">
+
+            <div class="trailerVideo">
+
+              ${
+                trailer
+                ? `
+                  <video
+                    controls
+                    preload="metadata"
+                    poster="${escapeHtml(cover)}">
+
+                    <source
+                      src="${escapeHtml(trailer)}">
+
+                    Your browser does not support video playback.
+
+                  </video>
+                `
+                : `
+                  <div class="trailerFallback">
+
+                    <div>
+
+                      <strong>
+                        ${escapeHtml(
+                          book.title ||
+                          'Book Trailer'
+                        )}
+                      </strong>
+
+                      <span>
+                        Trailer available on the book page.
+                      </span>
+
+                    </div>
+
+                  </div>
+                `
+              }
+
+              <div class="playBadge">
+                ▶
+              </div>
+
+            </div>
+
+            <div class="trailerInfo">
+
+              <h3>
+                ${escapeHtml(
+                  book.title ||
+                  'Untitled Book'
+                )}
+              </h3>
+
+              <div class="trailerAuthor">
+                By ${escapeHtml(authorName)}
+              </div>
+
+              <p>
+                ${escapeHtml(
+                  book.description ||
+                  'Discover this book on Reader Reach.'
+                )}
+              </p>
+
+              <div class="trailerActions">
+
+                <button
+                  class="btn primary small"
+                  type="button"
+                  onclick="goToBook('${book.id}')">
+                  View Book
+                </button>
+
+                <button
+                  class="btn small"
+                  type="button"
+                  onclick="goToAuthor('${book.author_id}')">
+                  View Author Profile
+                </button>
+
+              </div>
+
+            </div>
+
+          </article>
+        `;
+
+      })
+      .join('');
 
 }
 
 
 /* ============================================================
    DISCUSSION SESSIONS
-============================================================ */
+   ============================================================ */
 
 async function loadDiscussionSessions(){
 
@@ -3184,96 +3068,296 @@ async function loadDiscussionSessions(){
       'discussionBookSelect'
     );
 
-  select.innerHTML =
-    '<option value="">Select a scheduled book</option>';
+  const status =
+    document.getElementById(
+      'discussionStatus'
+    );
 
   const {
     data,
     error
-  } = await supabaseClient
-    .from('reader_discussion_sessions')
-    .select('*')
-    .eq('status','scheduled')
-    .order('start_at',{ascending:true});
+  } =
+    await supabaseClient
+      .from('discussions')
+      .select(`
+        id,
+        book_id,
+        created_at
+      `)
+      .order(
+        'created_at',
+        {
+          ascending:false
+        }
+      );
+
+  /*
+    The original homepage used reader_discussion_sessions.
+    The project brief's core table is discussions.
+
+    If the core table is unavailable in the current database,
+    fall back to the existing discussion-session table.
+  */
 
   if(error){
 
-    console.error(
-      'Unable to load discussion sessions:',
-      error
-    );
+    const fallback =
+      await supabaseClient
+        .from('reader_discussion_sessions')
+        .select('*')
+        .order(
+          'start_at',
+          {
+            ascending:true
+          }
+        );
 
-    document.getElementById(
-      'discussionStatus'
-    ).textContent =
-      'Discussion sessions are temporarily unavailable.';
+    if(fallback.error){
+
+      console.error(
+        'Discussion sessions load error:',
+        error,
+        fallback.error
+      );
+
+      status.textContent =
+        'Discussion sessions are temporarily unavailable.';
+
+      return;
+    }
+
+    discussionSessions =
+      fallback.data || [];
+
+    renderDiscussionOptions(
+      discussionSessions
+    );
 
     return;
 
   }
 
-  discussionSessions = data || [];
-
-  const approvedBookIds =
-    new Set(
-      approvedBooks.map(book => book.id)
-    );
-
   discussionSessions =
-    discussionSessions.filter(
-      session =>
-        approvedBookIds.has(session.book_id)
+    data || [];
+
+  /*
+    The core discussions table does not necessarily contain
+    schedule fields. Try feature_schedules for the public schedule.
+  */
+
+  if(discussionSessions.length){
+
+    const bookIds =
+      discussionSessions
+        .map(item => item.book_id)
+        .filter(Boolean);
+
+    if(bookIds.length){
+
+      const {
+        data:schedules
+      } =
+        await supabaseClient
+          .from('feature_schedules')
+          .select(`
+            id,
+            book_id,
+            scheduled_date,
+            scheduled_time,
+            status
+          `)
+          .eq(
+            'status',
+            'scheduled'
+          )
+          .in(
+            'book_id',
+            bookIds
+          );
+
+      if(schedules){
+
+        discussionSessions =
+          discussionSessions.map(
+            session => {
+
+              const schedule =
+                schedules.find(
+                  item =>
+                    item.book_id ===
+                    session.book_id
+                );
+
+              if(!schedule){
+                return session;
+              }
+
+              const start =
+                schedule.scheduled_date &&
+                schedule.scheduled_time
+                ? `${schedule.scheduled_date}T${schedule.scheduled_time}`
+                : null;
+
+              return {
+                ...session,
+                start_at:
+                  session.start_at ||
+                  start,
+                end_at:
+                  session.end_at ||
+                  (
+                    start
+                    ? new Date(
+                        new Date(start).getTime() +
+                        30 * 60 * 1000
+                      ).toISOString()
+                    : null
+                  )
+              };
+
+            }
+          );
+
+      }
+
+    }
+
+  }
+
+  renderDiscussionOptions(
+    discussionSessions
+  );
+
+}
+
+
+function renderDiscussionOptions(
+  sessions
+){
+
+  const select =
+    document.getElementById(
+      'discussionBookSelect'
     );
 
-  discussionSessions.forEach(session => {
-
-    const book =
-      approvedBooks.find(
-        item => item.id === session.book_id
-      );
-
-    if(!book) return;
-
-    const option =
-      document.createElement('option');
-
-    option.value = session.id;
-
-    option.textContent =
-      book.title +
-      ' — ' +
-      formatDateTime(session.start_at);
-
-    select.appendChild(option);
-
-  });
-
-  if(!discussionSessions.length){
-
+  const status =
     document.getElementById(
       'discussionStatus'
-    ).textContent =
+    );
+
+  select.innerHTML = `
+    <option value="">
+      Select a scheduled book
+    </option>
+  `;
+
+  const bookMap =
+    new Map(
+      approvedBooks.map(
+        book => [
+          book.id,
+          book
+        ]
+      )
+    );
+
+  const visibleSessions =
+    sessions
+      .filter(
+        session =>
+          bookMap.has(
+            session.book_id
+          )
+      );
+
+  visibleSessions
+    .forEach(session => {
+
+      const book =
+        bookMap.get(
+          session.book_id
+        );
+
+      const option =
+        document.createElement(
+          'option'
+        );
+
+      option.value =
+        session.id;
+
+      option.textContent =
+        `${book.title} — ${
+          formatDateTime(
+            session.start_at
+          )
+        }`;
+
+      select.appendChild(
+        option
+      );
+
+    });
+
+  if(!visibleSessions.length){
+
+    status.textContent =
       'There are no scheduled reader discussion sessions right now.';
+
+  }else{
+
+    status.textContent =
+      'Select a scheduled book to view its discussion status.';
 
   }
 
 }
 
 
-function getSessionState(session){
+function getSessionState(
+  session
+){
 
   if(!session){
     return 'none';
+  }
+
+  if(!session.start_at){
+    return 'unknown';
   }
 
   const now =
     new Date();
 
   const start =
-    new Date(session.start_at);
+    new Date(
+      session.start_at
+    );
 
-  const end =
-    new Date(session.end_at);
+  if(Number.isNaN(
+    start.getTime()
+  )){
+    return 'unknown';
+  }
+
+  let end;
+
+  if(session.end_at){
+
+    end =
+      new Date(
+        session.end_at
+      );
+
+  }else{
+
+    end =
+      new Date(
+        start.getTime() +
+        30 * 60 * 1000
+      );
+
+  }
 
   if(now < start){
     return 'upcoming';
@@ -3288,695 +3372,967 @@ function getSessionState(session){
 }
 
 
-function updateDiscussionStatus(session){
-
-  const status =
-    document.getElementById(
-      'discussionStatus'
-    );
-
-  const form =
-    document.getElementById(
-      'discussionMessageForm'
-    );
-
-  if(!session){
-
-    status.textContent =
-      'No discussion session selected.';
-
-    form.style.display =
-      'none';
-
-    return;
-
-  }
-
-  const book =
-    approvedBooks.find(
-      item => item.id === session.book_id
-    );
-
-  const state =
-    getSessionState(session);
-
-  if(state === 'upcoming'){
-
-    status.textContent =
-      'Discussion for "' +
-      (book ? book.title : 'this book') +
-      '" starts ' +
-      formatDateTime(session.start_at) +
-      ' and lasts 30 minutes.';
-
-    form.style.display =
-      'none';
-
-    return;
-
-  }
-
-  if(state === 'active'){
-
-    status.textContent =
-      'Discussion is open for "' +
-      (book ? book.title : 'this book') +
-      '". It closes at ' +
-      formatDateTime(session.end_at) +
-      '.';
-
-    form.style.display =
-      'block';
-
-    return;
-
-  }
-
-  status.textContent =
-    'This 30-minute discussion session has ended.';
-
-  form.style.display =
-    'none';
-
-}
-
-
-async function loadDiscussionMessages(sessionId){
+async function loadDiscussionMessages(
+  sessionId
+){
 
   const list =
     document.getElementById(
       'discussionMessages'
     );
 
+  const login =
+    document.getElementById(
+      'discussionLogin'
+    );
+
   const session =
     discussionSessions.find(
-      item => item.id === sessionId
+      item =>
+        item.id === sessionId
     );
 
   if(!session){
 
-    list.innerHTML =
-      '<div class="loading">No session selected.</div>';
+    list.innerHTML = `
+      <div class="loading">
+        Select a scheduled discussion.
+      </div>
+    `;
+
+    login.style.display =
+      'none';
+
+    return;
+  }
+
+  const state =
+    getSessionState(
+      session
+    );
+
+  if(
+    state === 'upcoming'
+  ){
+
+    list.innerHTML = `
+      <div class="loading">
+        Messages will appear when the discussion opens.
+      </div>
+    `;
+
+    login.style.display =
+      'none';
 
     return;
 
   }
 
-  const state =
-    getSessionState(session);
+  if(
+    state === 'expired'
+  ){
 
-  if(state !== 'active'){
+    list.innerHTML = `
+      <div class="loading">
+        This discussion session has ended.
+      </div>
+    `;
 
-    list.innerHTML =
-      `
-        <div class="loading">
-          ${
-            state === 'upcoming'
-            ? 'Messages will appear when the discussion opens.'
-            : 'This discussion session has ended.'
-          }
-        </div>
-      `;
+    login.style.display =
+      'none';
+
+    return;
+
+  }
+
+  if(
+    state === 'unknown'
+  ){
+
+    list.innerHTML = `
+      <div class="loading">
+        Discussion timing is not currently available.
+      </div>
+    `;
+
+    login.style.display =
+      'none';
 
     return;
 
   }
 
   /*
-    Reader-only messages are protected by Supabase RLS.
-    If the visitor is not authenticated as a reader,
-    Supabase will return no unauthorized content.
+    Current project discussion messages use discussion_messages.
   */
 
   const {
     data,
     error
-  } = await supabaseClient
-    .from('reader_discussion_messages')
-    .select('*')
-    .eq('session_id',sessionId)
-    .order('created_at',{ascending:true});
+  } =
+    await supabaseClient
+      .from('discussion_messages')
+      .select(`
+        id,
+        discussion_id,
+        author_profile_id,
+        message,
+        created_at,
+        updated_at
+      `)
+      .eq(
+        'discussion_id',
+        sessionId
+      )
+      .order(
+        'created_at',
+        {
+          ascending:true
+        }
+      );
 
   if(error){
 
     console.error(
-      'Unable to load discussion messages:',
+      'Discussion messages load error:',
       error
     );
 
-    list.innerHTML =
-      `
-        <div class="loading">
-          Sign in as a Reader to participate in this discussion.
-        </div>
-      `;
+    list.innerHTML = `
+      <div class="loading">
+        Sign in as a Reader to participate in this discussion.
+      </div>
+    `;
+
+    login.style.display =
+      'block';
 
     return;
 
   }
+
+  login.style.display =
+    'none';
 
   if(!data || !data.length){
 
-    list.innerHTML =
-      `
-        <div class="loading">
-          No messages yet. The conversation can begin.
-        </div>
-      `;
+    list.innerHTML = `
+      <div class="loading">
+        No messages yet.
+      </div>
+    `;
 
     return;
 
   }
 
-  list.innerHTML = '';
+  /*
+    Load participant display names.
+  */
 
-  data.forEach(message => {
+  const profileIds =
+    data
+      .map(message =>
+        message.author_profile_id
+      )
+      .filter(Boolean);
 
-    const item =
-      document.createElement('div');
+  let profileMap =
+    new Map();
 
-    item.className =
-      'message';
+  if(profileIds.length){
 
-    item.innerHTML = `
+    const {
+      data:profiles
+    } =
+      await supabaseClient
+        .from('profiles')
+        .select(`
+          id,
+          display_name,
+          role
+        `)
+        .in(
+          'id',
+          profileIds
+        );
 
-      <strong>Reader</strong>
+    profileMap =
+      new Map(
+        (profiles || [])
+          .map(profile => [
+            profile.id,
+            profile
+          ])
+      );
 
-      <small>
-        ${escapeHtml(formatDateTime(message.created_at))}
-      </small>
+  }
 
-      <p>
-        ${escapeHtml(message.message)}
-      </p>
-    `;
+  list.innerHTML =
+    data
+      .map(message => {
 
-    list.appendChild(item);
+        const profile =
+          profileMap.get(
+            message.author_profile_id
+          ) || {};
 
-  });
+        return `
+          <div class="message">
+
+            <strong>
+              ${escapeHtml(
+                profile.display_name ||
+                'Reader Reach User'
+              )}
+            </strong>
+
+            <small>
+              ${escapeHtml(
+                formatDateTime(
+                  message.created_at
+                )
+              )}
+            </small>
+
+            <p>
+              ${escapeHtml(
+                message.message
+              )}
+            </p>
+
+          </div>
+        `;
+
+      })
+      .join('');
 
 }
 
 
 document
-  .getElementById('discussionBookSelect')
-  .addEventListener('change',async event => {
+  .getElementById(
+    'discussionBookSelect'
+  )
+  .addEventListener(
+    'change',
+    async event => {
 
-    const sessionId =
-      event.target.value;
+      const sessionId =
+        event.target.value;
 
-    selectedDiscussionSession =
-      discussionSessions.find(
-        session => session.id === sessionId
-      ) || null;
+      selectedDiscussionSession =
+        discussionSessions.find(
+          session =>
+            session.id ===
+            sessionId
+        ) || null;
 
-    updateDiscussionStatus(
-      selectedDiscussionSession
-    );
+      const status =
+        document.getElementById(
+          'discussionStatus'
+        );
 
-    if(selectedDiscussionSession){
+      if(!selectedDiscussionSession){
+
+        status.textContent =
+          'Select a scheduled book to view its discussion.';
+
+        await loadDiscussionMessages(
+          ''
+        );
+
+        return;
+
+      }
+
+      const state =
+        getSessionState(
+          selectedDiscussionSession
+        );
+
+      const book =
+        approvedBooks.find(
+          item =>
+            item.id ===
+            selectedDiscussionSession.book_id
+        );
+
+      if(state === 'upcoming'){
+
+        status.textContent =
+          `Discussion for "${book?.title || 'this book'}" starts ${
+            formatDateTime(
+              selectedDiscussionSession.start_at
+            )
+          }.`;
+
+      }else if(state === 'active'){
+
+        status.textContent =
+          `Discussion for "${book?.title || 'this book'}" is currently open.`;
+
+      }else if(state === 'expired'){
+
+        status.textContent =
+          'This discussion session has ended.';
+
+      }else{
+
+        status.textContent =
+          'Discussion timing is currently unavailable.';
+
+      }
 
       await loadDiscussionMessages(
-        selectedDiscussionSession.id
+        sessionId
       );
 
-    }else{
+    }
+  );
 
-      document.getElementById(
-        'discussionMessages'
-      ).innerHTML =
-        `
-          <div class="loading">
-            Select a scheduled book to view its discussion.
+
+/* ============================================================
+   CALENDAR
+   ============================================================ */
+
+async function loadCalendar(){
+
+  const list =
+    document.getElementById(
+      'calendarList'
+    );
+
+  const today =
+    new Date();
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from('feature_schedules')
+      .select(`
+        id,
+        book_id,
+        scheduled_date,
+        scheduled_time,
+        status,
+        notes
+      `)
+      .eq(
+        'status',
+        'scheduled'
+      )
+      .order(
+        'scheduled_date',
+        {
+          ascending:true
+        }
+      )
+      .limit(12);
+
+  if(error){
+
+    console.error(
+      'Calendar load error:',
+      error
+    );
+
+    list.innerHTML = `
+      <div class="emptyState">
+        <h3>Calendar temporarily unavailable.</h3>
+        <p>
+          Please try again shortly.
+        </p>
+      </div>
+    `;
+
+    return;
+
+  }
+
+  const rows =
+    (data || [])
+      .filter(item => {
+
+        if(!item.scheduled_date){
+          return true;
+        }
+
+        const date =
+          new Date(
+            `${item.scheduled_date}T${
+              item.scheduled_time ||
+              '00:00:00'
+            }`
+          );
+
+        return (
+          Number.isNaN(date.getTime()) ||
+          date >= today
+        );
+
+      });
+
+  if(!rows.length){
+
+    list.innerHTML = `
+      <div class="emptyState">
+
+        <h3>
+          No upcoming features yet.
+        </h3>
+
+        <p>
+          When a real Reader Reach feature is scheduled,
+          it will appear here.
+        </p>
+
+      </div>
+    `;
+
+    return;
+
+  }
+
+  const bookIds =
+    rows
+      .map(row =>
+        row.book_id
+      )
+      .filter(Boolean);
+
+  const {
+    data:books
+  } =
+    bookIds.length
+    ? await supabaseClient
+        .from('books')
+        .select(`
+          id,
+          title,
+          status
+        `)
+        .in(
+          'id',
+          bookIds
+        )
+    : {
+        data:[]
+      };
+
+  const bookMap =
+    new Map(
+      (books || [])
+        .map(book => [
+          book.id,
+          book
+        ])
+    );
+
+  list.innerHTML =
+    rows
+      .map(row => {
+
+        const book =
+          bookMap.get(
+            row.book_id
+          );
+
+        const title =
+          book?.title ||
+          'Reader Reach Feature';
+
+        const dateLabel =
+          row.scheduled_date
+          ? formatDate(
+              `${row.scheduled_date}T${
+                row.scheduled_time ||
+                '00:00:00'
+              }`
+            )
+          : 'Date to be announced';
+
+        return `
+          <div class="eventItem">
+
+            <div>
+
+              <strong>
+                ${escapeHtml(title)}
+              </strong>
+
+              <span>
+                ${escapeHtml(
+                  row.notes ||
+                  'Scheduled Reader Reach feature.'
+                )}
+              </span>
+
+            </div>
+
+            <div class="eventDate">
+
+              ${escapeHtml(
+                dateLabel
+              )}
+
+              ${
+                row.scheduled_time
+                ? `
+                  <br>
+                  ${escapeHtml(
+                    row.scheduled_time
+                  )}
+                `
+                : ''
+              }
+
+            </div>
+
+            ${
+              book
+              ? `
+                <button
+                  class="btn small"
+                  type="button"
+                  onclick="goToBook('${book.id}')">
+                  View Book
+                </button>
+              `
+              : ''
+            }
+
           </div>
         `;
 
-    }
+      })
+      .join('');
 
-  });
+}
+
+
+/* ============================================================
+   BOOK MODAL
+   ============================================================ */
+
+async function openBookModal(
+  bookId
+){
+
+  const modal =
+    document.getElementById(
+      'bookModal'
+    );
+
+  const content =
+    document.getElementById(
+      'bookModalContent'
+    );
+
+  const book =
+    approvedBooks.find(
+      item =>
+        item.id === bookId
+    );
+
+  if(!book){
+
+    content.innerHTML = `
+      <div class="loading">
+        Book could not be found.
+      </div>
+    `;
+
+    modal.classList.add(
+      'show'
+    );
+
+    document.body.classList.add(
+      'modal-open'
+    );
+
+    return;
+
+  }
+
+  const authorMap =
+    await getAuthorsForBooks([
+      book
+    ]);
+
+  const author =
+    authorMap.get(
+      book.author_id
+    ) || {};
+
+  const cover =
+    getCover(book);
+
+  const trailer =
+    getTrailerUrl(book);
+
+  content.innerHTML = `
+
+    <div class="bookModalGrid">
+
+      <div class="bookModalCover">
+
+        ${
+          cover
+          ? `
+            <img
+              src="${escapeHtml(cover)}"
+              alt="${escapeHtml(
+                book.title
+              )}">
+          `
+          : `
+            <div class="coverInner">
+
+              <small>
+                Reader Reach
+              </small>
+
+              <strong>
+                ${escapeHtml(
+                  book.title
+                )}
+              </strong>
+
+            </div>
+          `
+        }
+
+      </div>
+
+      <div class="bookModalInfo">
+
+        ${
+          book.genre
+          ? `
+            <span class="tag">
+              ${escapeHtml(book.genre)}
+            </span>
+          `
+          : ''
+        }
+
+        <h2>
+          ${escapeHtml(
+            book.title
+          )}
+        </h2>
+
+        <p>
+          By
+          <strong>
+            ${escapeHtml(
+              getAuthorName(author)
+            )}
+          </strong>
+        </p>
+
+        <h3>
+          About the Book
+        </h3>
+
+        <p>
+          ${escapeHtml(
+            book.description ||
+            'No description has been published yet.'
+          )}
+        </p>
+
+        ${
+          book.availability
+          ? `
+            <h3>
+              Availability
+            </h3>
+
+            <p>
+              ${escapeHtml(
+                book.availability
+              )}
+            </p>
+          `
+          : ''
+        }
+
+        ${
+          trailer
+          ? `
+            <h3>
+              Trailer
+            </h3>
+
+            <video
+              controls
+              style="width:100%;max-height:360px;background:#17100d;border-radius:12px;">
+
+              <source
+                src="${escapeHtml(trailer)}">
+
+            </video>
+          `
+          : ''
+        }
+
+        <div class="modalActions">
+
+          <button
+            class="btn primary"
+            type="button"
+            onclick="goToBook('${book.id}')">
+            Open Book Details
+          </button>
+
+          <button
+            class="btn"
+            type="button"
+            onclick="goToAuthor('${book.author_id}')">
+            View Author Profile
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+  `;
+
+  modal.classList.add(
+    'show'
+  );
+
+  document.body.classList.add(
+    'modal-open'
+  );
+
+}
+
+
+function closeModal(
+  id
+){
+
+  const modal =
+    document.getElementById(
+      id
+    );
+
+  if(!modal){
+    return;
+  }
+
+  modal.classList.remove(
+    'show'
+  );
+
+  document.body.classList.remove(
+    'modal-open'
+  );
+
+}
 
 
 document
-  .getElementById('refreshDiscussionBtn')
-  .addEventListener('click',async () => {
+  .getElementById(
+    'bookModal'
+  )
+  .addEventListener(
+    'click',
+    event => {
 
-    await loadDiscussionSessions();
+      if(
+        event.target.id ===
+        'bookModal'
+      ){
 
-    if(selectedDiscussionSession){
-
-      const refreshed =
-        discussionSessions.find(
-          session =>
-            session.id === selectedDiscussionSession.id
-        );
-
-      selectedDiscussionSession =
-        refreshed || null;
-
-      updateDiscussionStatus(
-        selectedDiscussionSession
-      );
-
-      if(refreshed){
-
-        await loadDiscussionMessages(
-          refreshed.id
+        closeModal(
+          'bookModal'
         );
 
       }
 
     }
-
-    toast('Discussion sessions refreshed.');
-
-  });
-
-
-document
-  .getElementById('discussionMessageForm')
-  .addEventListener('submit',async event => {
-
-    event.preventDefault();
-
-    if(!selectedDiscussionSession){
-      toast('Select a discussion session first.');
-      return;
-    }
-
-    if(
-      getSessionState(selectedDiscussionSession) !==
-      'active'
-    ){
-
-      toast('This discussion session is no longer open.');
-      return;
-
-    }
-
-    const messageInput =
-      document.getElementById(
-        'discussionMessageInput'
-      );
-
-    const message =
-      messageInput.value.trim();
-
-    if(!message){
-      toast('Please write a message first.');
-      return;
-    }
-
-    const {
-      data: authData
-    } = await supabaseClient.auth.getUser();
-
-    if(!authData || !authData.user){
-
-      toast(
-        'Please sign in as a Reader before joining the discussion.'
-      );
-
-      return;
-
-    }
-
-    /*
-      The actual reader_id must come from the authenticated
-      Reader profile. We deliberately do not invent or
-      expose another person's reader ID here.
-    */
-
-    const {
-      data: reader,
-      error: readerError
-    } = await supabaseClient
-      .from('readers')
-      .select('id')
-      .eq('profile_id',authData.user.id)
-      .maybeSingle();
-
-    if(readerError || !reader){
-
-      toast(
-        'Your Reader account is not ready for discussion access yet.'
-      );
-
-      return;
-
-    }
-
-    const {
-      error
-    } = await supabaseClient
-      .from('reader_discussion_messages')
-      .insert({
-        session_id:
-          selectedDiscussionSession.id,
-        reader_id:
-          reader.id,
-        message:
-          message
-      });
-
-    if(error){
-
-      console.error(
-        'Unable to send discussion message:',
-        error
-      );
-
-      toast(
-        'The message could not be sent.'
-      );
-
-      return;
-
-    }
-
-    messageInput.value = '';
-
-    await loadDiscussionMessages(
-      selectedDiscussionSession.id
-    );
-
-  });
+  );
 
 
 /* ============================================================
-   CALENDAR
-============================================================ */
+   LIVE CHAT
+   ============================================================ */
 
-function formatCalendarDate(dateValue){
-
-  if(!dateValue) return '';
-
-  const parts = String(dateValue).split('-');
-
-  if(parts.length !== 3) return String(dateValue);
-
-  const year = Number(parts[0]);
-  const month = Number(parts[1]);
-  const day = Number(parts[2]);
-
-  if(!year || !month || !day){
-    return String(dateValue);
-  }
-
-  return new Date(year,month - 1,day).toLocaleDateString(
-    undefined,
-    {
-      year:'numeric',
-      month:'long',
-      day:'numeric'
-    }
+const chatLauncher =
+  document.getElementById(
+    'chatLauncher'
   );
 
-}
-
-
-function formatCalendarTime(timeValue){
-
-  if(!timeValue) return '';
-
-  const match =
-    String(timeValue).match(/^(\d{1,2}):(\d{2})/);
-
-  if(!match){
-    return String(timeValue);
-  }
-
-  const hours = Number(match[1]);
-  const minutes = Number(match[2]);
-
-  if(
-    Number.isNaN(hours) ||
-    Number.isNaN(minutes) ||
-    hours > 23 ||
-    minutes > 59
-  ){
-    return String(timeValue);
-  }
-
-  const date = new Date();
-  date.setHours(hours,minutes,0,0);
-
-  return date.toLocaleTimeString(
-    undefined,
-    {
-      hour:'numeric',
-      minute:'2-digit'
-    }
+const chatPanel =
+  document.getElementById(
+    'chatPanel'
   );
 
-}
-
-
-function calendarEmptyState(){
-
-  return `
-    <div class="event">
-      <div>
-        <strong>No upcoming events yet</strong>
-        <span>
-          When a real Reader Reach event is scheduled, it will appear here.
-        </span>
-      </div>
-    </div>
-  `;
-
-}
-
-
-async function loadCalendar(){
-
-  const container =
-    document.getElementById(
-      'calendarList'
-    );
-
-  if(!container) return;
-
-  const {
-    data,
-    error
-  } = await supabaseClient
-    .from('feature_schedules')
-    .select(
-      'id,book_id,feature_date,feature_time,status,notes'
-    )
-    .eq('status','scheduled')
-    .order('feature_date',{ascending:true})
-    .order('feature_time',{ascending:true});
-
-  if(error){
-
-    console.error(
-      'Unable to load feature calendar:',
-      error
-    );
-
-    container.innerHTML = calendarEmptyState();
-    return;
-
-  }
-
-  const schedules =
-    data || [];
-
-  if(!schedules.length){
-
-    container.innerHTML = calendarEmptyState();
-    return;
-
-  }
-
-  container.innerHTML = '';
-
-  schedules.forEach(schedule => {
-
-    const book =
-      approvedBooks.find(
-        item => item.id === schedule.book_id
-      );
-
-    /*
-      A schedule only appears publicly when its book is also
-      an approved public book. This keeps the homepage from
-      exposing a schedule for a rejected or unavailable book.
-    */
-    if(!book) return;
-
-    const dateText =
-      formatCalendarDate(schedule.feature_date);
-
-    const timeText =
-      formatCalendarTime(schedule.feature_time);
-
-    const notesText =
-      schedule.notes
-      ? String(schedule.notes).trim()
-      : '';
-
-    const item =
-      document.createElement('div');
-
-    item.className =
-      'eventItem';
-
-    item.innerHTML = `
-
-      <div>
-
-        <strong>
-          ${escapeHtml(book.title)}
-        </strong>
-
-        <span>
-          ${escapeHtml(dateText)}
-          ${
-            timeText
-            ? ' • ' + escapeHtml(timeText)
-            : ''
-          }
-          ${
-            notesText
-            ? ' • ' + escapeHtml(notesText)
-            : ''
-          }
-        </span>
-
-      </div>
-
-      <a
-        class="btn small"
-        href="book.html?id=${encodeURIComponent(book.id)}">
-        View Book
-      </a>
-
-    `;
-
-    container.appendChild(item);
-
-  });
-
-  if(!container.children.length){
-    container.innerHTML = calendarEmptyState();
-  }
-
-}
-
-
-
-/* ============================================================
-   AUTHOR FORM
-============================================================ */
-
-document
-  .getElementById('authorSubmissionForm')
-  .addEventListener('submit',event => {
-
-    event.preventDefault();
-
-    toast(
-      'Author submission will be connected to the approved Author account system.'
-    );
-
-  });
-
-
-async function updateAuthLinks(){
-
-  const {data:{user}} = await supabaseClient.auth.getUser();
-  const signInLink = document.querySelector('.navActions .btn:not(.primary)');
-  const authorLink = document.querySelector('.navActions .btn.primary');
-
-  if(user){
-    if(signInLink){
-      signInLink.textContent = 'Account';
-      signInLink.href = 'reader.html';
-    }
-
-    if(authorLink){
-      authorLink.textContent = 'Author Access';
-      authorLink.href = 'author.html';
-    }
-  }else{
-    if(signInLink){
-      signInLink.textContent = 'Sign In';
-      signInLink.href = 'auth.html?mode=signin';
-    }
-
-    if(authorLink){
-      authorLink.textContent = 'For Authors';
-      authorLink.href = 'auth.html?mode=author';
-    }
-  }
-
-}
-
-
-/* ============================================================
-   STARTUP
-============================================================ */
-
-async function initializeReaderReach(){
-
-  console.log(
-    'Reader Reach Supabase client initialized:',
-    !!supabaseClient
+const chatClose =
+  document.getElementById(
+    'chatClose'
   );
 
-  await loadApprovedAuthors();
 
-  await loadApprovedBooks();
+chatLauncher.addEventListener(
+  'click',
+  () => {
 
-  renderAuthorGrid();
+    chatPanel.classList.toggle(
+      'open'
+    );
 
-  await loadFeaturedBooks();
+    chatPanel.setAttribute(
+      'aria-hidden',
+      chatPanel.classList.contains(
+        'open'
+      )
+      ? 'false'
+      : 'true'
+    );
 
-  await loadUpcomingTrailers();
-
-  await loadDiscussionSessions();
-
-  await loadCalendar();
-
-  await updateAuthLinks();
-
-}
-
-
-initializeReaderReach();
+  }
+);
 
 
-supabaseClient.auth.onAuthStateChange(() => {
-  updateAuthLinks();
-});
+chatClose.addEventListener(
+  'click',
+  () => {
+
+    chatPanel.classList.remove(
+      'open'
+    );
+
+    chatPanel.setAttribute(
+      'aria-hidden',
+      'true'
+    );
+
+  }
+);
 
 
 /*
-  Keep the public homepage calendar connected to the same
-  feature_schedules table used by the Admin Calendar.
-  A refresh when the page becomes visible and a short polling
-  interval let approved schedule changes appear without changing
-  the existing homepage design or database structure.
+  The current project contains conversations/messages tables,
+  but the homepage source does not establish a verified public
+  anonymous schema for those tables.
+
+  Therefore the homepage does NOT invent a database schema here.
+
+  Contact messages remain routed through contact.html and the
+  Moderator Messages workflow.
+
+  The launcher is still present so the public UI is ready for
+  the connected live-chat implementation.
 */
 
-document.addEventListener('visibilitychange',() => {
 
-  if(!document.hidden){
-    loadFeaturedBooks();
-    loadUpcomingTrailers();
-    loadCalendar();
-  }
+document
+  .getElementById(
+    'chatForm'
+  )
+  .addEventListener(
+    'submit',
+    async event => {
 
-});
+      event.preventDefault();
+
+      const name =
+        document.getElementById(
+          'chatName'
+        ).value.trim();
+
+      const email =
+        document.getElementById(
+          'chatEmail'
+        ).value.trim();
+
+      const message =
+        document.getElementById(
+          'chatMessage'
+        ).value.trim();
+
+      if(
+        !name ||
+        !email ||
+        !message
+      ){
+
+        showToast(
+          'Please complete all live chat fields.'
+        );
+
+        return;
+
+      }
+
+      /*
+        Use the dedicated Contact page until the exact anonymous
+        live-chat table schema and RLS policies are connected.
+
+        No visitor message is silently written into a guessed table.
+      */
+
+      const params =
+        new URLSearchParams({
+          name,
+          email,
+          subject:'Live Chat',
+          message
+        });
+
+      window.location.href =
+        'contact.html?' +
+        params.toString();
+
+    }
+  );
 
 
-window.setInterval(() => {
-  loadFeaturedBooks();
-  loadUpcomingTrailers();
-  loadCalendar();
-},60000);
+/* ============================================================
+   INITIAL LOAD
+   ============================================================ */
+
+async function init(){
+
+  /*
+    Load books first because several homepage sections
+    depend on the approved-book list.
+  */
+
+  await loadApprovedBooks();
+
+  await Promise.all([
+    loadApprovedAuthors(),
+    loadFeaturedBooks(),
+    loadTrailerBooks(),
+    loadDiscussionSessions(),
+    loadCalendar()
+  ]);
+
+}
+
+
+/* ============================================================
+   START
+   ============================================================ */
+
+init()
+  .catch(error => {
+
+    console.error(
+      'Reader Reach homepage initialization error:',
+      error
+    );
+
+  });
 
 </script>
 

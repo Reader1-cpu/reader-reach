@@ -776,6 +776,66 @@
       justify-content:flex-end;
     }
 
+    .author-follow-card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:18px;
+      box-shadow:0 8px 24px rgba(59,36,27,.05);
+      display:flex;
+      flex-direction:column;
+      min-height:190px;
+    }
+
+    .author-follow-card h3{
+      color:var(--brown);
+      font-size:20px;
+      margin-bottom:7px;
+    }
+
+    .author-follow-card p{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+      display:-webkit-box;
+      -webkit-line-clamp:4;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+      margin-bottom:14px;
+    }
+
+    .author-follow-meta{
+      color:#92715a;
+      font-size:11px;
+      margin-bottom:13px;
+    }
+
+    .author-follow-actions{
+      margin-top:auto;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .author-follow-actions .btn{
+      flex:1;
+      min-width:110px;
+    }
+
+    .error-box{
+      border:1px solid #e8c9c4;
+      background:#fff5f3;
+      color:var(--danger);
+      border-radius:14px;
+      padding:17px;
+      font-size:13px;
+    }
+
+    .error-box strong{
+      display:block;
+      margin-bottom:5px;
+    }
+
     @media(max-width:1050px){
       .dashboard-layout{
         grid-template-columns:190px minmax(0,1fr);
@@ -942,11 +1002,9 @@
     </div>
   </nav>
 
-
   <main class="page">
 
     <header class="dashboard-header">
-
       <div class="dashboard-header-content">
 
         <div class="eyebrow">
@@ -960,19 +1018,16 @@
 
         <p>
           Keep track of the books you are exploring, return to books you
-          are currently reading, see what you have completed, and stay
-          connected with Reader Reach notifications.
+          are currently reading, see what you have completed, follow
+          authors you enjoy, and stay connected with Reader Reach.
         </p>
 
       </div>
-
     </header>
-
 
     <div id="pageMessage" class="message-box info">
       Loading your Reader Reach account...
     </div>
-
 
     <div class="dashboard-layout">
 
@@ -996,10 +1051,6 @@
             My Books
           </button>
 
-          <button data-target="followingAuthors">
-            Following Authors
-          </button>
-
           <button data-target="reading">
             Currently Reading
           </button>
@@ -1008,50 +1059,45 @@
             Completed
           </button>
 
+          <button data-target="followingAuthors">
+            Following Authors
+          </button>
+
           <button data-target="notifications">
             Notifications
           </button>
 
           <button data-target="account">
-            My Account
+            Account
           </button>
 
         </div>
 
         <div class="sidebar-divider"></div>
 
-        <button class="btn danger" id="signOutSide" style="width:100%;">
-          Sign Out
-        </button>
+        <a
+          href="authors.html"
+          class="btn gold"
+          style="width:100%;"
+        >
+          Explore Authors
+        </a>
 
       </aside>
 
-
       <div class="content">
-
-
-        <!-- OVERVIEW -->
 
         <section id="overview" class="section">
 
           <div class="section-header">
-
             <div>
-              <div class="section-kicker">
-                Your space
-              </div>
-
-              <h2 class="section-title">
-                Reader Overview
-              </h2>
-
+              <div class="section-kicker">Your Reading Space</div>
+              <h2 class="section-title">Overview</h2>
               <p class="section-description">
-                A quick view of your Reader Reach activity.
+                A quick look at your Reader Reach activity.
               </p>
             </div>
-
           </div>
-
 
           <div class="stats">
 
@@ -1059,71 +1105,57 @@
               <div class="stat-label">
                 Books Saved
               </div>
-
               <div class="stat-value" id="savedCount">
                 —
               </div>
-
               <div class="stat-note">
-                Books in your Reader shelf
+                Books in your shelf
               </div>
             </div>
-
 
             <div class="stat-card">
               <div class="stat-label">
                 Currently Reading
               </div>
-
               <div class="stat-value" id="readingCount">
                 —
               </div>
-
               <div class="stat-note">
-                Books you are reading
+                Books in progress
               </div>
             </div>
-
 
             <div class="stat-card">
               <div class="stat-label">
                 Completed
               </div>
-
               <div class="stat-value" id="completedCount">
                 —
               </div>
-
               <div class="stat-note">
-                Books marked completed
+                Books completed
               </div>
             </div>
-
 
             <div class="stat-card">
               <div class="stat-label">
                 Notifications
               </div>
-
               <div class="stat-value" id="notificationCount">
                 —
               </div>
-
               <div class="stat-note">
-                Reader Reach updates
+                Unread updates
               </div>
             </div>
-
 
             <div class="stat-card">
               <div class="stat-label">
                 Following
               </div>
-
               <div class="stat-value" id="followingCount">
                 —
               </div>
-
               <div class="stat-note">
                 Authors you follow
               </div>
@@ -1131,119 +1163,108 @@
 
           </div>
 
-
-          <div class="card">
-
-            <div class="section-header" style="margin-bottom:10px;">
-
-              <div>
-                <div class="section-kicker">
-                  Start exploring
-                </div>
-
-                <h3 class="section-title" style="font-size:21px;">
-                  Find your next book.
-                </h3>
-
-                <p class="section-description">
-                  Browse approved books and discover the authors behind them.
-                </p>
-              </div>
-
-            </div>
-
-            <div class="profile-actions">
-
-              <a class="btn primary" href="index.html#featured">
-                Explore Featured Books
-              </a>
-
-              <a class="btn" href="authors.html">
-                Explore Authors
-              </a>
-
-            </div>
-
-          </div>
-
         </section>
 
-
-        <!-- FEATURED -->
 
         <section id="featured" class="section">
 
           <div class="section-header">
-
             <div>
-              <div class="section-kicker">
-                Featured
-              </div>
-
-              <h2 class="section-title">
-                Featured Books
-              </h2>
-
+              <div class="section-kicker">Discover</div>
+              <h2 class="section-title">Featured Books</h2>
               <p class="section-description">
-                Books currently selected for the Reader Reach homepage.
+                Books currently highlighted by Reader Reach.
               </p>
             </div>
 
-            <span class="section-count" id="featuredCount">
+            <span class="section-count" id="featuredSectionCount">
               —
             </span>
-
           </div>
 
-          <div id="featuredBooksGrid" class="books-grid">
-
+          <div id="featuredGrid" class="books-grid">
             <div class="loading">
               Loading featured books...
             </div>
-
           </div>
 
         </section>
 
-
-        <!-- MY BOOKS -->
 
         <section id="myBooks" class="section">
 
           <div class="section-header">
-
             <div>
-              <div class="section-kicker">
-                My Shelf
-              </div>
-
-              <h2 class="section-title">
-                My Books
-              </h2>
-
+              <div class="section-kicker">Your Shelf</div>
+              <h2 class="section-title">My Books</h2>
               <p class="section-description">
-                Books you have added to your Reader Reach shelf.
+                Books you have saved to your reading space.
               </p>
             </div>
 
-            <span class="section-count" id="myBooksCount">
+            <span class="section-count" id="myBooksSectionCount">
               —
             </span>
-
           </div>
 
           <div id="myBooksGrid" class="books-grid">
-
             <div class="loading">
               Loading your books...
             </div>
-
           </div>
 
         </section>
 
 
-        <!-- FOLLOWING AUTHORS -->
+        <section id="reading" class="section">
+
+          <div class="section-header">
+            <div>
+              <div class="section-kicker">In Progress</div>
+              <h2 class="section-title">Currently Reading</h2>
+              <p class="section-description">
+                Return to books you are currently reading.
+              </p>
+            </div>
+
+            <span class="section-count" id="readingSectionCount">
+              —
+            </span>
+          </div>
+
+          <div id="readingGrid" class="books-grid">
+            <div class="loading">
+              Loading currently reading...
+            </div>
+          </div>
+
+        </section>
+
+
+        <section id="completed" class="section">
+
+          <div class="section-header">
+            <div>
+              <div class="section-kicker">Finished</div>
+              <h2 class="section-title">Completed</h2>
+              <p class="section-description">
+                Books you have finished reading.
+              </p>
+            </div>
+
+            <span class="section-count" id="completedSectionCount">
+              —
+            </span>
+          </div>
+
+          <div id="completedGrid" class="books-grid">
+            <div class="loading">
+              Loading completed books...
+            </div>
+          </div>
+
+        </section>
+
 
         <section id="followingAuthors" class="section">
 
@@ -1263,98 +1284,26 @@
               </p>
             </div>
 
-            <span class="section-count" id="followingSectionCount">
+            <span
+              class="section-count"
+              id="followingSectionCount"
+            >
               —
             </span>
 
           </div>
 
-          <div id="followingAuthorsGrid" class="books-grid">
-
+          <div
+            id="followingAuthorsGrid"
+            class="books-grid"
+          >
             <div class="loading">
               Loading authors you follow...
             </div>
-
           </div>
 
         </section>
 
-
-        <!-- CURRENTLY READING -->
-
-        <section id="reading" class="section">
-
-          <div class="section-header">
-
-            <div>
-              <div class="section-kicker">
-                Reading
-              </div>
-
-              <h2 class="section-title">
-                Currently Reading
-              </h2>
-
-              <p class="section-description">
-                Books you have marked as currently being read.
-              </p>
-            </div>
-
-            <span class="section-count" id="readingSectionCount">
-              —
-            </span>
-
-          </div>
-
-          <div id="readingGrid" class="books-grid">
-
-            <div class="loading">
-              Loading your current reading list...
-            </div>
-
-          </div>
-
-        </section>
-
-
-        <!-- COMPLETED -->
-
-        <section id="completed" class="section">
-
-          <div class="section-header">
-
-            <div>
-              <div class="section-kicker">
-                Finished
-              </div>
-
-              <h2 class="section-title">
-                Completed
-              </h2>
-
-              <p class="section-description">
-                Books you have marked as completed.
-              </p>
-            </div>
-
-            <span class="section-count" id="completedSectionCount">
-              —
-            </span>
-
-          </div>
-
-          <div id="completedGrid" class="books-grid">
-
-            <div class="loading">
-              Loading completed books...
-            </div>
-
-          </div>
-
-        </section>
-
-
-        <!-- NOTIFICATIONS -->
 
         <section id="notifications" class="section">
 
@@ -1370,32 +1319,30 @@
               </h2>
 
               <p class="section-description">
-                Important Reader Reach updates connected to your account.
+                Important updates from Reader Reach.
               </p>
             </div>
 
-            <button class="btn" id="refreshNotifications">
-              Refresh
-            </button>
+            <span
+              class="section-count"
+              id="notificationsSectionCount"
+            >
+              —
+            </span>
 
           </div>
 
-          <div class="card">
-
-            <div id="notificationList" class="notification-list">
-
-              <div class="loading">
-                Loading notifications...
-              </div>
-
+          <div
+            id="notificationList"
+            class="notification-list"
+          >
+            <div class="loading">
+              Loading notifications...
             </div>
-
           </div>
 
         </section>
 
-
-        <!-- ACCOUNT -->
 
         <section id="account" class="section">
 
@@ -1403,15 +1350,15 @@
 
             <div>
               <div class="section-kicker">
-                Account
+                Your Account
               </div>
 
               <h2 class="section-title">
-                My Account
+                Account
               </h2>
 
               <p class="section-description">
-                Your Reader Reach account information.
+                Your Reader Reach account details.
               </p>
             </div>
 
@@ -1422,69 +1369,78 @@
             <div class="account-grid">
 
               <div class="account-item">
+
                 <div class="account-label">
-                  Display Name
+                  Name
                 </div>
 
-                <div class="account-value" id="accountDisplayName">
+                <div
+                  class="account-value"
+                  id="accountName"
+                >
                   —
                 </div>
+
               </div>
 
-
               <div class="account-item">
+
                 <div class="account-label">
                   Email
                 </div>
 
-                <div class="account-value" id="accountEmail">
+                <div
+                  class="account-value"
+                  id="accountEmail"
+                >
                   —
                 </div>
+
               </div>
 
-
               <div class="account-item">
+
                 <div class="account-label">
-                  Account Role
+                  Role
                 </div>
 
-                <div class="account-value" id="accountRole">
+                <div
+                  class="account-value"
+                  id="accountRole"
+                >
                   Reader
                 </div>
-              </div>
 
+              </div>
 
               <div class="account-item">
+
                 <div class="account-label">
-                  Member Since
+                  Profile ID
                 </div>
 
-                <div class="account-value" id="accountCreated">
+                <div
+                  class="account-value"
+                  id="accountProfileId"
+                >
                   —
                 </div>
+
               </div>
 
             </div>
 
-
             <div class="security-note">
-              Your private account information is protected by Supabase
-              authentication and database access policies. Private location
-              information is not displayed on public Reader Reach pages.
+              Your Reader Reach account uses Supabase authentication.
+              Keep your login details private.
             </div>
-
 
             <div class="profile-actions">
 
-              <a class="btn" href="reset-password.html">
-                Reset Password
-              </a>
-
-              <a class="btn" href="contact.html">
-                Contact Reader Reach
-              </a>
-
-              <button class="btn danger" id="accountSignOut">
+              <button
+                class="btn danger"
+                id="signOutAccount"
+              >
                 Sign Out
               </button>
 
@@ -1493,7 +1449,6 @@
           </div>
 
         </section>
-
 
       </div>
 
@@ -1507,95 +1462,73 @@
     <div class="footer-inner">
 
       <div class="footer-brand">
-
-        <h3>
-          Reader Reach
-        </h3>
-
+        <h3>Reader Reach</h3>
         <p>
           Every Book Has Its Readers.
         </p>
-
       </div>
 
-
       <div class="footer-links">
-
-        <a href="index.html">
-          Home
-        </a>
-
-        <a href="authors.html">
-          Authors
-        </a>
-
-        <a href="index.html#featured">
-          Featured
-        </a>
-
-        <a href="contact.html">
-          Contact Us
-        </a>
-
+        <a href="index.html">Home</a>
+        <a href="authors.html">Authors</a>
+        <a href="index.html#featured">Featured</a>
+        <a href="contact.html">Contact</a>
       </div>
 
     </div>
 
-
     <div class="footer-bottom">
-      © 2026 Reader Reach. All rights reserved.
+      © Reader Reach. All rights reserved.
     </div>
 
   </footer>
 
 
-  <!-- LIVE CHAT -->
-
   <button
     class="chat-button"
     id="chatButton"
-    type="button">
-    Live Chat
+  >
+    Message Reader Reach
   </button>
 
 
   <div
     class="chat-panel"
-    id="chatPanel">
+    id="chatPanel"
+  >
 
     <div class="chat-header">
 
       <strong>
-        Reader Reach Support
+        Message Reader Reach
       </strong>
 
       <button
         class="chat-close"
         id="chatClose"
-        type="button"
-        aria-label="Close chat">
+      >
         ×
       </button>
 
     </div>
 
-
     <div class="chat-body">
 
       <p>
-        Need help with your Reader Reach account or reading experience?
-        Contact the Reader Reach support team.
+        Send a message to the Reader Reach team.
       </p>
 
       <textarea
         id="chatMessage"
-        placeholder="How can we help?"></textarea>
+        placeholder="Write your message..."
+      ></textarea>
 
       <div class="chat-actions">
 
         <button
           class="btn primary"
-          id="sendChatMessage">
+          id="sendChatMessage"
+        >
           Send Message
         </button>
 
@@ -1606,7 +1539,10 @@
   </div>
 
 
-  <div id="toast" class="toast"></div>
+  <div
+    class="toast"
+    id="toast"
+  ></div>
 
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1614,10 +1550,10 @@
   <script>
 
     const SUPABASE_URL =
-      'https://bublmnfhyyrefcdkloak.supabase.co';
+      "https://bublmnfhyyrefcdkloak.supabase.co";
 
     const SUPABASE_KEY =
-      'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
+      "sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY";
 
     const supabaseClient =
       window.supabase.createClient(
@@ -1628,259 +1564,228 @@
 
     let currentUser = null;
     let currentProfile = null;
-    let currentReader = null;
 
-    let allMyBooks = [];
-    let featuredBooks = [];
 
-    let chatConversationId = null;
+    const $ = (id) =>
+      document.getElementById(id);
 
 
     function escapeHtml(value){
 
       if(value === null || value === undefined){
-        return '';
+        return "";
       }
 
       return String(value)
-        .replace(/&/g,'&amp;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;')
-        .replace(/'/g,'&#039;');
-
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
     }
 
 
-    function showToast(message){
+    function truncate(text,length = 180){
 
-      const toast =
-        document.getElementById('toast');
+      if(!text){
+        return "";
+      }
 
-      toast.textContent =
-        message;
+      const value = String(text);
 
-      toast.classList.add('show');
+      if(value.length <= length){
+        return value;
+      }
 
-      setTimeout(() => {
-        toast.classList.remove('show');
-      },3500);
-
+      return value.slice(0,length).trim() + "...";
     }
 
 
     function formatDate(value){
 
       if(!value){
-        return '—';
+        return "";
       }
 
-      const date =
-        new Date(value);
+      try{
 
-      if(Number.isNaN(date.getTime())){
-        return '—';
-      }
-
-      return date.toLocaleDateString(
-        undefined,
-        {
-          year:'numeric',
-          month:'short',
-          day:'numeric'
-        }
-      );
-
-    }
-
-
-    function formatRelativeDate(value){
-
-      if(!value){
-        return '';
-      }
-
-      const date =
-        new Date(value);
-
-      if(Number.isNaN(date.getTime())){
-        return '';
-      }
-
-      const now =
-        new Date();
-
-      const difference =
-        now.getTime() -
-        date.getTime();
-
-      const minutes =
-        Math.floor(
-          difference /
-          60000
+        return new Date(value).toLocaleDateString(
+          undefined,
+          {
+            year:"numeric",
+            month:"short",
+            day:"numeric"
+          }
         );
 
-      if(minutes < 1){
-        return 'Just now';
+      }catch(error){
+
+        return "";
+
       }
-
-      if(minutes < 60){
-        return minutes +
-          ' minute' +
-          (minutes === 1 ? '' : 's') +
-          ' ago';
-      }
-
-      const hours =
-        Math.floor(minutes / 60);
-
-      if(hours < 24){
-        return hours +
-          ' hour' +
-          (hours === 1 ? '' : 's') +
-          ' ago';
-      }
-
-      const days =
-        Math.floor(hours / 24);
-
-      if(days < 7){
-        return days +
-          ' day' +
-          (days === 1 ? '' : 's') +
-          ' ago';
-      }
-
-      return formatDate(value);
 
     }
 
 
-    function getBookCover(book){
+    function updateCount(id,value){
 
-      return (
-        book.cover_url ||
-        book.cover_image_url ||
-        book.cover ||
-        ''
-      );
+      const element = $(id);
 
-    }
-
-
-    function getBookAuthor(book){
-
-      return (
-        book.author_name ||
-        book.author ||
-        'Reader Reach Author'
-      );
+      if(element){
+        element.textContent = value;
+      }
 
     }
 
 
-    function renderBookCard(book, options = {}){
+    function showToast(message){
 
-      const cover =
-        getBookCover(book);
+      const toast = $("toast");
 
-      const author =
-        getBookAuthor(book);
+      if(!toast){
+        return;
+      }
+
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(window.__readerReachToast);
+
+      window.__readerReachToast =
+        setTimeout(
+          () => toast.classList.remove("show"),
+          2800
+        );
+
+    }
+
+
+    function setPageMessage(
+      message,
+      type = "info"
+    ){
+
+      const box = $("pageMessage");
+
+      if(!box){
+        return;
+      }
+
+      box.className =
+        "message-box " + type;
+
+      box.textContent = message;
+
+    }
+
+
+    function errorMessage(error){
+
+      if(!error){
+        return "Unknown Supabase error.";
+      }
+
+      if(error.message){
+        return error.message;
+      }
+
+      return String(error);
+
+    }
+
+
+    function authorProfileUrl(authorId){
+
+      return "author-profile.html?id=" +
+        encodeURIComponent(authorId);
+
+    }
+
+
+    function bookCard(book){
 
       const title =
-        book.title ||
-        'Untitled Book';
+        escapeHtml(book.title || "Untitled Book");
 
       const description =
-        book.description ||
-        'No book description is available yet.';
+        escapeHtml(
+          truncate(
+            book.description ||
+            "No description available.",
+            180
+          )
+        );
+
+      const authorName =
+        escapeHtml(
+          book.author_name ||
+          "Reader Reach Author"
+        );
 
       const status =
-        options.status ||
-        book.reading_status ||
-        '';
+        escapeHtml(
+          book.status ||
+          "approved"
+        );
 
-      const bookId =
-        book.id;
+      const cover =
+        book.cover_url
+          ? `
+              <img
+                src="${escapeHtml(book.cover_url)}"
+                alt="${title}"
+                loading="lazy"
+              >
+            `
+          : `
+              <div class="book-cover-placeholder">
+                No cover image available
+              </div>
+            `;
+
+      const link =
+        book.book_link || "#";
 
       return `
-
         <article class="book-card">
 
           <div class="book-cover">
-
-            ${
-              cover
-              ?
-
-              `<img
-                src="${escapeHtml(cover)}"
-                alt="${escapeHtml(title)} book cover"
-                loading="lazy"
-                onerror="this.parentElement.innerHTML='<div class=&quot;book-cover-placeholder&quot;>Book cover unavailable</div>';">`
-
-              :
-
-              `<div class="book-cover-placeholder">
-                Book cover unavailable
-              </div>`
-            }
-
+            ${cover}
           </div>
-
 
           <div class="book-body">
 
-            ${
-              status
-              ?
-
-              `<span class="book-status">
-                ${escapeHtml(status)}
-              </span>`
-
-              :
-
-              ''
-            }
-
+            <span class="book-status">
+              ${status}
+            </span>
 
             <h3 class="book-title">
-              ${escapeHtml(title)}
+              ${title}
             </h3>
 
-
             <div class="book-author">
-              ${escapeHtml(author)}
+              ${authorName}
             </div>
 
-
             <p class="book-description">
-              ${escapeHtml(description)}
+              ${description}
             </p>
-
 
             <div class="book-actions">
 
-              <a
-                class="btn primary"
-                href="book.html?id=${encodeURIComponent(bookId)}">
-                View Book
-              </a>
-
               ${
-                book.author_id
-                ?
-
-                `<a
-                  class="btn"
-                  href="author-profile.html?id=${encodeURIComponent(book.author_id)}">
-                  Author
-                </a>`
-
-                :
-
-                ''
+                link !== "#"
+                  ? `
+                    <a
+                      class="btn primary"
+                      href="${escapeHtml(link)}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Book
+                    </a>
+                  `
+                  : ""
               }
 
             </div>
@@ -1888,997 +1793,1032 @@
           </div>
 
         </article>
-
       `;
 
     }
 
 
-    function renderBooks(containerId, books, emptyTitle, emptyMessage){
+    function renderEmpty(
+      containerId,
+      title,
+      message,
+      buttonHtml = ""
+    ){
 
-      const container =
-        document.getElementById(containerId);
+      const container = $(containerId);
 
       if(!container){
         return;
       }
 
-      if(!books || books.length === 0){
+      container.innerHTML = `
+        <div class="empty">
 
-        container.innerHTML = `
+          <strong>
+            ${escapeHtml(title)}
+          </strong>
 
-          <div class="empty" style="grid-column:1/-1;">
-
-            <strong>
-              ${escapeHtml(emptyTitle)}
-            </strong>
-
-            <div>
-              ${escapeHtml(emptyMessage)}
-            </div>
-
-            <a
-              class="btn primary"
-              href="index.html#featured">
-              Explore Books
-            </a>
-
+          <div>
+            ${escapeHtml(message)}
           </div>
 
-        `;
+          ${buttonHtml}
 
-        return;
-
-      }
-
-      container.innerHTML =
-        books.map(book =>
-          renderBookCard(book)
-        ).join('');
-
-    }
-
-
-    async function loadSession(){
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .auth
-          .getSession();
-
-      if(error){
-
-        console.error(
-          'Session error:',
-          error
-        );
-
-        showAccessError(
-          'We could not verify your Reader Reach session.'
-        );
-
-        return false;
-
-      }
-
-      if(!data.session){
-
-        window.location.href =
-          'auth.html?mode=reader';
-
-        return false;
-
-      }
-
-      currentUser =
-        data.session.user;
-
-      return true;
+        </div>
+      `;
 
     }
 
 
     async function loadProfile(){
 
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('profiles')
-          .select(`
-            id,
-            display_name,
-            role,
-            created_at
-          `)
-          .eq('id',currentUser.id)
-          .maybeSingle();
-
-      if(error){
-
-        console.error(
-          'Profile loading error:',
-          error
-        );
-
-        showAccessError(
-          'Your account could not be loaded.'
-        );
-
-        return false;
-
+      if(!currentUser){
+        return;
       }
-
-      currentProfile =
-        data || {};
-
-      if(
-        currentProfile.role &&
-        currentProfile.role !== 'reader'
-      ){
-
-        if(currentProfile.role === 'author'){
-          window.location.href =
-            'author-dashboard.html';
-          return false;
-        }
-
-        if(currentProfile.role === 'moderator'){
-          window.location.href =
-            'moderator-dashboard.html';
-          return false;
-        }
-
-        if(currentProfile.role === 'admin'){
-          window.location.href =
-            'admin.html';
-          return false;
-        }
-
-      }
-
-      return true;
-
-    }
-
-
-    async function loadReader(){
 
       const {
         data,
         error
       } =
         await supabaseClient
-          .from('readers')
-          .select(`
-            id,
-            profile_id,
-            created_at,
-            updated_at
-          `)
-          .eq('profile_id',currentUser.id)
+          .from("profiles")
+          .select("*")
+          .eq("id",currentUser.id)
           .maybeSingle();
 
       if(error){
 
         console.error(
-          'Reader record error:',
+          "Profile loading error:",
           error
         );
 
-        showAccessError(
-          'Your Reader account record could not be loaded.'
-        );
-
-        return false;
+        return;
 
       }
 
-      currentReader =
-        data || null;
+      currentProfile = data || {
+        id:currentUser.id,
+        role:"reader",
+        display_name:
+          currentUser.user_metadata?.display_name ||
+          currentUser.email?.split("@")[0] ||
+          "Reader"
+      };
 
-      if(!currentReader){
 
-        showAccessError(
-          'A Reader account record was not found for this account.'
-        );
+      const name =
+        currentProfile.display_name ||
+        currentUser.user_metadata?.display_name ||
+        currentUser.email?.split("@")[0] ||
+        "Reader";
 
-        return false;
 
+      if($("headerReaderName")){
+        $("headerReaderName").textContent = name;
       }
 
-      return true;
+      if($("accountName")){
+        $("accountName").textContent = name;
+      }
 
-    }
+      if($("accountEmail")){
+        $("accountEmail").textContent =
+          currentUser.email || "—";
+      }
 
+      if($("accountRole")){
+        $("accountRole").textContent =
+          currentProfile.role || "reader";
+      }
 
-    function populateAccount(){
-
-      const displayName =
-        currentProfile?.display_name ||
-        currentUser?.user_metadata?.display_name ||
-        'Reader';
-
-      document.getElementById(
-        'headerReaderName'
-      ).textContent =
-        displayName;
-
-      document.getElementById(
-        'accountDisplayName'
-      ).textContent =
-        displayName;
-
-      document.getElementById(
-        'accountEmail'
-      ).textContent =
-        currentUser?.email ||
-        '—';
-
-      document.getElementById(
-        'accountRole'
-      ).textContent =
-        'Reader';
-
-      document.getElementById(
-        'accountCreated'
-      ).textContent =
-        formatDate(
-          currentProfile?.created_at ||
-          currentReader?.created_at ||
-          currentUser?.created_at
-        );
+      if($("accountProfileId")){
+        $("accountProfileId").textContent =
+          currentProfile.id || currentUser.id;
+      }
 
     }
 
 
     async function loadFeaturedBooks(){
 
-      const container =
-        document.getElementById(
-          'featuredBooksGrid'
-        );
+      const grid = $("featuredGrid");
 
-      container.innerHTML =
-        '<div class="loading">Loading featured books...</div>';
-
-      const {
-        data:featuredRows,
-        error:featuredError
-      } =
-        await supabaseClient
-          .from('homepage_featured_books')
-          .select(`
-            book_id
-          `);
-
-      if(featuredError){
-
-        console.error(
-          'Featured books error:',
-          featuredError
-        );
-
-        container.innerHTML = `
-          <div class="empty" style="grid-column:1/-1;">
-            <strong>Featured books unavailable</strong>
-            Reader Reach could not load the current featured selection.
-          </div>
-        `;
-
+      if(!grid){
         return;
-
       }
 
-      const ids =
-        (featuredRows || [])
-          .map(row => row.book_id)
-          .filter(Boolean);
+      try{
 
-      if(ids.length === 0){
+        const {
+          data,
+          error
+        } =
+          await supabaseClient
+            .from("homepage_featured_books")
+            .select("*");
 
-        featuredBooks = [];
+        if(error){
 
-        renderBooks(
-          'featuredBooksGrid',
-          [],
-          'No featured books yet',
-          'There are no books currently selected for the Reader Reach homepage.'
-        );
+          console.error(
+            "Featured books error:",
+            error
+          );
+
+          grid.innerHTML = `
+            <div class="error-box">
+
+              <strong>
+                Featured books could not be loaded.
+              </strong>
+
+              ${escapeHtml(
+                errorMessage(error)
+              )}
+
+            </div>
+          `;
+
+          updateCount(
+            "featuredSectionCount",
+            0
+          );
+
+          return;
+
+        }
+
+        const books =
+          data || [];
 
         updateCount(
-          'featuredCount',
-          0
+          "featuredSectionCount",
+          books.length
         );
 
-        return;
+        if(!books.length){
 
-      }
+          renderEmpty(
+            "featuredGrid",
+            "No featured books yet",
+            "Featured books will appear here when they are published."
+          );
 
-      const {
-        data:books,
-        error:booksError
-      } =
-        await supabaseClient
-          .from('books')
-          .select(`
-            id,
-            author_id,
-            title,
-            description,
-            genre_topic,
-            availability,
-            cover_url,
-            status,
-            created_at
-          `)
-          .in('id',ids)
-          .eq('status','approved');
+          return;
 
-      if(booksError){
+        }
+
+        grid.innerHTML =
+          books
+            .map(bookCard)
+            .join("");
+
+      }catch(error){
 
         console.error(
-          'Featured book details error:',
-          booksError
-        );
-
-        renderBooks(
-          'featuredBooksGrid',
-          [],
-          'Featured books unavailable',
-          'The featured book information could not be loaded.'
-        );
-
-        return;
-
-      }
-
-      featuredBooks =
-        books || [];
-
-      await attachAuthorNames(
-        featuredBooks
-      );
-
-      renderBooks(
-        'featuredBooksGrid',
-        featuredBooks,
-        'No featured books yet',
-        'There are no books currently selected for the Reader Reach homepage.'
-      );
-
-      updateCount(
-        'featuredCount',
-        featuredBooks.length
-      );
-
-    }
-
-
-    async function attachAuthorNames(books){
-
-      const authorIds =
-        [...new Set(
-          (books || [])
-            .map(book => book.author_id)
-            .filter(Boolean)
-        )];
-
-      if(authorIds.length === 0){
-        return books;
-      }
-
-      const {
-        data:authors,
-        error
-      } =
-        await supabaseClient
-          .from('authors')
-          .select(`
-            id,
-            author_name
-          `)
-          .in('id',authorIds);
-
-      if(error){
-
-        console.warn(
-          'Author names could not be loaded:',
+          "Featured books exception:",
           error
         );
 
-        return books;
+        grid.innerHTML = `
+          <div class="error-box">
+
+            <strong>
+              Something went wrong.
+            </strong>
+
+            ${escapeHtml(
+              errorMessage(error)
+            )}
+
+          </div>
+        `;
 
       }
-
-      const map =
-        new Map(
-          (authors || []).map(author => [
-            author.id,
-            author.author_name
-          ])
-        );
-
-      books.forEach(book => {
-
-        book.author_name =
-          map.get(book.author_id) ||
-          'Reader Reach Author';
-
-      });
-
-      return books;
 
     }
 
 
     async function loadMyBooks(){
 
-      const container =
-        document.getElementById(
-          'myBooksGrid'
+      const grid = $("myBooksGrid");
+
+      if(!grid || !currentUser){
+        return;
+      }
+
+      try{
+
+        const {
+          data,
+          error
+        } =
+          await supabaseClient
+            .from("reader_books")
+            .select("*")
+            .eq("reader_id",currentUser.id)
+            .order("created_at",{
+              ascending:false
+            });
+
+        if(error){
+
+          console.error(
+            "Reader books error:",
+            error
+          );
+
+          grid.innerHTML = `
+            <div class="error-box">
+
+              <strong>
+                Your books could not be loaded.
+              </strong>
+
+              ${escapeHtml(
+                errorMessage(error)
+              )}
+
+            </div>
+          `;
+
+          updateCount(
+            "savedCount",
+            0
+          );
+
+          updateCount(
+            "myBooksSectionCount",
+            0
+          );
+
+          return;
+
+        }
+
+        const rows =
+          data || [];
+
+        updateCount(
+          "savedCount",
+          rows.length
         );
 
-      container.innerHTML =
-        '<div class="loading">Loading your books...</div>';
+        updateCount(
+          "myBooksSectionCount",
+          rows.length
+        );
 
-      const {
-        data:readerBooks,
-        error
-      } =
-        await supabaseClient
-          .from('reader_books')
-          .select(`
-            id,
-            reader_id,
-            book_id,
-            status,
-            reading_status,
-            progress,
-            created_at,
-            updated_at
-          `)
-          .eq('reader_id',currentReader.id)
-          .order('created_at',{
-            ascending:false
-          });
+        if(!rows.length){
 
-      if(error){
+          renderEmpty(
+            "myBooksGrid",
+            "Your shelf is empty",
+            "Save books from Reader Reach to build your personal shelf.",
+            `
+              <a
+                href="index.html#featured"
+                class="btn primary"
+              >
+                Discover Books
+              </a>
+            `
+          );
+
+          return;
+
+        }
+
+        const bookIds =
+          rows
+            .map(row => row.book_id)
+            .filter(Boolean);
+
+        if(!bookIds.length){
+
+          renderEmpty(
+            "myBooksGrid",
+            "Your shelf is empty",
+            "No saved book records are available."
+          );
+
+          return;
+
+        }
+
+        const {
+          data:books,
+          error:booksError
+        } =
+          await supabaseClient
+            .from("books")
+            .select("*")
+            .in("id",bookIds);
+
+        if(booksError){
+
+          throw booksError;
+
+        }
+
+        const bookList =
+          books || [];
+
+        grid.innerHTML =
+          bookList
+            .map(bookCard)
+            .join("");
+
+        if(!bookList.length){
+
+          renderEmpty(
+            "myBooksGrid",
+            "No books found",
+            "The books on your shelf are not currently available."
+          );
+
+        }
+
+      }catch(error){
 
         console.error(
-          'Reader books error:',
+          "My books exception:",
           error
         );
 
-        container.innerHTML = `
-
-          <div class="empty" style="grid-column:1/-1;">
+        grid.innerHTML = `
+          <div class="error-box">
 
             <strong>
-              Your shelf could not be loaded
+              Your shelf could not be loaded.
             </strong>
 
-            Reader Reach could not load your saved books.
-            Please try refreshing the page.
+            ${escapeHtml(
+              errorMessage(error)
+            )}
 
           </div>
-
         `;
 
-        return;
-
       }
 
-      if(!readerBooks || readerBooks.length === 0){
+    }
 
-        allMyBooks = [];
 
-        renderBooks(
-          'myBooksGrid',
-          [],
-          'Your shelf is empty',
-          'When you add an approved book to your Reader shelf, it will appear here.'
-        );
+    async function loadReadingBooks(){
 
-        updateCount(
-          'myBooksCount',
-          0
-        );
+      const grid =
+        $("readingGrid");
 
-        updateCount(
-          'savedCount',
-          0
-        );
-
-        updateCount(
-          'readingCount',
-          0
-        );
-
-        updateCount(
-          'completedCount',
-          0
-        );
-
-        renderBooks(
-          'readingGrid',
-          [],
-          'Nothing currently being read',
-          'Books you mark as currently reading will appear here.'
-        );
-
-        renderBooks(
-          'completedGrid',
-          [],
-          'Nothing completed yet',
-          'Books you mark as completed will appear here.'
-        );
-
+      if(!grid || !currentUser){
         return;
-
       }
 
-      const bookIds =
-        readerBooks
-          .map(row => row.book_id)
-          .filter(Boolean);
+      try{
 
-      const {
-        data:books,
-        error:bookError
-      } =
-        await supabaseClient
-          .from('books')
-          .select(`
-            id,
-            author_id,
-            title,
-            description,
-            genre_topic,
-            availability,
-            cover_url,
-            status,
-            created_at
-          `)
-          .in('id',bookIds)
-          .eq('status','approved');
+        const {
+          data,
+          error
+        } =
+          await supabaseClient
+            .from("reader_books")
+            .select("*")
+            .eq("reader_id",currentUser.id)
+            .eq("status","reading")
+            .order("created_at",{
+              ascending:false
+            });
 
-      if(bookError){
+        if(error){
+
+          console.error(
+            "Reading books error:",
+            error
+          );
+
+          updateCount(
+            "readingCount",
+            0
+          );
+
+          updateCount(
+            "readingSectionCount",
+            0
+          );
+
+          grid.innerHTML = `
+            <div class="error-box">
+
+              <strong>
+                Currently reading could not be loaded.
+              </strong>
+
+              ${escapeHtml(
+                errorMessage(error)
+              )}
+
+            </div>
+          `;
+
+          return;
+
+        }
+
+        const rows =
+          data || [];
+
+        updateCount(
+          "readingCount",
+          rows.length
+        );
+
+        updateCount(
+          "readingSectionCount",
+          rows.length
+        );
+
+        if(!rows.length){
+
+          renderEmpty(
+            "readingGrid",
+            "Nothing in progress",
+            "Books you mark as currently reading will appear here."
+          );
+
+          return;
+
+        }
+
+        const ids =
+          rows
+            .map(row => row.book_id)
+            .filter(Boolean);
+
+        if(!ids.length){
+
+          renderEmpty(
+            "readingGrid",
+            "Nothing in progress",
+            "No reading records are available."
+          );
+
+          return;
+
+        }
+
+        const {
+          data:books,
+          error:booksError
+        } =
+          await supabaseClient
+            .from("books")
+            .select("*")
+            .in("id",ids);
+
+        if(booksError){
+          throw booksError;
+        }
+
+        grid.innerHTML =
+          (books || [])
+            .map(bookCard)
+            .join("");
+
+      }catch(error){
 
         console.error(
-          'Shelf book details error:',
-          bookError
+          "Reading books exception:",
+          error
         );
 
-        return;
+        grid.innerHTML = `
+          <div class="error-box">
+
+            <strong>
+              Currently reading could not be loaded.
+            </strong>
+
+            ${escapeHtml(
+              errorMessage(error)
+            )}
+
+          </div>
+        `;
 
       }
 
-      const bookMap =
-        new Map(
-          (books || []).map(book => [
-            book.id,
-            book
-          ])
-        );
-
-      allMyBooks =
-        readerBooks
-          .map(row => {
-
-            const book =
-              bookMap.get(row.book_id);
-
-            if(!book){
-              return null;
-            }
-
-            return {
-              ...book,
-              reader_book_id:row.id,
-              reading_status:
-                row.reading_status ||
-                row.status ||
-                '',
-              reader_progress:
-                row.progress,
-              reader_created_at:
-                row.created_at,
-              reader_updated_at:
-                row.updated_at
-            };
-
-          })
-          .filter(Boolean);
-
-      await attachAuthorNames(
-        allMyBooks
-      );
-
-      renderBooks(
-        'myBooksGrid',
-        allMyBooks,
-        'Your shelf is empty',
-        'When you add an approved book to your Reader shelf, it will appear here.'
-      );
-
-      updateCount(
-        'myBooksCount',
-        allMyBooks.length
-      );
-
-      updateCount(
-        'savedCount',
-        allMyBooks.length
-      );
-
-
-      const currentlyReading =
-        allMyBooks.filter(book =>
-          isReadingBook(book)
-        );
-
-      const completed =
-        allMyBooks.filter(book =>
-          isCompletedBook(book)
-        );
-
-
-      renderBooks(
-        'readingGrid',
-        currentlyReading.map(book => ({
-          ...book,
-          reading_status:'Currently Reading'
-        })),
-        'Nothing currently being read',
-        'Books you mark as currently reading will appear here.'
-      );
-
-      renderBooks(
-        'completedGrid',
-        completed.map(book => ({
-          ...book,
-          reading_status:'Completed'
-        })),
-        'Nothing completed yet',
-        'Books you mark as completed will appear here.'
-      );
-
-
-      updateCount(
-        'readingCount',
-        currentlyReading.length
-      );
-
-      updateCount(
-        'completedCount',
-        completed.length
-      );
-
-      updateCount(
-        'readingSectionCount',
-        currentlyReading.length
-      );
-
-      updateCount(
-        'completedSectionCount',
-        completed.length
-      );
-
     }
 
 
-    function isReadingBook(book){
+    async function loadCompletedBooks(){
 
-      const status =
-        String(
-          book.reading_status ||
-          ''
-        ).toLowerCase();
+      const grid =
+        $("completedGrid");
 
-      return (
-        status === 'reading' ||
-        status === 'currently_reading' ||
-        status === 'in_progress' ||
-        status === 'current'
-      );
+      if(!grid || !currentUser){
+        return;
+      }
 
-    }
+      try{
 
+        const {
+          data,
+          error
+        } =
+          await supabaseClient
+            .from("reader_books")
+            .select("*")
+            .eq("reader_id",currentUser.id)
+            .eq("status","completed")
+            .order("created_at",{
+              ascending:false
+            });
 
-    function isCompletedBook(book){
+        if(error){
 
-      const status =
-        String(
-          book.reading_status ||
-          ''
-        ).toLowerCase();
+          console.error(
+            "Completed books error:",
+            error
+          );
 
-      return (
-        status === 'completed' ||
-        status === 'complete' ||
-        status === 'finished'
-      );
+          updateCount(
+            "completedCount",
+            0
+          );
+
+          updateCount(
+            "completedSectionCount",
+            0
+          );
+
+          grid.innerHTML = `
+            <div class="error-box">
+
+              <strong>
+                Completed books could not be loaded.
+              </strong>
+
+              ${escapeHtml(
+                errorMessage(error)
+              )}
+
+            </div>
+          `;
+
+          return;
+
+        }
+
+        const rows =
+          data || [];
+
+        updateCount(
+          "completedCount",
+          rows.length
+        );
+
+        updateCount(
+          "completedSectionCount",
+          rows.length
+        );
+
+        if(!rows.length){
+
+          renderEmpty(
+            "completedGrid",
+            "Nothing completed yet",
+            "Books you finish will appear here."
+          );
+
+          return;
+
+        }
+
+        const ids =
+          rows
+            .map(row => row.book_id)
+            .filter(Boolean);
+
+        if(!ids.length){
+
+          renderEmpty(
+            "completedGrid",
+            "Nothing completed yet",
+            "No completed book records are available."
+          );
+
+          return;
+
+        }
+
+        const {
+          data:books,
+          error:booksError
+        } =
+          await supabaseClient
+            .from("books")
+            .select("*")
+            .in("id",ids);
+
+        if(booksError){
+          throw booksError;
+        }
+
+        grid.innerHTML =
+          (books || [])
+            .map(bookCard)
+            .join("");
+
+      }catch(error){
+
+        console.error(
+          "Completed books exception:",
+          error
+        );
+
+        grid.innerHTML = `
+          <div class="error-box">
+
+            <strong>
+              Completed books could not be loaded.
+            </strong>
+
+            ${escapeHtml(
+              errorMessage(error)
+            )}
+
+          </div>
+        `;
+
+      }
 
     }
 
 
     async function loadFollowingAuthors(){
 
-      const container =
-        document.getElementById(
-          'followingAuthorsGrid'
+      const grid =
+        $("followingAuthorsGrid");
+
+      if(!grid){
+
+        console.error(
+          "Following authors grid element not found."
         );
 
-      if(!container){
-        console.error(
-          'followingAuthorsGrid element not found.'
-        );
         return;
+
       }
 
-      container.innerHTML =
-        '<div class="loading">Loading authors you follow...</div>';
+      if(!currentUser){
+
+        grid.innerHTML = `
+          <div class="error-box">
+
+            <strong>
+              Reader session not available.
+            </strong>
+
+            Please sign in again to view the authors you follow.
+
+          </div>
+        `;
+
+        return;
+
+      }
+
+      grid.innerHTML = `
+        <div class="loading">
+          Loading authors you follow...
+        </div>
+      `;
+
 
       try{
 
-        if(!currentUser){
-
-          container.innerHTML = `
-            <div class="empty" style="grid-column:1/-1;">
-              <strong>Reader session not found</strong>
-              Please sign in again.
-            </div>
-          `;
-
-          return;
-        }
-
+        /*
+          First get the follow rows for the
+          currently signed-in reader.
+        */
 
         const {
-          data: follows,
-          error: followsError
-        } = await supabaseClient
-          .from('author_follows')
-          .select(`
-            id,
-            author_id,
-            created_at
-          `)
-          .eq('follower_profile_id',currentUser.id)
-          .order('created_at',{
-            ascending:false
-          });
+          data:followRows,
+          error:followError
+        } =
+          await supabaseClient
+            .from("author_follows")
+            .select(
+              "author_id, created_at"
+            )
+            .eq(
+              "follower_profile_id",
+              currentUser.id
+            )
+            .order(
+              "created_at",
+              {
+                ascending:false
+              }
+            );
 
 
-        if(followsError){
+        if(followError){
 
           console.error(
-            'Following authors error:',
-            followsError
+            "Following authors query error:",
+            followError
           );
 
-          container.innerHTML = `
-            <div class="empty" style="grid-column:1/-1;">
-              <strong>Could not load followed authors</strong>
-              <div>${escapeHtml(followsError.message)}</div>
+          updateCount(
+            "followingCount",
+            0
+          );
+
+          updateCount(
+            "followingSectionCount",
+            0
+          );
+
+          grid.innerHTML = `
+            <div class="error-box">
+
+              <strong>
+                Authors you follow could not be loaded.
+              </strong>
+
+              ${escapeHtml(
+                errorMessage(followError)
+              )}
+
             </div>
           `;
 
-          updateCount('followingCount',0);
-          updateCount('followingSectionCount',0);
           return;
+
         }
 
 
-        if(!follows || follows.length === 0){
+        const follows =
+          followRows || [];
 
-          container.innerHTML = `
-            <div class="empty" style="grid-column:1/-1;">
-              <strong>You are not following any authors yet.</strong>
-              <div>
-                Explore Reader Reach authors and follow the ones
-                whose books you want to keep up with.
-              </div>
-              <a class="btn primary" href="authors.html">
+
+        updateCount(
+          "followingCount",
+          follows.length
+        );
+
+        updateCount(
+          "followingSectionCount",
+          follows.length
+        );
+
+
+        /*
+          No follows = proper empty state.
+        */
+
+        if(!follows.length){
+
+          renderEmpty(
+            "followingAuthorsGrid",
+            "You are not following any authors yet",
+            "Explore the Reader Reach author directory and follow authors whose books interest you.",
+            `
+              <a
+                href="authors.html"
+                class="btn primary"
+              >
                 Explore Authors
               </a>
-            </div>
-          `;
+            `
+          );
 
-          updateCount('followingCount',0);
-          updateCount('followingSectionCount',0);
           return;
+
         }
 
 
-        const authorIds = [
-          ...new Set(
-            follows
-              .map(row => row.author_id)
-              .filter(Boolean)
-          )
-        ];
+        const authorIds =
+          follows
+            .map(row => row.author_id)
+            .filter(Boolean);
 
 
-        if(authorIds.length === 0){
+        if(!authorIds.length){
 
-          container.innerHTML = `
-            <div class="empty" style="grid-column:1/-1;">
-              <strong>No followed authors found</strong>
-            </div>
-          `;
+          renderEmpty(
+            "followingAuthorsGrid",
+            "No authors found",
+            "Your following list does not contain any author records."
+          );
 
-          updateCount('followingCount',0);
-          updateCount('followingSectionCount',0);
           return;
+
         }
 
+
+        /*
+          Now load the actual approved authors.
+          We deliberately do this as a second query
+          instead of assuming a foreign-key relationship.
+        */
 
         const {
-          data: authors,
-          error: authorsError
-        } = await supabaseClient
-          .from('authors')
-          .select(`
-            id,
-            profile_id,
-            author_name,
-            bio,
-            website_url,
-            status
-          `)
-          .in('id',authorIds)
-          .eq('status','approved');
+          data:authors,
+          error:authorsError
+        } =
+          await supabaseClient
+            .from("authors")
+            .select(
+              "id, author_name, bio, website_url, status"
+            )
+            .in(
+              "id",
+              authorIds
+            )
+            .eq(
+              "status",
+              "approved"
+            );
 
 
         if(authorsError){
 
           console.error(
-            'Followed author details error:',
+            "Authors lookup error:",
             authorsError
           );
 
-          container.innerHTML = `
-            <div class="empty" style="grid-column:1/-1;">
-              <strong>Could not load author profiles</strong>
-              <div>${escapeHtml(authorsError.message)}</div>
-            </div>
-          `;
+          grid.innerHTML = `
+            <div class="error-box">
 
-          updateCount('followingCount',0);
-          updateCount('followingSectionCount',0);
-          return;
-        }
+              <strong>
+                Your followed authors could not be loaded.
+              </strong>
 
+              ${escapeHtml(
+                errorMessage(authorsError)
+              )}
 
-        const authorMap = new Map(
-          (authors || []).map(author => [
-            author.id,
-            author
-          ])
-        );
-
-
-        const followedAuthors = follows
-          .map(follow => {
-
-            const author =
-              authorMap.get(follow.author_id);
-
-            if(!author){
-              return null;
-            }
-
-            return {
-              ...author,
-              follow_id:follow.id,
-              followed_at:follow.created_at
-            };
-
-          })
-          .filter(Boolean);
-
-
-        updateCount(
-          'followingCount',
-          followedAuthors.length
-        );
-
-        updateCount(
-          'followingSectionCount',
-          followedAuthors.length
-        );
-
-
-        if(followedAuthors.length === 0){
-
-          container.innerHTML = `
-            <div class="empty" style="grid-column:1/-1;">
-              <strong>Your followed authors are unavailable.</strong>
-              <div>
-                The authors you followed may no longer be approved.
-              </div>
             </div>
           `;
 
           return;
+
         }
 
 
-        container.innerHTML =
-          followedAuthors.map(author => {
+        const authorList =
+          authors || [];
 
-            const authorName =
-              author.author_name ||
-              'Reader Reach Author';
 
-            const bio =
-              author.bio ||
-              'Discover books from this Reader Reach author.';
+        if(!authorList.length){
 
-            return `
-              <article class="card">
+          renderEmpty(
+            "followingAuthorsGrid",
+            "No approved authors found",
+            "The authors you followed are not currently available in the approved author directory."
+          );
 
-                <div class="section-kicker">
-                  Author
-                </div>
+          return;
 
-                <h3
-                  class="section-title"
-                  style="font-size:21px;margin-bottom:7px;">
-                  ${escapeHtml(authorName)}
-                </h3>
+        }
 
-                <p
-                  class="section-description"
-                  style="margin-bottom:15px;">
-                  ${escapeHtml(bio)}
-                </p>
 
-                <div class="profile-actions">
+        /*
+          Preserve the order from author_follows,
+          so newest follows appear first.
+        */
 
-                  <a
-                    class="btn primary"
-                    href="author-profile.html?id=${encodeURIComponent(author.id)}">
-                    View Profile
-                  </a>
+        const authorMap =
+          new Map(
+            authorList.map(
+              author => [
+                author.id,
+                author
+              ]
+            )
+          );
 
-                  <button
-                    class="btn danger"
-                    type="button"
-                    onclick="unfollowFromDashboard('${author.id}')">
-                    Unfollow
-                  </button>
 
-                </div>
+        const orderedAuthors =
+          authorIds
+            .map(id => authorMap.get(id))
+            .filter(Boolean);
 
-              </article>
-            `;
 
-          }).join('');
+        grid.innerHTML =
+          orderedAuthors
+            .map(author => {
+
+              const name =
+                escapeHtml(
+                  author.author_name ||
+                  "Unnamed Author"
+                );
+
+              const bio =
+                escapeHtml(
+                  truncate(
+                    author.bio ||
+                    "This author has not added a biography yet.",
+                    220
+                  )
+                );
+
+              const profileLink =
+                authorProfileUrl(
+                  author.id
+                );
+
+              return `
+                <article class="author-follow-card">
+
+                  <h3>
+                    ${name}
+                  </h3>
+
+                  <div class="author-follow-meta">
+                    Reader Reach Author
+                  </div>
+
+                  <p>
+                    ${bio}
+                  </p>
+
+                  <div class="author-follow-actions">
+
+                    <a
+                      class="btn primary"
+                      href="${profileLink}"
+                    >
+                      View Profile
+                    </a>
+
+                    <button
+                      class="btn danger"
+                      type="button"
+                      onclick="unfollowFromDashboard('${escapeHtml(author.id)}')"
+                    >
+                      Unfollow
+                    </button>
+
+                  </div>
+
+                </article>
+              `;
+
+            })
+            .join("");
+
+
+        /*
+          If follow rows existed but none of their
+          authors are still approved, make that clear.
+        */
+
+        if(!orderedAuthors.length){
+
+          renderEmpty(
+            "followingAuthorsGrid",
+            "No approved authors found",
+            "The authors you followed are not currently available in the approved author directory."
+          );
+
+        }
 
 
       }catch(error){
 
         console.error(
-          'Unexpected following authors error:',
+          "Following authors exception:",
           error
         );
 
-        container.innerHTML = `
-          <div class="empty" style="grid-column:1/-1;">
-            <strong>Something went wrong</strong>
-            <div>
-              ${escapeHtml(
-                error.message ||
-                'Could not load followed authors.'
-              )}
-            </div>
+
+        updateCount(
+          "followingCount",
+          0
+        );
+
+        updateCount(
+          "followingSectionCount",
+          0
+        );
+
+
+        grid.innerHTML = `
+          <div class="error-box">
+
+            <strong>
+              Following authors could not be loaded.
+            </strong>
+
+            ${escapeHtml(
+              errorMessage(error)
+            )}
+
           </div>
         `;
 
@@ -2887,263 +2827,248 @@
     }
 
 
-    async function unfollowFromDashboard(authorId){
+    async function unfollowFromDashboard(
+      authorId
+    ){
 
-      if(!currentUser || !authorId){
+      if(!currentUser){
+
+        showToast(
+          "Please sign in again."
+        );
+
+        return;
+
+      }
+
+
+      if(!authorId){
         return;
       }
 
-      const {
-        error
-      } = await supabaseClient
-        .from('author_follows')
-        .delete()
-        .eq('follower_profile_id',currentUser.id)
-        .eq('author_id',authorId);
 
-      if(error){
+      try{
+
+        const {
+          error
+        } =
+          await supabaseClient
+            .from("author_follows")
+            .delete()
+            .eq(
+              "follower_profile_id",
+              currentUser.id
+            )
+            .eq(
+              "author_id",
+              authorId
+            );
+
+
+        if(error){
+
+          console.error(
+            "Unfollow error:",
+            error
+          );
+
+          showToast(
+            errorMessage(error)
+          );
+
+          return;
+
+        }
+
+
+        showToast(
+          "Author unfollowed."
+        );
+
+
+        await loadFollowingAuthors();
+
+      }catch(error){
 
         console.error(
-          'Unfollow error:',
+          "Unfollow exception:",
           error
         );
 
         showToast(
-          'Could not unfollow this author. Please try again.'
+          errorMessage(error)
         );
 
-        return;
       }
-
-      showToast(
-        'You are no longer following this author.'
-      );
-
-      await loadFollowingAuthors();
 
     }
 
 
-        async function loadNotifications(){
+    window.unfollowFromDashboard =
+      unfollowFromDashboard;
+
+
+    async function loadNotifications(){
 
       const list =
-        document.getElementById(
-          'notificationList'
-        );
+        $("notificationList");
 
-      list.innerHTML =
-        '<div class="loading">Loading notifications...</div>';
+      if(!list || !currentUser){
+        return;
+      }
 
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('notifications')
-          .select(`
-            id,
-            profile_id,
-            type,
-            title,
-            message,
-            related_book_id,
-            is_read,
-            created_at
-          `)
-          .eq('profile_id',currentUser.id)
-          .order('created_at',{
-            ascending:false
-          })
-          .limit(50);
+      try{
 
-      if(error){
-
-        console.error(
-          'Notification error:',
+        const {
+          data,
           error
-        );
+        } =
+          await supabaseClient
+            .from("notifications")
+            .select("*")
+            .eq(
+              "profile_id",
+              currentUser.id
+            )
+            .order(
+              "created_at",
+              {
+                ascending:false
+              }
+            );
 
-        list.innerHTML = `
+        if(error){
 
-          <div class="empty">
+          console.error(
+            "Notifications error:",
+            error
+          );
 
-            <strong>
-              Notifications unavailable
-            </strong>
+          list.innerHTML = `
+            <div class="error-box">
 
-            Reader Reach could not load your notifications.
+              <strong>
+                Notifications could not be loaded.
+              </strong>
 
-          </div>
-
-        `;
-
-        return;
-
-      }
-
-      const notifications =
-        data || [];
-
-      const unread =
-        notifications.filter(
-          item => !item.is_read
-        ).length;
-
-      updateCount(
-        'notificationCount',
-        unread
-      );
-
-
-      if(notifications.length === 0){
-
-        list.innerHTML = `
-
-          <div class="empty">
-
-            <strong>
-              No notifications yet
-            </strong>
-
-            Important Reader Reach account and book updates
-            will appear here.
-
-          </div>
-
-        `;
-
-        return;
-
-      }
-
-
-      list.innerHTML =
-        notifications.map(notification => `
-
-          <article
-            class="notification ${
-              notification.is_read
-              ? ''
-              : 'unread'
-            }">
-
-            <div class="notification-main">
-
-              <div class="notification-title">
-                ${escapeHtml(
-                  notification.title ||
-                  'Reader Reach Notification'
-                )}
-              </div>
-
-              <div class="notification-message">
-                ${escapeHtml(
-                  notification.message ||
-                  ''
-                )}
-              </div>
-
-            </div>
-
-            <div class="notification-time">
               ${escapeHtml(
-                formatRelativeDate(
-                  notification.created_at
-                )
+                errorMessage(error)
               )}
+
             </div>
+          `;
 
-          </article>
+          updateCount(
+            "notificationCount",
+            0
+          );
 
-        `).join('');
+          updateCount(
+            "notificationsSectionCount",
+            0
+          );
 
-    }
+          return;
 
+        }
 
-    function updateCount(id,value){
+        const notifications =
+          data || [];
 
-      const element =
-        document.getElementById(id);
+        const unread =
+          notifications.filter(
+            item => !item.is_read
+          ).length;
 
-      if(element){
-        element.textContent =
-          String(value);
-      }
-
-    }
-
-
-    function showAccessError(message){
-
-      const pageMessage =
-        document.getElementById(
-          'pageMessage'
+        updateCount(
+          "notificationCount",
+          unread
         );
 
-      pageMessage.className =
-        'message-box warning';
-
-      pageMessage.textContent =
-        message;
-
-    }
+        updateCount(
+          "notificationsSectionCount",
+          notifications.length
+        );
 
 
-    async function signOut(){
+        if(!notifications.length){
 
-      const {
-        error
-      } =
-        await supabaseClient
-          .auth
-          .signOut();
+          renderEmpty(
+            "notificationList",
+            "No notifications",
+            "You are all caught up."
+          );
 
-      if(error){
+          return;
+
+        }
+
+
+        list.innerHTML =
+          notifications
+            .map(notification => {
+
+              return `
+                <article
+                  class="notification ${
+                    notification.is_read
+                      ? ""
+                      : "unread"
+                  }"
+                >
+
+                  <div class="notification-main">
+
+                    <div class="notification-title">
+                      ${escapeHtml(
+                        notification.title ||
+                        "Reader Reach Update"
+                      )}
+                    </div>
+
+                    <div class="notification-message">
+                      ${escapeHtml(
+                        notification.message ||
+                        ""
+                      )}
+                    </div>
+
+                  </div>
+
+                  <div class="notification-time">
+                    ${formatDate(
+                      notification.created_at
+                    )}
+                  </div>
+
+                </article>
+              `;
+
+            })
+            .join("");
+
+      }catch(error){
 
         console.error(
-          'Sign out error:',
+          "Notifications exception:",
           error
         );
 
-        showToast(
-          'Could not sign out. Please try again.'
-        );
+        list.innerHTML = `
+          <div class="error-box">
 
-        return;
+            <strong>
+              Notifications could not be loaded.
+            </strong>
 
-      }
+            ${escapeHtml(
+              errorMessage(error)
+            )}
 
-      window.location.href =
-        'auth.html?mode=signin';
-
-    }
-
-
-    async function markNotificationsRead(){
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .from('notifications')
-          .update({
-            is_read:true
-          })
-          .eq('profile_id',currentUser.id)
-          .eq('is_read',false);
-
-      if(error){
-
-        console.warn(
-          'Could not mark notifications read:',
-          error
-        );
-
-        return;
+          </div>
+        `;
 
       }
-
-      await loadNotifications();
 
     }
 
@@ -3152,41 +3077,44 @@
 
       const buttons =
         document.querySelectorAll(
-          '.sidebar-nav button'
+          ".sidebar-nav button"
         );
+
 
       buttons.forEach(button => {
 
         button.addEventListener(
-          'click',
+          "click",
           () => {
-
-            buttons.forEach(item =>
-              item.classList.remove(
-                'active'
-              )
-            );
-
-            button.classList.add(
-              'active'
-            );
 
             const targetId =
               button.dataset.target;
 
             const target =
-              document.getElementById(
-                targetId
-              );
+              $(targetId);
 
-            if(target){
-
-              target.scrollIntoView({
-                behavior:'smooth',
-                block:'start'
-              });
-
+            if(!target){
+              return;
             }
+
+
+            buttons.forEach(
+              item =>
+                item.classList.remove(
+                  "active"
+                )
+            );
+
+
+            button.classList.add(
+              "active"
+            );
+
+
+            target.scrollIntoView({
+              behavior:"smooth",
+              block:"start"
+            });
 
           }
         );
@@ -3196,316 +3124,384 @@
     }
 
 
-    function setupChat(){
-
-      const button =
-        document.getElementById(
-          'chatButton'
-        );
-
-      const panel =
-        document.getElementById(
-          'chatPanel'
-        );
-
-      const close =
-        document.getElementById(
-          'chatClose'
-        );
-
-      button.addEventListener(
-        'click',
-        () => {
-
-          panel.classList.toggle(
-            'open'
-          );
-
-        }
-      );
-
-      close.addEventListener(
-        'click',
-        () => {
-
-          panel.classList.remove(
-            'open'
-          );
-
-        }
-      );
-
-
-      document
-        .getElementById('sendChatMessage')
-        .addEventListener(
-          'click',
-          sendChatMessage
-        );
-
-    }
-
-
-    async function sendChatMessage(){
-
-      const input =
-        document.getElementById(
-          'chatMessage'
-        );
-
-      const message =
-        input.value.trim();
-
-      if(!message){
-
-        showToast(
-          'Please enter a message.'
-        );
-
-        return;
-
-      }
-
-      const sendButton =
-        document.getElementById(
-          'sendChatMessage'
-        );
-
-      sendButton.disabled =
-        true;
-
-      sendButton.textContent =
-        'Sending...';
-
+    async function signOut(){
 
       try{
 
-        if(!chatConversationId){
-
-          const {
-            data:conversation,
-            error:conversationError
-          } =
-            await supabaseClient
-              .from('conversations')
-              .insert({
-                visitor_name:
-                  currentProfile?.display_name ||
-                  'Reader',
-                visitor_email:
-                  currentUser?.email ||
-                  null,
-                subject:
-                  'Reader Dashboard Support',
-                status:
-                  'open'
-              })
-              .select('id')
-              .single();
-
-          if(conversationError){
-
-            throw conversationError;
-
-          }
-
-          chatConversationId =
-            conversation.id;
-
-        }
-
-
-        const {
-          error
-        } =
-          await supabaseClient
-            .from('messages')
-            .insert({
-              conversation_id:
-                chatConversationId,
-              sender_type:
-                'reader',
-              message:
-                message
-            });
-
-        if(error){
-
-          throw error;
-
-        }
-
-        input.value =
-          '';
-
-        showToast(
-          'Your message was sent to Reader Reach support.'
-        );
+        await supabaseClient.auth.signOut();
 
       }catch(error){
 
         console.error(
-          'Chat message error:',
+          "Sign out error:",
           error
         );
 
-        showToast(
-          'Your message could not be sent right now. Please use Contact Us.'
-        );
-
-      }finally{
-
-        sendButton.disabled =
-          false;
-
-        sendButton.textContent =
-          'Send Message';
-
       }
+
+      window.location.href =
+        "auth.html?mode=reader";
 
     }
 
 
-    function setupRealtime(){
+    function setupSignOut(){
 
-      if(!currentUser){
-        return;
-      }
+      [
+        "signOutTop",
+        "signOutMobile",
+        "signOutAccount"
+      ]
+        .forEach(id => {
 
-      supabaseClient
-        .channel(
-          'reader-notifications-' +
-          currentUser.id
-        )
-        .on(
-          'postgres_changes',
-          {
-            event:'*',
-            schema:'public',
-            table:'notifications',
-            filter:
-              'profile_id=eq.' +
-              currentUser.id
-          },
-          async () => {
+          const button = $(id);
 
-            await loadNotifications();
+          if(button){
 
-            showToast(
-              'You have a new Reader Reach notification.'
+            button.addEventListener(
+              "click",
+              signOut
             );
 
           }
-        )
-        .subscribe();
+
+        });
+
+    }
+
+
+    function setupChat(){
+
+      const button =
+        $("chatButton");
+
+      const panel =
+        $("chatPanel");
+
+      const close =
+        $("chatClose");
+
+      const send =
+        $("sendChatMessage");
+
+      const textarea =
+        $("chatMessage");
+
+
+      if(button && panel){
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            panel.classList.toggle(
+              "open"
+            );
+
+          }
+        );
+
+      }
+
+
+      if(close && panel){
+
+        close.addEventListener(
+          "click",
+          () => {
+
+            panel.classList.remove(
+              "open"
+            );
+
+          }
+        );
+
+      }
+
+
+      if(send){
+
+        send.addEventListener(
+          "click",
+          async () => {
+
+            if(!currentUser){
+
+              showToast(
+                "Please sign in again."
+              );
+
+              return;
+
+            }
+
+
+            const message =
+              textarea
+                ? textarea.value.trim()
+                : "";
+
+
+            if(!message){
+
+              showToast(
+                "Please enter a message."
+              );
+
+              return;
+
+            }
+
+
+            try{
+
+              /*
+                The existing Reader Reach dashboard
+                supports the conversations/messages flow.
+                We keep this action isolated so that a
+                failure here does not break the dashboard.
+              */
+
+              const {
+                data:conversation,
+                error:conversationError
+              } =
+                await supabaseClient
+                  .from("conversations")
+                  .insert({
+                    author_id:null,
+                    moderator_id:null
+                  })
+                  .select()
+                  .maybeSingle();
+
+
+              if(conversationError){
+
+                console.error(
+                  "Conversation creation error:",
+                  conversationError
+                );
+
+                showToast(
+                  "Message could not be sent."
+                );
+
+                return;
+
+              }
+
+
+              if(
+                conversation &&
+                conversation.id
+              ){
+
+                const {
+                  error:messageError
+                } =
+                  await supabaseClient
+                    .from("messages")
+                    .insert({
+                      conversation_id:
+                        conversation.id,
+                      sender_profile_id:
+                        currentUser.id,
+                      message:message
+                    });
+
+
+                if(messageError){
+
+                  console.error(
+                    "Message creation error:",
+                    messageError
+                  );
+
+                  showToast(
+                    "Message could not be sent."
+                  );
+
+                  return;
+
+                }
+
+              }
+
+
+              if(textarea){
+                textarea.value = "";
+              }
+
+
+              showToast(
+                "Message sent."
+              );
+
+
+              if(panel){
+                panel.classList.remove(
+                  "open"
+                );
+              }
+
+
+            }catch(error){
+
+              console.error(
+                "Chat exception:",
+                error
+              );
+
+              showToast(
+                "Message could not be sent."
+              );
+
+            }
+
+          }
+        );
+
+      }
 
     }
 
 
     async function initialize(){
 
-      const sessionLoaded =
-        await loadSession();
+      try{
 
-      if(!sessionLoaded){
-        return;
-      }
+        const {
+          data,
+          error
+        } =
+          await supabaseClient.auth.getSession();
 
 
-      const profileLoaded =
+        if(error){
+
+          console.error(
+            "Session error:",
+            error
+          );
+
+          setPageMessage(
+            "Your session could not be loaded. Please sign in again.",
+            "warning"
+          );
+
+          return;
+
+        }
+
+
+        currentUser =
+          data?.session?.user || null;
+
+
+        if(!currentUser){
+
+          setPageMessage(
+            "There is no active Reader Reach session in this browser. Please sign in again.",
+            "warning"
+          );
+
+          setTimeout(
+            () => {
+
+              window.location.href =
+                "auth.html?mode=reader";
+
+            },
+            1200
+          );
+
+          return;
+
+        }
+
+
         await loadProfile();
 
-      if(!profileLoaded){
-        return;
-      }
+
+        if(
+          currentProfile &&
+          currentProfile.role &&
+          currentProfile.role !== "reader"
+        ){
+
+          console.warn(
+            "Current profile role:",
+            currentProfile.role
+          );
+
+        }
 
 
-      const readerLoaded =
-        await loadReader();
-
-      if(!readerLoaded){
-        return;
-      }
-
-
-      populateAccount();
-
-
-      const pageMessage =
-        document.getElementById(
-          'pageMessage'
+        setPageMessage(
+          "Your Reader Reach account is ready.",
+          "success"
         );
 
-      pageMessage.className =
-        'message-box success';
 
-      pageMessage.textContent =
-        'Your Reader Reach dashboard is ready.';
-
-
-      await Promise.all([
-        loadFeaturedBooks(),
-        loadMyBooks(),
-        loadNotifications(),
-        loadFollowingAuthors()
-      ]);
+        await Promise.all([
+          loadFeaturedBooks(),
+          loadMyBooks(),
+          loadReadingBooks(),
+          loadCompletedBooks(),
+          loadFollowingAuthors(),
+          loadNotifications()
+        ]);
 
 
-      setupRealtime();
+      }catch(error){
+
+        console.error(
+          "Dashboard initialization error:",
+          error
+        );
+
+        setPageMessage(
+          "Something went wrong while loading your dashboard: " +
+          errorMessage(error),
+          "warning"
+        );
+
+      }
 
     }
 
 
-    document
-      .getElementById('signOutTop')
-      .addEventListener(
-        'click',
-        signOut
-      );
+    supabaseClient.auth.onAuthStateChange(
+      (event,session) => {
 
+        if(event === "SIGNED_OUT"){
 
-    document
-      .getElementById('signOutMobile')
-      .addEventListener(
-        'click',
-        signOut
-      );
+          currentUser = null;
+          currentProfile = null;
 
-
-    document
-      .getElementById('signOutSide')
-      .addEventListener(
-        'click',
-        signOut
-      );
-
-
-    document
-      .getElementById('accountSignOut')
-      .addEventListener(
-        'click',
-        signOut
-      );
-
-
-    document
-      .getElementById('refreshNotifications')
-      .addEventListener(
-        'click',
-        async () => {
-
-          await loadNotifications();
-
-          showToast(
-            'Notifications refreshed.'
-          );
+          window.location.href =
+            "auth.html?mode=reader";
 
         }
-      );
+
+        if(
+          event === "TOKEN_REFRESHED" &&
+          session?.user
+        ){
+
+          currentUser =
+            session.user;
+
+        }
+
+      }
+    );
 
 
     setupNavigation();
-
+    setupSignOut();
     setupChat();
 
     initialize();

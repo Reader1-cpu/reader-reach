@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Author Dashboard — Reader Reach</title>
+  <title>Author Dashboard | Reader Reach</title>
 
   <style>
     :root{
@@ -17,9 +16,9 @@
       --muted:#76665d;
       --line:#e7dbcf;
       --white:#fff;
-      --green:#3d6b4a;
-      --red:#8b3f36;
-      --shadow:0 16px 45px rgba(59,36,27,.08);
+      --green:#54745d;
+      --red:#9a554c;
+      --shadow:0 14px 40px rgba(59,36,27,.08);
       --radius:20px;
     }
 
@@ -57,16 +56,16 @@
     .topbar{
       position:sticky;
       top:0;
-      z-index:50;
+      z-index:100;
       background:rgba(255,253,248,.96);
-      backdrop-filter:blur(14px);
       border-bottom:1px solid var(--line);
+      backdrop-filter:blur(12px);
     }
 
-    .topbar-inner{
+    .nav{
       max-width:1400px;
       margin:auto;
-      min-height:74px;
+      min-height:76px;
       padding:0 24px;
       display:flex;
       align-items:center;
@@ -75,120 +74,87 @@
     }
 
     .brand{
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:24px;
+      font-family:Georgia,serif;
+      font-size:25px;
       font-weight:700;
       color:var(--brown);
-      white-space:nowrap;
     }
 
-    .top-links{
+    .brand span{
+      display:block;
+      font-family:Inter,sans-serif;
+      font-size:11px;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      color:var(--muted);
+      margin-top:2px;
+    }
+
+    .navActions{
       display:flex;
       align-items:center;
-      gap:18px;
-      color:var(--muted);
-      font-size:14px;
+      gap:10px;
     }
 
-    .top-links a:hover{
-      color:var(--brown);
-    }
-
-    .btn{
+    .navButton{
       border:1px solid var(--line);
       background:var(--white);
       color:var(--brown);
-      border-radius:12px;
-      padding:11px 16px;
+      border-radius:999px;
+      padding:10px 15px;
       font-weight:700;
-      transition:.2s ease;
     }
 
-    .btn:hover{
-      transform:translateY(-1px);
-      box-shadow:0 8px 20px rgba(59,36,27,.08);
-    }
-
-    .btn.primary{
+    .navButton.primary{
       background:var(--brown);
-      border-color:var(--brown);
       color:white;
-    }
-
-    .btn.gold{
-      background:var(--butter);
-      border-color:var(--butter);
-      color:var(--brown);
-    }
-
-    .btn.danger{
-      color:var(--red);
-      border-color:#e4c9c5;
-      background:#fff8f7;
-    }
-
-    .btn.small{
-      padding:8px 11px;
-      font-size:13px;
+      border-color:var(--brown);
     }
 
     .layout{
       max-width:1400px;
       margin:auto;
-      padding:28px 24px 60px;
+      padding:28px 24px 70px;
       display:grid;
       grid-template-columns:250px minmax(0,1fr);
-      gap:28px;
+      gap:26px;
     }
 
     .sidebar{
       position:sticky;
-      top:98px;
-      height:max-content;
+      top:102px;
+      align-self:start;
       background:var(--white);
       border:1px solid var(--line);
-      border-radius:var(--radius);
+      border-radius:24px;
       padding:16px;
       box-shadow:var(--shadow);
     }
 
-    .side-title{
-      padding:10px 12px 16px;
-      border-bottom:1px solid var(--line);
-      margin-bottom:10px;
+    .sideTitle{
+      padding:8px 10px 14px;
+      font-family:Georgia,serif;
+      font-size:20px;
+      font-weight:700;
     }
 
-    .side-title strong{
-      display:block;
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:19px;
-    }
-
-    .side-title span{
-      display:block;
-      margin-top:4px;
-      color:var(--muted);
-      font-size:12px;
-    }
-
-    .side-nav{
-      display:grid;
-      gap:5px;
-    }
-
-    .side-nav button{
+    .sideLink{
       width:100%;
-      text-align:left;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 13px;
       border:0;
+      border-radius:13px;
       background:transparent;
       color:var(--muted);
-      border-radius:12px;
-      padding:12px;
-      font-weight:650;
+      text-align:left;
+      font-weight:700;
+      margin-bottom:4px;
     }
 
-    .side-nav button:hover,
-    .side-nav button.active{
+    .sideLink:hover,
+    .sideLink.active{
       background:var(--soft);
       color:var(--brown);
     }
@@ -198,370 +164,209 @@
     }
 
     .hero{
-      background:
-        linear-gradient(120deg,rgba(59,36,27,.98),rgba(90,56,41,.94));
+      background:var(--brown);
       color:white;
-      border-radius:26px;
-      padding:34px;
-      box-shadow:var(--shadow);
+      border-radius:28px;
+      padding:32px;
       margin-bottom:24px;
+      position:relative;
+      overflow:hidden;
     }
 
-    .hero-grid{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) auto;
-      gap:25px;
+    .hero:after{
+      content:"";
+      position:absolute;
+      width:260px;
+      height:260px;
+      right:-90px;
+      top:-100px;
+      border-radius:50%;
+      background:rgba(234,215,155,.12);
+    }
+
+    .heroInner{
+      position:relative;
+      z-index:1;
+      display:flex;
+      justify-content:space-between;
+      gap:24px;
       align-items:center;
     }
 
     .eyebrow{
-      color:var(--butter);
       font-size:12px;
-      font-weight:800;
-      letter-spacing:.12em;
+      letter-spacing:2px;
       text-transform:uppercase;
+      color:var(--butter);
+      font-weight:800;
+      margin-bottom:8px;
     }
 
     .hero h1{
-      margin:8px 0 8px;
-      font-family:Georgia,"Times New Roman",serif;
+      font-family:Georgia,serif;
       font-size:clamp(30px,4vw,48px);
       line-height:1.05;
+      margin:0 0 10px;
     }
 
     .hero p{
       margin:0;
-      color:#eadfd7;
-      max-width:720px;
-      line-height:1.7;
+      color:#eadfd8;
+      max-width:650px;
+      line-height:1.65;
     }
 
-    .status-pill{
+    .statusBadge{
       display:inline-flex;
       align-items:center;
-      gap:7px;
-      margin-top:18px;
-      border:1px solid rgba(255,255,255,.2);
       border-radius:999px;
-      padding:8px 13px;
-      font-size:13px;
+      padding:8px 12px;
+      font-size:12px;
       font-weight:800;
+      text-transform:capitalize;
+      background:rgba(255,255,255,.12);
+      margin-top:18px;
     }
 
-    .status-pill.approved{
-      background:rgba(61,107,74,.3);
+    .statusBadge.approved{
+      background:rgba(84,116,93,.35);
     }
 
-    .status-pill.pending{
+    .statusBadge.pending{
       background:rgba(234,215,155,.18);
+      color:var(--butter);
     }
 
-    .status-pill.rejected{
-      background:rgba(139,63,54,.35);
-    }
-
-    .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      justify-content:flex-end;
-    }
-
-    .hero-actions .btn{
-      background:white;
-      color:var(--brown);
-      border-color:white;
+    .statusBadge.rejected{
+      background:rgba(154,85,76,.3);
     }
 
     .section{
-      display:none;
+      margin-bottom:28px;
+      scroll-margin-top:100px;
     }
 
-    .section.active{
-      display:block;
+    .sectionHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:15px;
+      margin-bottom:14px;
     }
 
-    .section-head{
-      margin-bottom:18px;
-    }
-
-    .section-head h2{
-      margin:0 0 5px;
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:30px;
-    }
-
-    .section-head p{
+    .sectionHead h2{
+      font-family:Georgia,serif;
       margin:0;
-      color:var(--muted);
-    }
-
-    .stats{
-      display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:14px;
-      margin-bottom:24px;
-    }
-
-    .stat{
-      background:var(--white);
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:18px;
-      box-shadow:var(--shadow);
-    }
-
-    .stat strong{
-      display:block;
-      font-family:Georgia,"Times New Roman",serif;
       font-size:28px;
       color:var(--brown);
     }
 
-    .stat span{
-      display:block;
-      margin-top:5px;
+    .sectionHead p{
+      margin:5px 0 0;
       color:var(--muted);
-      font-size:13px;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:18px;
     }
 
     .card{
       background:var(--white);
       border:1px solid var(--line);
-      border-radius:20px;
-      padding:22px;
+      border-radius:var(--radius);
       box-shadow:var(--shadow);
     }
 
-    .card h3{
-      margin:0 0 7px;
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:21px;
-    }
-
-    .card-sub{
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.6;
-    }
-
-    .profile-card{
-      display:flex;
-      align-items:center;
-      gap:18px;
-    }
-
-    .avatar{
-      width:82px;
-      height:82px;
-      flex:0 0 82px;
-      border-radius:50%;
+    .stats{
       display:grid;
-      place-items:center;
-      background:var(--soft);
-      color:var(--brown);
-      border:1px solid var(--line);
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:26px;
-      font-weight:700;
-      overflow:hidden;
+      grid-template-columns:repeat(4,1fr);
+      gap:15px;
     }
 
-    .avatar img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
+    .stat{
+      padding:22px;
     }
 
-    .profile-name{
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:25px;
-      font-weight:700;
-      color:var(--brown);
-    }
-
-    .profile-email{
-      margin-top:4px;
+    .statLabel{
       color:var(--muted);
-      font-size:14px;
-      word-break:break-word;
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:9px;
     }
 
-    .mini-stats{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:10px;
-      margin-top:18px;
-    }
-
-    .mini-stat{
-      background:var(--soft);
-      border-radius:14px;
-      padding:13px;
-    }
-
-    .mini-stat strong{
-      display:block;
-      font-size:20px;
+    .statValue{
+      font-family:Georgia,serif;
       color:var(--brown);
+      font-size:29px;
+      font-weight:700;
     }
 
-    .mini-stat span{
+    .statNote{
+      margin-top:5px;
       color:var(--muted);
       font-size:12px;
+      line-height:1.4;
     }
 
-    .notice{
-      padding:16px;
-      border-radius:15px;
-      background:var(--soft);
-      border:1px solid var(--line);
-      margin-bottom:18px;
-      line-height:1.6;
-      font-size:14px;
-    }
-
-    .notice.success{
-      background:#f1f7f2;
-      border-color:#cfe2d3;
-    }
-
-    .notice.warning{
-      background:#fff9e9;
-      border-color:#eadca9;
-    }
-
-    .notice.error{
-      background:#fff5f3;
-      border-color:#e5c7c2;
-    }
-
-    .book-list,
-    .schedule-list,
-    .notification-list,
-    .message-list{
+    .profileGrid{
       display:grid;
-      gap:12px;
+      grid-template-columns:220px minmax(0,1fr);
+      gap:22px;
+      padding:24px;
     }
 
-    .book-item,
-    .schedule-item,
-    .notification-item,
-    .message-item{
-      border:1px solid var(--line);
-      border-radius:15px;
-      padding:16px;
-      background:#fffdfa;
-    }
-
-    .book-row{
-      display:flex;
-      gap:15px;
-      align-items:flex-start;
-    }
-
-    .book-cover{
-      width:72px;
-      height:94px;
-      flex:0 0 72px;
-      border-radius:10px;
-      background:var(--soft);
-      border:1px solid var(--line);
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-      color:var(--muted);
-      font-size:11px;
+    .photoArea{
       text-align:center;
     }
 
-    .book-cover img{
+    .photoPreview{
+      width:150px;
+      height:150px;
+      margin:0 auto 14px;
+      border-radius:50%;
+      background:var(--soft);
+      border:2px dashed #d9c7b6;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      color:var(--muted);
+      font-family:Georgia,serif;
+      font-size:40px;
+    }
+
+    .photoPreview img{
       width:100%;
       height:100%;
       object-fit:cover;
     }
 
-    .book-main{
-      min-width:0;
-      flex:1;
-    }
-
-    .book-title{
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:20px;
-      color:var(--brown);
-      font-weight:700;
-    }
-
-    .book-meta{
-      margin-top:4px;
+    .photoNote{
+      font-size:12px;
       color:var(--muted);
-      font-size:13px;
+      line-height:1.5;
     }
 
-    .book-description{
-      margin-top:8px;
-      color:var(--muted);
-      line-height:1.6;
-      font-size:14px;
-    }
-
-    .item-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:12px;
-    }
-
-    .badge{
-      display:inline-flex;
+    .uploadButton{
+      display:inline-block;
+      margin-top:10px;
+      padding:9px 13px;
       border-radius:999px;
-      padding:5px 9px;
-      font-size:11px;
-      font-weight:800;
-      text-transform:capitalize;
-      border:1px solid var(--line);
       background:var(--soft);
       color:var(--brown);
+      font-weight:800;
+      cursor:pointer;
     }
 
-    .badge.approved{
-      background:#eef6ef;
-      color:var(--green);
-      border-color:#cfe2d3;
+    .uploadButton input{
+      display:none;
     }
 
-    .badge.pending{
-      background:#fff9e9;
-      color:#78622a;
-      border-color:#eadca9;
-    }
-
-    .badge.rejected{
-      background:#fff4f2;
-      color:var(--red);
-      border-color:#e5c7c2;
-    }
-
-    form{
-      display:grid;
-      gap:16px;
-    }
-
-    .form-grid{
+    .formGrid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:16px;
+      gap:15px;
     }
 
     .field{
-      display:grid;
+      display:flex;
+      flex-direction:column;
       gap:7px;
     }
 
@@ -570,9 +375,9 @@
     }
 
     label{
+      color:var(--brown);
       font-size:13px;
       font-weight:800;
-      color:var(--brown);
     }
 
     input,
@@ -580,18 +385,23 @@
     select{
       width:100%;
       border:1px solid var(--line);
-      border-radius:12px;
-      background:#fff;
-      color:var(--text);
+      border-radius:13px;
       padding:12px 13px;
+      background:#fffdfa;
+      color:var(--text);
       outline:none;
     }
 
     input:focus,
     textarea:focus,
     select:focus{
-      border-color:var(--brown2);
-      box-shadow:0 0 0 3px rgba(90,56,41,.08);
+      border-color:#bda58f;
+      box-shadow:0 0 0 3px rgba(189,165,143,.13);
+    }
+
+    input[readonly]{
+      background:#f7f1ea;
+      color:var(--muted);
     }
 
     textarea{
@@ -599,300 +409,409 @@
       resize:vertical;
     }
 
-    input[readonly]{
-      background:#f7f2ec;
-      color:var(--muted);
-    }
-
-    .help{
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.5;
-    }
-
-    .file-box{
-      border:1px dashed #cdbdad;
-      border-radius:14px;
-      padding:16px;
-      background:#fffdfa;
-    }
-
-    .file-box input{
-      border:0;
-      padding:0;
-      background:transparent;
-    }
-
-    .photo-area{
+    .formActions{
+      grid-column:1/-1;
       display:flex;
       align-items:center;
-      gap:20px;
-      padding-bottom:8px;
+      gap:10px;
+      flex-wrap:wrap;
+      padding-top:4px;
     }
 
-    .large-avatar{
-      width:120px;
-      height:120px;
-      border-radius:50%;
+    .btn{
+      border:0;
+      border-radius:12px;
+      padding:12px 16px;
+      font-weight:800;
+      background:var(--soft);
+      color:var(--brown);
+    }
+
+    .btn.primary{
+      background:var(--brown);
+      color:white;
+    }
+
+    .btn.secondary{
+      background:white;
+      border:1px solid var(--line);
+    }
+
+    .btn.danger{
+      background:#f6e8e5;
+      color:var(--red);
+    }
+
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    .formMessage{
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .books{
+      display:grid;
+      gap:14px;
+    }
+
+    .bookCard{
+      display:grid;
+      grid-template-columns:100px minmax(0,1fr) auto;
+      gap:18px;
+      align-items:center;
+      padding:17px;
+    }
+
+    .bookCover{
+      width:100px;
+      height:130px;
+      border-radius:12px;
       background:var(--soft);
       border:1px solid var(--line);
-      display:grid;
-      place-items:center;
-      color:var(--brown);
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:34px;
-      overflow:hidden;
-    }
-
-    .large-avatar img{
-      width:100%;
-      height:100%;
       object-fit:cover;
     }
 
-    .messages-layout{
-      display:grid;
-      grid-template-columns:290px minmax(0,1fr);
-      min-height:560px;
-      border:1px solid var(--line);
-      border-radius:20px;
-      overflow:hidden;
-      background:white;
-      box-shadow:var(--shadow);
+    .bookCover.placeholder{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:10px;
+      color:var(--muted);
+      font-family:Georgia,serif;
     }
 
-    .conversation-list{
-      border-right:1px solid var(--line);
-      background:#fffaf5;
-      padding:14px;
+    .bookTitle{
+      font-family:Georgia,serif;
+      font-size:21px;
+      color:var(--brown);
+      margin-bottom:5px;
     }
 
-    .conversation-item{
-      width:100%;
-      border:1px solid transparent;
-      background:transparent;
-      border-radius:13px;
-      padding:13px;
-      text-align:left;
-      margin-bottom:7px;
-      color:var(--text);
+    .bookMeta{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.55;
     }
 
-    .conversation-item:hover,
-    .conversation-item.active{
-      background:white;
-      border-color:var(--line);
+    .bookDescription{
+      margin-top:9px;
+      color:#62534b;
+      font-size:14px;
+      line-height:1.55;
     }
 
-    .conversation-item strong{
-      display:block;
+    .bookActions{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-width:130px;
+    }
+
+    .pill{
+      display:inline-flex;
+      width:max-content;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:11px;
+      font-weight:800;
+      text-transform:capitalize;
+      background:var(--soft);
       color:var(--brown);
     }
 
-    .conversation-item span{
-      display:block;
-      margin-top:4px;
-      color:var(--muted);
-      font-size:12px;
+    .pill.approved{
+      background:#e6eee8;
+      color:var(--green);
     }
 
-    .chat-panel{
-      display:flex;
-      flex-direction:column;
-      min-width:0;
+    .pill.rejected{
+      background:#f5e6e3;
+      color:var(--red);
     }
 
-    .chat-header{
-      padding:17px 20px;
-      border-bottom:1px solid var(--line);
-    }
-
-    .chat-header strong{
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:20px;
-    }
-
-    .chat-messages{
-      flex:1;
-      min-height:360px;
-      max-height:520px;
-      overflow:auto;
-      padding:20px;
-      background:#fffdfa;
-      display:grid;
-      align-content:start;
-      gap:12px;
-    }
-
-    .chat-bubble{
-      max-width:78%;
-      padding:12px 14px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      background:white;
-    }
-
-    .chat-bubble.author{
-      justify-self:end;
-      background:var(--brown);
-      color:white;
-      border-color:var(--brown);
-    }
-
-    .chat-bubble.moderator{
-      justify-self:start;
-    }
-
-    .chat-bubble small{
-      display:block;
-      margin-top:6px;
-      opacity:.65;
-      font-size:10px;
-    }
-
-    .chat-compose{
-      border-top:1px solid var(--line);
-      padding:15px;
-    }
-
-    .chat-compose form{
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:10px;
-      align-items:end;
-    }
-
-    .chat-compose textarea{
-      min-height:70px;
+    .pill.pending{
+      background:#f4ecd5;
+      color:#826d34;
     }
 
     .empty{
-      padding:35px 20px;
+      padding:34px 20px;
       text-align:center;
       color:var(--muted);
-      border:1px dashed var(--line);
-      border-radius:15px;
-      background:#fffdfa;
     }
 
     .empty strong{
       display:block;
       color:var(--brown);
+      font-family:Georgia,serif;
+      font-size:20px;
+      margin-bottom:6px;
+    }
+
+    .messagesLayout{
+      display:grid;
+      grid-template-columns:280px minmax(0,1fr);
+      min-height:560px;
+      overflow:hidden;
+    }
+
+    .conversationList{
+      border-right:1px solid var(--line);
+      padding:14px;
+      background:#fffaf4;
+    }
+
+    .conversationItem{
+      width:100%;
+      text-align:left;
+      border:1px solid transparent;
+      background:transparent;
+      padding:13px;
+      border-radius:13px;
+      margin-bottom:6px;
+      color:var(--text);
+    }
+
+    .conversationItem:hover,
+    .conversationItem.active{
+      background:white;
+      border-color:var(--line);
+    }
+
+    .conversationName{
+      font-weight:800;
+      color:var(--brown);
+    }
+
+    .conversationSmall{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:4px;
+    }
+
+    .chatPanel{
+      display:flex;
+      flex-direction:column;
+      min-width:0;
+    }
+
+    .chatHeader{
+      padding:18px 20px;
+      border-bottom:1px solid var(--line);
+      background:white;
+    }
+
+    .chatHeader strong{
+      font-family:Georgia,serif;
+      color:var(--brown);
+      font-size:20px;
+    }
+
+    .chatMessages{
+      flex:1;
+      min-height:360px;
+      max-height:500px;
+      overflow:auto;
+      padding:20px;
+      background:#fffdfa;
+    }
+
+    .message{
+      max-width:78%;
+      margin-bottom:13px;
+      padding:12px 14px;
+      border-radius:15px;
+      background:var(--soft);
+    }
+
+    .message.mine{
+      margin-left:auto;
+      background:var(--brown);
+      color:white;
+    }
+
+    .messageMeta{
+      font-size:10px;
+      opacity:.7;
       margin-bottom:5px;
     }
 
-    .rating-placeholder{
+    .messageText{
+      white-space:pre-wrap;
+      line-height:1.5;
+      font-size:14px;
+    }
+
+    .chatForm{
+      padding:15px;
+      border-top:1px solid var(--line);
       display:flex;
+      gap:9px;
+      background:white;
+    }
+
+    .chatForm textarea{
+      min-height:48px;
+      max-height:130px;
+    }
+
+    .scheduleList,
+    .notificationList{
+      display:grid;
+      gap:10px;
+    }
+
+    .scheduleItem,
+    .notificationItem{
+      padding:18px;
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
       align-items:center;
-      gap:12px;
     }
 
-    .stars{
-      color:#b18b2d;
-      font-size:22px;
-      letter-spacing:2px;
+    .scheduleItem strong,
+    .notificationItem strong{
+      color:var(--brown);
+      font-family:Georgia,serif;
+      font-size:18px;
     }
 
-    .locked-card{
-      background:#faf6f0;
-      border:1px dashed #d6c7b8;
+    .muted{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
     }
 
-    .locked-card .lock{
-      font-size:26px;
-      margin-bottom:8px;
+    .notificationItem.unread{
+      border-left:4px solid var(--butter);
+    }
+
+    .notice{
+      background:#fff8e7;
+      border:1px solid #eadbb4;
+      color:#69552c;
+      border-radius:14px;
+      padding:13px 15px;
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .notConnected{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .hidden{
+      display:none!important;
+    }
+
+    .loading{
+      padding:30px;
+      text-align:center;
+      color:var(--muted);
+    }
+
+    .errorBox{
+      padding:18px;
+      border-radius:15px;
+      background:#f8e9e6;
+      border:1px solid #e5c6c0;
+      color:#713e37;
+      line-height:1.55;
     }
 
     .toast{
       position:fixed;
       right:20px;
       bottom:20px;
-      z-index:100;
-      max-width:360px;
+      z-index:500;
       background:var(--brown);
       color:white;
       padding:13px 16px;
       border-radius:13px;
-      box-shadow:0 15px 40px rgba(0,0,0,.18);
-      display:none;
-    }
-
-    .loading{
-      color:var(--muted);
-      padding:20px;
-      text-align:center;
-    }
-
-    .footer{
-      max-width:1400px;
-      margin:0 auto;
-      padding:0 24px 40px;
-      color:var(--muted);
+      box-shadow:var(--shadow);
+      opacity:0;
+      transform:translateY(10px);
+      pointer-events:none;
+      transition:.2s ease;
+      max-width:360px;
       font-size:13px;
     }
 
-    @media(max-width:1100px){
-      .stats{
-        grid-template-columns:repeat(3,minmax(0,1fr));
-      }
-
-      .layout{
-        grid-template-columns:210px minmax(0,1fr);
-      }
+    .toast.show{
+      opacity:1;
+      transform:translateY(0);
     }
 
-    @media(max-width:850px){
-      .top-links{
-        display:none;
-      }
+    .mobileMenu{
+      display:none;
+    }
 
+    @media(max-width:1050px){
       .layout{
         grid-template-columns:1fr;
       }
 
       .sidebar{
         position:static;
+        display:flex;
+        gap:5px;
+        overflow:auto;
+        padding:10px;
       }
 
-      .side-nav{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+      .sideTitle{
+        display:none;
       }
 
-      .hero-grid,
-      .grid,
-      .messages-layout{
-        grid-template-columns:1fr;
-      }
-
-      .conversation-list{
-        border-right:0;
-        border-bottom:1px solid var(--line);
-      }
-
-      .conversation-item{
-        display:inline-block;
+      .sideLink{
         width:auto;
-        margin-right:5px;
-      }
-    }
-
-    @media(max-width:600px){
-      .topbar-inner,
-      .layout,
-      .footer{
-        padding-left:14px;
-        padding-right:14px;
-      }
-
-      .hero{
-        padding:25px 20px;
+        white-space:nowrap;
+        margin:0;
       }
 
       .stats{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+
+    @media(max-width:750px){
+      .nav{
+        padding:0 15px;
       }
 
-      .form-grid{
+      .navActions .navButton:not(.primary){
+        display:none;
+      }
+
+      .layout{
+        padding:18px 14px 50px;
+      }
+
+      .hero{
+        padding:24px;
+        border-radius:20px;
+      }
+
+      .heroInner{
+        display:block;
+      }
+
+      .stats{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .profileGrid{
+        grid-template-columns:1fr;
+      }
+
+      .formGrid{
         grid-template-columns:1fr;
       }
 
@@ -900,22 +819,53 @@
         grid-column:auto;
       }
 
-      .mini-stats{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+      .bookCard{
+        grid-template-columns:75px minmax(0,1fr);
       }
 
-      .side-nav{
+      .bookCover{
+        width:75px;
+        height:100px;
+      }
+
+      .bookActions{
+        grid-column:1/-1;
+        flex-direction:row;
+        flex-wrap:wrap;
+      }
+
+      .messagesLayout{
         grid-template-columns:1fr;
       }
 
-      .profile-card,
-      .photo-area{
-        align-items:flex-start;
-        flex-direction:column;
+      .conversationList{
+        border-right:0;
+        border-bottom:1px solid var(--line);
+        max-height:180px;
+        overflow:auto;
       }
 
-      .chat-compose form{
+      .chatMessages{
+        max-height:430px;
+      }
+
+      .scheduleItem,
+      .notificationItem{
+        display:block;
+      }
+    }
+
+    @media(max-width:480px){
+      .stats{
         grid-template-columns:1fr;
+      }
+
+      .brand{
+        font-size:21px;
+      }
+
+      .hero h1{
+        font-size:31px;
       }
     }
   </style>
@@ -923,3734 +873,2739 @@
 
 <body>
 
-  <header class="topbar">
-    <div class="topbar-inner">
+<header class="topbar">
+  <nav class="nav">
+    <a href="index.html" class="brand">
+      Reader Reach
+      <span>Every Book Has Its Readers.</span>
+    </a>
 
-      <a class="brand" href="index.html">
-        Reader Reach
-      </a>
-
-      <nav class="top-links">
-        <a href="index.html">Home</a>
-        <a href="authors.html">Authors</a>
-        <a href="index.html#featured">Featured</a>
-        <a href="contact.html">Contact</a>
-      </nav>
-
-      <button
-        class="btn danger small"
-        id="topSignOutBtn"
-        type="button">
-        Sign Out
-      </button>
-
+    <div class="navActions">
+      <a href="index.html" class="navButton">Home</a>
+      <button class="navButton primary" id="signOutTop">Sign Out</button>
     </div>
-  </header>
+  </nav>
+</header>
 
 
-  <div class="layout">
+<div class="layout">
 
-    <aside class="sidebar">
+  <aside class="sidebar">
 
-      <div class="side-title">
-        <strong>Author Dashboard</strong>
-        <span id="sideAuthorName">Loading author...</span>
+    <div class="sideTitle">Author Dashboard</div>
+
+    <button class="sideLink active" data-section="overview">
+      Overview
+    </button>
+
+    <button class="sideLink" data-section="profile">
+      My Profile
+    </button>
+
+    <button class="sideLink" data-section="submit">
+      Submit a Book
+    </button>
+
+    <button class="sideLink" data-section="books">
+      My Books
+    </button>
+
+    <button class="sideLink" data-section="messages">
+      Messages
+    </button>
+
+    <button class="sideLink" data-section="schedule">
+      Feature Schedule
+    </button>
+
+    <button class="sideLink" data-section="notifications">
+      Notifications
+    </button>
+
+    <button class="sideLink" data-section="account">
+      My Account
+    </button>
+
+    <button class="sideLink" id="signOutSide">
+      Sign Out
+    </button>
+
+  </aside>
+
+
+  <main class="main">
+
+    <!-- HERO -->
+    <section class="hero section" id="overview">
+
+      <div class="heroInner">
+
+        <div>
+          <div class="eyebrow">Author Dashboard</div>
+
+          <h1 id="heroName">
+            Welcome
+          </h1>
+
+          <p>
+            Manage your author profile, submit books, communicate with
+            Reader Reach moderators, and follow your feature schedule.
+          </p>
+
+          <div id="authorStatus" class="statusBadge">
+            Loading account...
+          </div>
+        </div>
+
       </div>
 
-      <nav class="side-nav">
-
-        <button
-          class="active"
-          data-section="overview"
-          type="button">
-          Overview
-        </button>
-
-        <button
-          data-section="profile"
-          type="button">
-          My Profile
-        </button>
-
-        <button
-          data-section="submit"
-          type="button">
-          Submit a Book
-        </button>
-
-        <button
-          data-section="books"
-          type="button">
-          My Books
-        </button>
-
-        <button
-          data-section="messages"
-          type="button">
-          Messages
-        </button>
-
-        <button
-          data-section="schedule"
-          type="button">
-          Feature Schedule
-        </button>
-
-        <button
-          data-section="followers"
-          type="button">
-          Followers & Following
-        </button>
-
-        <button
-          data-section="notifications"
-          type="button">
-          Notifications
-        </button>
-
-        <button
-          data-section="account"
-          type="button">
-          Account
-        </button>
-
-      </nav>
-
-    </aside>
+    </section>
 
 
-    <main class="main">
+    <!-- STATS -->
+    <section class="section">
 
-      <!-- HERO -->
+      <div class="stats">
 
-      <section class="hero">
+        <article class="card stat">
+          <div class="statLabel">My Books</div>
+          <div class="statValue" id="bookCount">0</div>
+          <div class="statNote">Books connected to your author account.</div>
+        </article>
 
-        <div class="hero-grid">
-
-          <div>
-
-            <div class="eyebrow">
-              Author Access
-            </div>
-
-            <h1 id="heroTitle">
-              Welcome back.
-            </h1>
-
-            <p>
-              Manage your author profile, books, Reader Reach
-              submissions, feature schedules, messages and notifications.
-            </p>
-
-            <div
-              id="heroStatus"
-              class="status-pill pending">
-              Loading status...
-            </div>
-
+        <article class="card stat">
+          <div class="statLabel">Followers</div>
+          <div class="statValue">—</div>
+          <div class="statNote">
+            Follower system is not connected to the supplied database schema yet.
           </div>
+        </article>
 
-          <div class="hero-actions">
-
-            <a
-              class="btn"
-              id="publicProfileBtn"
-              href="#"
-              target="_blank">
-              View Public Profile
-            </a>
-
-            <button
-              class="btn gold"
-              type="button"
-              data-go="submit">
-              Submit a Book
-            </button>
-
+        <article class="card stat">
+          <div class="statLabel">Following</div>
+          <div class="statValue">—</div>
+          <div class="statNote">
+            Following system is not connected to the supplied database schema yet.
           </div>
+        </article>
 
-        </div>
-
-      </section>
-
-
-      <!-- OVERVIEW -->
-
-      <section
-        class="section active"
-        id="section-overview">
-
-        <div class="section-head">
-
-          <h2>Overview</h2>
-
-          <p>
-            Your Reader Reach author activity at a glance.
-          </p>
-
-        </div>
-
-
-        <div class="stats">
-
-          <div class="stat">
-            <strong id="statTotalBooks">0</strong>
-            <span>Total Books</span>
+        <article class="card stat">
+          <div class="statLabel">Ratings</div>
+          <div class="statValue">—</div>
+          <div class="statNote">
+            Ratings data is not connected to the supplied database schema yet.
           </div>
+        </article>
 
-          <div class="stat">
-            <strong id="statApprovedBooks">0</strong>
-            <span>Approved Books</span>
-          </div>
+      </div>
 
-          <div class="stat">
-            <strong id="statPendingBooks">0</strong>
-            <span>Pending Books</span>
-          </div>
-
-          <div class="stat">
-            <strong id="statUnread">0</strong>
-            <span>Unread Notifications</span>
-          </div>
-
-          <div class="stat">
-            <strong id="statSchedules">0</strong>
-            <span>Scheduled Features</span>
-          </div>
-
-        </div>
+    </section>
 
 
-        <div class="grid">
+    <!-- PROFILE -->
+    <section class="section" id="profile">
 
-          <div class="card">
-
-            <div class="profile-card">
-
-              <div
-                class="avatar"
-                id="overviewAvatar">
-                RR
-              </div>
-
-              <div>
-
-                <div
-                  class="profile-name"
-                  id="overviewName">
-                  Author
-                </div>
-
-                <div
-                  class="profile-email"
-                  id="overviewEmail">
-                  Loading...
-                </div>
-
-              </div>
-
-            </div>
-
-
-            <div class="mini-stats">
-
-              <div class="mini-stat">
-                <strong id="overviewBooks">0</strong>
-                <span>Books</span>
-              </div>
-
-              <div class="mini-stat">
-                <strong id="overviewFollowers">—</strong>
-                <span>Followers</span>
-              </div>
-
-              <div class="mini-stat">
-                <strong id="overviewFollowing">—</strong>
-                <span>Following</span>
-              </div>
-
-              <div class="mini-stat">
-                <strong id="overviewRating">—</strong>
-                <span>Rating</span>
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <div class="card">
-
-            <h3>Author Status</h3>
-
-            <div
-              id="overviewStatusText"
-              class="card-sub">
-              Loading your author status...
-            </div>
-
-            <div
-              id="overviewStatusNotice"
-              class="notice"
-              style="margin-top:15px">
-            </div>
-
-          </div>
-
-
-          <div class="card">
-
-            <h3>Recent Books</h3>
-
-            <div
-              id="overviewRecentBooks"
-              class="book-list">
-              <div class="loading">
-                Loading books...
-              </div>
-            </div>
-
-          </div>
-
-
-          <div class="card">
-
-            <h3>Ratings</h3>
-
-            <div class="rating-placeholder">
-
-              <div class="stars">
-                ★★★★★
-              </div>
-
-              <div class="card-sub">
-                <strong>
-                  Rating system pending backend connection.
-                </strong>
-                <br>
-                No rating has been invented or displayed as real data.
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- PROFILE -->
-
-      <section
-        class="section"
-        id="section-profile">
-
-        <div class="section-head">
-
+      <div class="sectionHead">
+        <div>
           <h2>My Profile</h2>
+          <p>Manage the public author information connected to your account.</p>
+        </div>
+      </div>
 
-          <p>
-            Manage the information that belongs on your author profile.
-          </p>
+      <div class="card profileGrid">
+
+        <div class="photoArea">
+
+          <div class="photoPreview" id="photoPreview">
+            <span id="photoInitial">A</span>
+          </div>
+
+          <label class="uploadButton">
+            Choose Profile Photo
+            <input
+              type="file"
+              id="profilePhoto"
+              accept="image/*">
+          </label>
+
+          <div class="photoNote">
+            Photo preview is available here, but permanent profile-photo
+            storage is not present in the supplied database schema yet.
+          </div>
 
         </div>
 
 
-        <div class="grid">
+        <form id="profileForm">
 
-          <div class="card">
+          <div class="formGrid">
 
-            <h3>Profile Photo</h3>
-
-            <div class="photo-area">
-
-              <div
-                class="large-avatar"
-                id="profileAvatar">
-                RR
-              </div>
-
-              <div>
-
-                <div class="notice warning">
-                  Your current database has no author/profile photo
-                  column or confirmed storage destination yet.
-                  The upload control is therefore shown for the profile
-                  design, but it will not pretend to save an image that
-                  the database cannot store.
-                </div>
-
-                <div class="file-box">
-
-                  <input
-                    type="file"
-                    id="profilePhotoInput"
-                    accept="image/*">
-
-                  <div class="help">
-                    Photo storage will be connected after the profile
-                    photo field/storage bucket is added.
-                  </div>
-
-                </div>
-
-              </div>
-
+            <div class="field">
+              <label for="profileAuthorName">Author Name</label>
+              <input id="profileAuthorName" readonly>
             </div>
 
-          </div>
+            <div class="field">
+              <label for="profileEmail">Email Address</label>
+              <input id="profileEmail" type="email" readonly>
+            </div>
 
+            <div class="field full">
+              <label for="profileBio">About the Author</label>
+              <textarea
+                id="profileBio"
+                placeholder="Tell readers about the author."></textarea>
+            </div>
 
-          <div class="card">
+            <div class="field full">
+              <label for="profileWebsite">Website</label>
+              <input
+                id="profileWebsite"
+                type="url"
+                placeholder="https://">
+            </div>
 
-            <h3>Profile Information</h3>
+            <div class="formActions">
 
-            <form id="profileForm">
-
-              <div class="field">
-
-                <label for="profileName">
-                  Author Name
-                </label>
-
-                <input
-                  id="profileName"
-                  type="text"
-                  required>
-
-              </div>
-
-
-              <div class="field">
-
-                <label for="profileEmail">
-                  Email Address
-                </label>
-
-                <input
-                  id="profileEmail"
-                  type="email"
-                  readonly>
-
-              </div>
-
-
-              <div class="field">
-
-                <label for="profileWebsite">
-                  Website
-                </label>
-
-                <input
-                  id="profileWebsite"
-                  type="url"
-                  placeholder="https://example.com">
-
-              </div>
-
-
-              <div class="field">
-
-                <label for="profileBio">
-                  About the Author
-                </label>
-
-                <textarea
-                  id="profileBio"
-                  placeholder="Tell readers about yourself."></textarea>
-
-              </div>
-
-
-              <button
-                class="btn primary"
-                type="submit">
+              <button class="btn primary" type="submit">
                 Save Profile
               </button>
 
-            </form>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- SUBMIT -->
-
-      <section
-        class="section"
-        id="section-submit">
-
-        <div class="section-head">
-
-          <h2>Submit a Book</h2>
-
-          <p>
-            Submit another book for the Reader Reach review process.
-          </p>
-
-        </div>
-
-
-        <div
-          id="submissionNotice"
-          class="notice"
-          style="display:none">
-        </div>
-
-
-        <div class="card">
-
-          <form id="bookSubmissionForm">
-
-            <div class="form-grid">
-
-              <div class="field">
-
-                <label>
-                  Author Name *
-                </label>
-
-                <input
-                  id="submitAuthorName"
-                  readonly
-                  required>
-
-              </div>
-
-
-              <div class="field">
-
-                <label>
-                  Email Address *
-                </label>
-
-                <input
-                  id="submitAuthorEmail"
-                  type="email"
-                  readonly
-                  required>
-
-              </div>
-
-
-              <div class="field full">
-
-                <label>
-                  About the Author *
-                </label>
-
-                <textarea
-                  id="submitBio"
-                  required
-                  placeholder="Tell Reader Reach about the author."></textarea>
-
-              </div>
-
-
-              <div class="field">
-
-                <label>
-                  Book Title *
-                </label>
-
-                <input
-                  id="bookTitle"
-                  required>
-
-              </div>
-
-
-              <div class="field">
-
-                <label>
-                  Genre / Topic *
-                </label>
-
-                <input
-                  id="bookGenre"
-                  required>
-
-              </div>
-
-
-              <div class="field full">
-
-                <label>
-                  Book Description *
-                </label>
-
-                <textarea
-                  id="bookDescription"
-                  required
-                  placeholder="Describe the book."></textarea>
-
-              </div>
-
-
-              <div class="field">
-
-                <label>
-                  Who Is the Book For? *
-                </label>
-
-                <textarea
-                  id="bookAudience"
-                  required
-                  placeholder="Who will benefit from this book?"></textarea>
-
-              </div>
-
-
-              <div class="field">
-
-                <label>
-                  Where Is the Book Currently Available? *
-                </label>
-
-                <textarea
-                  id="bookAvailability"
-                  required
-                  placeholder="Where can readers currently find it?"></textarea>
-
-              </div>
-
-
-              <div class="field">
-
-                <label>
-                  Book Cover Image *
-                </label>
-
-                <div class="file-box">
-
-                  <input
-                    id="bookCover"
-                    type="file"
-                    accept="image/*"
-                    required>
-
-                  <div class="help">
-                    Upload the actual book cover image.
-                  </div>
-
-                </div>
-
-              </div>
-
-
-              <div class="field">
-
-                <label>
-                  Book Trailer Video *
-                </label>
-
-                <div class="file-box">
-
-                  <input
-                    id="bookTrailer"
-                    type="file"
-                    accept="video/*"
-                    required>
-
-                  <div class="help">
-                    Upload the actual trailer video.
-                  </div>
-
-                </div>
-
-              </div>
-
-
-              <div class="field full">
-
-                <label>
-                  Flipper Guide Link *
-                </label>
-
-                <input
-                  id="flipperGuideLink"
-                  type="url"
-                  required
-                  placeholder="https://example.com/flipper-guide">
-
-                <div class="help">
-                  This is stored with the submitted book's protected
-                  Flipper Guide record.
-                </div>
-
-              </div>
+              <a
+                class="btn secondary"
+                id="publicProfileLink"
+                href="#"
+                target="_blank">
+                View Public Profile
+              </a>
+
+              <span
+                class="formMessage"
+                id="profileMessage">
+              </span>
 
             </div>
 
+          </div>
+
+        </form>
+
+      </div>
+
+    </section>
+
+
+    <!-- SUBMIT BOOK -->
+    <section class="section" id="submit">
+
+      <div class="sectionHead">
+        <div>
+          <h2>Submit a Book</h2>
+          <p>
+            Every new book enters the Reader Reach review process.
+          </p>
+        </div>
+      </div>
+
+      <div class="card" style="padding:24px;">
+
+        <div class="notice" style="margin-bottom:18px;">
+          Your Author Name and Email Address are taken from your approved
+          Reader Reach account. A separate Book Link field is intentionally
+          not included.
+        </div>
+
+        <form id="bookForm">
+
+          <div class="formGrid">
+
+            <div class="field">
+              <label>Author Name</label>
+              <input id="submissionAuthorName" readonly>
+            </div>
+
+            <div class="field">
+              <label>Email Address</label>
+              <input id="submissionAuthorEmail" readonly>
+            </div>
+
+            <div class="field full">
+              <label for="bookTitle">Book Title *</label>
+              <input
+                id="bookTitle"
+                required
+                placeholder="Book title">
+            </div>
+
+            <div class="field">
+              <label for="bookGenre">Genre / Topic *</label>
+              <input
+                id="bookGenre"
+                required
+                placeholder="Genre or topic">
+            </div>
+
+            <div class="field">
+              <label for="bookAvailability">Where Is the Book Currently Available? *</label>
+              <input
+                id="bookAvailability"
+                required
+                placeholder="Availability information">
+            </div>
+
+            <div class="field full">
+              <label for="bookDescription">Book Description *</label>
+              <textarea
+                id="bookDescription"
+                required
+                placeholder="Describe the book."></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="bookAudience">Who Is the Book For? *</label>
+              <textarea
+                id="bookAudience"
+                required
+                placeholder="Describe the intended readers."></textarea>
+            </div>
+
+            <div class="field">
+              <label for="bookCover">Book Cover Image *</label>
+              <input
+                id="bookCover"
+                type="file"
+                accept="image/*"
+                required>
+            </div>
+
+            <div class="field">
+              <label for="bookTrailer">Book Trailer Video *</label>
+              <input
+                id="bookTrailer"
+                type="file"
+                accept="video/*"
+                required>
+            </div>
+
+            <div class="field full">
+              <label for="guideLink">Flipper Guide Link *</label>
+              <input
+                id="guideLink"
+                type="url"
+                required
+                placeholder="https://">
+            </div>
+
+            <div class="formActions">
+
+              <button
+                class="btn primary"
+                type="submit"
+                id="submitBookButton">
+                Submit Book for Review
+              </button>
+
+              <span
+                class="formMessage"
+                id="bookFormMessage">
+              </span>
+
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </section>
+
+
+    <!-- BOOKS -->
+    <section class="section" id="books">
+
+      <div class="sectionHead">
+        <div>
+          <h2>My Books</h2>
+          <p>
+            Track every book submitted through your author account.
+          </p>
+        </div>
+
+        <button class="btn secondary" id="refreshBooks">
+          Refresh
+        </button>
+      </div>
+
+      <div id="booksList" class="books">
+        <div class="card loading">
+          Loading your books...
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- MESSAGES -->
+    <section class="section" id="messages">
+
+      <div class="sectionHead">
+        <div>
+          <h2>Messages</h2>
+          <p>
+            Communicate directly with Reader Reach moderators.
+          </p>
+        </div>
+
+        <button class="btn secondary" id="refreshMessages">
+          Refresh
+        </button>
+      </div>
+
+      <div class="card messagesLayout">
+
+        <div class="conversationList" id="conversationList">
+          <div class="loading">
+            Loading conversations...
+          </div>
+        </div>
+
+        <div class="chatPanel">
+
+          <div class="chatHeader" id="chatHeader">
+            <strong>Select a conversation</strong>
+            <div class="muted">
+              Choose a moderator conversation to view messages.
+            </div>
+          </div>
+
+          <div class="chatMessages" id="chatMessages">
+            <div class="empty">
+              <strong>No conversation selected</strong>
+              Select a moderator from the conversation list.
+            </div>
+          </div>
+
+          <form class="chatForm" id="messageForm">
+
+            <textarea
+              id="messageInput"
+              placeholder="Write a message..."
+              disabled></textarea>
 
             <button
               class="btn primary"
-              id="submitBookBtn"
-              type="submit">
-              Submit Book for Review
+              type="submit"
+              id="sendMessageButton"
+              disabled>
+              Send
             </button>
 
           </form>
 
         </div>
 
-      </section>
+      </div>
+
+    </section>
 
 
-      <!-- BOOKS -->
+    <!-- FEATURE SCHEDULE -->
+    <section class="section" id="schedule">
 
-      <section
-        class="section"
-        id="section-books">
-
-        <div class="section-head">
-
-          <h2>My Books</h2>
-
+      <div class="sectionHead">
+        <div>
+          <h2>Feature Schedule</h2>
           <p>
-            Track every book submitted from this author account.
+            See Reader Reach feature schedules connected to your books.
           </p>
-
         </div>
 
+        <button class="btn secondary" id="refreshSchedule">
+          Refresh
+        </button>
+      </div>
 
-        <div class="stats">
-
-          <div class="stat">
-            <strong id="booksAllCount">0</strong>
-            <span>All Books</span>
-          </div>
-
-          <div class="stat">
-            <strong id="booksApprovedCount">0</strong>
-            <span>Approved</span>
-          </div>
-
-          <div class="stat">
-            <strong id="booksPendingCount">0</strong>
-            <span>Pending</span>
-          </div>
-
-          <div class="stat">
-            <strong id="booksRejectedCount">0</strong>
-            <span>Rejected</span>
-          </div>
-
-          <div class="stat">
-            <strong id="booksIncompleteCount">0</strong>
-            <span>Incomplete</span>
-          </div>
-
+      <div id="scheduleList" class="scheduleList">
+        <div class="card loading">
+          Loading schedules...
         </div>
+      </div>
+
+    </section>
 
 
-        <div
-          id="booksList"
-          class="book-list">
-          <div class="loading">
-            Loading your books...
-          </div>
-        </div>
+    <!-- NOTIFICATIONS -->
+    <section class="section" id="notifications">
 
-      </section>
-
-
-      <!-- MESSAGES -->
-
-      <section
-        class="section"
-        id="section-messages">
-
-        <div class="section-head">
-
-          <h2>Messages</h2>
-
+      <div class="sectionHead">
+        <div>
+          <h2>Notifications</h2>
           <p>
-            Communicate directly with Reader Reach moderators about
-            your books, features, schedules and support.
+            Review updates about your author account and books.
           </p>
-
         </div>
 
+        <button class="btn secondary" id="refreshNotifications">
+          Refresh
+        </button>
+      </div>
 
-        <div class="messages-layout">
+      <div id="notificationList" class="notificationList">
+        <div class="card loading">
+          Loading notifications...
+        </div>
+      </div>
 
-          <div class="conversation-list">
+    </section>
+
+
+    <!-- ACCOUNT -->
+    <section class="section" id="account">
+
+      <div class="sectionHead">
+        <div>
+          <h2>My Account</h2>
+          <p>Account information from Supabase Auth.</p>
+        </div>
+      </div>
+
+      <div class="card" style="padding:24px;">
+
+        <div class="formGrid">
+
+          <div class="field">
+            <label>Email Address</label>
+            <input id="accountEmail" readonly>
+          </div>
+
+          <div class="field">
+            <label>Account Role</label>
+            <input value="Author" readonly>
+          </div>
+
+          <div class="field">
+            <label>Profile ID</label>
+            <input id="accountProfileId" readonly>
+          </div>
+
+          <div class="field">
+            <label>Author Record ID</label>
+            <input id="accountAuthorId" readonly>
+          </div>
+
+          <div class="formActions">
 
             <button
-              class="btn primary"
-              id="newConversationBtn"
               type="button"
-              style="width:100%;margin-bottom:14px">
-              New Message
+              class="btn danger"
+              id="signOutAccount">
+              Sign Out
             </button>
 
-            <div id="conversationList">
-              <div class="loading">
-                Loading conversations...
-              </div>
-            </div>
-
-          </div>
-
-
-          <div class="chat-panel">
-
-            <div class="chat-header">
-
-              <strong id="chatTitle">
-                Select a conversation
-              </strong>
-
-              <div
-                id="chatSubtitle"
-                class="card-sub">
-                Your moderator conversations will appear here.
-              </div>
-
-            </div>
-
-
-            <div
-              class="chat-messages"
-              id="chatMessages">
-
-              <div class="empty">
-
-                <strong>
-                  No conversation selected.
-                </strong>
-
-                Choose a conversation or start a new message
-                to Reader Reach Moderation.
-
-              </div>
-
-            </div>
-
-
-            <div class="chat-compose">
-
-              <form id="messageForm">
-
-                <textarea
-                  id="messageInput"
-                  placeholder="Write a message to the moderator..."
-                  required></textarea>
-
-                <button
-                  class="btn primary"
-                  id="sendMessageBtn"
-                  type="submit">
-                  Send
-                </button>
-
-              </form>
-
-            </div>
-
           </div>
 
         </div>
 
-      </section>
+      </div>
 
+    </section>
 
-      <!-- SCHEDULE -->
+  </main>
 
-      <section
-        class="section"
-        id="section-schedule">
+</div>
 
-        <div class="section-head">
 
-          <h2>Feature Schedule</h2>
+<div class="toast" id="toast"></div>
 
-          <p>
-            See feature dates assigned to your approved books.
-          </p>
 
-        </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+  const SUPABASE_URL =
+    'https://bublmnfhyyrefcdkloak.supabase.co';
 
-        <div
-          id="scheduleList"
-          class="schedule-list">
+  const SUPABASE_ANON_KEY =
+    'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
 
-          <div class="loading">
-            Loading schedules...
-          </div>
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
 
-        </div>
 
-      </section>
+  let currentUser = null;
+  let currentProfile = null;
+  let currentAuthor = null;
 
+  let myBooks = [];
+  let moderators = [];
+  let conversations = [];
+  let selectedConversation = null;
 
-      <!-- FOLLOWERS -->
+  let messageRealtimeChannel = null;
+  let notificationRealtimeChannel = null;
 
-      <section
-        class="section"
-        id="section-followers">
 
-        <div class="section-head">
+  function escapeHtml(value){
+    return String(value ?? '')
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#039;');
+  }
 
-          <h2>Followers & Following</h2>
 
-          <p>
-            Reader Reach will show your follower and following activity
-            here when the follow system is connected.
-          </p>
+  function showToast(message){
+    const toast =
+      document.getElementById('toast');
 
-        </div>
+    toast.textContent = message;
+    toast.classList.add('show');
 
+    clearTimeout(
+      window.__toastTimer
+    );
 
-        <div class="grid">
+    window.__toastTimer =
+      setTimeout(() => {
+        toast.classList.remove('show');
+      },3500);
+  }
 
-          <div class="card">
 
-            <h3>Followers</h3>
+  function formatDate(value){
+    if(!value) return '';
 
-            <div class="stat" style="box-shadow:none;margin-top:15px">
-              <strong>—</strong>
-              <span>
-                Follow records are not currently present in the
-                confirmed database schema.
-              </span>
-            </div>
+    const date = new Date(value);
 
-          </div>
+    if(Number.isNaN(date.getTime())){
+      return String(value);
+    }
 
+    return date.toLocaleDateString(
+      undefined,
+      {
+        year:'numeric',
+        month:'short',
+        day:'numeric'
+      }
+    );
+  }
 
-          <div class="card">
 
-            <h3>Following</h3>
+  function formatDateTime(value){
+    if(!value) return '';
 
-            <div class="stat" style="box-shadow:none;margin-top:15px">
-              <strong>—</strong>
-              <span>
-                Following records are not currently present in the
-                confirmed database schema.
-              </span>
-            </div>
+    const date = new Date(value);
 
-          </div>
+    if(Number.isNaN(date.getTime())){
+      return String(value);
+    }
 
-        </div>
-
-      </section>
-
-
-      <!-- NOTIFICATIONS -->
-
-      <section
-        class="section"
-        id="section-notifications">
-
-        <div class="section-head">
-
-          <h2>Notifications</h2>
-
-          <p>
-            Account, book, moderator and feature notifications.
-          </p>
-
-        </div>
-
-
-        <div
-          id="notificationsList"
-          class="notification-list">
-
-          <div class="loading">
-            Loading notifications...
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- ACCOUNT -->
-
-      <section
-        class="section"
-        id="section-account">
-
-        <div class="section-head">
-
-          <h2>My Account</h2>
-
-          <p>
-            Account details and security.
-          </p>
-
-        </div>
-
-
-        <div class="grid">
-
-          <div class="card">
-
-            <h3>Account Details</h3>
-
-            <div class="notice">
-
-              <strong>Email</strong>
-
-              <div id="accountEmail">
-                Loading...
-              </div>
-
-            </div>
-
-
-            <div class="notice">
-
-              <strong>Role</strong>
-
-              <div>
-                Author
-              </div>
-
-            </div>
-
-
-            <div class="notice">
-
-              <strong>Member Since</strong>
-
-              <div id="accountCreated">
-                Loading...
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <div class="card">
-
-            <h3>Password & Sign Out</h3>
-
-            <p class="card-sub">
-              Passwords are managed through Supabase Auth.
-              Reader Reach administrators do not receive or display
-              your password.
-            </p>
-
-            <div class="item-actions">
-
-              <a
-                class="btn"
-                href="reset-password.html">
-                Reset Password
-              </a>
-
-              <button
-                class="btn danger"
-                id="accountSignOutBtn"
-                type="button">
-                Sign Out
-              </button>
-
-            </div>
-
-          </div>
-
-
-          <div class="card locked-card">
-
-            <div class="lock">
-              🔒
-            </div>
-
-            <h3>Private Account Information</h3>
-
-            <p class="card-sub">
-              Private signup information is not displayed on the
-              public author profile. Location information, where
-              collected during signup, remains private.
-            </p>
-
-          </div>
-
-
-          <div class="card">
-
-            <h3>Ratings</h3>
-
-            <p class="card-sub">
-              Ratings are part of the planned Author experience,
-              but no ratings table was included in the confirmed
-              database schema supplied for this dashboard.
-            </p>
-
-          </div>
-
-        </div>
-
-      </section>
-
-    </main>
-
-  </div>
-
-
-  <div class="footer">
-    Reader Reach — Every Book Has Its Readers.
-  </div>
-
-
-  <div
-    id="toast"
-    class="toast">
-  </div>
-
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <script>
-
-    const SUPABASE_URL =
-      'https://bublmnfhyyrefcdkloak.supabase.co';
-
-    const SUPABASE_PUBLISHABLE_KEY =
-      'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
-
-    const supabaseClient =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
+    return date.toLocaleString(
+      undefined,
+      {
+        year:'numeric',
+        month:'short',
+        day:'numeric',
+        hour:'numeric',
+        minute:'2-digit'
+      }
+    );
+  }
+
+
+  function formatScheduleDate(dateValue,timeValue){
+    if(!dateValue) return 'Date not set';
+
+    let result =
+      new Date(
+        `${dateValue}T${timeValue || '00:00:00'}`
       );
 
-
-    let currentUser = null;
-    let currentProfile = null;
-    let currentAuthor = null;
-    let authorBooks = [];
-    let conversations = [];
-    let selectedConversation = null;
-
-
-    function escapeHtml(value){
-
-      return String(value ?? '')
-        .replaceAll('&','&amp;')
-        .replaceAll('<','&lt;')
-        .replaceAll('>','&gt;')
-        .replaceAll('"','&quot;')
-        .replaceAll("'","&#039;");
-
+    if(Number.isNaN(result.getTime())){
+      return `${dateValue}${timeValue ? ' • ' + timeValue : ''}`;
     }
 
+    return result.toLocaleString(
+      undefined,
+      {
+        year:'numeric',
+        month:'long',
+        day:'numeric',
+        hour:timeValue ? 'numeric' : undefined,
+        minute:timeValue ? '2-digit' : undefined
+      }
+    );
+  }
 
-    function toast(message){
 
-      const el =
-        document.getElementById('toast');
+  function normalizeStatus(value){
+    return String(value || 'pending')
+      .toLowerCase()
+      .replace(/_/g,' ');
+  }
 
-      el.textContent =
-        message;
 
-      el.style.display =
-        'block';
+  function statusClass(value){
+    const status =
+      String(value || '')
+        .toLowerCase();
 
-      clearTimeout(
-        window.readerReachToastTimer
+    if(status === 'approved'){
+      return 'approved';
+    }
+
+    if(status === 'rejected'){
+      return 'rejected';
+    }
+
+    return 'pending';
+  }
+
+
+  function setAuthorStatus(status){
+    const element =
+      document.getElementById(
+        'authorStatus'
       );
 
-      window.readerReachToastTimer =
-        setTimeout(() => {
+    const normalized =
+      String(status || 'pending')
+        .toLowerCase();
 
-          el.style.display =
-            'none';
+    element.textContent =
+      `Author status: ${normalizeStatus(normalized)}`;
 
-        },3500);
-
-    }
-
-
-    function initials(name){
-
-      const parts =
-        String(name || 'Reader Reach')
-          .trim()
-          .split(/\s+/)
-          .filter(Boolean);
-
-      return parts
-        .slice(0,2)
-        .map(part => part[0])
-        .join('')
-        .toUpperCase() || 'RR';
-
-    }
+    element.className =
+      `statusBadge ${statusClass(normalized)}`;
+  }
 
 
-    function formatDate(value){
-
-      if(!value){
-        return '—';
-      }
-
-      const date =
-        new Date(value);
-
-      if(Number.isNaN(date.getTime())){
-        return String(value);
-      }
-
-      return date.toLocaleDateString(
-        undefined,
-        {
-          year:'numeric',
-          month:'long',
-          day:'numeric'
-        }
-      );
-
-    }
-
-
-    function formatDateTime(value){
-
-      if(!value){
-        return '—';
-      }
-
-      const date =
-        new Date(value);
-
-      if(Number.isNaN(date.getTime())){
-        return String(value);
-      }
-
-      return date.toLocaleString(
-        undefined,
-        {
-          year:'numeric',
-          month:'short',
-          day:'numeric',
-          hour:'numeric',
-          minute:'2-digit'
-        }
-      );
-
-    }
-
-
-    function statusClass(status){
-
-      const value =
-        String(status || '')
-          .toLowerCase();
-
-      if(value.includes('approved')){
-        return 'approved';
-      }
-
-      if(value.includes('rejected')){
-        return 'rejected';
-      }
-
-      return 'pending';
-
-    }
-
-
-    function statusBadge(status){
-
-      return `
-        <span class="badge ${statusClass(status)}">
-          ${escapeHtml(status || 'pending')}
-        </span>
-      `;
-
-    }
-
-
-    function switchSection(section){
-
-      document
-        .querySelectorAll('.section')
-        .forEach(el => {
-
-          el.classList.toggle(
-            'active',
-            el.id === `section-${section}`
-          );
-
-        });
-
-
-      document
-        .querySelectorAll('.side-nav button')
-        .forEach(button => {
-
-          button.classList.toggle(
-            'active',
-            button.dataset.section === section
-          );
-
-        });
-
-
-      window.scrollTo({
-        top:0,
-        behavior:'smooth'
-      });
-
-    }
-
-
+  function setActiveSection(sectionId){
     document
-      .querySelectorAll('.side-nav button')
+      .querySelectorAll('.sideLink[data-section]')
       .forEach(button => {
+        button.classList.toggle(
+          'active',
+          button.dataset.section === sectionId
+        );
+      });
+  }
 
-        button.addEventListener(
-          'click',
-          () => {
 
-            switchSection(
+  document
+    .querySelectorAll('.sideLink[data-section]')
+    .forEach(button => {
+
+      button.addEventListener(
+        'click',
+        () => {
+
+          const target =
+            document.getElementById(
               button.dataset.section
             );
 
-          }
-        );
+          if(target){
+            target.scrollIntoView({
+              behavior:'smooth',
+              block:'start'
+            });
 
-      });
-
-
-    document
-      .querySelectorAll('[data-go]')
-      .forEach(button => {
-
-        button.addEventListener(
-          'click',
-          () => {
-
-            switchSection(
-              button.dataset.go
+            setActiveSection(
+              button.dataset.section
             );
-
           }
-        );
 
-      });
+        }
+      );
+
+    });
 
 
-    async function signOut(){
+  async function requireAuthor(){
 
-      await supabaseClient.auth.signOut();
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth.getUser();
 
+    if(error){
+      throw error;
+    }
+
+    if(!data || !data.user){
       window.location.href =
         'auth.html?mode=author';
 
+      return false;
     }
 
+    currentUser =
+      data.user;
 
-    document
-      .getElementById('topSignOutBtn')
-      .addEventListener(
-        'click',
-        signOut
+    const {
+      data: profile,
+      error: profileError
+    } =
+      await supabaseClient
+        .from('profiles')
+        .select(
+          'id,role,display_name,created_at,updated_at'
+        )
+        .eq(
+          'id',
+          currentUser.id
+        )
+        .maybeSingle();
+
+    if(profileError){
+      throw profileError;
+    }
+
+    if(!profile){
+      throw new Error(
+        'Your account profile could not be found.'
       );
+    }
 
+    currentProfile =
+      profile;
 
-    document
-      .getElementById('accountSignOutBtn')
-      .addEventListener(
-        'click',
-        signOut
+    if(
+      String(profile.role).toLowerCase() !==
+      'author'
+    ){
+      throw new Error(
+        'This account is not registered as an Author account.'
       );
-
-
-    async function loadSession(){
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient.auth.getUser();
-
-      if(
-        error ||
-        !data ||
-        !data.user
-      ){
-
-        window.location.href =
-          'auth.html?mode=author';
-
-        return false;
-
-      }
-
-      currentUser =
-        data.user;
-
-      return true;
-
     }
 
+    const {
+      data: author,
+      error: authorError
+    } =
+      await supabaseClient
+        .from('authors')
+        .select(
+          'id,profile_id,author_name,bio,website_url,status,submitted_at,reviewed_at,reviewed_by,created_at,updated_at'
+        )
+        .eq(
+          'profile_id',
+          currentUser.id
+        )
+        .maybeSingle();
 
-    async function loadProfile(){
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('profiles')
-          .select(
-            'id,display_name,role,created_at'
-          )
-          .eq(
-            'id',
-            currentUser.id
-          )
-          .maybeSingle();
-
-
-      if(error || !data){
-
-        toast(
-          'Your Reader Reach profile could not be loaded.'
-        );
-
-        return false;
-
-      }
-
-
-      if(data.role !== 'author'){
-
-        await supabaseClient.auth.signOut();
-
-        window.location.href =
-          'auth.html?mode=author';
-
-        return false;
-
-      }
-
-
-      currentProfile =
-        data;
-
-      return true;
-
+    if(authorError){
+      throw authorError;
     }
 
-
-    async function loadAuthor(){
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('authors')
-          .select(
-            'id,profile_id,author_name,bio,website_url,status,submitted_at,reviewed_at,reviewed_by,created_at,updated_at'
-          )
-          .eq(
-            'profile_id',
-            currentUser.id
-          )
-          .maybeSingle();
-
-
-      if(error || !data){
-
-        toast(
-          'Your Author profile has not been created yet.'
-        );
-
-        return false;
-
-      }
-
-
-      currentAuthor =
-        data;
-
-      return true;
-
+    if(!author){
+      throw new Error(
+        'Your Author record has not been created yet.'
+      );
     }
 
+    currentAuthor =
+      author;
 
-    function getAuthorName(){
+    return true;
+  }
 
-      return (
-        currentAuthor &&
-        currentAuthor.author_name
-      ) ||
-      (
-        currentProfile &&
-        currentProfile.display_name
-      ) ||
+
+  function populateAccount(){
+
+    const displayName =
+      currentAuthor.author_name ||
+      currentProfile.display_name ||
       'Author';
 
-    }
+    document.getElementById(
+      'heroName'
+    ).textContent =
+      `Welcome, ${displayName}`;
+
+    document.getElementById(
+      'profileAuthorName'
+    ).value =
+      currentAuthor.author_name || '';
+
+    document.getElementById(
+      'profileEmail'
+    ).value =
+      currentUser.email || '';
+
+    document.getElementById(
+      'profileBio'
+    ).value =
+      currentAuthor.bio || '';
+
+    document.getElementById(
+      'profileWebsite'
+    ).value =
+      currentAuthor.website_url || '';
+
+    document.getElementById(
+      'submissionAuthorName'
+    ).value =
+      currentAuthor.author_name || '';
+
+    document.getElementById(
+      'submissionAuthorEmail'
+    ).value =
+      currentUser.email || '';
+
+    document.getElementById(
+      'accountEmail'
+    ).value =
+      currentUser.email || '';
+
+    document.getElementById(
+      'accountProfileId'
+    ).value =
+      currentUser.id || '';
+
+    document.getElementById(
+      'accountAuthorId'
+    ).value =
+      currentAuthor.id || '';
+
+    setAuthorStatus(
+      currentAuthor.status
+    );
+
+    const initial =
+      String(displayName)
+        .trim()
+        .charAt(0)
+        .toUpperCase() || 'A';
+
+    document.getElementById(
+      'photoInitial'
+    ).textContent =
+      initial;
+
+    document.getElementById(
+      'publicProfileLink'
+    ).href =
+      `author-profile.html?id=${encodeURIComponent(currentAuthor.id)}`;
+  }
 
 
-    function renderIdentity(){
+  async function loadBooks(){
 
-      const name =
-        getAuthorName();
-
-      const email =
-        currentUser.email || '';
-
-
+    const list =
       document.getElementById(
-        'heroTitle'
-      ).textContent =
-        `Welcome back, ${name}.`;
+        'booksList'
+      );
 
+    list.innerHTML =
+      '<div class="card loading">Loading your books...</div>';
 
-      document.getElementById(
-        'sideAuthorName'
-      ).textContent =
-        name;
-
-
-      document.getElementById(
-        'overviewName'
-      ).textContent =
-        name;
-
-
-      document.getElementById(
-        'overviewEmail'
-      ).textContent =
-        email;
-
-
-      document.getElementById(
-        'accountEmail'
-      ).textContent =
-        email;
-
-
-      document.getElementById(
-        'accountCreated'
-      ).textContent =
-        formatDate(
-          currentProfile.created_at
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('books')
+        .select(
+          'id,author_id,title,description,genre_topic,who_its_for,availability,book_link,cover_url,status,submitted_at,reviewed_at,reviewed_by,created_at,updated_at,submission_complete,missing_fields'
+        )
+        .eq(
+          'author_id',
+          currentAuthor.id
+        )
+        .order(
+          'created_at',
+          {
+            ascending:false
+          }
         );
 
+    if(error){
+      console.error(error);
 
-      const initialsText =
-        initials(name);
+      list.innerHTML =
+        `<div class="card errorBox">
+          Unable to load your books.
+          <br><br>
+          ${escapeHtml(error.message)}
+        </div>`;
 
-
-      document.getElementById(
-        'overviewAvatar'
-      ).textContent =
-        initialsText;
-
-
-      document.getElementById(
-        'profileAvatar'
-      ).textContent =
-        initialsText;
-
-
-      document.getElementById(
-        'profileName'
-      ).value =
-        currentAuthor.author_name || name;
-
-
-      document.getElementById(
-        'profileEmail'
-      ).value =
-        email;
-
-
-      document.getElementById(
-        'profileWebsite'
-      ).value =
-        currentAuthor.website_url || '';
-
-
-      document.getElementById(
-        'profileBio'
-      ).value =
-        currentAuthor.bio || '';
-
-
-      document.getElementById(
-        'submitAuthorName'
-      ).value =
-        name;
-
-
-      document.getElementById(
-        'submitAuthorEmail'
-      ).value =
-        email;
-
-
-      document.getElementById(
-        'submitBio'
-      ).value =
-        currentAuthor.bio || '';
-
-
-      document.getElementById(
-        'publicProfileBtn'
-      ).href =
-        `author-profile.html?id=${encodeURIComponent(currentAuthor.id)}`;
-
+      return;
     }
 
+    myBooks =
+      data || [];
 
-    function renderStatus(){
+    document.getElementById(
+      'bookCount'
+    ).textContent =
+      myBooks.length;
+
+    renderBooks();
+  }
+
+
+  function renderBooks(){
+
+    const list =
+      document.getElementById(
+        'booksList'
+      );
+
+    if(!myBooks.length){
+
+      list.innerHTML =
+        `<div class="card empty">
+          <strong>No books submitted yet</strong>
+          Your submitted books will appear here.
+        </div>`;
+
+      return;
+    }
+
+    list.innerHTML = '';
+
+    myBooks.forEach(book => {
+
+      const article =
+        document.createElement('article');
+
+      article.className =
+        'card bookCard';
+
+      const cover =
+        book.cover_url
+          ? `<img
+              class="bookCover"
+              src="${escapeHtml(book.cover_url)}"
+              alt="${escapeHtml(book.title)} cover">`
+          : `<div class="bookCover placeholder">
+              Cover not available
+            </div>`;
+
+      const missing =
+        Array.isArray(book.missing_fields) &&
+        book.missing_fields.length
+          ? `<div class="muted" style="margin-top:7px;">
+              Missing:
+              ${escapeHtml(book.missing_fields.join(', '))}
+            </div>`
+          : '';
 
       const status =
-        String(
-          currentAuthor.status || 'pending'
-        ).toLowerCase();
+        String(book.status || 'pending')
+          .toLowerCase();
+
+      article.innerHTML = `
+
+        ${cover}
+
+        <div>
+
+          <div class="bookTitle">
+            ${escapeHtml(book.title || 'Untitled Book')}
+          </div>
+
+          <div class="bookMeta">
+            ${escapeHtml(book.genre_topic || 'Genre not provided')}
+            ${book.submitted_at
+              ? ' • Submitted ' + escapeHtml(formatDate(book.submitted_at))
+              : ''}
+          </div>
+
+          <span class="pill ${statusClass(status)}">
+            ${escapeHtml(normalizeStatus(status))}
+          </span>
+
+          <div class="bookDescription">
+            ${escapeHtml(
+              book.description ||
+              'No description provided.'
+            )}
+          </div>
+
+          ${missing}
+
+        </div>
+
+        <div class="bookActions">
+
+          ${
+            book.cover_url
+              ? `<a
+                  class="btn secondary"
+                  href="${escapeHtml(book.cover_url)}"
+                  target="_blank"
+                  rel="noopener">
+                  View Cover
+                </a>`
+              : ''
+          }
+
+          ${
+            book.book_link
+              ? `<a
+                  class="btn secondary"
+                  href="${escapeHtml(book.book_link)}"
+                  target="_blank"
+                  rel="noopener">
+                  Book Link
+                </a>`
+              : ''
+          }
+
+        </div>
 
-
-      const label =
-        status.charAt(0).toUpperCase() +
-        status.slice(1);
-
-
-      const heroStatus =
-        document.getElementById(
-          'heroStatus'
-        );
-
-
-      heroStatus.textContent =
-        `Author Status: ${label}`;
-
-
-      heroStatus.className =
-        `status-pill ${statusClass(status)}`;
-
-
-      const statusText =
-        document.getElementById(
-          'overviewStatusText'
-        );
-
-
-      const notice =
-        document.getElementById(
-          'overviewStatusNotice'
-        );
-
-
-      if(status === 'approved'){
-
-        statusText.textContent =
-          'Your author account is approved. You can submit books and communicate with the Reader Reach team.';
-
-
-        notice.className =
-          'notice success';
-
-        notice.textContent =
-          'Your approved author account can manage multiple book submissions. Each book still goes through its own review process.';
-
-      }
-      else if(status === 'rejected'){
-
-        statusText.textContent =
-          'Your author account is currently marked as rejected.';
-
-
-        notice.className =
-          'notice error';
-
-        notice.textContent =
-          'Please use the Messages area to contact the Reader Reach moderation team if you need clarification or assistance.';
-
-      }
-      else{
-
-        statusText.textContent =
-          'Your author account is currently pending review.';
-
-
-        notice.className =
-          'notice warning';
-
-        notice.textContent =
-          'Your account remains separate from individual book approval. Books submitted while your account is pending can still be recorded for the review process.';
-
-      }
-
-    }
-
-
-    async function loadBooks(){
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('books')
-          .select(
-            'id,author_id,title,description,genre_topic,who_its_for,availability,book_link,cover_url,status,submitted_at,reviewed_at,reviewed_by,created_at,updated_at,submission_complete,missing_fields'
-          )
-          .eq(
-            'author_id',
-            currentAuthor.id
-          )
-          .order(
-            'created_at',
-            {
-              ascending:false
-            }
-          );
-
-
-      if(error){
-
-        console.error(
-          'Books load error:',
-          error
-        );
-
-        authorBooks = [];
-
-        toast(
-          'Books could not be loaded.'
-        );
-
-        return;
-
-      }
-
-
-      authorBooks =
-        data || [];
-
-      renderBookStats();
-      renderBooks();
-      renderRecentBooks();
-
-    }
-
-
-    function renderBookStats(){
-
-      const total =
-        authorBooks.length;
-
-      const approved =
-        authorBooks.filter(
-          book =>
-            String(book.status).toLowerCase() ===
-            'approved'
-        ).length;
-
-      const pending =
-        authorBooks.filter(
-          book =>
-            String(book.status).toLowerCase() ===
-            'pending'
-        ).length;
-
-      const rejected =
-        authorBooks.filter(
-          book =>
-            String(book.status).toLowerCase() ===
-            'rejected'
-        ).length;
-
-      const incomplete =
-        authorBooks.filter(
-          book =>
-            book.submission_complete === false
-        ).length;
-
-
-      document.getElementById(
-        'statTotalBooks'
-      ).textContent =
-        total;
-
-
-      document.getElementById(
-        'statApprovedBooks'
-      ).textContent =
-        approved;
-
-
-      document.getElementById(
-        'statPendingBooks'
-      ).textContent =
-        pending;
-
-
-      document.getElementById(
-        'booksAllCount'
-      ).textContent =
-        total;
-
-
-      document.getElementById(
-        'booksApprovedCount'
-      ).textContent =
-        approved;
-
-
-      document.getElementById(
-        'booksPendingCount'
-      ).textContent =
-        pending;
-
-
-      document.getElementById(
-        'booksRejectedCount'
-      ).textContent =
-        rejected;
-
-
-      document.getElementById(
-        'booksIncompleteCount'
-      ).textContent =
-        incomplete;
-
-
-      document.getElementById(
-        'overviewBooks'
-      ).textContent =
-        total;
-
-    }
-
-
-    function bookCover(book){
-
-      if(book.cover_url){
-
-        return `
-          <img
-            src="${escapeHtml(book.cover_url)}"
-            alt="${escapeHtml(book.title || 'Book cover')}">
-        `;
-
-      }
-
-      return `
-        <span>
-          No Cover
-        </span>
       `;
 
-    }
+      list.appendChild(article);
 
+    });
 
-    function renderBooks(){
+  }
 
-      const container =
-        document.getElementById(
-          'booksList'
-        );
 
+  async function saveProfile(event){
 
-      if(!authorBooks.length){
+    event.preventDefault();
 
-        container.innerHTML = `
-          <div class="empty">
-
-            <strong>
-              No books submitted yet.
-            </strong>
-
-            Use “Submit a Book” to begin your first submission.
-
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      container.innerHTML =
-        authorBooks
-          .map(book => {
-
-            const missing =
-              Array.isArray(book.missing_fields)
-                ? book.missing_fields
-                : [];
-
-
-            return `
-              <article class="book-item">
-
-                <div class="book-row">
-
-                  <div class="book-cover">
-                    ${bookCover(book)}
-                  </div>
-
-                  <div class="book-main">
-
-                    <div class="book-title">
-                      ${escapeHtml(book.title || 'Untitled Book')}
-                    </div>
-
-                    <div class="book-meta">
-
-                      ${escapeHtml(book.genre_topic || 'Genre not provided')}
-
-                      ·
-
-                      ${statusBadge(book.status)}
-
-                    </div>
-
-                    <div class="book-description">
-
-                      ${escapeHtml(
-                        book.description ||
-                        'No description provided.'
-                      )}
-
-                    </div>
-
-                    ${
-                      book.submission_complete === false
-                      ? `
-                        <div class="notice warning" style="margin-top:12px">
-
-                          <strong>
-                            Incomplete submission
-                          </strong>
-
-                          <div>
-                            ${
-                              missing.length
-                              ? escapeHtml(
-                                  missing.join(', ')
-                                )
-                              : 'Some required information is missing.'
-                            }
-                          </div>
-
-                        </div>
-                      `
-                      : ''
-                    }
-
-                    <div class="item-actions">
-
-                      ${
-                        book.book_link
-                        ? `
-                          <a
-                            class="btn small"
-                            href="${escapeHtml(book.book_link)}"
-                            target="_blank"
-                            rel="noopener">
-                            Open Book Link
-                          </a>
-                        `
-                        : ''
-                      }
-
-                      ${
-                        book.status === 'approved'
-                        ? `
-                          <a
-                            class="btn small primary"
-                            href="book.html?id=${encodeURIComponent(book.id)}">
-                            View Public Book
-                          </a>
-                        `
-                        : ''
-                      }
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </article>
-            `;
-
-          })
-          .join('');
-
-    }
-
-
-    function renderRecentBooks(){
-
-      const container =
-        document.getElementById(
-          'overviewRecentBooks'
-        );
-
-
-      const recent =
-        authorBooks.slice(0,3);
-
-
-      if(!recent.length){
-
-        container.innerHTML = `
-          <div class="empty">
-            <strong>No books yet.</strong>
-            Your submitted books will appear here.
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      container.innerHTML =
-        recent
-          .map(book => `
-            <div class="book-item">
-
-              <div class="book-title">
-                ${escapeHtml(book.title)}
-              </div>
-
-              <div class="book-meta">
-
-                ${statusBadge(book.status)}
-
-                ·
-
-                Submitted
-                ${escapeHtml(
-                  formatDate(book.submitted_at || book.created_at)
-                )}
-
-              </div>
-
-            </div>
-          `)
-          .join('');
-
-    }
-
-
-    async function saveProfile(event){
-
-      event.preventDefault();
-
-
-      const authorName =
-        document.getElementById(
-          'profileName'
-        ).value.trim();
-
-
-      const website =
-        document.getElementById(
-          'profileWebsite'
-        ).value.trim();
-
-
-      const bio =
-        document.getElementById(
-          'profileBio'
-        ).value.trim();
-
-
-      if(!authorName){
-
-        toast(
-          'Author Name is required.'
-        );
-
-        return;
-
-      }
-
-
-      const {
-        error: authorError
-      } =
-        await supabaseClient
-          .from('authors')
-          .update({
-            author_name:authorName,
-            website_url:website || null,
-            bio:bio || null,
-            updated_at:new Date().toISOString()
-          })
-          .eq(
-            'id',
-            currentAuthor.id
-          );
-
-
-      if(authorError){
-
-        console.error(
-          authorError
-        );
-
-        toast(
-          'Your author profile could not be saved.'
-        );
-
-        return;
-
-      }
-
-
-      const {
-        error: profileError
-      } =
-        await supabaseClient
-          .from('profiles')
-          .update({
-            display_name:authorName,
-            updated_at:new Date().toISOString()
-          })
-          .eq(
-            'id',
-            currentUser.id
-          );
-
-
-      if(profileError){
-
-        console.error(
-          profileError
-        );
-
-        toast(
-          'Author profile saved, but display name could not be updated.'
-        );
-
-      }
-
-
-      currentAuthor.author_name =
-        authorName;
-
-      currentAuthor.website_url =
-        website;
-
-      currentAuthor.bio =
-        bio;
-
-      currentProfile.display_name =
-        authorName;
-
-
-      renderIdentity();
-
-
+    const message =
       document.getElementById(
-        'submitBio'
-      ).value =
-        bio;
-
-
-      toast(
-        'Author profile saved.'
+        'profileMessage'
       );
 
-    }
+    message.textContent =
+      'Saving...';
 
-
-    document
-      .getElementById('profileForm')
-      .addEventListener(
-        'submit',
-        saveProfile
-      );
-
-
-    async function uploadFile(bucket,file,path){
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .storage
-          .from(bucket)
-          .upload(
-            path,
-            file,
-            {
-              upsert:true
-            }
-          );
-
-
-      if(error){
-
-        throw error;
-
-      }
-
-
-      const {
-        data
-      } =
-        supabaseClient
-          .storage
-          .from(bucket)
-          .getPublicUrl(path);
-
-
-      return data.publicUrl;
-
-    }
-
-
-    async function submitBook(event){
-
-      event.preventDefault();
-
-
-      const button =
-        document.getElementById(
-          'submitBookBtn'
-        );
-
-
-      const notice =
-        document.getElementById(
-          'submissionNotice'
-        );
-
-
-      button.disabled =
-        true;
-
-      button.textContent =
-        'Submitting...';
-
-
-      notice.style.display =
-        'none';
-
-
-      try{
-
-        const title =
-          document.getElementById(
-            'bookTitle'
-          ).value.trim();
-
-
-        const genre =
-          document.getElementById(
-            'bookGenre'
-          ).value.trim();
-
-
-        const description =
-          document.getElementById(
-            'bookDescription'
-          ).value.trim();
-
-
-        const audience =
-          document.getElementById(
-            'bookAudience'
-          ).value.trim();
-
-
-        const availability =
-          document.getElementById(
-            'bookAvailability'
-          ).value.trim();
-
-
-        const guideLink =
-          document.getElementById(
-            'flipperGuideLink'
-          ).value.trim();
-
-
-        const coverFile =
-          document.getElementById(
-            'bookCover'
-          ).files[0];
-
-
-        const trailerFile =
-          document.getElementById(
-            'bookTrailer'
-          ).files[0];
-
-
-        const missing = [];
-
-
-        if(!title){
-          missing.push('Book Title');
-        }
-
-        if(!genre){
-          missing.push('Genre / Topic');
-        }
-
-        if(!description){
-          missing.push('Book Description');
-        }
-
-        if(!audience){
-          missing.push('Who Is the Book For?');
-        }
-
-        if(!availability){
-          missing.push('Availability');
-        }
-
-        if(!coverFile){
-          missing.push('Book Cover Image');
-        }
-
-        if(!trailerFile){
-          missing.push('Book Trailer Video');
-        }
-
-        if(!guideLink){
-          missing.push('Flipper Guide Link');
-        }
-
-
-        let coverUrl =
-          null;
-
-        let trailerUrl =
-          null;
-
-
-        if(coverFile){
-
-          const coverPath =
-            `${currentAuthor.id}/${crypto.randomUUID()}-${coverFile.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
-
-          try{
-
-            coverUrl =
-              await uploadFile(
-                'book-covers',
-                coverFile,
-                coverPath
-              );
-
-          }
-          catch(storageError){
-
-            console.error(
-              storageError
-            );
-
-            throw new Error(
-              'The book cover could not be uploaded. Check the book-covers storage bucket and its policies.'
-            );
-
-          }
-
-        }
-
-
-        if(trailerFile){
-
-          const trailerPath =
-            `${currentAuthor.id}/${crypto.randomUUID()}-${trailerFile.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
-
-          try{
-
-            trailerUrl =
-              await uploadFile(
-                'book-trailers',
-                trailerFile,
-                trailerPath
-              );
-
-          }
-          catch(storageError){
-
-            console.error(
-              storageError
-            );
-
-            throw new Error(
-              'The book trailer could not be uploaded. Check the book-trailers storage bucket and its policies.'
-            );
-
-          }
-
-        }
-
-
-        const complete =
-          missing.length === 0;
-
-
-        const {
-          data: book,
-          error: bookError
-        } =
-          await supabaseClient
-            .from('books')
-            .insert({
-              author_id:currentAuthor.id,
-              title:title || null,
-              description:description || null,
-              genre_topic:genre || null,
-              who_its_for:audience || null,
-              availability:availability || null,
-              cover_url:coverUrl,
-              status:'pending',
-              submitted_at:new Date().toISOString(),
-              submission_complete:complete,
-              missing_fields:missing
-            })
-            .select()
-            .single();
-
-
-        if(bookError){
-
-          console.error(
-            bookError
-          );
-
-          throw new Error(
-            bookError.message ||
-            'The book submission could not be saved.'
-          );
-
-        }
-
-
-        /*
-          The existing books schema supports book_link, but the
-          requested Author submission form deliberately uses the
-          Flipper Guide Link instead of a separate Book Link field.
-        */
-
-
-        if(trailerUrl){
-
-          const {
-            error: trailerError
-          } =
-            await supabaseClient
-              .from('book_trailers')
-              .insert({
-                book_id:book.id,
-                trailer_url:trailerUrl,
-                title:title,
-                show_on_homepage:false
-              });
-
-
-          if(trailerError){
-
-            console.error(
-              trailerError
-            );
-
-            throw new Error(
-              'The book was saved, but the trailer record could not be created.'
-            );
-
-          }
-
-        }
-
-
-        if(guideLink){
-
-          const {
-            error: guideError
-          } =
-            await supabaseClient
-              .from('flipper_guides')
-              .insert({
-                book_id:book.id,
-                title:`${title} Flipper Guide`,
-                content_url:guideLink
-              });
-
-
-          if(guideError){
-
-            console.error(
-              guideError
-            );
-
-            throw new Error(
-              'The book was saved, but the Flipper Guide record could not be created.'
-            );
-
-          }
-
-        }
-
-
-        /*
-          Notify the Author when the submission is incomplete.
-          The notification table is confirmed in the database schema.
-        */
-
-        if(!complete){
-
-          await supabaseClient
-            .from('notifications')
-            .insert({
-              profile_id:currentUser.id,
-              type:'book_submission_incomplete',
-              title:'Book submission needs attention',
-              message:
-                `Your submission for "${title || 'Untitled Book'}" is incomplete. Missing: ${missing.join(', ')}`,
-              related_book_id:book.id,
-              is_read:false
-            });
-
-        }
-
-
-        notice.style.display =
-          'block';
-
-        notice.className =
-          complete
-          ? 'notice success'
-          : 'notice warning';
-
-
-        notice.innerHTML =
-          complete
-          ? `
-              <strong>
-                Book submitted successfully.
-              </strong>
-              Your book is now pending Admin review.
-            `
-          : `
-              <strong>
-                Book submitted with missing information.
-              </strong>
-              The submission remains pending and you have been
-              notified about the missing pieces.
-            `;
-
-
-        document
-          .getElementById(
-            'bookSubmissionForm'
-          )
-          .reset();
-
-
-        document.getElementById(
-          'submitAuthorName'
-        ).value =
-          getAuthorName();
-
-
-        document.getElementById(
-          'submitAuthorEmail'
-        ).value =
-          currentUser.email || '';
-
-
-        document.getElementById(
-          'submitBio'
-        ).value =
-          currentAuthor.bio || '';
-
-
-        await loadBooks();
-        await loadNotifications();
-
-
-        toast(
-          complete
-          ? 'Book submitted for review.'
-          : 'Book submitted with an incomplete-submission notice.'
-        );
-
-
-        switchSection(
-          'books'
-        );
-
-      }
-      catch(error){
-
-        console.error(
-          'Submission error:',
-          error
-        );
-
-        notice.style.display =
-          'block';
-
-        notice.className =
-          'notice error';
-
-        notice.textContent =
-          error.message ||
-          'The book submission could not be completed.';
-
-
-        toast(
-          error.message ||
-          'Book submission failed.'
-        );
-
-      }
-      finally{
-
-        button.disabled =
-          false;
-
-        button.textContent =
-          'Submit Book for Review';
-
-      }
-
-    }
-
-
-    document
-      .getElementById(
-        'bookSubmissionForm'
-      )
-      .addEventListener(
-        'submit',
-        submitBook
-      );
-
-
-    async function loadSchedules(){
-
-      const container =
-        document.getElementById(
-          'scheduleList'
-        );
-
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('feature_schedules')
-          .select(
-            'id,book_id,moderator_id,scheduled_date,scheduled_time,status,notes,created_at,updated_at'
-          )
-          .in(
-            'book_id',
-            authorBooks.map(
-              book => book.id
-            )
-          )
-          .order(
-            'scheduled_date',
-            {
-              ascending:true
-            }
-          )
-          .order(
-            'scheduled_time',
-            {
-              ascending:true
-            }
-          );
-
-
-      if(error){
-
-        console.error(
-          error
-        );
-
-        container.innerHTML = `
-          <div class="empty">
-            <strong>
-              Schedule information could not be loaded.
-            </strong>
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      const schedules =
-        data || [];
-
-
+    const bio =
       document.getElementById(
-        'statSchedules'
-      ).textContent =
-        schedules.length;
+        'profileBio'
+      ).value.trim();
 
-
-      if(!schedules.length){
-
-        container.innerHTML = `
-          <div class="empty">
-
-            <strong>
-              No feature schedule yet.
-            </strong>
-
-            Approved books can be scheduled by Reader Reach moderators.
-
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      container.innerHTML =
-        schedules
-          .map(schedule => {
-
-            const book =
-              authorBooks.find(
-                item =>
-                  item.id === schedule.book_id
-              );
-
-
-            return `
-              <article class="schedule-item">
-
-                <div class="book-title">
-                  ${escapeHtml(
-                    book
-                    ? book.title
-                    : 'Scheduled Book'
-                  )}
-                </div>
-
-                <div class="book-meta">
-
-                  ${escapeHtml(
-                    formatDate(
-                      schedule.scheduled_date
-                    )
-                  )}
-
-                  ·
-
-                  ${escapeHtml(
-                    schedule.scheduled_time || ''
-                  )}
-
-                  ·
-
-                  ${statusBadge(
-                    schedule.status
-                  )}
-
-                </div>
-
-                ${
-                  schedule.notes
-                  ? `
-                    <div class="book-description">
-                      ${escapeHtml(schedule.notes)}
-                    </div>
-                  `
-                  : ''
-                }
-
-              </article>
-            `;
-
-          })
-          .join('');
-
-    }
-
-
-    async function loadNotifications(){
-
-      const container =
-        document.getElementById(
-          'notificationsList'
-        );
-
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('notifications')
-          .select(
-            'id,profile_id,type,title,message,related_book_id,related_schedule_id,is_read,created_at'
-          )
-          .eq(
-            'profile_id',
-            currentUser.id
-          )
-          .order(
-            'created_at',
-            {
-              ascending:false
-            }
-          );
-
-
-      if(error){
-
-        console.error(
-          error
-        );
-
-        container.innerHTML = `
-          <div class="empty">
-            <strong>
-              Notifications could not be loaded.
-            </strong>
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      const notifications =
-        data || [];
-
-
+    const website =
       document.getElementById(
-        'statUnread'
-      ).textContent =
-        notifications.filter(
-          notification =>
-            !notification.is_read
-        ).length;
-
-
-      if(!notifications.length){
-
-        container.innerHTML = `
-          <div class="empty">
-
-            <strong>
-              No notifications yet.
-            </strong>
-
-            New Reader Reach activity will appear here.
-
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      container.innerHTML =
-        notifications
-          .map(notification => `
-
-            <article
-              class="notification-item"
-              style="${
-                notification.is_read
-                ? ''
-                : 'border-left:4px solid var(--butter)'
-              }">
-
-              <strong>
-                ${escapeHtml(
-                  notification.title ||
-                  'Reader Reach Notification'
-                )}
-              </strong>
-
-              <div class="book-meta">
-
-                ${escapeHtml(
-                  formatDateTime(
-                    notification.created_at
-                  )
-                )}
-
-              </div>
-
-              <div class="book-description">
-
-                ${escapeHtml(
-                  notification.message || ''
-                )}
-
-              </div>
-
-              ${
-                !notification.is_read
-                ? `
-                  <div class="item-actions">
-
-                    <button
-                      class="btn small"
-                      type="button"
-                      onclick="markNotificationRead('${notification.id}')">
-                      Mark as Read
-                    </button>
-
-                  </div>
-                `
-                : ''
-              }
-
-            </article>
-
-          `)
-          .join('');
-
-    }
-
-
-    async function markNotificationRead(id){
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .from('notifications')
-          .update({
-            is_read:true
-          })
-          .eq(
-            'id',
-            id
-          )
-          .eq(
-            'profile_id',
-            currentUser.id
-          );
-
-
-      if(error){
-
-        toast(
-          'Notification could not be updated.'
-        );
-
-        return;
-
-      }
-
-
-      await loadNotifications();
-
-    }
-
-
-    window.markNotificationRead =
-      markNotificationRead;
-
-
-    async function loadModerators(){
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('moderators')
-          .select(
-            'id,profile_id,display_name,active'
-          )
-          .eq(
-            'active',
-            true
-          )
-          .order(
-            'display_name',
-            {
-              ascending:true
-            }
-          );
-
-
-      if(error){
-
-        console.error(
-          error
-        );
-
-        return [];
-
-      }
-
-
-      return data || [];
-
-    }
-
-
-    async function loadConversations(){
-
-      const container =
-        document.getElementById(
-          'conversationList'
-        );
-
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('conversations')
-          .select(
-            'id,author_id,moderator_id,book_id,created_at,updated_at'
-          )
-          .eq(
-            'author_id',
-            currentAuthor.id
-          )
-          .order(
-            'updated_at',
-            {
-              ascending:false
-            }
-          );
-
-
-      if(error){
-
-        console.error(
-          'Conversation load error:',
-          error
-        );
-
-        conversations = [];
-
-        container.innerHTML = `
-          <div class="empty">
-
-            <strong>
-              Messages are unavailable.
-            </strong>
-
-            Check the conversations RLS policy for the Author role.
-
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      conversations =
-        data || [];
-
-
-      if(!conversations.length){
-
-        container.innerHTML = `
-          <div class="empty">
-
-            <strong>
-              No conversations yet.
-            </strong>
-
-            Start a message with a Reader Reach moderator.
-
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      const moderators =
-        await loadModerators();
-
-
-      container.innerHTML =
-        conversations
-          .map(conversation => {
-
-            const moderator =
-              moderators.find(
-                item =>
-                  item.id === conversation.moderator_id
-              );
-
-
-            const book =
-              authorBooks.find(
-                item =>
-                  item.id === conversation.book_id
-              );
-
-
-            return `
-              <button
-                class="conversation-item ${
-                  selectedConversation &&
-                  selectedConversation.id === conversation.id
-                  ? 'active'
-                  : ''
-                }"
-                type="button"
-                data-conversation-id="${conversation.id}">
-
-                <strong>
-                  ${
-                    escapeHtml(
-                      moderator
-                      ? moderator.display_name
-                      : 'Reader Reach Moderator'
-                    )
-                  }
-                </strong>
-
-                <span>
-                  ${
-                    escapeHtml(
-                      book
-                      ? book.title
-                      : 'General Author Support'
-                    )
-                  }
-                </span>
-
-                <span>
-                  ${escapeHtml(
-                    formatDateTime(
-                      conversation.updated_at ||
-                      conversation.created_at
-                    )
-                  )}
-                </span>
-
-              </button>
-            `;
-
-          })
-          .join('');
-
-
-      container
-        .querySelectorAll(
-          '[data-conversation-id]'
-        )
-        .forEach(button => {
-
-          button.addEventListener(
-            'click',
-            async () => {
-
-              const conversation =
-                conversations.find(
-                  item =>
-                    item.id ===
-                    button.dataset.conversationId
-                );
-
-
-              if(!conversation){
-                return;
-              }
-
-
-              selectedConversation =
-                conversation;
-
-
-              await renderConversationList();
-              await loadMessages();
-
-            }
-          );
-
-        });
-
-    }
-
-
-    async function renderConversationList(){
-
-      const container =
-        document.getElementById(
-          'conversationList'
-        );
-
-
-      if(!conversations.length){
-
-        container.innerHTML = `
-          <div class="empty">
-            <strong>No conversations yet.</strong>
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      const moderators =
-        await loadModerators();
-
-
-      container.innerHTML =
-        conversations
-          .map(conversation => {
-
-            const moderator =
-              moderators.find(
-                item =>
-                  item.id === conversation.moderator_id
-              );
-
-
-            const book =
-              authorBooks.find(
-                item =>
-                  item.id === conversation.book_id
-              );
-
-
-            return `
-              <button
-                class="conversation-item ${
-                  selectedConversation &&
-                  selectedConversation.id === conversation.id
-                  ? 'active'
-                  : ''
-                }"
-                type="button"
-                data-conversation-id="${conversation.id}">
-
-                <strong>
-                  ${
-                    escapeHtml(
-                      moderator
-                      ? moderator.display_name
-                      : 'Reader Reach Moderator'
-                    )
-                  }
-                </strong>
-
-                <span>
-                  ${
-                    escapeHtml(
-                      book
-                      ? book.title
-                      : 'General Author Support'
-                    )
-                  }
-                </span>
-
-                <span>
-                  ${escapeHtml(
-                    formatDateTime(
-                      conversation.updated_at ||
-                      conversation.created_at
-                    )
-                  )}
-                </span>
-
-              </button>
-            `;
-
-          })
-          .join('');
-
-
-      container
-        .querySelectorAll(
-          '[data-conversation-id]'
-        )
-        .forEach(button => {
-
-          button.addEventListener(
-            'click',
-            async () => {
-
-              const conversation =
-                conversations.find(
-                  item =>
-                    item.id ===
-                    button.dataset.conversationId
-                );
-
-
-              selectedConversation =
-                conversation || null;
-
-
-              await renderConversationList();
-              await loadMessages();
-
-            }
-          );
-
-        });
-
-    }
-
-
-    async function loadMessages(){
-
-      const title =
-        document.getElementById(
-          'chatTitle'
-        );
-
-      const subtitle =
-        document.getElementById(
-          'chatSubtitle'
-        );
-
-      const container =
-        document.getElementById(
-          'chatMessages'
-        );
-
-
-      if(!selectedConversation){
-
-        title.textContent =
-          'Select a conversation';
-
-        subtitle.textContent =
-          'Your moderator conversations will appear here.';
-
-        container.innerHTML = `
-          <div class="empty">
-
-            <strong>
-              No conversation selected.
-            </strong>
-
-            Choose a conversation or start a new message.
-
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      title.textContent =
-        'Reader Reach Moderator';
-
-
-      const book =
-        authorBooks.find(
-          item =>
-            item.id ===
-            selectedConversation.book_id
-        );
-
-
-      subtitle.textContent =
-        book
-        ? `Conversation about ${book.title}`
-        : 'Author support conversation';
-
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('messages')
-          .select(
-            'id,conversation_id,sender_profile_id,message,created_at,read_at'
-          )
-          .eq(
-            'conversation_id',
-            selectedConversation.id
-          )
-          .order(
-            'created_at',
-            {
-              ascending:true
-            }
-          );
-
-
-      if(error){
-
-        console.error(
-          error
-        );
-
-        container.innerHTML = `
-          <div class="empty">
-
-            <strong>
-              Messages could not be loaded.
-            </strong>
-
-            Check the Messages RLS policy.
-
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      const messages =
-        data || [];
-
-
-      if(!messages.length){
-
-        container.innerHTML = `
-          <div class="empty">
-
-            <strong>
-              Conversation started.
-            </strong>
-
-            Send your first message below.
-
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      container.innerHTML =
-        messages
-          .map(message => {
-
-            const mine =
-              message.sender_profile_id ===
-              currentUser.id;
-
-
-            return `
-              <div
-                class="chat-bubble ${
-                  mine
-                  ? 'author'
-                  : 'moderator'
-                }">
-
-                ${escapeHtml(
-                  message.message
-                )}
-
-                <small>
-                  ${escapeHtml(
-                    formatDateTime(
-                      message.created_at
-                    )
-                  )}
-                </small>
-
-              </div>
-            `;
-
-          })
-          .join('');
-
-
-      container.scrollTop =
-        container.scrollHeight;
-
-
-      /*
-        Mark moderator messages as read.
-      */
-
-      const unreadIds =
-        messages
-          .filter(
-            message =>
-              message.sender_profile_id !== currentUser.id &&
-              !message.read_at
-          )
-          .map(
-            message =>
-              message.id
-          );
-
-
-      if(unreadIds.length){
-
-        await supabaseClient
-          .from('messages')
-          .update({
-            read_at:new Date().toISOString()
-          })
-          .in(
-            'id',
-            unreadIds
-          );
-
-      }
-
-    }
-
-
-    async function createConversation(){
-
-      const moderators =
-        await loadModerators();
-
-
-      if(!moderators.length){
-
-        toast(
-          'No active moderator is currently available.'
-        );
-
-        return;
-
-      }
-
-
-      const moderator =
-        moderators[0];
-
-
-      const subject =
-        prompt(
-          'What would you like to contact Reader Reach about?'
-        );
-
-
-      if(!subject){
-
-        return;
-
-      }
-
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('conversations')
-          .insert({
-            author_id:currentAuthor.id,
-            moderator_id:moderator.id,
-            book_id:null
-          })
-          .select()
-          .single();
-
-
-      if(error){
-
-        console.error(
-          error
-        );
-
-        toast(
-          'A new conversation could not be created.'
-        );
-
-        return;
-
-      }
-
-
-      selectedConversation =
-        data;
-
-
-      conversations.unshift(
-        data
-      );
-
-
-      await renderConversationList();
-      await loadMessages();
-
-
-      document.getElementById(
-        'messageInput'
-      ).value =
-        subject;
-
-
-      toast(
-        'Conversation created. Send the message when ready.'
-      );
-
-    }
-
-
-    document
-      .getElementById(
-        'newConversationBtn'
-      )
-      .addEventListener(
-        'click',
-        createConversation
-      );
-
-
-    async function sendMessage(event){
-
-      event.preventDefault();
-
-
-      if(!selectedConversation){
-
-        toast(
-          'Select or create a conversation first.'
-        );
-
-        return;
-
-      }
-
-
-      const input =
-        document.getElementById(
-          'messageInput'
-        );
-
-
-      const message =
-        input.value.trim();
-
-
-      if(!message){
-        return;
-      }
-
-
-      const button =
-        document.getElementById(
-          'sendMessageBtn'
-        );
-
-
-      button.disabled =
-        true;
-
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .from('messages')
-          .insert({
-            conversation_id:
-              selectedConversation.id,
-            sender_profile_id:
-              currentUser.id,
-            message:message
-          });
-
-
-      if(error){
-
-        console.error(
-          error
-        );
-
-        toast(
-          'Message could not be sent.'
-        );
-
-        button.disabled =
-          false;
-
-        return;
-
-      }
-
-
+        'profileWebsite'
+      ).value.trim();
+
+    const {
+      data,
+      error
+    } =
       await supabaseClient
-        .from('conversations')
+        .from('authors')
         .update({
-          updated_at:
-            new Date().toISOString()
+          bio: bio || null,
+          website_url: website || null,
+          updated_at: new Date().toISOString()
         })
         .eq(
           'id',
-          selectedConversation.id
+          currentAuthor.id
+        )
+        .select(
+          'id,profile_id,author_name,bio,website_url,status,submitted_at,reviewed_at,reviewed_by,created_at,updated_at'
+        )
+        .single();
+
+    if(error){
+
+      console.error(error);
+
+      message.textContent =
+        'Profile could not be saved.';
+
+      showToast(
+        error.message
+      );
+
+      return;
+    }
+
+    currentAuthor =
+      data;
+
+    populateAccount();
+
+    message.textContent =
+      'Profile saved.';
+
+    showToast(
+      'Author profile updated.'
+    );
+
+  }
+
+
+  async function uploadFile(
+    file,
+    bucket,
+    folder
+  ){
+
+    if(!file){
+      return {
+        url:null,
+        error:null
+      };
+    }
+
+    const safeName =
+      file.name
+        .replace(/[^a-zA-Z0-9._-]/g,'-');
+
+    const path =
+      `${folder}/${currentUser.id}/${Date.now()}-${safeName}`;
+
+    const {
+      error
+    } =
+      await supabaseClient.storage
+        .from(bucket)
+        .upload(
+          path,
+          file,
+          {
+            upsert:false,
+            contentType:file.type
+          }
         );
 
+    if(error){
+      return {
+        url:null,
+        error
+      };
+    }
 
-      input.value =
-        '';
+    const {
+      data
+    } =
+      supabaseClient.storage
+        .from(bucket)
+        .getPublicUrl(path);
+
+    return {
+      url:data?.publicUrl || null,
+      error:null
+    };
+  }
+
+
+  function calculateMissingFields(values){
+
+    const missing = [];
+
+    if(!values.title){
+      missing.push('title');
+    }
+
+    if(!values.genre_topic){
+      missing.push('genre_topic');
+    }
+
+    if(!values.description){
+      missing.push('description');
+    }
+
+    if(!values.who_its_for){
+      missing.push('who_its_for');
+    }
+
+    if(!values.availability){
+      missing.push('availability');
+    }
+
+    if(!values.cover_url){
+      missing.push('cover_url');
+    }
+
+    if(!values.trailer_url){
+      missing.push('book_trailer');
+    }
+
+    if(!values.guide_url){
+      missing.push('flipper_guide');
+    }
+
+    return missing;
+  }
+
+
+  async function submitBook(event){
+
+    event.preventDefault();
+
+    const button =
+      document.getElementById(
+        'submitBookButton'
+      );
+
+    const message =
+      document.getElementById(
+        'bookFormMessage'
+      );
+
+    button.disabled =
+      true;
+
+    message.textContent =
+      'Preparing your submission...';
+
+    try{
+
+      const title =
+        document.getElementById(
+          'bookTitle'
+        ).value.trim();
+
+      const genre =
+        document.getElementById(
+          'bookGenre'
+        ).value.trim();
+
+      const description =
+        document.getElementById(
+          'bookDescription'
+        ).value.trim();
+
+      const audience =
+        document.getElementById(
+          'bookAudience'
+        ).value.trim();
+
+      const availability =
+        document.getElementById(
+          'bookAvailability'
+        ).value.trim();
+
+      const guideUrl =
+        document.getElementById(
+          'guideLink'
+        ).value.trim();
+
+      const coverFile =
+        document.getElementById(
+          'bookCover'
+        ).files[0];
+
+      const trailerFile =
+        document.getElementById(
+          'bookTrailer'
+        ).files[0];
+
+      if(!coverFile){
+        throw new Error(
+          'Please select a book cover image.'
+        );
+      }
+
+      if(!trailerFile){
+        throw new Error(
+          'Please select a book trailer video.'
+        );
+      }
+
+      message.textContent =
+        'Uploading book cover...';
+
+      const coverResult =
+        await uploadFile(
+          coverFile,
+          'book-covers',
+          'covers'
+        );
+
+      if(coverResult.error){
+        throw new Error(
+          `Book cover upload failed: ${coverResult.error.message}`
+        );
+      }
+
+      message.textContent =
+        'Uploading book trailer...';
+
+      const trailerResult =
+        await uploadFile(
+          trailerFile,
+          'book-trailers',
+          'trailers'
+        );
+
+      if(trailerResult.error){
+        throw new Error(
+          `Book trailer upload failed: ${trailerResult.error.message}`
+        );
+      }
+
+      const missing =
+        calculateMissingFields({
+          title,
+          genre_topic:genre,
+          description,
+          who_its_for:audience,
+          availability,
+          cover_url:coverResult.url,
+          trailer_url:trailerResult.url,
+          guide_url:guideUrl
+        });
+
+      /*
+        The books table stores the book itself.
+        Trailer and Flipper Guide records are attempted separately
+        because their exact columns were not included in the latest
+        schema supplied for this project.
+      */
+
+      message.textContent =
+        'Submitting your book for review...';
+
+      const {
+        data: book,
+        error: bookError
+      } =
+        await supabaseClient
+          .from('books')
+          .insert({
+            author_id:currentAuthor.id,
+            title:title,
+            description:description,
+            genre_topic:genre,
+            who_its_for:audience,
+            availability:availability,
+            book_link:null,
+            cover_url:coverResult.url,
+            status:'pending',
+            submitted_at:new Date().toISOString(),
+            submission_complete:missing.length === 0,
+            missing_fields:missing
+          })
+          .select(
+            'id,author_id,title,description,genre_topic,who_its_for,availability,book_link,cover_url,status,submitted_at,reviewed_at,reviewed_by,created_at,updated_at,submission_complete,missing_fields'
+          )
+          .single();
+
+      if(bookError){
+        throw bookError;
+      }
+
+      let trailerSaved =
+        false;
+
+      let guideSaved =
+        false;
+
+      /*
+        Try the trailer table used by the original Reader Reach
+        project structure. If its exact schema/RLS differs, the
+        book submission itself remains safely stored.
+      */
+
+      try{
+
+        const {
+          error: trailerError
+        } =
+          await supabaseClient
+            .from('book_trailers')
+            .insert({
+              book_id:book.id,
+              trailer_url:trailerResult.url,
+              show_on_homepage:false
+            });
+
+        if(!trailerError){
+          trailerSaved = true;
+        }else{
+          console.warn(
+            'Trailer record could not be saved:',
+            trailerError
+          );
+        }
+
+      }catch(error){
+
+        console.warn(
+          'Trailer table unavailable:',
+          error
+        );
+
+      }
+
+
+      /*
+        Try the Flipper Guide table used by the Reader Reach
+        project structure.
+      */
+
+      try{
+
+        const {
+          error: guideError
+        } =
+          await supabaseClient
+            .from('flipper_guides')
+            .insert({
+              book_id:book.id,
+              content_url:guideUrl
+            });
+
+        if(!guideError){
+          guideSaved = true;
+        }else{
+          console.warn(
+            'Flipper Guide record could not be saved:',
+            guideError
+          );
+        }
+
+      }catch(error){
+
+        console.warn(
+          'Flipper Guide table unavailable:',
+          error
+        );
+
+      }
+
+
+      /*
+        Notify the author using the exact notification columns
+        supplied in the project schema.
+      */
+
+      try{
+
+        await supabaseClient
+          .from('notifications')
+          .insert({
+            profile_id:currentUser.id,
+            type:'book_submission_incomplete',
+            title:
+              missing.length
+                ? 'Book submitted with missing pieces'
+                : 'Book submitted for review',
+            message:
+              missing.length
+                ? `Your book "${title}" was submitted and is awaiting review. Missing: ${missing.join(', ')}.`
+                : `Your book "${title}" was submitted for review.`,
+            related_book_id:book.id,
+            is_read:false
+          });
+
+      }catch(notificationError){
+
+        console.warn(
+          'Author notification could not be created:',
+          notificationError
+        );
+
+      }
+
+
+      /*
+        If the optional related records were not available, tell the
+        author exactly what happened instead of claiming everything
+        was connected.
+      */
+
+      if(!trailerSaved || !guideSaved){
+
+        message.textContent =
+          'Book submitted. Some supporting records need database setup.';
+
+        showToast(
+          'Your book was submitted, but some supporting records need database setup.'
+        );
+
+      }else{
+
+        message.textContent =
+          'Book submitted successfully.';
+
+        showToast(
+          'Your book has been submitted for review.'
+        );
+
+      }
+
+      document
+        .getElementById('bookForm')
+        .reset();
+
+      document.getElementById(
+        'submissionAuthorName'
+      ).value =
+        currentAuthor.author_name || '';
+
+      document.getElementById(
+        'submissionAuthorEmail'
+      ).value =
+        currentUser.email || '';
+
+      await loadBooks();
+
+    }catch(error){
+
+      console.error(
+        'Book submission error:',
+        error
+      );
+
+      message.textContent =
+        'The book could not be submitted.';
+
+      showToast(
+        error.message ||
+        'The book could not be submitted.'
+      );
+
+    }finally{
 
       button.disabled =
         false;
 
+    }
 
-      await loadMessages();
-      await loadConversations();
+  }
 
+
+  async function loadModerators(){
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('moderators')
+        .select(
+          'id,profile_id,active'
+        )
+        .eq(
+          'active',
+          true
+        );
+
+    if(error){
+
+      console.error(
+        'Unable to load moderators:',
+        error
+      );
+
+      moderators = [];
+
+      return;
+    }
+
+    const rows =
+      data || [];
+
+    if(!rows.length){
+      moderators = [];
+      return;
+    }
+
+    const profileIds =
+      rows
+        .map(row => row.profile_id)
+        .filter(Boolean);
+
+    if(!profileIds.length){
+      moderators = [];
+      return;
+    }
+
+    const {
+      data: profiles,
+      error: profileError
+    } =
+      await supabaseClient
+        .from('profiles')
+        .select(
+          'id,display_name'
+        )
+        .in(
+          'id',
+          profileIds
+        );
+
+    if(profileError){
+
+      console.error(
+        profileError
+      );
+
+      moderators = [];
+
+      return;
+    }
+
+    const profileMap =
+      new Map(
+        (profiles || [])
+          .map(profile => [
+            profile.id,
+            profile
+          ])
+      );
+
+    moderators =
+      rows.map(row => ({
+        ...row,
+        profile:
+          profileMap.get(
+            row.profile_id
+          ) || null
+      }));
+
+  }
+
+
+  async function loadConversations(){
+
+    const list =
+      document.getElementById(
+        'conversationList'
+      );
+
+    list.innerHTML =
+      '<div class="loading">Loading conversations...</div>';
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('conversations')
+        .select(
+          'id,author_id,moderator_id,book_id,created_at,updated_at'
+        )
+        .eq(
+          'author_id',
+          currentAuthor.id
+        )
+        .order(
+          'updated_at',
+          {
+            ascending:false
+          }
+        );
+
+    if(error){
+
+      console.error(
+        error
+      );
+
+      list.innerHTML =
+        `<div class="errorBox">
+          Unable to load conversations.
+          <br><br>
+          ${escapeHtml(error.message)}
+        </div>`;
+
+      return;
+    }
+
+    conversations =
+      data || [];
+
+    /*
+      Add moderator information.
+    */
+
+    const moderatorIds =
+      conversations
+        .map(item => item.moderator_id)
+        .filter(Boolean);
+
+    const uniqueModeratorIds =
+      [...new Set(moderatorIds)];
+
+    let moderatorProfiles = [];
+
+    if(uniqueModeratorIds.length){
+
+      const {
+        data: profiles
+      } =
+        await supabaseClient
+          .from('profiles')
+          .select(
+            'id,display_name'
+          )
+          .in(
+            'id',
+            uniqueModeratorIds
+          );
+
+      moderatorProfiles =
+        profiles || [];
+    }
+
+    const moderatorMap =
+      new Map(
+        moderatorProfiles.map(
+          profile => [
+            profile.id,
+            profile
+          ]
+        )
+      );
+
+    conversations =
+      conversations.map(
+        conversation => ({
+          ...conversation,
+          moderatorProfile:
+            moderatorMap.get(
+              conversation.moderator_id
+            ) || null
+        })
+      );
+
+    renderConversations();
+
+  }
+
+
+  function renderConversations(){
+
+    const list =
+      document.getElementById(
+        'conversationList'
+      );
+
+    list.innerHTML = '';
+
+    /*
+      If no conversation exists yet, show active moderators so the
+      author can start a conversation.
+    */
+
+    if(!conversations.length){
+
+      if(!moderators.length){
+
+        list.innerHTML =
+          `<div class="empty">
+            <strong>No moderator available</strong>
+            No active moderator account is currently available.
+          </div>`;
+
+        return;
+      }
+
+      const heading =
+        document.createElement('div');
+
+      heading.className =
+        'muted';
+
+      heading.style.padding =
+        '8px';
+
+      heading.textContent =
+        'Start a conversation';
+
+      list.appendChild(
+        heading
+      );
+
+      moderators.forEach(
+        moderator => {
+
+          const button =
+            document.createElement('button');
+
+          button.className =
+            'conversationItem';
+
+          button.type =
+            'button';
+
+          button.innerHTML = `
+            <div class="conversationName">
+              ${escapeHtml(
+                moderator.profile?.display_name ||
+                'Moderator'
+              )}
+            </div>
+
+            <div class="conversationSmall">
+              Reader Reach Moderator
+            </div>
+          `;
+
+          button.addEventListener(
+            'click',
+            () => startConversation(
+              moderator
+            )
+          );
+
+          list.appendChild(
+            button
+          );
+
+        }
+      );
+
+      return;
     }
 
 
-    document
-      .getElementById(
-        'messageForm'
-      )
-      .addEventListener(
-        'submit',
-        sendMessage
+    conversations.forEach(
+      conversation => {
+
+        const button =
+          document.createElement('button');
+
+        button.className =
+          'conversationItem';
+
+        button.type =
+          'button';
+
+        if(
+          selectedConversation &&
+          selectedConversation.id ===
+            conversation.id
+        ){
+          button.classList.add(
+            'active'
+          );
+        }
+
+        const moderatorName =
+          conversation
+            .moderatorProfile
+            ?.display_name ||
+          'Moderator';
+
+        button.innerHTML = `
+          <div class="conversationName">
+            ${escapeHtml(moderatorName)}
+          </div>
+
+          <div class="conversationSmall">
+            Updated
+            ${escapeHtml(
+              formatDateTime(
+                conversation.updated_at ||
+                conversation.created_at
+              )
+            )}
+          </div>
+        `;
+
+        button.addEventListener(
+          'click',
+          () => selectConversation(
+            conversation
+          )
+        );
+
+        list.appendChild(
+          button
+        );
+
+      }
+    );
+
+
+    const newConversationLabel =
+      document.createElement('div');
+
+    newConversationLabel.className =
+      'muted';
+
+    newConversationLabel.style.padding =
+      '14px 8px 7px';
+
+    newConversationLabel.textContent =
+      'Contact another moderator';
+
+    list.appendChild(
+      newConversationLabel
+    );
+
+
+    moderators.forEach(
+      moderator => {
+
+        const alreadyHas =
+          conversations.some(
+            conversation =>
+              conversation.moderator_id ===
+              moderator.profile_id
+          );
+
+        if(alreadyHas){
+          return;
+        }
+
+        const button =
+          document.createElement('button');
+
+        button.className =
+          'conversationItem';
+
+        button.type =
+          'button';
+
+        button.innerHTML = `
+          <div class="conversationName">
+            ${escapeHtml(
+              moderator.profile?.display_name ||
+              'Moderator'
+            )}
+          </div>
+
+          <div class="conversationSmall">
+            Start new conversation
+          </div>
+        `;
+
+        button.addEventListener(
+          'click',
+          () => startConversation(
+            moderator
+          )
+        );
+
+        list.appendChild(
+          button
+        );
+
+      }
+    );
+
+  }
+
+
+  async function startConversation(
+    moderator
+  ){
+
+    if(!moderator?.profile_id){
+      showToast(
+        'Moderator profile could not be identified.'
       );
 
+      return;
+    }
 
-    function setupRealtime(){
+    /*
+      Reuse an existing author/moderator conversation if present.
+    */
 
-      supabaseClient
-        .channel(
-          `author-notifications-${currentUser.id}`
+    const existing =
+      conversations.find(
+        conversation =>
+          conversation.moderator_id ===
+          moderator.profile_id
+      );
+
+    if(existing){
+
+      await selectConversation(
+        existing
+      );
+
+      return;
+    }
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('conversations')
+        .insert({
+          author_id:currentAuthor.id,
+          moderator_id:moderator.profile_id,
+          book_id:null
+        })
+        .select(
+          'id,author_id,moderator_id,book_id,created_at,updated_at'
         )
-        .on(
-          'postgres_changes',
+        .single();
+
+    if(error){
+
+      console.error(error);
+
+      showToast(
+        error.message
+      );
+
+      return;
+    }
+
+    const conversation = {
+      ...data,
+      moderatorProfile:
+        moderator.profile || null
+    };
+
+    conversations.unshift(
+      conversation
+    );
+
+    selectedConversation =
+      conversation;
+
+    renderConversations();
+
+    await loadConversationMessages();
+
+    showToast(
+      'Conversation started.'
+    );
+
+  }
+
+
+  async function selectConversation(
+    conversation
+  ){
+
+    selectedConversation =
+      conversation;
+
+    renderConversations();
+
+    await loadConversationMessages();
+
+  }
+
+
+  async function loadConversationMessages(){
+
+    const header =
+      document.getElementById(
+        'chatHeader'
+      );
+
+    const messages =
+      document.getElementById(
+        'chatMessages'
+      );
+
+    const input =
+      document.getElementById(
+        'messageInput'
+      );
+
+    const send =
+      document.getElementById(
+        'sendMessageButton'
+      );
+
+    if(!selectedConversation){
+
+      header.innerHTML = `
+        <strong>Select a conversation</strong>
+        <div class="muted">
+          Choose a moderator conversation to view messages.
+        </div>
+      `;
+
+      messages.innerHTML =
+        `<div class="empty">
+          <strong>No conversation selected</strong>
+          Select a moderator conversation.
+        </div>`;
+
+      input.disabled =
+        true;
+
+      send.disabled =
+        true;
+
+      return;
+    }
+
+    const moderatorName =
+      selectedConversation
+        .moderatorProfile
+        ?.display_name ||
+      'Moderator';
+
+    header.innerHTML = `
+      <strong>
+        ${escapeHtml(moderatorName)}
+      </strong>
+
+      <div class="muted">
+        Reader Reach Moderator
+      </div>
+    `;
+
+    input.disabled =
+      false;
+
+    send.disabled =
+      false;
+
+    messages.innerHTML =
+      '<div class="loading">Loading messages...</div>';
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('messages')
+        .select(
+          'id,conversation_id,sender_profile_id,message,created_at,read_at'
+        )
+        .eq(
+          'conversation_id',
+          selectedConversation.id
+        )
+        .order(
+          'created_at',
           {
-            event:'*',
-            schema:'public',
-            table:'notifications',
-            filter:`profile_id=eq.${currentUser.id}`
-          },
-          async () => {
+            ascending:true
+          }
+        );
 
-            await loadNotifications();
+    if(error){
 
+      console.error(error);
+
+      messages.innerHTML =
+        `<div class="errorBox">
+          Unable to load messages.
+          <br><br>
+          ${escapeHtml(error.message)}
+        </div>`;
+
+      return;
+    }
+
+    renderMessages(
+      data || []
+    );
+
+    /*
+      Mark moderator messages as read.
+    */
+
+    const unreadIds =
+      (data || [])
+        .filter(
+          message =>
+            message.sender_profile_id !==
+              currentUser.id &&
+            !message.read_at
+        )
+        .map(
+          message => message.id
+        );
+
+    if(unreadIds.length){
+
+      await supabaseClient
+        .from('messages')
+        .update({
+          read_at:new Date().toISOString()
+        })
+        .in(
+          'id',
+          unreadIds
+        );
+
+    }
+
+  }
+
+
+  function renderMessages(
+    rows
+  ){
+
+    const container =
+      document.getElementById(
+        'chatMessages'
+      );
+
+    if(!rows.length){
+
+      container.innerHTML =
+        `<div class="empty">
+          <strong>No messages yet</strong>
+          Send the first message to your moderator.
+        </div>`;
+
+      return;
+    }
+
+    container.innerHTML = '';
+
+    rows.forEach(
+      message => {
+
+        const mine =
+          message.sender_profile_id ===
+          currentUser.id;
+
+        const item =
+          document.createElement('div');
+
+        item.className =
+          `message${mine ? ' mine' : ''}`;
+
+        item.innerHTML = `
+          <div class="messageMeta">
+            ${mine ? 'You' : 'Moderator'}
+            •
+            ${escapeHtml(
+              formatDateTime(
+                message.created_at
+              )
+            )}
+          </div>
+
+          <div class="messageText">
+            ${escapeHtml(
+              message.message
+            )}
+          </div>
+        `;
+
+        container.appendChild(
+          item
+        );
+
+      }
+    );
+
+    container.scrollTop =
+      container.scrollHeight;
+
+  }
+
+
+  async function sendMessage(event){
+
+    event.preventDefault();
+
+    if(!selectedConversation){
+      showToast(
+        'Select a conversation first.'
+      );
+
+      return;
+    }
+
+    const input =
+      document.getElementById(
+        'messageInput'
+      );
+
+    const message =
+      input.value.trim();
+
+    if(!message){
+      return;
+    }
+
+    const send =
+      document.getElementById(
+        'sendMessageButton'
+      );
+
+    send.disabled =
+      true;
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from('messages')
+        .insert({
+          conversation_id:
+            selectedConversation.id,
+          sender_profile_id:
+            currentUser.id,
+          message:message
+        });
+
+    if(error){
+
+      console.error(error);
+
+      showToast(
+        error.message
+      );
+
+      send.disabled =
+        false;
+
+      return;
+    }
+
+    input.value = '';
+
+    await supabaseClient
+      .from('conversations')
+      .update({
+        updated_at:
+          new Date().toISOString()
+      })
+      .eq(
+        'id',
+        selectedConversation.id
+      );
+
+    await loadConversationMessages();
+
+    send.disabled =
+      false;
+
+  }
+
+
+  async function loadSchedule(){
+
+    const list =
+      document.getElementById(
+        'scheduleList'
+      );
+
+    list.innerHTML =
+      '<div class="card loading">Loading schedules...</div>';
+
+    const bookIds =
+      myBooks.map(
+        book => book.id
+      );
+
+    if(!bookIds.length){
+
+      list.innerHTML =
+        `<div class="card empty">
+          <strong>No feature schedules yet</strong>
+          Your schedules will appear here after a moderator schedules one of your books.
+        </div>`;
+
+      return;
+    }
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('feature_schedules')
+        .select(
+          'id,book_id,moderator_id,scheduled_date,scheduled_time,status,notes,created_at,updated_at'
+        )
+        .in(
+          'book_id',
+          bookIds
+        )
+        .order(
+          'scheduled_date',
+          {
+            ascending:true
           }
         )
-        .subscribe();
+        .order(
+          'scheduled_time',
+          {
+            ascending:true
+          }
+        );
+
+    if(error){
+
+      console.error(error);
+
+      list.innerHTML =
+        `<div class="card errorBox">
+          Unable to load feature schedules.
+          <br><br>
+          ${escapeHtml(error.message)}
+        </div>`;
+
+      return;
+    }
+
+    const schedules =
+      data || [];
+
+    if(!schedules.length){
+
+      list.innerHTML =
+        `<div class="card empty">
+          <strong>No feature schedules yet</strong>
+          When a moderator schedules one of your approved books,
+          it will appear here.
+        </div>`;
+
+      return;
+    }
+
+    list.innerHTML = '';
+
+    schedules.forEach(
+      schedule => {
+
+        const book =
+          myBooks.find(
+            item =>
+              item.id ===
+              schedule.book_id
+          );
+
+        const item =
+          document.createElement('article');
+
+        item.className =
+          'card scheduleItem';
+
+        item.innerHTML = `
+
+          <div>
+
+            <strong>
+              ${escapeHtml(
+                book?.title ||
+                'Book'
+              )}
+            </strong>
+
+            <div class="muted">
+              ${escapeHtml(
+                formatScheduleDate(
+                  schedule.scheduled_date,
+                  schedule.scheduled_time
+                )
+              )}
+            </div>
+
+            ${
+              schedule.notes
+                ? `<div class="muted" style="margin-top:7px;">
+                    ${escapeHtml(schedule.notes)}
+                  </div>`
+                : ''
+            }
+
+          </div>
+
+          <span class="pill">
+            ${escapeHtml(
+              normalizeStatus(
+                schedule.status
+              )
+            )}
+          </span>
+
+        `;
+
+        list.appendChild(
+          item
+        );
+
+      }
+    );
+
+  }
 
 
+  async function loadNotifications(){
+
+    const list =
+      document.getElementById(
+        'notificationList'
+      );
+
+    list.innerHTML =
+      '<div class="card loading">Loading notifications...</div>';
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('notifications')
+        .select(
+          'id,profile_id,type,title,message,related_book_id,related_schedule_id,is_read,created_at'
+        )
+        .eq(
+          'profile_id',
+          currentUser.id
+        )
+        .order(
+          'created_at',
+          {
+            ascending:false
+          }
+        )
+        .limit(50);
+
+    if(error){
+
+      console.error(error);
+
+      list.innerHTML =
+        `<div class="card errorBox">
+          Unable to load notifications.
+          <br><br>
+          ${escapeHtml(error.message)}
+        </div>`;
+
+      return;
+    }
+
+    const notifications =
+      data || [];
+
+    if(!notifications.length){
+
+      list.innerHTML =
+        `<div class="card empty">
+          <strong>No notifications</strong>
+          New account, book, message, and schedule updates will appear here.
+        </div>`;
+
+      return;
+    }
+
+    list.innerHTML = '';
+
+    notifications.forEach(
+      notification => {
+
+        const item =
+          document.createElement('article');
+
+        item.className =
+          `card notificationItem ${
+            notification.is_read
+              ? ''
+              : 'unread'
+          }`;
+
+        item.innerHTML = `
+
+          <div>
+
+            <strong>
+              ${escapeHtml(
+                notification.title ||
+                'Reader Reach Notification'
+              )}
+            </strong>
+
+            <div class="muted">
+              ${escapeHtml(
+                notification.message ||
+                ''
+              )}
+            </div>
+
+            <div class="muted" style="margin-top:7px;">
+              ${escapeHtml(
+                formatDateTime(
+                  notification.created_at
+                )
+              )}
+            </div>
+
+          </div>
+
+          ${
+            notification.is_read
+              ? ''
+              : `<button
+                  class="btn secondary markReadButton"
+                  type="button"
+                  data-id="${escapeHtml(notification.id)}">
+                  Mark Read
+                </button>`
+          }
+
+        `;
+
+        list.appendChild(
+          item
+        );
+
+      }
+    );
+
+
+    list
+      .querySelectorAll(
+        '.markReadButton'
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            'click',
+            async () => {
+
+              const id =
+                button.dataset.id;
+
+              const {
+                error
+              } =
+                await supabaseClient
+                  .from('notifications')
+                  .update({
+                    is_read:true
+                  })
+                  .eq(
+                    'id',
+                    id
+                  )
+                  .eq(
+                    'profile_id',
+                    currentUser.id
+                  );
+
+              if(error){
+
+                showToast(
+                  error.message
+                );
+
+                return;
+              }
+
+              await loadNotifications();
+
+            }
+          );
+
+        }
+      );
+
+  }
+
+
+  async function setupRealtime(){
+
+    /*
+      Message realtime.
+    */
+
+    messageRealtimeChannel =
       supabaseClient
         .channel(
           `author-messages-${currentUser.id}`
@@ -4671,66 +3626,309 @@
                 selectedConversation.id
             ){
 
-              await loadMessages();
+              await loadConversationMessages();
+
+            }else{
+
+              await loadConversations();
 
             }
-
-            await loadConversations();
 
           }
         )
         .subscribe();
 
-    }
+
+    /*
+      Notification realtime.
+    */
+
+    notificationRealtimeChannel =
+      supabaseClient
+        .channel(
+          `author-notifications-${currentUser.id}`
+        )
+        .on(
+          'postgres_changes',
+          {
+            event:'INSERT',
+            schema:'public',
+            table:'notifications',
+            filter:
+              `profile_id=eq.${currentUser.id}`
+          },
+          async () => {
+
+            await loadNotifications();
+
+            showToast(
+              'You have a new Reader Reach notification.'
+            );
+
+          }
+        )
+        .subscribe();
+
+  }
 
 
-    async function initialize(){
+  function setupPhotoPreview(){
 
-      const sessionReady =
-        await loadSession();
+    const input =
+      document.getElementById(
+        'profilePhoto'
+      );
 
-      if(!sessionReady){
-        return;
+    input.addEventListener(
+      'change',
+      () => {
+
+        const file =
+          input.files[0];
+
+        if(!file){
+          return;
+        }
+
+        const reader =
+          new FileReader();
+
+        reader.onload =
+          event => {
+
+            document.getElementById(
+              'photoPreview'
+            ).innerHTML = `
+              <img
+                src="${event.target.result}"
+                alt="Profile photo preview">
+            `;
+
+          };
+
+        reader.readAsDataURL(
+          file
+        );
+
+        showToast(
+          'Photo preview updated. Permanent photo storage is not connected yet.'
+        );
+
       }
-
-
-      const profileReady =
-        await loadProfile();
-
-      if(!profileReady){
-        return;
-      }
-
-
-      const authorReady =
-        await loadAuthor();
-
-      if(!authorReady){
-        return;
-      }
-
-
-      renderIdentity();
-      renderStatus();
-
-
-      await loadBooks();
-      await loadSchedules();
-      await loadNotifications();
-      await loadConversations();
-
-
-      setupRealtime();
-
-    }
-
-
-    document.addEventListener(
-      'DOMContentLoaded',
-      initialize
     );
 
-  </script>
+  }
+
+
+  async function signOut(){
+
+    const {
+      error
+    } =
+      await supabaseClient.auth.signOut();
+
+    if(error){
+
+      showToast(
+        error.message
+      );
+
+      return;
+    }
+
+    window.location.href =
+      'auth.html?mode=author';
+
+  }
+
+
+  async function initialize(){
+
+    try{
+
+      const authenticated =
+        await requireAuthor();
+
+      if(!authenticated){
+        return;
+      }
+
+      populateAccount();
+
+      setupPhotoPreview();
+
+      await loadBooks();
+
+      await loadModerators();
+
+      await loadConversations();
+
+      await loadSchedule();
+
+      await loadNotifications();
+
+      await setupRealtime();
+
+    }catch(error){
+
+      console.error(
+        'Author dashboard initialization error:',
+        error
+      );
+
+      document.querySelector(
+        '.main'
+      ).innerHTML =
+        `<section class="card errorBox" style="padding:28px;">
+          <strong style="font-family:Georgia,serif;font-size:24px;">
+            Author Dashboard could not load
+          </strong>
+
+          <p>
+            ${escapeHtml(
+              error.message ||
+              'Unable to load your Author account.'
+            )}
+          </p>
+
+          <button
+            class="btn primary"
+            onclick="window.location.href='auth.html?mode=author'">
+            Return to Author Sign In
+          </button>
+        </section>`;
+
+    }
+
+  }
+
+
+  document
+    .getElementById('profileForm')
+    .addEventListener(
+      'submit',
+      saveProfile
+    );
+
+
+  document
+    .getElementById('bookForm')
+    .addEventListener(
+      'submit',
+      submitBook
+    );
+
+
+  document
+    .getElementById('messageForm')
+    .addEventListener(
+      'submit',
+      sendMessage
+    );
+
+
+  document
+    .getElementById('refreshBooks')
+    .addEventListener(
+      'click',
+      loadBooks
+    );
+
+
+  document
+    .getElementById('refreshMessages')
+    .addEventListener(
+      'click',
+      async () => {
+
+        await loadModerators();
+
+        await loadConversations();
+
+        if(selectedConversation){
+
+          const refreshed =
+            conversations.find(
+              conversation =>
+                conversation.id ===
+                selectedConversation.id
+            );
+
+          selectedConversation =
+            refreshed || null;
+
+          renderConversations();
+
+          await loadConversationMessages();
+
+        }
+
+      }
+    );
+
+
+  document
+    .getElementById('refreshSchedule')
+    .addEventListener(
+      'click',
+      loadSchedule
+    );
+
+
+  document
+    .getElementById('refreshNotifications')
+    .addEventListener(
+      'click',
+      loadNotifications
+    );
+
+
+  document
+    .getElementById('signOutTop')
+    .addEventListener(
+      'click',
+      signOut
+    );
+
+
+  document
+    .getElementById('signOutSide')
+    .addEventListener(
+      'click',
+      signOut
+    );
+
+
+  document
+    .getElementById('signOutAccount')
+    .addEventListener(
+      'click',
+      signOut
+    );
+
+
+  window.addEventListener(
+    'beforeunload',
+    () => {
+
+      if(messageRealtimeChannel){
+        supabaseClient.removeChannel(
+          messageRealtimeChannel
+        );
+      }
+
+      if(notificationRealtimeChannel){
+        supabaseClient.removeChannel(
+          notificationRealtimeChannel
+        );
+      }
+
+    }
+  );
+
+
+  initialize();
+</script>
 
 </body>
 </html>

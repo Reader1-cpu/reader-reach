@@ -1,9 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Reader Reach | Account Access</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reader Reach — Sign In / Sign Up</title>
 
 <style>
 :root{
@@ -16,338 +16,530 @@
   --muted:#76665d;
   --line:#e7dbcf;
   --white:#fff;
-  --success:#2f6848;
-  --error:#8a342d;
+  --danger:#9d3c32;
+  --success:#356b48;
 }
 
 *{box-sizing:border-box}
 
+html{scroll-behavior:smooth}
+
 body{
   margin:0;
+  font-family:Georgia,"Times New Roman",serif;
   background:var(--cream);
   color:var(--text);
-  font-family:Georgia,serif;
-  line-height:1.6
+}
+
+button,input,select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
 }
 
 a{
+  color:inherit;
   text-decoration:none;
-  color:inherit
-}
-
-button,input,textarea{
-  font:inherit
 }
 
 .wrap{
-  width:min(1080px,92%);
-  margin:auto
+  width:min(1180px,92%);
+  margin:auto;
 }
 
-.top{
-  background:var(--brown);
-  color:#fff;
-  padding:9px 0;
-  font:12px Arial
-}
-
-.top .wrap{
-  display:flex;
-  justify-content:space-between
-}
+/* NAV */
 
 nav{
-  background:#fffdf8ee;
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(255,253,248,.96);
+  border-bottom:1px solid var(--line);
   backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--line)
 }
 
 .nav{
-  min-height:78px;
+  min-height:82px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:20px
+  gap:24px;
 }
 
 .logo{
-  font-size:25px;
-  font-weight:bold;
-  color:var(--brown)
+  color:var(--brown);
+  font-weight:700;
+  font-size:24px;
+  line-height:1.05;
 }
 
 .logo small{
   display:block;
-  font:10px Arial;
-  letter-spacing:2px;
+  margin-top:6px;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:400;
+  letter-spacing:.08em;
   text-transform:uppercase;
-  color:#76513e
 }
 
-.back{
-  font:bold 13px Arial;
-  color:var(--brown)
-}
-
-main{
-  padding:70px 0 90px
-}
-
-.layout{
-  display:grid;
-  grid-template-columns:.85fr 1.15fr;
-  gap:45px;
-  align-items:start
-}
-
-.intro{
-  padding-top:35px
-}
-
-.kicker{
-  font:700 11px Arial;
-  letter-spacing:2.5px;
-  text-transform:uppercase;
-  color:#76513e
-}
-
-h1{
-  font-size:clamp(42px,6vw,66px);
-  line-height:1.05;
-  color:var(--brown);
-  margin:12px 0 18px
-}
-
-.intro p{
-  font-size:18px;
-  color:var(--muted);
-  max-width:520px
-}
-
-.note{
-  margin-top:28px;
-  padding:18px 20px;
-  background:var(--soft);
-  border:1px solid var(--line);
-  border-radius:18px;
-  color:var(--muted);
-  font:13px Arial
-}
-
-.card{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:26px;
-  padding:32px;
-  box-shadow:0 18px 50px #3b241b12
-}
-
-.tabs{
+.links{
   display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-bottom:25px
-}
-
-.tab{
-  border:1px solid var(--line);
-  border-radius:999px;
-  padding:10px 15px;
-  background:var(--cream);
-  color:var(--brown);
-  font:bold 12px Arial;
-  cursor:pointer
-}
-
-.tab.active{
-  background:var(--brown);
-  border-color:var(--brown);
-  color:#fff
-}
-
-.panel{
-  display:none
-}
-
-.panel.active{
-  display:block
-}
-
-h2{
-  font-size:32px;
-  color:var(--brown);
-  margin:0 0 8px
-}
-
-.sub{
+  align-items:center;
+  gap:24px;
   color:var(--muted);
-  font:13px Arial;
-  margin:0 0 24px
+  font-size:14px;
 }
 
-.form{
-  display:grid;
-  gap:16px
+.links a:hover{
+  color:var(--brown);
 }
 
-.field{
+.navActions{
   display:flex;
-  flex-direction:column;
-  gap:7px
-}
-
-label{
-  font:700 11px Arial;
-  color:var(--brown)
-}
-
-input,textarea{
-  width:100%;
-  border:1px solid #d9cabc;
-  border-radius:11px;
-  padding:13px;
-  background:#fff;
-  outline:none;
-  color:var(--text)
-}
-
-input:focus,textarea:focus{
-  border-color:var(--brown2)
-}
-
-textarea{
-  min-height:105px;
-  resize:vertical
-}
-
-.actions{
-  display:flex;
+  align-items:center;
   gap:10px;
-  flex-wrap:wrap;
-  margin-top:4px
 }
 
 .btn{
-  display:inline-block;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+  padding:0 18px;
   border:1px solid var(--brown);
   border-radius:999px;
-  padding:12px 19px;
-  font:bold 13px Arial;
-  cursor:pointer;
+  color:var(--brown);
   background:transparent;
-  color:var(--brown)
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.btn:hover{
+  transform:translateY(-1px);
 }
 
 .btn.primary{
   background:var(--brown);
-  color:#fff
+  color:var(--white);
 }
 
-.btn.secondary{
+.btn.gold{
   background:var(--butter);
-  border-color:var(--butter)
-}
-
-.btn:disabled{
-  opacity:.55;
-  cursor:not-allowed
-}
-
-.help{
-  margin-top:15px;
-  font:12px Arial;
-  color:var(--muted)
-}
-
-.help button{
-  border:0;
-  background:none;
+  border-color:var(--butter);
   color:var(--brown);
-  font-weight:bold;
+}
+
+.btn.full{
+  width:100%;
+}
+
+/* PAGE */
+
+.page{
+  min-height:calc(100vh - 82px);
+  padding:70px 0 90px;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(234,215,155,.24),transparent 28%),
+    var(--cream);
+}
+
+.authLayout{
+  width:min(1080px,92%);
+  margin:auto;
+  display:grid;
+  grid-template-columns:1fr 1.05fr;
+  gap:55px;
+  align-items:center;
+}
+
+.intro{
+  padding-right:20px;
+}
+
+.eyebrow{
+  display:inline-block;
+  color:var(--brown2);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+
+.intro h1{
+  margin:0 0 20px;
+  color:var(--brown);
+  font-size:clamp(42px,5vw,68px);
+  line-height:1.02;
+}
+
+.intro p{
+  max-width:570px;
+  margin:0 0 26px;
+  color:var(--muted);
+  font-size:18px;
+  line-height:1.8;
+}
+
+.points{
+  display:grid;
+  gap:13px;
+  margin-top:30px;
+}
+
+.point{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  color:var(--text);
+  line-height:1.55;
+}
+
+.pointIcon{
+  flex:0 0 30px;
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:var(--soft);
+  color:var(--brown);
+  font-weight:700;
+}
+
+/* AUTH CARD */
+
+.card{
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:26px;
+  padding:34px;
+  box-shadow:0 22px 60px rgba(59,36,27,.09);
+}
+
+.cardHeader{
+  margin-bottom:24px;
+}
+
+.cardHeader h2{
+  margin:0 0 8px;
+  color:var(--brown);
+  font-size:32px;
+}
+
+.cardHeader p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.modeSwitch{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5px;
+  padding:5px;
+  margin-bottom:26px;
+  border-radius:14px;
+  background:var(--soft);
+}
+
+.modeSwitch button{
+  min-height:43px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:var(--muted);
+  font-weight:700;
+}
+
+.modeSwitch button.active{
+  background:var(--white);
+  color:var(--brown);
+  box-shadow:0 3px 12px rgba(59,36,27,.08);
+}
+
+.roleSwitch{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:22px;
+}
+
+.roleChoice{
+  position:relative;
+}
+
+.roleChoice input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+
+.roleChoice label{
+  display:block;
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  text-align:center;
+  color:var(--muted);
+  font-weight:700;
   cursor:pointer;
-  padding:0
+}
+
+.roleChoice input:checked + label{
+  border-color:var(--brown);
+  background:var(--soft);
+  color:var(--brown);
+}
+
+.form{
+  display:grid;
+  gap:17px;
+}
+
+.field{
+  display:grid;
+  gap:7px;
+}
+
+.field label{
+  color:var(--brown);
+  font-size:14px;
+  font-weight:700;
+}
+
+.field input,
+.field select{
+  width:100%;
+  height:49px;
+  padding:0 14px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  outline:none;
+  background:#fffefa;
+  color:var(--text);
+}
+
+.field input:focus,
+.field select:focus{
+  border-color:var(--brown2);
+  box-shadow:0 0 0 3px rgba(90,56,41,.08);
+}
+
+.locationGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.passwordRow{
+  position:relative;
+}
+
+.passwordRow input{
+  padding-right:70px;
+}
+
+.showPassword{
+  position:absolute;
+  right:9px;
+  top:7px;
+  height:35px;
+  padding:0 10px;
+  border:0;
+  border-radius:8px;
+  background:var(--soft);
+  color:var(--brown);
+  font-size:12px;
+  font-weight:700;
+}
+
+.formOptions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  font-size:13px;
+}
+
+.remember{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:var(--muted);
+}
+
+.remember input{
+  accent-color:var(--brown);
+}
+
+.forgot{
+  color:var(--brown2);
+  font-weight:700;
+}
+
+.forgot:hover{
+  text-decoration:underline;
 }
 
 .status{
   display:none;
+  padding:13px 15px;
   border-radius:12px;
-  padding:12px 14px;
-  margin-bottom:18px;
-  font:13px Arial
+  font-size:14px;
+  line-height:1.5;
 }
 
 .status.show{
-  display:block
-}
-
-.status.success{
-  background:#edf7f0;
-  color:var(--success)
+  display:block;
 }
 
 .status.error{
-  background:#fff0ee;
-  color:var(--error)
+  background:#f8e9e6;
+  color:var(--danger);
+  border:1px solid #edc9c4;
 }
 
-.account{
-  display:none
+.status.success{
+  background:#eaf4ed;
+  color:var(--success);
+  border:1px solid #c8dfcf;
 }
 
-.account.show{
-  display:block
+.authFooter{
+  margin-top:22px;
+  padding-top:20px;
+  border-top:1px solid var(--line);
+  text-align:center;
+  color:var(--muted);
+  font-size:14px;
 }
 
-.accountBox{
-  background:var(--soft);
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:20px;
-  margin:20px 0
+.authFooter button{
+  border:0;
+  padding:0;
+  background:none;
+  color:var(--brown2);
+  font-weight:700;
 }
 
-.accountBox strong{
-  color:var(--brown)
+.authFooter button:hover{
+  text-decoration:underline;
 }
+
+/* SIGNUP ONLY */
+
+.signupOnly{
+  display:none;
+}
+
+.signupOnly.show{
+  display:grid;
+}
+
+.signinOnly.hide{
+  display:none;
+}
+
+/* FOOTER */
 
 footer{
-  background:var(--brown);
-  color:#d9ccc5;
-  padding:30px 0;
-  font:11px Arial
+  padding:28px 0;
+  border-top:1px solid var(--line);
+  background:var(--soft);
 }
 
-footer .wrap{
+.footerInner{
   display:flex;
   justify-content:space-between;
-  gap:20px
+  align-items:center;
+  gap:20px;
+  color:var(--muted);
+  font-size:13px;
 }
 
-@media(max-width:820px){
+.footerLinks{
+  display:flex;
+  gap:18px;
+}
 
-  .layout{
-    grid-template-columns:1fr
+.footerLinks a:hover{
+  color:var(--brown);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+  .links{
+    display:none;
+  }
+
+  .authLayout{
+    grid-template-columns:1fr;
+    gap:35px;
   }
 
   .intro{
-    padding-top:0
+    padding-right:0;
   }
 
-  .top span+span{
-    display:none
+  .intro h1{
+    font-size:48px;
+  }
+}
+
+@media(max-width:600px){
+  .nav{
+    min-height:72px;
+  }
+
+  .logo{
+    font-size:21px;
+  }
+
+  .logo small{
+    display:none;
+  }
+
+  .navActions .btn:first-child{
+    display:none;
+  }
+
+  .page{
+    padding:40px 0 60px;
+  }
+
+  .card{
+    padding:23px;
+    border-radius:20px;
+  }
+
+  .intro h1{
+    font-size:42px;
+  }
+
+  .intro p{
+    font-size:16px;
+  }
+
+  .locationGrid,
+  .roleSwitch{
+    grid-template-columns:1fr;
+  }
+
+  .footerInner{
+    flex-direction:column;
+    text-align:center;
   }
 }
 </style>
 </head>
 
 <body>
-
-<div class="top">
-  <div class="wrap">
-    <span>Books • Authors • Readers</span>
-    <span>A place for meaningful book discovery</span>
-  </div>
-</div>
 
 <nav>
   <div class="wrap nav">
@@ -357,305 +549,337 @@ footer .wrap{
       <small>Every Book Has Its Readers</small>
     </a>
 
-    <a class="back" href="index.html">
-      ← Back to Reader Reach
-    </a>
+    <div class="links">
+      <a href="authors.html">Authors</a>
+      <a href="index.html#featured">Featured</a>
+      <a href="index.html#about">About Us</a>
+      <a href="contact.html">Contact Us</a>
+    </div>
+
+    <div class="navActions">
+      <a class="btn" href="index.html">Home</a>
+    </div>
 
   </div>
 </nav>
 
-<main>
+<main class="page">
 
-  <div class="wrap layout">
+  <div class="authLayout">
 
     <section class="intro">
 
-      <div class="kicker">
-        Account Access
-      </div>
+      <div class="eyebrow">Reader Reach Access</div>
 
-      <h1>
-        Enter Reader Reach.
-      </h1>
+      <h1>Welcome back to Reader Reach.</h1>
 
       <p>
-        Use your Reader Reach account to access the area connected to your role.
+        Sign in to continue to your Reader, Author, Moderator,
+        or Administrator account.
       </p>
 
-      <div class="note">
-        Create or access your Reader Reach account to continue.
+      <div class="points">
+
+        <div class="point">
+          <div class="pointIcon">✓</div>
+          <div>Discover approved books and authors.</div>
+        </div>
+
+        <div class="point">
+          <div class="pointIcon">✓</div>
+          <div>Manage your Reader Reach account securely.</div>
+        </div>
+
+        <div class="point">
+          <div class="pointIcon">✓</div>
+          <div>Access role-specific dashboards and protected content.</div>
+        </div>
+
       </div>
 
     </section>
 
     <section class="card">
 
-      <div id="status" class="status"></div>
+      <div class="cardHeader">
+        <h2 id="cardTitle">Sign In</h2>
+        <p id="cardSubtitle">
+          Enter your Reader Reach account details.
+        </p>
+      </div>
 
-      <div id="authPanels">
+      <div class="modeSwitch">
 
-        <div class="tabs">
+        <button
+          type="button"
+          id="signinMode"
+          class="active"
+          onclick="setMode('signin')">
+          Sign In
+        </button>
 
-          <button class="tab" data-mode="signin" type="button">
-            Sign In
-          </button>
-
-          <button class="tab" data-mode="reader" type="button">
-            Reader Account
-          </button>
-
-          <button class="tab" data-mode="author" type="button">
-            Author Access
-          </button>
-
-          <button class="tab" data-mode="reset" type="button">
-            Reset Password
-          </button>
-
-        </div>
-
-        <div id="signinPanel" class="panel">
-
-          <h2>Welcome back.</h2>
-
-          <p class="sub">
-            Sign in with the email and password for your Reader Reach account.
-          </p>
-
-          <form id="signinForm" class="form">
-
-            <div class="field">
-              <label for="signinEmail">Email</label>
-
-              <input
-                id="signinEmail"
-                type="email"
-                autocomplete="email"
-                required
-              >
-            </div>
-
-            <div class="field">
-              <label for="signinPassword">Password</label>
-
-              <input
-                id="signinPassword"
-                type="password"
-                autocomplete="current-password"
-                required
-              >
-            </div>
-
-            <div class="actions">
-              <button class="btn primary" type="submit">
-                Sign In
-              </button>
-            </div>
-
-          </form>
-
-          <div class="help">
-            Forgot your password?
-
-            <button type="button" data-switch="reset">
-              Reset it here.
-            </button>
-          </div>
-
-        </div>
-
-        <div id="readerPanel" class="panel">
-
-          <h2>Create a Reader account.</h2>
-
-          <p class="sub">
-            Reader accounts start with Reader access.
-            Protected content remains controlled by your account permissions.
-          </p>
-
-          <form id="readerForm" class="form">
-
-            <div class="field">
-              <label for="readerName">Name</label>
-
-              <input
-                id="readerName"
-                type="text"
-                autocomplete="name"
-                required
-              >
-            </div>
-
-            <div class="field">
-              <label for="readerEmail">Email</label>
-
-              <input
-                id="readerEmail"
-                type="email"
-                autocomplete="email"
-                required
-              >
-            </div>
-
-            <div class="field">
-              <label for="readerPassword">Password</label>
-
-              <input
-                id="readerPassword"
-                type="password"
-                autocomplete="new-password"
-                minlength="8"
-                required
-              >
-            </div>
-
-            <div class="actions">
-              <button class="btn primary" type="submit">
-                Create Reader Account
-              </button>
-            </div>
-
-          </form>
-
-        </div>
-
-        <div id="authorPanel" class="panel">
-
-          <h2>Request Author access.</h2>
-
-          <p class="sub">
-            Create your account and submit an Author access request.
-            Admin approval is required before author tools become available.
-          </p>
-
-          <form id="authorForm" class="form">
-
-            <div class="field">
-              <label for="authorName">Author name</label>
-
-              <input
-                id="authorName"
-                type="text"
-                autocomplete="name"
-                required
-              >
-            </div>
-
-            <div class="field">
-              <label for="authorEmail">Email</label>
-
-              <input
-                id="authorEmail"
-                type="email"
-                autocomplete="email"
-                required
-              >
-            </div>
-
-            <div class="field">
-              <label for="authorPassword">Password</label>
-
-              <input
-                id="authorPassword"
-                type="password"
-                autocomplete="new-password"
-                minlength="8"
-                required
-              >
-            </div>
-
-            <div class="field">
-              <label for="authorMessage">About your request</label>
-
-              <textarea
-                id="authorMessage"
-                placeholder="A short introduction to your books or author work."
-              ></textarea>
-            </div>
-
-            <div class="actions">
-              <button class="btn secondary" type="submit">
-                Create Account & Request Access
-              </button>
-            </div>
-
-          </form>
-
-        </div>
-
-        <div id="resetPanel" class="panel">
-
-          <h2>Reset your password.</h2>
-
-          <p class="sub">
-            Enter your account email and Supabase Auth will send the reset link.
-          </p>
-
-          <form id="resetForm" class="form">
-
-            <div class="field">
-              <label for="resetEmail">Email</label>
-
-              <input
-                id="resetEmail"
-                type="email"
-                autocomplete="email"
-                required
-              >
-            </div>
-
-            <div class="actions">
-              <button class="btn primary" type="submit">
-                Send Reset Link
-              </button>
-            </div>
-
-          </form>
-
-        </div>
+        <button
+          type="button"
+          id="signupMode"
+          onclick="setMode('signup')">
+          Create Account
+        </button>
 
       </div>
 
-      <div id="accountPanel" class="account">
+      <div
+        id="statusMessage"
+        class="status">
+      </div>
 
-        <h2>Your account.</h2>
+      <!-- SIGN IN -->
 
-        <p class="sub">
-          You are signed in to Reader Reach.
-        </p>
+      <form id="signinForm" class="form signinOnly">
 
-        <div class="accountBox">
-          <strong>Email</strong>
-          <div id="accountEmail"></div>
+        <div class="field">
+
+          <label for="signinEmail">
+            Email Address
+          </label>
+
+          <input
+            id="signinEmail"
+            type="email"
+            autocomplete="email"
+            required
+            placeholder="you@example.com">
+
         </div>
 
-        <div class="accountBox">
-          <strong>Role</strong>
-          <div id="accountRole">Loading...</div>
-        </div>
+        <div class="field">
 
-        <div class="accountBox">
-          <strong>Access status</strong>
-          <div id="accountStatus">
-            Checking account access...
+          <label for="signinPassword">
+            Password
+          </label>
+
+          <div class="passwordRow">
+
+            <input
+              id="signinPassword"
+              type="password"
+              autocomplete="current-password"
+              required
+              placeholder="Enter your password">
+
+            <button
+              type="button"
+              class="showPassword"
+              onclick="togglePassword('signinPassword',this)">
+              Show
+            </button>
+
           </div>
+
         </div>
 
-        <div class="actions">
+        <div class="formOptions">
 
-          <a class="btn" href="index.html">
-            Return Home
+          <label class="remember">
+            <input
+              id="rememberMe"
+              type="checkbox"
+              checked>
+            Remember me
+          </label>
+
+          <a
+            class="forgot"
+            href="reset-password.html">
+            Forgot password?
           </a>
 
-          <button
-            id="signoutButton"
-            class="btn primary"
-            type="button"
-          >
-            Sign Out
-          </button>
+        </div>
+
+        <button
+          id="signinButton"
+          class="btn primary full"
+          type="submit">
+          Sign In
+        </button>
+
+      </form>
+
+      <!-- SIGN UP -->
+
+      <form id="signupForm" class="form signupOnly">
+
+        <div class="roleSwitch">
+
+          <div class="roleChoice">
+
+            <input
+              type="radio"
+              id="readerRole"
+              name="signupRole"
+              value="reader"
+              checked>
+
+            <label for="readerRole">
+              Reader
+            </label>
+
+          </div>
+
+          <div class="roleChoice">
+
+            <input
+              type="radio"
+              id="authorRole"
+              name="signupRole"
+              value="author">
+
+            <label for="authorRole">
+              Author
+            </label>
+
+          </div>
 
         </div>
+
+        <div class="field">
+
+          <label for="signupName">
+            Display Name
+          </label>
+
+          <input
+            id="signupName"
+            type="text"
+            autocomplete="name"
+            required
+            placeholder="Your display name">
+
+        </div>
+
+        <div class="field">
+
+          <label for="signupEmail">
+            Email Address
+          </label>
+
+          <input
+            id="signupEmail"
+            type="email"
+            autocomplete="email"
+            required
+            placeholder="you@example.com">
+
+        </div>
+
+        <div class="field">
+
+          <label for="signupPassword">
+            Password
+          </label>
+
+          <div class="passwordRow">
+
+            <input
+              id="signupPassword"
+              type="password"
+              autocomplete="new-password"
+              minlength="8"
+              required
+              placeholder="At least 8 characters">
+
+            <button
+              type="button"
+              class="showPassword"
+              onclick="togglePassword('signupPassword',this)">
+              Show
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="field">
+
+          <label for="signupPasswordConfirm">
+            Confirm Password
+          </label>
+
+          <div class="passwordRow">
+
+            <input
+              id="signupPasswordConfirm"
+              type="password"
+              autocomplete="new-password"
+              minlength="8"
+              required
+              placeholder="Repeat your password">
+
+            <button
+              type="button"
+              class="showPassword"
+              onclick="togglePassword('signupPasswordConfirm',this)">
+              Show
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="locationGrid">
+
+          <div class="field">
+
+            <label for="signupCountry">
+              Country
+            </label>
+
+            <input
+              id="signupCountry"
+              type="text"
+              autocomplete="country-name"
+              required
+              placeholder="Country">
+
+          </div>
+
+          <div class="field">
+
+            <label for="signupCity">
+              City / Region
+            </label>
+
+            <input
+              id="signupCity"
+              type="text"
+              autocomplete="address-level2"
+              required
+              placeholder="City or region">
+
+          </div>
+
+        </div>
+
+        <button
+          id="signupButton"
+          class="btn primary full"
+          type="submit">
+          Create Account
+        </button>
+
+      </form>
+
+      <div class="authFooter">
+
+        <span id="footerPrompt">
+          Don't have an account?
+        </span>
+
+        <button
+          type="button"
+          id="footerAction"
+          onclick="setMode('signup')">
+          Create one
+        </button>
 
       </div>
 
@@ -667,15 +891,17 @@ footer .wrap{
 
 <footer>
 
-  <div class="wrap">
+  <div class="wrap footerInner">
 
-    <span>
+    <div>
       © 2026 Reader Reach. All rights reserved.
-    </span>
+    </div>
 
-    <a href="index.html">
-      Every Book Has Its Readers.
-    </a>
+    <div class="footerLinks">
+      <a href="index.html">Home</a>
+      <a href="authors.html">Authors</a>
+      <a href="contact.html">Contact</a>
+    </div>
 
   </div>
 
@@ -684,15 +910,11 @@ footer .wrap{
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-
 const SUPABASE_URL =
   'https://bublmnfhyyrefcdkloak.supabase.co';
 
 const SUPABASE_PUBLISHABLE_KEY =
   'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
-
-const READER_REACH_STORAGE_KEY =
-  'reader-reach-auth';
 
 const supabaseClient =
   window.supabase.createClient(
@@ -700,401 +922,432 @@ const supabaseClient =
     SUPABASE_PUBLISHABLE_KEY,
     {
       auth:{
-        storage:window.localStorage,
-        storageKey:READER_REACH_STORAGE_KEY,
+        storageKey:'reader-reach-auth',
         persistSession:true,
         autoRefreshToken:true,
-        detectSessionInUrl:true
+        detectSessionInUrl:true,
+        storage:window.localStorage
       }
     }
   );
 
-const statusEl =
-  document.getElementById('status');
+const params =
+  new URLSearchParams(window.location.search);
 
-const modePanels = {
-  signin:'signinPanel',
-  reader:'readerPanel',
-  author:'authorPanel',
-  reset:'resetPanel'
-};
+let currentMode =
+  params.get('mode') || 'signin';
 
-function setStatus(message,type='success'){
+if(
+  currentMode !== 'signin' &&
+  currentMode !== 'signup' &&
+  currentMode !== 'reader' &&
+  currentMode !== 'author'
+){
+  currentMode = 'signin';
+}
 
-  statusEl.textContent = message;
+function setMode(mode){
 
-  statusEl.className =
+  currentMode = mode === 'author' || mode === 'reader'
+    ? 'signup'
+    : mode;
+
+  document
+    .getElementById('signinMode')
+    .classList.toggle(
+      'active',
+      currentMode === 'signin'
+    );
+
+  document
+    .getElementById('signupMode')
+    .classList.toggle(
+      'active',
+      currentMode === 'signup'
+    );
+
+  const signinForm =
+    document.getElementById('signinForm');
+
+  const signupForm =
+    document.getElementById('signupForm');
+
+  const cardTitle =
+    document.getElementById('cardTitle');
+
+  const cardSubtitle =
+    document.getElementById('cardSubtitle');
+
+  const footerPrompt =
+    document.getElementById('footerPrompt');
+
+  const footerAction =
+    document.getElementById('footerAction');
+
+  if(currentMode === 'signin'){
+
+    signinForm.style.display = 'grid';
+    signupForm.classList.remove('show');
+
+    cardTitle.textContent =
+      'Sign In';
+
+    cardSubtitle.textContent =
+      'Enter your Reader Reach account details.';
+
+    footerPrompt.textContent =
+      "Don't have an account?";
+
+    footerAction.textContent =
+      'Create one';
+
+    footerAction.onclick =
+      () => setMode('signup');
+
+  }else{
+
+    signinForm.style.display = 'none';
+    signupForm.classList.add('show');
+
+    cardTitle.textContent =
+      currentMode === 'author'
+        ? 'Create Author Account'
+        : 'Create Account';
+
+    cardSubtitle.textContent =
+      currentMode === 'author'
+        ? 'Create your Author account and submit your work for approval.'
+        : 'Create your Reader Reach account.';
+
+    footerPrompt.textContent =
+      'Already have an account?';
+
+    footerAction.textContent =
+      'Sign in';
+
+    footerAction.onclick =
+      () => setMode('signin');
+
+    if(currentMode === 'author'){
+      document.getElementById('authorRole').checked = true;
+    }
+
+    if(currentMode === 'reader'){
+      document.getElementById('readerRole').checked = true;
+    }
+  }
+
+  clearStatus();
+
+  const url =
+    currentMode === 'signup'
+      ? 'auth.html?mode=signup'
+      : currentMode === 'author'
+        ? 'auth.html?mode=author'
+        : currentMode === 'reader'
+          ? 'auth.html?mode=reader'
+          : 'auth.html?mode=signin';
+
+  window.history.replaceState({},'',url);
+}
+
+function togglePassword(id,button){
+
+  const input =
+    document.getElementById(id);
+
+  if(input.type === 'password'){
+
+    input.type = 'text';
+    button.textContent = 'Hide';
+
+  }else{
+
+    input.type = 'password';
+    button.textContent = 'Show';
+
+  }
+}
+
+function showStatus(message,type='error'){
+
+  const element =
+    document.getElementById('statusMessage');
+
+  element.textContent = message;
+  element.className =
     'status show ' + type;
-
 }
 
 function clearStatus(){
 
-  statusEl.textContent = '';
+  const element =
+    document.getElementById('statusMessage');
 
-  statusEl.className = 'status';
-
+  element.textContent = '';
+  element.className = 'status';
 }
 
-function showMode(mode){
+function safeNextPage(){
 
-  if(!modePanels[mode]){
-    mode = 'signin';
+  const requested =
+    params.get('next');
+
+  if(!requested){
+    return null;
   }
 
-  document
-    .querySelectorAll('.tab')
-    .forEach(tab => {
+  const allowedPages = [
+    'reader-dashboard.html',
+    'author-dashboard.html',
+    'moderator-dashboard.html',
+    'admin.html'
+  ];
 
-      tab.classList.toggle(
-        'active',
-        tab.dataset.mode === mode
-      );
+  if(
+    allowedPages.some(
+      page => requested === page
+    )
+  ){
+    return requested;
+  }
 
-    });
+  return null;
+}
 
-  document
-    .querySelectorAll('.panel')
-    .forEach(panel => {
+async function getProfile(userId){
 
-      panel.classList.remove('active');
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from('profiles')
+    .select('id,display_name,role,created_at')
+    .eq('id',userId)
+    .maybeSingle();
 
-    });
+  if(error){
+    console.error(
+      'Profile lookup error:',
+      error
+    );
+    return null;
+  }
 
-  document
-    .getElementById(modePanels[mode])
-    .classList.add('active');
+  return data;
+}
+
+async function redirectByRole(user){
+
+  if(!user){
+    return;
+  }
+
+  const requested =
+    safeNextPage();
+
+  if(requested){
+    window.location.href =
+      requested;
+
+    return;
+  }
+
+  const profile =
+    await getProfile(user.id);
+
+  if(!profile){
+
+    showStatus(
+      'Your account was authenticated, but your Reader Reach profile could not be found. Please contact support.',
+      'error'
+    );
+
+    return;
+  }
+
+  const role =
+    String(profile.role || '').toLowerCase();
+
+  if(role === 'admin'){
+    window.location.href =
+      'admin.html';
+
+  }else if(role === 'moderator'){
+    window.location.href =
+      'moderator-dashboard.html';
+
+  }else if(role === 'author'){
+    window.location.href =
+      'author-dashboard.html';
+
+  }else{
+    window.location.href =
+      'reader-dashboard.html';
+  }
+}
+
+async function handleSignIn(event){
+
+  event.preventDefault();
 
   clearStatus();
 
-}
+  const email =
+    document
+      .getElementById('signinEmail')
+      .value
+      .trim();
 
-function showAuth(){
+  const password =
+    document
+      .getElementById('signinPassword')
+      .value;
 
-  document.getElementById(
-    'authPanels'
-  ).style.display = 'block';
+  const button =
+    document.getElementById('signinButton');
 
-  document
-    .getElementById('accountPanel')
-    .classList.remove('show');
+  if(!email || !password){
 
-}
+    showStatus(
+      'Please enter your email address and password.'
+    );
 
-function showAccount(session){
+    return;
+  }
 
-  document.getElementById(
-    'authPanels'
-  ).style.display = 'none';
-
-  document
-    .getElementById('accountPanel')
-    .classList.add('show');
-
-  document.getElementById(
-    'accountEmail'
-  ).textContent =
-    session.user.email || '';
-
-  loadAccountProfile(session);
-
-}
-
-async function getProfile(session){
+  button.disabled = true;
+  button.textContent =
+    'Signing In...';
 
   const {
     data,
     error
   } =
-    await supabaseClient
-      .from('profiles')
-      .select(
-        'id,display_name,role'
-      )
-      .eq(
-        'id',
-        session.user.id
-      )
-      .maybeSingle();
+    await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  button.disabled = false;
+  button.textContent =
+    'Sign In';
 
   if(error){
-    throw error;
-  }
-
-  if(!data){
-    throw new Error(
-      'No Reader Reach profile was found for this account.'
-    );
-  }
-
-  return data;
-
-}
-
-async function loadAccountProfile(session){
-
-  document.getElementById(
-    'accountRole'
-  ).textContent = 'Loading...';
-
-  document.getElementById(
-    'accountStatus'
-  ).textContent =
-    'Checking account access...';
-
-  try{
-
-    const profile =
-      await getProfile(session);
-
-    const role =
-      profile.role || 'reader';
-
-    document.getElementById(
-      'accountRole'
-    ).textContent =
-      role.charAt(0).toUpperCase() +
-      role.slice(1);
-
-    if(role === 'author'){
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('authors')
-          .select('status')
-          .eq(
-            'profile_id',
-            session.user.id
-          )
-          .maybeSingle();
-
-      if(error){
-        throw error;
-      }
-
-      document.getElementById(
-        'accountStatus'
-      ).textContent =
-        data?.status
-          ? 'Author account: ' + data.status
-          : 'Author account awaiting setup.';
-
-    }else if(role === 'reader'){
-
-      document.getElementById(
-        'accountStatus'
-      ).textContent =
-        'Reader access is active.';
-
-    }else{
-
-      document.getElementById(
-        'accountStatus'
-      ).textContent =
-        'Role access is active.';
-
-    }
-
-  }catch(error){
 
     console.error(
-      'Reader Reach profile lookup failed:',
+      'Sign in error:',
       error
     );
 
-    document.getElementById(
-      'accountRole'
-    ).textContent =
-      'Unavailable';
-
-    document.getElementById(
-      'accountStatus'
-    ).textContent =
-      'Your account is signed in, but your account details could not be loaded.';
-
-  }
-
-}
-
-async function routeAuthenticatedUser(session){
-
-  if(!session){
-
-    showAuth();
-    showMode('signin');
+    showStatus(
+      error.message ||
+      'Sign in failed. Please check your details and try again.'
+    );
 
     return;
-
   }
 
-  try{
+  if(!data.user){
 
-    const profile =
-      await getProfile(session);
-
-    const role =
-      profile.role || 'reader';
-
-    /*
-      Reader accounts go to the Reader dashboard.
-    */
-    if(role === 'reader'){
-
-      await supabaseClient.auth.setSession({
-        access_token:session.access_token,
-        refresh_token:session.refresh_token
-      });
-
-      window.location.replace(
-        'reader-dashboard.html'
-      );
-
-      return;
-
-    }
-
-    /*
-      Approved Author accounts go directly
-      to the Author dashboard.
-    */
-    if(role === 'author'){
-
-      const {
-        data:author,
-        error:authorError
-      } =
-        await supabaseClient
-          .from('authors')
-          .select('id,status')
-          .eq(
-            'profile_id',
-            session.user.id
-          )
-          .maybeSingle();
-
-      if(authorError){
-        throw authorError;
-      }
-
-      if(
-        author &&
-        author.status === 'approved'
-      ){
-
-        await supabaseClient.auth.setSession({
-          access_token:session.access_token,
-          refresh_token:session.refresh_token
-        });
-
-        window.location.replace(
-          'author-dashboard.html'
-        );
-
-        return;
-
-      }
-
-      /*
-        If an Author role exists but the author
-        record is not approved, keep the user
-        on the account page.
-      */
-      showAccount(session);
-
-      history.replaceState(
-        {},
-        '',
-        'auth.html?mode=account'
-      );
-
-      return;
-
-    }
-
-    /*
-      Admin routing is prepared for the existing
-      Admin dashboard.
-    */
-    if(role === 'admin'){
-
-      await supabaseClient.auth.setSession({
-        access_token:session.access_token,
-        refresh_token:session.refresh_token
-      });
-
-      window.location.replace(
-        'admin-dashboard.html'
-      );
-
-      return;
-
-    }
-
-    /*
-      Moderator routing will use the Moderator
-      dashboard when that dashboard is in place.
-      Until then, keep the account page available.
-    */
-    if(role === 'moderator'){
-
-      showAccount(session);
-
-      history.replaceState(
-        {},
-        '',
-        'auth.html?mode=account'
-      );
-
-      return;
-
-    }
-
-    showAccount(session);
-
-    history.replaceState(
-      {},
-      '',
-      'auth.html?mode=account'
+    showStatus(
+      'Sign in did not return an account.'
     );
 
-  }catch(error){
-
-    console.error(
-      'Reader Reach account routing failed:',
-      error
-    );
-
-    showAccount(session);
-
-    setStatus(
-      'Your account is signed in, but your account details could not be loaded.',
-      'error'
-    );
-
+    return;
   }
 
+  showStatus(
+    'Signed in successfully. Opening your dashboard...',
+    'success'
+  );
+
+  await redirectByRole(data.user);
 }
 
-function getUrlMode(){
+async function handleSignUp(event){
 
-  const mode =
-    new URLSearchParams(
-      window.location.search
-    ).get('mode');
+  event.preventDefault();
 
-  return mode || 'signin';
+  clearStatus();
 
-}
+  const displayName =
+    document
+      .getElementById('signupName')
+      .value
+      .trim();
 
-async function signUpCommon({
-  email,
-  password,
-  name,
-  authorRequest = false
-}){
+  const email =
+    document
+      .getElementById('signupEmail')
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById('signupPassword')
+      .value;
+
+  const confirmPassword =
+    document
+      .getElementById('signupPasswordConfirm')
+      .value;
+
+  const country =
+    document
+      .getElementById('signupCountry')
+      .value
+      .trim();
+
+  const city =
+    document
+      .getElementById('signupCity')
+      .value
+      .trim();
+
+  const role =
+    document.querySelector(
+      'input[name="signupRole"]:checked'
+    )?.value || 'reader';
+
+  if(!displayName ||
+     !email ||
+     !password ||
+     !confirmPassword ||
+     !country ||
+     !city){
+
+    showStatus(
+      'Please complete all required fields.'
+    );
+
+    return;
+  }
+
+  if(password.length < 8){
+
+    showStatus(
+      'Password must contain at least 8 characters.'
+    );
+
+    return;
+  }
+
+  if(password !== confirmPassword){
+
+    showStatus(
+      'The passwords do not match.'
+    );
+
+    return;
+  }
+
+  const button =
+    document.getElementById('signupButton');
+
+  button.disabled = true;
+  button.textContent =
+    'Creating Account...';
 
   const {
     data,
@@ -1105,546 +1358,96 @@ async function signUpCommon({
       password,
       options:{
         data:{
-          display_name:name,
-          full_name:name
+          display_name:displayName,
+          role:role,
+          location_country:country,
+          location_city_region:city
         }
       }
     });
 
   if(error){
-    throw error;
-  }
 
-  if(!data.user){
-    throw new Error(
-      'The account could not be created.'
+    console.error(
+      'Signup error:',
+      error
     );
+
+    button.disabled = false;
+    button.textContent =
+      'Create Account';
+
+    showStatus(
+      error.message ||
+      'Account creation failed.'
+    );
+
+    return;
   }
 
-  if(authorRequest){
+  /*
+   * The database should create the profile/role records
+   * through the existing Supabase signup trigger/policies.
+   *
+   * We do not expose private location publicly.
+   */
 
-    const {
-      error:requestError
-    } =
-      await supabaseClient
-        .from('access_requests')
-        .insert({
-          profile_id:data.user.id,
-          requested_role:'author',
-          message:
-            document
-              .getElementById(
-                'authorMessage'
-              )
-              .value
-              .trim() || null
-        });
+  if(data.user && data.session){
 
-    if(requestError){
-      throw requestError;
-    }
+    showStatus(
+      'Account created successfully. Opening your dashboard...',
+      'success'
+    );
 
+    await redirectByRole(data.user);
+
+    return;
   }
 
-  return data;
+  button.disabled = false;
+  button.textContent =
+    'Create Account';
 
+  showStatus(
+    'Account created. Please check your email to confirm your account before signing in.',
+    'success'
+  );
+
+  setMode('signin');
 }
-
-document
-  .querySelectorAll('.tab')
-  .forEach(tab => {
-
-    tab.addEventListener(
-      'click',
-      () => {
-
-        showMode(
-          tab.dataset.mode
-        );
-
-      }
-    );
-
-  });
-
-document
-  .querySelectorAll('[data-switch]')
-  .forEach(button => {
-
-    button.addEventListener(
-      'click',
-      () => {
-
-        showMode(
-          button.dataset.switch
-        );
-
-      }
-    );
-
-  });
 
 document
   .getElementById('signinForm')
   .addEventListener(
     'submit',
-    async event => {
-
-      event.preventDefault();
-
-      clearStatus();
-
-      const button =
-        event.target.querySelector(
-          'button[type=submit]'
-        );
-
-      button.disabled = true;
-
-      try{
-
-        const {
-          data,
-          error
-        } =
-          await supabaseClient.auth
-            .signInWithPassword({
-
-              email:
-                document
-                  .getElementById(
-                    'signinEmail'
-                  )
-                  .value
-                  .trim(),
-
-              password:
-                document
-                  .getElementById(
-                    'signinPassword'
-                  )
-                  .value
-
-            });
-
-        if(error){
-          throw error;
-        }
-
-        if(!data.session){
-          throw new Error(
-            'Sign-in completed, but no active session was returned.'
-          );
-        }
-
-        setStatus(
-          'Signed in successfully.',
-          'success'
-        );
-
-        await routeAuthenticatedUser(
-          data.session
-        );
-
-      }catch(error){
-
-        console.error(
-          'Reader Reach sign-in failed:',
-          error
-        );
-
-        setStatus(
-          error.message ||
-          'Unable to sign in.',
-          'error'
-        );
-
-      }finally{
-
-        button.disabled = false;
-
-      }
-
-    }
+    handleSignIn
   );
 
 document
-  .getElementById('readerForm')
+  .getElementById('signupForm')
   .addEventListener(
     'submit',
-    async event => {
-
-      event.preventDefault();
-
-      clearStatus();
-
-      const button =
-        event.target.querySelector(
-          'button[type=submit]'
-        );
-
-      button.disabled = true;
-
-      try{
-
-        const data =
-          await signUpCommon({
-
-            email:
-              document
-                .getElementById(
-                  'readerEmail'
-                )
-                .value
-                .trim(),
-
-            password:
-              document
-                .getElementById(
-                  'readerPassword'
-                )
-                .value,
-
-            name:
-              document
-                .getElementById(
-                  'readerName'
-                )
-                .value
-                .trim()
-
-          });
-
-        if(data.session){
-
-          setStatus(
-            'Reader account created and signed in.',
-            'success'
-          );
-
-          await routeAuthenticatedUser(
-            data.session
-          );
-
-        }else{
-
-          setStatus(
-            'Reader account created. You can now sign in.',
-            'success'
-          );
-
-          showMode('signin');
-
-        }
-
-      }catch(error){
-
-        console.error(error);
-
-        setStatus(
-          error.message ||
-          'Unable to create the Reader account.',
-          'error'
-        );
-
-      }finally{
-
-        button.disabled = false;
-
-      }
-
-    }
-  );
-
-document
-  .getElementById('authorForm')
-  .addEventListener(
-    'submit',
-    async event => {
-
-      event.preventDefault();
-
-      clearStatus();
-
-      const button =
-        event.target.querySelector(
-          'button[type=submit]'
-        );
-
-      button.disabled = true;
-
-      try{
-
-        const data =
-          await signUpCommon({
-
-            email:
-              document
-                .getElementById(
-                  'authorEmail'
-                )
-                .value
-                .trim(),
-
-            password:
-              document
-                .getElementById(
-                  'authorPassword'
-                )
-                .value,
-
-            name:
-              document
-                .getElementById(
-                  'authorName'
-                )
-                .value
-                .trim(),
-
-            authorRequest:true
-
-          });
-
-        if(data.session){
-
-          setStatus(
-            'Account created and Author access requested. Admin approval is required.',
-            'success'
-          );
-
-          showAccount(
-            data.session
-          );
-
-          history.replaceState(
-            {},
-            '',
-            'auth.html?mode=account'
-          );
-
-        }else{
-
-          setStatus(
-            'Account created and Author access requested. You can now sign in.',
-            'success'
-          );
-
-          showMode('signin');
-
-        }
-
-      }catch(error){
-
-        console.error(error);
-
-        setStatus(
-          error.message ||
-          'Unable to create the Author account.',
-          'error'
-        );
-
-      }finally{
-
-        button.disabled = false;
-
-      }
-
-    }
-  );
-
-document
-  .getElementById('resetForm')
-  .addEventListener(
-    'submit',
-    async event => {
-
-      event.preventDefault();
-
-      clearStatus();
-
-      const button =
-        event.target.querySelector(
-          'button[type=submit]'
-        );
-
-      button.disabled = true;
-
-      try{
-
-        const email =
-          document
-            .getElementById(
-              'resetEmail'
-            )
-            .value
-            .trim();
-
-        const redirectTo =
-          new URL(
-            'auth.html',
-            window.location.href
-          ).href +
-          '?mode=reset';
-
-        const {
-          error
-        } =
-          await supabaseClient.auth
-            .resetPasswordForEmail(
-              email,
-              {
-                redirectTo
-              }
-            );
-
-        if(error){
-          throw error;
-        }
-
-        setStatus(
-          'Password reset instructions have been sent if the email belongs to a Reader Reach account.',
-          'success'
-        );
-
-      }catch(error){
-
-        console.error(error);
-
-        setStatus(
-          error.message ||
-          'Unable to send the reset link.',
-          'error'
-        );
-
-      }finally{
-
-        button.disabled = false;
-
-      }
-
-    }
-  );
-
-document
-  .getElementById('signoutButton')
-  .addEventListener(
-    'click',
-    async () => {
-
-      const {
-        error
-      } =
-        await supabaseClient.auth
-          .signOut();
-
-      if(error){
-
-        setStatus(
-          error.message ||
-          'Unable to sign out.',
-          'error'
-        );
-
-        return;
-
-      }
-
-      showAuth();
-
-      showMode('signin');
-
-      history.replaceState(
-        {},
-        '',
-        'auth.html?mode=signin'
-      );
-
-      setStatus(
-        'You have been signed out.',
-        'success'
-      );
-
-    }
+    handleSignUp
   );
 
 supabaseClient.auth.onAuthStateChange(
-  (event,session) => {
+  async(event,session) => {
 
-    if(event === 'SIGNED_OUT'){
+    if(
+      event === 'SIGNED_IN' &&
+      session?.user &&
+      currentMode === 'signin'
+    ){
 
-      showAuth();
-
-      showMode('signin');
-
-      history.replaceState(
-        {},
-        '',
-        'auth.html?mode=signin'
+      await redirectByRole(
+        session.user
       );
-
     }
 
   }
 );
 
-async function initializeAuth(){
-
-  try{
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.auth
-        .getSession();
-
-    if(error){
-      throw error;
-    }
-
-    const session =
-      data.session;
-
-    if(session){
-
-      await routeAuthenticatedUser(
-        session
-      );
-
-    }else{
-
-      showAuth();
-
-      showMode(
-        getUrlMode()
-      );
-
-    }
-
-  }catch(error){
-
-    console.error(
-      'Reader Reach authentication initialization failed:',
-      error
-    );
-
-    showAuth();
-
-    showMode(
-      getUrlMode()
-    );
-
-    setStatus(
-      'Unable to load your account session. Please try again.',
-      'error'
-    );
-
-  }
-
-}
-
-initializeAuth();
-
+setMode(currentMode);
 </script>
 
 </body>

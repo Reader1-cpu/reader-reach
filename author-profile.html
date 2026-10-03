@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Author Profile | Reader Reach</title>
+
   <meta
     name="description"
     content="Explore an author and discover their books on Reader Reach."
@@ -347,15 +348,22 @@
     }
 
     .book-cover {
-      height: 220px;
+      height: 280px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background:
-        linear-gradient(145deg, #eadcc7, #f5ecdd);
+      background: linear-gradient(145deg, #eadcc7, #f5ecdd);
       color: var(--brown);
       padding: 25px;
       text-align: center;
+      overflow: hidden;
+    }
+
+    .book-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .book-cover-title {
@@ -390,16 +398,57 @@
       font-size: 0.75rem;
     }
 
-    .book-link {
-      display: inline-block;
+    .book-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
       margin-top: 17px;
-      color: var(--brown);
-      font-weight: 700;
-      font-size: 0.88rem;
     }
 
-    .book-link span {
-      color: var(--gold);
+    .book-link,
+    .save-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .book-link {
+      color: white;
+      background: var(--brown);
+      border: 1px solid var(--brown);
+    }
+
+    .book-link:hover {
+      background: #2e1e16;
+    }
+
+    .save-button {
+      color: var(--brown);
+      background: transparent;
+      border: 1px solid var(--brown);
+    }
+
+    .save-button:hover {
+      background: var(--cream);
+    }
+
+    .save-button.saved {
+      color: var(--success);
+      border-color: var(--success);
+      background: #f1f8f2;
+      cursor: default;
+    }
+
+    .save-button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
     }
 
     /* STATES */
@@ -611,6 +660,7 @@
       style="display:none;"
     >
       <h2>Author not found</h2>
+
       <p>
         We couldn't find the author you're looking for.
       </p>
@@ -744,10 +794,13 @@
     >
 
       <div class="section-heading">
+
         <h2>Books by this author</h2>
+
         <p>
           Explore the author's approved books on Reader Reach.
         </p>
+
       </div>
 
       <div
@@ -769,6 +822,7 @@
 
   <!-- FOOTER -->
   <footer>
+
     <div class="footer-inner">
 
       <div class="footer-brand">
@@ -780,9 +834,11 @@
       </div>
 
     </div>
+
   </footer>
 
   <script>
+
     const SUPABASE_URL =
       "https://bublmnfhyyrefcdkloak.supabase.co";
 
@@ -795,6 +851,7 @@
       SUPABASE_URL,
       SUPABASE_PUBLISHABLE_KEY
     );
+
 
     const loadingState =
       document.getElementById("loadingState");
@@ -843,10 +900,33 @@
 
 
     /* --------------------------------
+       PAGE STATE
+    -------------------------------- */
+
+    let currentAuthor = null;
+    let currentUser = null;
+    let isFollowing = false;
+
+
+    /*
+      Stores the saved state of each approved
+      book for the currently signed-in reader.
+
+      Example:
+
+      {
+        "book-uuid": true
+      }
+    */
+    let savedBooks = {};
+
+
+    /* --------------------------------
        HELPERS
     -------------------------------- */
 
     function escapeHtml(value) {
+
       if (
         value === null ||
         value === undefined
@@ -864,19 +944,23 @@
 
 
     function getInitials(name) {
+
       if (!name) {
         return "?";
       }
 
-      const words = String(name)
-        .trim()
-        .split(/\s+/)
-        .filter(Boolean);
+      const words =
+        String(name)
+          .trim()
+          .split(/\s+/)
+          .filter(Boolean);
 
       if (words.length === 1) {
+
         return words[0]
           .substring(0, 2)
           .toUpperCase();
+
       }
 
       return (
@@ -886,56 +970,68 @@
     }
 
 
-    function shortenText(text, maxLength = 170) {
+    function shortenText(
+      text,
+      maxLength = 170
+    ) {
+
       if (!text) {
         return "";
       }
 
-      const clean = String(text).trim();
+      const clean =
+        String(text).trim();
 
       if (clean.length <= maxLength) {
         return clean;
       }
 
       return (
-        clean.substring(0, maxLength - 3).trimEnd() +
+        clean
+          .substring(0, maxLength - 3)
+          .trimEnd() +
         "..."
       );
     }
 
 
-    function showMessage(text, type = "") {
+    function showMessage(
+      text,
+      type = ""
+    ) {
+
       message.textContent = text;
 
-      message.className = "message show";
+      message.className =
+        "message show";
 
       if (type) {
         message.classList.add(type);
       }
 
-      clearTimeout(showMessage.timeout);
+      clearTimeout(
+        showMessage.timeout
+      );
 
-      showMessage.timeout = setTimeout(() => {
-        message.className = "message";
-      }, 3500);
+      showMessage.timeout =
+        setTimeout(() => {
+
+          message.className =
+            "message";
+
+        }, 3500);
     }
 
 
     function getAuthorId() {
+
       const params =
-        new URLSearchParams(window.location.search);
+        new URLSearchParams(
+          window.location.search
+        );
 
       return params.get("id");
     }
-
-
-    /* --------------------------------
-       PAGE STATE
-    -------------------------------- */
-
-    let currentAuthor = null;
-    let currentUser = null;
-    let isFollowing = false;
 
 
     /* --------------------------------
@@ -943,20 +1039,26 @@
     -------------------------------- */
 
     async function loadCurrentUser() {
+
       try {
+
         const {
           data,
           error
         } = await db.auth.getUser();
 
         if (error) {
+
           currentUser = null;
           return;
+
         }
 
-        currentUser = data?.user || null;
+        currentUser =
+          data?.user || null;
 
       } catch (error) {
+
         console.error(
           "Unable to load current user:",
           error
@@ -971,7 +1073,9 @@
        LOAD AUTHOR
     -------------------------------- */
 
-    async function loadAuthor(authorId) {
+    async function loadAuthor(
+      authorId
+    ) {
 
       const {
         data,
@@ -992,6 +1096,7 @@
         .maybeSingle();
 
       if (error) {
+
         console.error(
           "Author loading error:",
           error
@@ -1009,10 +1114,12 @@
 
 
     /* --------------------------------
-       LOAD BOOKS
+       LOAD APPROVED BOOKS
     -------------------------------- */
 
-    async function loadBooks(authorId) {
+    async function loadBooks(
+      authorId
+    ) {
 
       const {
         data,
@@ -1021,11 +1128,13 @@
         .from("books")
         .select(`
           id,
+          author_id,
           title,
           description,
           genre_topic,
           availability,
           book_link,
+          cover_url,
           status,
           created_at
         `)
@@ -1036,6 +1145,7 @@
         });
 
       if (error) {
+
         console.error(
           "Books loading error:",
           error
@@ -1049,10 +1159,84 @@
 
 
     /* --------------------------------
+       LOAD SAVED BOOKS
+    -------------------------------- */
+
+    async function loadSavedBooks(
+      books
+    ) {
+
+      savedBooks = {};
+
+      if (
+        !currentUser ||
+        !books ||
+        books.length === 0
+      ) {
+        return;
+      }
+
+      const bookIds =
+        books
+          .map(book => book.id)
+          .filter(Boolean);
+
+      if (!bookIds.length) {
+        return;
+      }
+
+      const {
+        data,
+        error
+      } = await db
+        .from("reader_books")
+        .select(`
+          id,
+          book_id
+        `)
+        .eq(
+          "reader_id",
+          currentUser.id
+        )
+        .in(
+          "book_id",
+          bookIds
+        );
+
+      if (error) {
+
+        console.error(
+          "Saved books loading error:",
+          error
+        );
+
+        /*
+          We don't block the author profile if
+          the reader shelf cannot be checked.
+        */
+
+        savedBooks = {};
+
+        return;
+      }
+
+      (data || []).forEach(row => {
+
+        if (row.book_id) {
+          savedBooks[row.book_id] = true;
+        }
+
+      });
+    }
+
+
+    /* --------------------------------
        LOAD FOLLOWERS
     -------------------------------- */
 
-    async function loadFollowerCount(authorId) {
+    async function loadFollowerCount(
+      authorId
+    ) {
 
       const {
         count,
@@ -1063,9 +1247,13 @@
           count: "exact",
           head: true
         })
-        .eq("author_id", authorId);
+        .eq(
+          "author_id",
+          authorId
+        );
 
       if (error) {
+
         console.error(
           "Follower count error:",
           error
@@ -1082,7 +1270,9 @@
        LOAD FOLLOWING
     -------------------------------- */
 
-    async function loadFollowingCount(profileId) {
+    async function loadFollowingCount(
+      profileId
+    ) {
 
       if (!profileId) {
         return 0;
@@ -1103,6 +1293,7 @@
         );
 
       if (error) {
+
         console.error(
           "Following count error:",
           error
@@ -1145,6 +1336,7 @@
         .maybeSingle();
 
       if (error) {
+
         console.error(
           "Follow status error:",
           error
@@ -1161,7 +1353,9 @@
        RENDER PROFILE
     -------------------------------- */
 
-    function renderProfile(author) {
+    function renderProfile(
+      author
+    ) {
 
       authorName.textContent =
         author.author_name ||
@@ -1172,22 +1366,30 @@
         "This author has not added a biography yet.";
 
       authorAvatar.textContent =
-        getInitials(author.author_name);
+        getInitials(
+          author.author_name
+        );
+
 
       if (author.website_url) {
 
         let website =
-          String(author.website_url).trim();
+          String(
+            author.website_url
+          ).trim();
 
         if (
           !website.startsWith("http://") &&
           !website.startsWith("https://")
         ) {
+
           website =
             "https://" + website;
         }
 
-        authorWebsite.href = website;
+        authorWebsite.href =
+          website;
+
         authorWebsite.style.display =
           "inline-block";
 
@@ -1205,12 +1407,6 @@
 
     function renderFollowButton() {
 
-      /*
-       * Not signed in:
-       * show Follow button, but clicking it
-       * takes the reader to sign in.
-       */
-
       if (!currentUser) {
 
         followButton.textContent =
@@ -1220,7 +1416,8 @@
           "following"
         );
 
-        followButton.disabled = false;
+        followButton.disabled =
+          false;
 
         followNote.textContent =
           "Sign in to follow";
@@ -1228,11 +1425,6 @@
         return;
       }
 
-
-      /*
-       * Author viewing their own profile:
-       * don't allow self-follow.
-       */
 
       if (
         currentAuthor &&
@@ -1243,7 +1435,8 @@
         followButton.textContent =
           "Your Profile";
 
-        followButton.disabled = true;
+        followButton.disabled =
+          true;
 
         followButton.classList.remove(
           "following"
@@ -1256,10 +1449,6 @@
       }
 
 
-      /*
-       * Following
-       */
-
       if (isFollowing) {
 
         followButton.textContent =
@@ -1269,7 +1458,8 @@
           "following"
         );
 
-        followButton.disabled = false;
+        followButton.disabled =
+          false;
 
         followNote.textContent =
           "Click to unfollow";
@@ -1278,10 +1468,6 @@
       }
 
 
-      /*
-       * Not following
-       */
-
       followButton.textContent =
         "Follow";
 
@@ -1289,7 +1475,8 @@
         "following"
       );
 
-      followButton.disabled = false;
+      followButton.disabled =
+        false;
 
       followNote.textContent =
         "Follow this author";
@@ -1321,8 +1508,8 @@
         return;
       }
 
-
-      followButton.disabled = true;
+      followButton.disabled =
+        true;
 
       try {
 
@@ -1340,11 +1527,6 @@
 
 
         if (error) {
-
-          /*
-           * The unique constraint prevents
-           * duplicate follows.
-           */
 
           if (
             error.code === "23505"
@@ -1409,7 +1591,8 @@
         return;
       }
 
-      followButton.disabled = true;
+      followButton.disabled =
+        true;
 
       try {
 
@@ -1427,11 +1610,9 @@
             currentAuthor.id
           );
 
-
         if (error) {
           throw error;
         }
-
 
         isFollowing = false;
 
@@ -1504,10 +1685,225 @@
 
 
     /* --------------------------------
+       CHECK WHETHER BOOK IS SAVED
+    -------------------------------- */
+
+    function isBookSaved(
+      bookId
+    ) {
+
+      return !!savedBooks[bookId];
+    }
+
+
+    /* --------------------------------
+       SAVE BOOK TO MY BOOKS
+    -------------------------------- */
+
+    async function saveBookToMyBooks(
+      bookId
+    ) {
+
+      if (!currentUser) {
+
+        window.location.href =
+          "auth.html?mode=reader";
+
+        return;
+      }
+
+      if (!bookId) {
+        return;
+      }
+
+
+      if (isBookSaved(bookId)) {
+
+        showMessage(
+          "This book is already in your shelf.",
+          "success"
+        );
+
+        return;
+      }
+
+
+      const button =
+        document.querySelector(
+          `[data-save-book="${CSS.escape(bookId)}"]`
+        );
+
+
+      if (button) {
+
+        button.disabled =
+          true;
+
+        button.textContent =
+          "Saving...";
+      }
+
+
+      try {
+
+        /*
+          IMPORTANT:
+
+          We intentionally do NOT send a
+          reader_books.status value here.
+
+          Your database has already rejected
+          the value "reading" for the
+          reader_book_status enum.
+
+          Saving a book should mean adding
+          the reader/book relationship.
+        */
+
+        const {
+          error
+        } = await db
+          .from("reader_books")
+          .insert({
+            reader_id:
+              currentUser.id,
+
+            book_id:
+              bookId
+          });
+
+
+        if (error) {
+
+          /*
+            PostgreSQL unique violation means
+            the book is already saved.
+          */
+
+          if (
+            error.code === "23505"
+          ) {
+
+            savedBooks[bookId] =
+              true;
+
+            updateBookSaveButton(
+              bookId
+            );
+
+            showMessage(
+              "This book is already in your shelf.",
+              "success"
+            );
+
+            return;
+          }
+
+          throw error;
+        }
+
+
+        savedBooks[bookId] =
+          true;
+
+        updateBookSaveButton(
+          bookId
+        );
+
+        showMessage(
+          "Book saved to My Books.",
+          "success"
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Save book error:",
+          error
+        );
+
+        if (button) {
+
+          button.disabled =
+            false;
+
+          button.textContent =
+            "Save to My Books";
+        }
+
+
+        /*
+          Give the user the actual database
+          message when Supabase rejects the
+          insert. This makes schema/RLS
+          problems visible instead of silently
+          pretending the save worked.
+        */
+
+        const errorText =
+          error?.message ||
+          "We couldn't save this book. Please try again.";
+
+        showMessage(
+          errorText,
+          "error"
+        );
+      }
+    }
+
+
+    /* --------------------------------
+       UPDATE SAVE BUTTON
+    -------------------------------- */
+
+    function updateBookSaveButton(
+      bookId
+    ) {
+
+      const button =
+        document.querySelector(
+          `[data-save-book="${CSS.escape(bookId)}"]`
+        );
+
+      if (!button) {
+        return;
+      }
+
+
+      if (isBookSaved(bookId)) {
+
+        button.textContent =
+          "Saved to My Books";
+
+        button.classList.add(
+          "saved"
+        );
+
+        button.disabled =
+          true;
+
+      } else {
+
+        button.textContent =
+          "Save to My Books";
+
+        button.classList.remove(
+          "saved"
+        );
+
+        button.disabled =
+          false;
+      }
+    }
+
+
+    /* --------------------------------
        RENDER BOOKS
     -------------------------------- */
 
-    function renderBooks(books) {
+    function renderBooks(
+      books
+    ) {
 
       bookCount.textContent =
         books.length;
@@ -1519,13 +1915,22 @@
       if (!books.length) {
 
         booksGrid.innerHTML = `
-          <div class="state-box" style="grid-column:1/-1;">
-            <h2>No approved books yet</h2>
+
+          <div
+            class="state-box"
+            style="grid-column:1/-1;">
+
+            <h2>
+              No approved books yet
+            </h2>
+
             <p>
               This author hasn't published an approved
               book on Reader Reach yet.
             </p>
+
           </div>
+
         `;
 
         return;
@@ -1541,6 +1946,7 @@
               "Untitled Book"
             );
 
+
           const description =
             escapeHtml(
               shortenText(
@@ -1549,6 +1955,7 @@
               )
             );
 
+
           const genre =
             escapeHtml(
               book.genre_topic ||
@@ -1556,43 +1963,162 @@
             );
 
 
+          /*
+            Cover image
+
+            If Taiwo's approved book has a
+            cover_url, display it.
+
+            Otherwise show the book title
+            placeholder.
+          */
+
+          let coverHTML = `
+
+            <div class="book-cover-title">
+              ${title}
+            </div>
+
+          `;
+
+
+          if (book.cover_url) {
+
+            const safeCover =
+              String(
+                book.cover_url
+              ).trim();
+
+            if (
+              safeCover.startsWith("https://") ||
+              safeCover.startsWith("http://")
+            ) {
+
+              coverHTML = `
+
+                <img
+                  src="${escapeHtml(safeCover)}"
+                  alt="${title} cover"
+                  loading="lazy"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                />
+
+                <div
+                  class="book-cover-title"
+                  style="display:none;"
+                >
+                  ${title}
+                </div>
+
+              `;
+            }
+          }
+
+
+          /*
+            External book link
+          */
+
           let bookLink = "";
+
 
           if (book.book_link) {
 
             let safeLink =
-              String(book.book_link).trim();
+              String(
+                book.book_link
+              ).trim();
 
             if (
               !safeLink.startsWith("http://") &&
               !safeLink.startsWith("https://")
             ) {
+
               safeLink =
                 "https://" + safeLink;
             }
 
+
             bookLink = `
+
               <a
                 href="${escapeHtml(safeLink)}"
                 class="book-link"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                View Book
-                <span>→</span>
+                View Book →
               </a>
+
+            `;
+          }
+
+
+          /*
+            Save button
+
+            Signed-out readers get a button
+            that takes them to reader sign-in.
+
+            Signed-in readers get the real
+            Save to My Books functionality.
+          */
+
+          let saveButton = "";
+
+
+          if (currentUser) {
+
+            const saved =
+              isBookSaved(book.id);
+
+
+            saveButton = `
+
+              <button
+                type="button"
+                class="save-button ${saved ? "saved" : ""}"
+                data-save-book="${escapeHtml(book.id)}"
+                ${saved ? "disabled" : ""}
+              >
+                ${
+                  saved
+                    ? "Saved to My Books"
+                    : "Save to My Books"
+                }
+              </button>
+
+            `;
+
+          } else {
+
+            saveButton = `
+
+              <button
+                type="button"
+                class="save-button"
+                data-signin-book="${escapeHtml(book.id)}"
+              >
+                Save to My Books
+              </button>
+
             `;
           }
 
 
           return `
-            <article class="book-card">
+
+            <article
+              class="book-card"
+              data-book-id="${escapeHtml(book.id)}"
+            >
 
               <div class="book-cover">
-                <div class="book-cover-title">
-                  ${title}
-                </div>
+
+                ${coverHTML}
+
               </div>
+
 
               <div class="book-body">
 
@@ -1600,22 +2126,80 @@
                   ${title}
                 </h3>
 
+
                 <p class="book-description">
                   ${description}
                 </p>
+
 
                 <span class="book-genre">
                   ${genre}
                 </span>
 
-                ${bookLink}
+
+                <div class="book-actions">
+
+                  ${bookLink}
+
+                  ${saveButton}
+
+                </div>
 
               </div>
 
             </article>
+
           `;
 
         }).join("");
+
+
+      /*
+        Wire up save buttons after rendering.
+      */
+
+      books.forEach(book => {
+
+        const saveButton =
+          document.querySelector(
+            `[data-save-book="${CSS.escape(book.id)}"]`
+          );
+
+        if (saveButton) {
+
+          saveButton.addEventListener(
+            "click",
+            () => {
+
+              saveBookToMyBooks(
+                book.id
+              );
+
+            }
+          );
+        }
+
+
+        const signInButton =
+          document.querySelector(
+            `[data-signin-book="${CSS.escape(book.id)}"]`
+          );
+
+        if (signInButton) {
+
+          signInButton.addEventListener(
+            "click",
+            () => {
+
+              window.location.href =
+                "auth.html?mode=reader";
+
+            }
+          );
+        }
+
+      });
+
     }
 
 
@@ -1644,18 +2228,20 @@
       try {
 
         /*
-         * Load session first.
-         */
+          Load session first.
+        */
 
         await loadCurrentUser();
 
 
         /*
-         * Load author.
-         */
+          Load approved author.
+        */
 
         const author =
-          await loadAuthor(authorId);
+          await loadAuthor(
+            authorId
+          );
 
 
         if (!author) {
@@ -1675,25 +2261,46 @@
 
 
         /*
-         * Render basic profile.
-         */
+          Render basic profile.
+        */
 
-        renderProfile(author);
+        renderProfile(
+          author
+        );
 
 
         /*
-         * Load books.
-         */
+          Load approved books.
+        */
 
         const books =
-          await loadBooks(author.id);
-
-        renderBooks(books);
+          await loadBooks(
+            author.id
+          );
 
 
         /*
-         * Load follower count.
-         */
+          Load which books this reader
+          has already saved.
+
+          This happens BEFORE rendering
+          the buttons so saved books are
+          immediately shown correctly.
+        */
+
+        await loadSavedBooks(
+          books
+        );
+
+
+        renderBooks(
+          books
+        );
+
+
+        /*
+          Load follower count.
+        */
 
         const followers =
           await loadFollowerCount(
@@ -1705,9 +2312,9 @@
 
 
         /*
-         * Load following count for the
-         * author account itself.
-         */
+          Load following count for
+          this author's account.
+        */
 
         const following =
           await loadFollowingCount(
@@ -1719,9 +2326,9 @@
 
 
         /*
-         * Check whether current signed-in
-         * user follows this author.
-         */
+          Check whether the current
+          reader follows this author.
+        */
 
         if (currentUser) {
 
@@ -1733,7 +2340,8 @@
 
         } else {
 
-          isFollowing = false;
+          isFollowing =
+            false;
         }
 
 
@@ -1741,8 +2349,8 @@
 
 
         /*
-         * Show page.
-         */
+          Show page.
+        */
 
         loadingState.style.display =
           "none";
@@ -1772,7 +2380,10 @@
     -------------------------------- */
 
     db.auth.onAuthStateChange(
-      async (event, session) => {
+      async (
+        event,
+        session
+      ) => {
 
         if (
           event === "SIGNED_IN" ||
@@ -1783,6 +2394,14 @@
           currentUser =
             session?.user || null;
 
+
+          /*
+            If the reader signs in while
+            already viewing the author page,
+            reload saved-book state so the
+            buttons immediately become real
+            Save buttons.
+          */
 
           if (
             currentAuthor &&
@@ -1795,9 +2414,65 @@
                 currentUser.id
               );
 
+
+            try {
+
+              const books =
+                await loadBooks(
+                  currentAuthor.id
+                );
+
+              await loadSavedBooks(
+                books
+              );
+
+              renderBooks(
+                books
+              );
+
+            } catch (error) {
+
+              console.error(
+                "Unable to refresh saved books after auth change:",
+                error
+              );
+            }
+
           } else {
 
-            isFollowing = false;
+            isFollowing =
+              false;
+
+            savedBooks = {};
+
+            /*
+              If the user signs out while
+              viewing the page, reload the
+              approved books so the buttons
+              become sign-in buttons.
+            */
+
+            if (currentAuthor) {
+
+              try {
+
+                const books =
+                  await loadBooks(
+                    currentAuthor.id
+                  );
+
+                renderBooks(
+                  books
+                );
+
+              } catch (error) {
+
+                console.error(
+                  "Unable to refresh books after sign out:",
+                  error
+                );
+              }
+            }
           }
 
 
@@ -1812,6 +2487,7 @@
     -------------------------------- */
 
     loadProfile();
+
   </script>
 
 </body>

@@ -1,1776 +1,2217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reader Reach — Author Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    *{
-      box-sizing:border-box;
-      margin:0;
-      padding:0;
-    }
+<title>Authors — Reader Reach</title>
 
-    body{
-      font-family:Georgia, "Times New Roman", serif;
-      background:#f6efe4;
-      color:#3f2a1f;
-      min-height:100vh;
-    }
+<meta
+  name="description"
+  content="Discover approved Reader Reach authors and explore their books."
+>
 
-    button,
-    input,
-    textarea,
-    select{
-      font:inherit;
-    }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    .topbar{
-      background:#4b2f24;
-      color:#fff8ef;
-      padding:18px 28px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:20px;
-      position:sticky;
-      top:0;
-      z-index:20;
-      box-shadow:0 4px 16px rgba(63,42,31,.14);
-    }
+<style>
+:root{
+  --brown:#3b241b;
+  --brown2:#5a3829;
+  --cream:#fffdf8;
+  --soft:#f7efe4;
+  --butter:#ead79b;
+  --text:#34251f;
+  --muted:#76665d;
+  --line:#e7dbcf;
+  --white:#fff;
+  --shadow:0 18px 45px rgba(59,36,27,.08);
+  --radius:20px;
+}
 
-    .brand{
-      font-size:24px;
-      font-weight:700;
-      letter-spacing:.3px;
-    }
+*{
+  box-sizing:border-box;
+}
 
-    .user-area{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      font-size:14px;
-    }
+html{
+  scroll-behavior:smooth;
+}
 
-    .page{
-      width:min(1180px, calc(100% - 32px));
-      margin:32px auto 60px;
-    }
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--text);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  line-height:1.6;
+}
 
-    .card{
-      background:#fffaf3;
-      border:1px solid #eadccc;
-      border-radius:18px;
-      box-shadow:0 10px 30px rgba(80,52,34,.08);
-      padding:24px;
-    }
+a{
+  color:inherit;
+  text-decoration:none;
+}
 
-    .welcome{
-      margin-bottom:24px;
-    }
+button,
+input,
+select{
+  font:inherit;
+}
 
-    .welcome h1{
-      font-size:34px;
-      color:#4b2f24;
-      margin-bottom:8px;
-    }
+button{
+  cursor:pointer;
+}
 
-    .muted{
-      color:#806b5d;
-      line-height:1.6;
-    }
+.wrap{
+  width:min(1180px,calc(100% - 40px));
+  margin:0 auto;
+}
 
-    .layout{
-      display:grid;
-      grid-template-columns:1.15fr .85fr;
-      gap:22px;
-    }
+.top{
+  background:var(--brown);
+  color:#fff;
+  font-size:12px;
+}
 
-    .section-title{
-      color:#4b2f24;
-      font-size:24px;
-      margin-bottom:7px;
-    }
+.top .wrap{
+  min-height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
 
-    .section-description{
-      color:#806b5d;
-      line-height:1.6;
-      margin-bottom:20px;
-    }
+nav{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(255,253,248,.96);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
 
-    .field{
-      margin-top:17px;
-    }
+.nav{
+  min-height:78px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:25px;
+}
 
-    label{
-      display:block;
-      margin-bottom:7px;
-      color:#5a3b2c;
-      font-weight:700;
-    }
+.logo{
+  display:flex;
+  flex-direction:column;
+  color:var(--brown);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:22px;
+  font-weight:700;
+  line-height:1.1;
+  white-space:nowrap;
+}
 
-    input,
-    textarea{
-      width:100%;
-      border:1px solid #dbc8b5;
-      border-radius:10px;
-      background:#fffdf9;
-      color:#3f2a1f;
-      padding:12px 13px;
-      outline:none;
-    }
+.logo small{
+  margin-top:5px;
+  color:var(--muted);
+  font-family:inherit;
+  font-size:10px;
+  font-weight:400;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
 
-    input:focus,
-    textarea:focus{
-      border-color:#a67850;
-      box-shadow:0 0 0 3px rgba(166,120,80,.12);
-    }
+.links{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:24px;
+  flex:1;
+}
 
-    textarea{
-      min-height:110px;
-      resize:vertical;
-    }
+.links a{
+  color:var(--muted);
+  font-size:14px;
+  font-weight:600;
+  transition:.2s ease;
+}
 
-    input[readonly]{
-      background:#f1e7da;
-      color:#6f584a;
-      cursor:not-allowed;
-    }
+.links a:hover,
+.links a.active{
+  color:var(--brown);
+}
 
-    input[type="file"]{
-      padding:10px;
-    }
+.navActions{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
 
-    .file-note{
-      color:#806b5d;
-      font-size:12px;
-      margin-top:6px;
-      line-height:1.5;
-    }
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:42px;
+  padding:0 17px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:var(--white);
+  color:var(--brown);
+  font-size:13px;
+  font-weight:700;
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
+}
 
-    .required-note{
-      color:#806b5d;
-      font-size:12px;
-      margin-top:6px;
-    }
+.btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 22px rgba(59,36,27,.08);
+}
 
-    .btn{
-      border:0;
-      border-radius:10px;
-      padding:11px 17px;
-      cursor:pointer;
-      background:#ead9c6;
-      color:#4b2f24;
-      font-weight:700;
-      transition:.2s ease;
-    }
+.btn.primary{
+  border-color:var(--brown);
+  background:var(--brown);
+  color:#fff;
+}
 
-    .btn:hover{
-      transform:translateY(-1px);
-    }
+.btn.soft{
+  background:var(--soft);
+}
 
-    .btn.primary{
-      background:#6b4634;
-      color:#fffaf3;
-    }
+.hero{
+  position:relative;
+  overflow:hidden;
+  min-height:430px;
+  display:flex;
+  align-items:center;
+  background:
+    linear-gradient(
+      110deg,
+      rgba(59,36,27,.97),
+      rgba(59,36,27,.86) 52%,
+      rgba(59,36,27,.64)
+    ),
+    url("https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1800&q=85")
+    center/cover;
+  color:#fff;
+}
 
-    .btn.secondary{
-      background:#eee1d2;
-      color:#5a3b2c;
-    }
+.hero::after{
+  content:"";
+  position:absolute;
+  width:420px;
+  height:420px;
+  right:-130px;
+  top:-160px;
+  border-radius:50%;
+  background:rgba(234,215,155,.13);
+}
 
-    .btn:disabled{
-      opacity:.6;
-      cursor:not-allowed;
-      transform:none;
-    }
+.heroContent{
+  position:relative;
+  z-index:2;
+  max-width:760px;
+  padding:80px 0;
+}
 
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:9px;
-      margin-top:20px;
-    }
+.eyebrow,
+.kicker{
+  color:var(--butter);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+}
 
-    .book-list{
-      display:grid;
-      gap:14px;
-    }
+.hero h1{
+  margin:12px 0 18px;
+  max-width:760px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(44px,7vw,72px);
+  line-height:1.02;
+  letter-spacing:-.035em;
+}
 
-    .book-card{
-      border:1px solid #eadccc;
-      border-radius:14px;
-      background:#fffdf9;
-      padding:17px;
-    }
+.hero p{
+  max-width:680px;
+  margin:0;
+  color:rgba(255,255,255,.82);
+  font-size:18px;
+}
 
-    .book-title{
-      font-size:19px;
-      font-weight:700;
-      color:#4b2f24;
-    }
+.page{
+  padding:70px 0 100px;
+}
 
-    .book-meta{
-      color:#806b5d;
-      font-size:13px;
-      margin-top:6px;
-      line-height:1.6;
-    }
+.sectionHead{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:30px;
+  margin-bottom:28px;
+}
 
-    .book-description{
-      color:#5d4333;
-      margin-top:12px;
-      line-height:1.6;
-    }
+.sectionHead h2{
+  margin:6px 0 0;
+  color:var(--brown);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:38px;
+  line-height:1.15;
+}
 
-    .status{
-      display:inline-block;
-      margin-top:12px;
-      padding:5px 10px;
-      border-radius:999px;
-      background:#eee0cf;
-      color:#624331;
-      font-size:12px;
-      font-weight:700;
-    }
+.sectionHead p{
+  max-width:640px;
+  margin:10px 0 0;
+  color:var(--muted);
+}
 
-    .status.approved{
-      background:#dfe9dc;
-      color:#3f633c;
-    }
+.authorTools{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 220px;
+  gap:14px;
+  margin-bottom:35px;
+}
 
-    .status.rejected{
-      background:#ead0ca;
-      color:#7b3024;
-    }
+.searchBox,
+.filterBox{
+  position:relative;
+}
 
-    .status.pending{
-      background:#eee0cf;
-      color:#624331;
-    }
+.searchBox input,
+.filterBox select{
+  width:100%;
+  height:54px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  outline:none;
+  background:#fff;
+  color:var(--text);
+  padding:0 17px;
+  box-shadow:0 5px 20px rgba(59,36,27,.035);
+}
 
-    .completion{
-      display:inline-block;
-      margin-top:8px;
-      margin-left:5px;
-      padding:5px 10px;
-      border-radius:999px;
-      background:#f2d7c6;
-      color:#7b4b32;
-      font-size:12px;
-      font-weight:700;
-    }
+.searchBox input{
+  padding-left:46px;
+}
 
-    .completion.complete{
-      background:#dfe9dc;
-      color:#3f633c;
-    }
+.searchIcon{
+  position:absolute;
+  left:17px;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--muted);
+  font-size:18px;
+  pointer-events:none;
+}
 
-    .empty{
-      padding:26px;
-      text-align:center;
-      color:#806b5d;
-      border:1px dashed #d9c5b0;
-      border-radius:12px;
-      background:#fffdf9;
-      line-height:1.6;
-    }
+.searchBox input:focus,
+.filterBox select:focus{
+  border-color:var(--brown2);
+  box-shadow:0 0 0 4px rgba(90,56,41,.07);
+}
 
-    .account-box{
-      background:#f7efe4;
-      border-radius:13px;
-      padding:17px;
-      margin-top:18px;
-    }
+.resultsBar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:18px;
+}
 
-    .account-row{
-      display:flex;
-      justify-content:space-between;
-      gap:15px;
-      padding:8px 0;
-      border-bottom:1px solid #eadccc;
-    }
+.resultsCount{
+  color:var(--muted);
+  font-size:14px;
+}
 
-    .account-row:last-child{
-      border-bottom:0;
-    }
+.resultsCount strong{
+  color:var(--brown);
+}
 
-    .account-label{
-      color:#806b5d;
-    }
+.authorGrid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:20px;
+}
 
-    .account-value{
-      font-weight:700;
-      color:#4b2f24;
-      text-align:right;
-    }
+.authorCard{
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:#fff;
+  box-shadow:var(--shadow);
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease;
+}
 
-    .notice{
-      margin-top:18px;
-      padding:14px;
-      border-radius:11px;
-      background:#f7efe4;
-      color:#5d4333;
-      line-height:1.6;
-    }
+.authorCard:hover{
+  transform:translateY(-4px);
+  box-shadow:0 22px 50px rgba(59,36,27,.12);
+}
 
-    .notice.warning{
-      background:#f4dfd2;
-      color:#75402e;
-    }
+.authorTop{
+  position:relative;
+  padding:25px 25px 20px;
+  background:
+    linear-gradient(
+      135deg,
+      var(--soft),
+      #fff
+    );
+}
 
-    .notice.success{
-      background:#e2ecdf;
-      color:#41603d;
-    }
+.authorIdentity{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
 
-    .hidden{
-      display:none !important;
-    }
+.avatar{
+  flex:0 0 70px;
+  width:70px;
+  height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  border:1px solid rgba(90,56,41,.15);
+  border-radius:50%;
+  background:var(--brown);
+  color:#fff;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:27px;
+  font-weight:700;
+}
 
-    .toast{
-      position:fixed;
-      right:22px;
-      bottom:22px;
-      background:#4b2f24;
-      color:#fffaf3;
-      padding:13px 17px;
-      border-radius:11px;
-      box-shadow:0 10px 30px rgba(0,0,0,.18);
-      opacity:0;
-      transform:translateY(12px);
-      pointer-events:none;
-      transition:.25s ease;
-      z-index:100;
-      max-width:360px;
-    }
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 
-    .toast.show{
-      opacity:1;
-      transform:translateY(0);
-    }
+.authorName{
+  margin:0;
+  color:var(--brown);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:23px;
+  line-height:1.2;
+}
 
-    @media(max-width:850px){
-      .layout{
-        grid-template-columns:1fr;
-      }
-    }
+.authorRole{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
 
-    @media(max-width:620px){
-      .topbar{
-        padding:16px 18px;
-      }
+.authorBody{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  padding:22px 25px 25px;
+}
 
-      .page{
-        width:min(100% - 22px, 1180px);
-        margin-top:22px;
-      }
+.bio{
+  display:-webkit-box;
+  overflow:hidden;
+  min-height:76px;
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.65;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+}
 
-      .welcome h1{
-        font-size:28px;
-      }
+.authorStats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin:20px 0;
+}
 
-      .card{
-        padding:18px;
-      }
+.stat{
+  padding:12px;
+  border-radius:13px;
+  background:var(--soft);
+  text-align:center;
+}
 
-      .user-area{
-        flex-direction:column;
-        align-items:flex-end;
-        gap:5px;
-      }
-    }
-  </style>
+.stat strong{
+  display:block;
+  color:var(--brown);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:21px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+
+.authorActions{
+  display:flex;
+  gap:9px;
+  margin-top:auto;
+}
+
+.authorActions .btn{
+  flex:1;
+}
+
+.emptyState,
+.loadingState,
+.errorState{
+  grid-column:1/-1;
+  padding:55px 25px;
+  border:1px dashed var(--line);
+  border-radius:var(--radius);
+  background:#fff;
+  text-align:center;
+}
+
+.emptyState h3,
+.loadingState h3,
+.errorState h3{
+  margin:0 0 8px;
+  color:var(--brown);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:24px;
+}
+
+.emptyState p,
+.loadingState p,
+.errorState p{
+  margin:0;
+  color:var(--muted);
+}
+
+.errorState{
+  border-style:solid;
+  border-color:#ead2ca;
+  background:#fff9f7;
+}
+
+.infoBand{
+  margin-top:65px;
+  padding:45px;
+  border-radius:var(--radius);
+  background:var(--brown);
+  color:#fff;
+}
+
+.infoBand h2{
+  margin:0 0 10px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:34px;
+}
+
+.infoBand p{
+  max-width:720px;
+  margin:0 0 23px;
+  color:rgba(255,255,255,.75);
+}
+
+.infoBand .btn{
+  background:#fff;
+  border-color:#fff;
+}
+
+footer{
+  padding:55px 0 35px;
+  border-top:1px solid var(--line);
+  background:var(--soft);
+}
+
+.footerGrid{
+  display:grid;
+  grid-template-columns:1.5fr 1fr 1fr;
+  gap:40px;
+}
+
+.footerBrand{
+  color:var(--brown);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:25px;
+  font-weight:700;
+}
+
+.footerText{
+  max-width:420px;
+  margin:10px 0 0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.footerCol h3{
+  margin:0 0 12px;
+  color:var(--brown);
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.footerCol a{
+  display:block;
+  margin:7px 0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.footerCol a:hover{
+  color:var(--brown);
+}
+
+.footerBottom{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  margin-top:40px;
+  padding-top:20px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:12px;
+}
+
+.chatButton{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  z-index:200;
+  width:58px;
+  height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  border-radius:50%;
+  background:var(--brown);
+  color:#fff;
+  font-size:23px;
+  box-shadow:0 14px 35px rgba(59,36,27,.25);
+}
+
+.chatPanel{
+  position:fixed;
+  right:22px;
+  bottom:92px;
+  z-index:199;
+  width:min(370px,calc(100% - 30px));
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 25px 70px rgba(59,36,27,.18);
+  display:none;
+}
+
+.chatPanel.open{
+  display:block;
+}
+
+.chatHeader{
+  padding:18px 20px;
+  background:var(--brown);
+  color:#fff;
+}
+
+.chatHeader strong{
+  display:block;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:20px;
+}
+
+.chatHeader span{
+  display:block;
+  margin-top:3px;
+  color:rgba(255,255,255,.7);
+  font-size:12px;
+}
+
+.chatBody{
+  padding:18px;
+}
+
+.chatMessages{
+  max-height:230px;
+  overflow:auto;
+  display:grid;
+  gap:9px;
+  margin-bottom:13px;
+}
+
+.chatMessage{
+  padding:10px 12px;
+  border-radius:12px;
+  background:var(--soft);
+  color:var(--muted);
+  font-size:13px;
+}
+
+.chatMessage.reply{
+  background:#f1ead8;
+  color:var(--brown);
+}
+
+.chatForm{
+  display:grid;
+  gap:9px;
+}
+
+.chatForm input,
+.chatForm textarea{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:11px;
+  outline:none;
+  padding:11px 12px;
+  background:#fff;
+  color:var(--text);
+  resize:vertical;
+}
+
+.chatForm textarea{
+  min-height:80px;
+}
+
+.chatForm input:focus,
+.chatForm textarea:focus{
+  border-color:var(--brown2);
+}
+
+.chatStatus{
+  min-height:18px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:24px;
+  z-index:300;
+  transform:translate(-50%,120px);
+  max-width:min(500px,calc(100% - 30px));
+  padding:13px 17px;
+  border-radius:12px;
+  background:var(--brown);
+  color:#fff;
+  box-shadow:0 15px 40px rgba(59,36,27,.2);
+  font-size:13px;
+  transition:.25s ease;
+}
+
+.toast.show{
+  transform:translate(-50%,0);
+}
+
+@media(max-width:1000px){
+  .links{
+    display:none;
+  }
+
+  .authorGrid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .footerGrid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:700px){
+  .wrap{
+    width:min(100% - 28px,1180px);
+  }
+
+  .top .wrap{
+    justify-content:center;
+  }
+
+  .top .wrap span:last-child{
+    display:none;
+  }
+
+  .nav{
+    min-height:70px;
+  }
+
+  .logo{
+    font-size:19px;
+  }
+
+  .logo small{
+    font-size:8px;
+  }
+
+  .navActions .btn:first-child{
+    display:none;
+  }
+
+  .hero{
+    min-height:390px;
+  }
+
+  .heroContent{
+    padding:65px 0;
+  }
+
+  .hero h1{
+    font-size:46px;
+  }
+
+  .hero p{
+    font-size:16px;
+  }
+
+  .page{
+    padding:55px 0 75px;
+  }
+
+  .sectionHead{
+    display:block;
+  }
+
+  .sectionHead h2{
+    font-size:32px;
+  }
+
+  .authorTools{
+    grid-template-columns:1fr;
+  }
+
+  .authorGrid{
+    grid-template-columns:1fr;
+  }
+
+  .infoBand{
+    padding:30px 25px;
+  }
+
+  .infoBand h2{
+    font-size:29px;
+  }
+
+  .footerGrid{
+    grid-template-columns:1fr;
+    gap:25px;
+  }
+
+  .footerBottom{
+    display:block;
+  }
+
+  .footerBottom span{
+    display:block;
+    margin-bottom:5px;
+  }
+
+  .chatPanel{
+    right:15px;
+    bottom:85px;
+  }
+
+  .chatButton{
+    right:15px;
+    bottom:15px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <header class="topbar">
-    <div class="brand">Reader Reach</div>
+<div class="top">
+  <div class="wrap">
+    <span>Books • Authors • Readers</span>
+    <span>A place for meaningful book discovery</span>
+  </div>
+</div>
 
-    <div class="user-area">
-      <span id="authorEmail"></span>
+<nav>
+  <div class="wrap nav">
 
-      <button id="signOutBtn" class="btn secondary">
-        Sign Out
-      </button>
+    <a class="logo" href="index.html">
+      Reader Reach
+      <small>Every Book Has Its Readers</small>
+    </a>
+
+    <div class="links">
+      <a href="authors.html" class="active">Authors</a>
+      <a href="index.html#featured">Featured</a>
+      <a href="index.html#about">About Us</a>
+      <a href="contact.html">Contact Us</a>
     </div>
-  </header>
 
-  <main class="page">
+    <div class="navActions">
+      <a class="btn" href="auth.html?mode=signin">
+        Sign In
+      </a>
 
-    <section class="welcome">
-      <h1>Author Dashboard</h1>
+      <a class="btn primary" href="auth.html?mode=signup">
+        Sign Up
+      </a>
+    </div>
 
-      <p class="muted">
-        Manage your books and submit new titles for Reader Reach review.
+  </div>
+</nav>
+
+
+<header class="hero">
+
+  <div class="wrap">
+
+    <div class="heroContent">
+
+      <div class="eyebrow">
+        Reader Reach Authors
+      </div>
+
+      <h1>
+        Meet the people behind the books.
+      </h1>
+
+      <p>
+        Discover approved Reader Reach authors, explore their work,
+        and visit their individual author profiles.
       </p>
-    </section>
 
-    <section class="layout">
+    </div>
 
-      <!-- SUBMIT BOOK -->
-      <div class="card">
+  </div>
 
-        <h2 class="section-title">
-          Submit a Book
+</header>
+
+
+<main class="page">
+
+  <div class="wrap">
+
+    <div class="sectionHead">
+
+      <div>
+        <div class="kicker">
+          Authors
+        </div>
+
+        <h2>
+          Explore Authors
         </h2>
+      </div>
 
-        <p class="section-description">
-          Submit your book for Reader Reach review. You can submit multiple
-          books from your approved author account.
-        </p>
+      <p>
+        Search the approved Reader Reach author community.
+        Public author information does not include private account location details.
+      </p>
 
-        <form id="bookForm">
+    </div>
 
-          <!-- AUTHOR NAME -->
-          <div class="field">
-            <label for="authorName">
-              Author Name *
-            </label>
 
-            <input
-              id="authorName"
-              type="text"
-              readonly
-            />
-          </div>
+    <div class="authorTools">
 
-          <!-- EMAIL -->
-          <div class="field">
-            <label for="authorEmailField">
-              Email Address *
-            </label>
+      <div class="searchBox">
 
-            <input
-              id="authorEmailField"
-              type="email"
-              readonly
-            />
-          </div>
+        <span class="searchIcon">⌕</span>
 
-          <!-- ABOUT AUTHOR -->
-          <div class="field">
-            <label for="aboutAuthor">
-              About the Author *
-            </label>
-
-            <textarea
-              id="aboutAuthor"
-              placeholder="Tell readers about yourself as an author"
-            ></textarea>
-          </div>
-
-          <!-- BOOK TITLE -->
-          <div class="field">
-            <label for="bookTitle">
-              Book Title *
-            </label>
-
-            <input
-              id="bookTitle"
-              type="text"
-              placeholder="Enter your book title"
-            />
-          </div>
-
-          <!-- GENRE -->
-          <div class="field">
-            <label for="bookGenre">
-              Genre / Topic *
-            </label>
-
-            <input
-              id="bookGenre"
-              type="text"
-              placeholder="For example: Fiction, Business, Romance"
-            />
-          </div>
-
-          <!-- DESCRIPTION -->
-          <div class="field">
-            <label for="bookDescription">
-              Book Description *
-            </label>
-
-            <textarea
-              id="bookDescription"
-              placeholder="Describe your book"
-            ></textarea>
-          </div>
-
-          <!-- AUDIENCE -->
-          <div class="field">
-            <label for="bookAudience">
-              Who Is the Book For? *
-            </label>
-
-            <input
-              id="bookAudience"
-              type="text"
-              placeholder="Describe the intended readers"
-            />
-          </div>
-
-          <!-- AVAILABILITY -->
-          <div class="field">
-            <label for="bookAvailability">
-              Where Is the Book Currently Available? *
-            </label>
-
-            <input
-              id="bookAvailability"
-              type="text"
-              placeholder="Tell readers where the book is available"
-            />
-          </div>
-
-          <!-- COVER -->
-          <div class="field">
-            <label for="coverFile">
-              Book Cover Image
-            </label>
-
-            <input
-              id="coverFile"
-              type="file"
-              accept="image/*"
-            />
-
-            <div class="file-note">
-              Upload the actual book cover image. A URL is not required.
-            </div>
-          </div>
-
-          <!-- TRAILER -->
-          <div class="field">
-            <label for="trailerFile">
-              Book Trailer Video
-            </label>
-
-            <input
-              id="trailerFile"
-              type="file"
-              accept="video/*"
-            />
-
-            <div class="file-note">
-              Upload the actual book trailer video. Admin will be able to
-              review the trailer before approving the book.
-            </div>
-          </div>
-
-          <!-- FLIPPER GUIDE -->
-          <div class="field">
-            <label for="flipperGuideLink">
-              Flipper Guide Link *
-            </label>
-
-            <input
-              id="flipperGuideLink"
-              type="url"
-              placeholder="https://..."
-            />
-
-            <div class="file-note">
-              This link is stored as protected Flipper Guide information.
-            </div>
-          </div>
-
-          <div class="required-note">
-
-          </div>
-
-          <div class="actions">
-            <button
-              id="submitBookBtn"
-              type="submit"
-              class="btn primary"
-            >
-              Submit Book for Review
-            </button>
-          </div>
-
-        </form>
-
-        <div id="submitNotice" class="notice hidden"></div>
+        <input
+          id="authorSearch"
+          type="search"
+          placeholder="Search authors by name or biography..."
+          autocomplete="off"
+        >
 
       </div>
 
 
-      <!-- ACCOUNT -->
-      <div class="card">
+      <div class="filterBox">
 
-        <h2 class="section-title">
-          My Account
-        </h2>
+        <select id="bookFilter">
 
-        <p class="section-description">
-          Your Reader Reach author account information.
+          <option value="all">
+            All Authors
+          </option>
+
+          <option value="books">
+            Authors With Books
+          </option>
+
+          <option value="none">
+            Authors Without Books
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+
+    <div class="resultsBar">
+
+      <div
+        class="resultsCount"
+        id="resultsCount"
+      >
+        Loading authors...
+      </div>
+
+    </div>
+
+
+    <section
+      class="authorGrid"
+      id="authorGrid"
+      aria-live="polite"
+    >
+
+      <div class="loadingState">
+
+        <h3>
+          Loading authors
+        </h3>
+
+        <p>
+          Reader Reach is checking the approved author directory.
         </p>
-
-        <div class="account-box">
-
-          <div class="account-row">
-            <span class="account-label">
-              Name
-            </span>
-
-            <span
-              id="accountName"
-              class="account-value"
-            >
-              —
-            </span>
-          </div>
-
-          <div class="account-row">
-            <span class="account-label">
-              Email
-            </span>
-
-            <span
-              id="accountEmail"
-              class="account-value"
-            >
-              —
-            </span>
-          </div>
-
-          <div class="account-row">
-            <span class="account-label">
-              Role
-            </span>
-
-            <span
-              id="accountRole"
-              class="account-value"
-            >
-              —
-            </span>
-          </div>
-
-          <div class="account-row">
-            <span class="account-label">
-              Author Status
-            </span>
-
-            <span
-              id="accountAuthorStatus"
-              class="account-value"
-            >
-              —
-            </span>
-          </div>
-
-        </div>
-
-        <div class="notice">
-          Your author approval is separate from individual book approval.
-          Every book you submit is reviewed independently.
-        </div>
 
       </div>
 
     </section>
 
 
-    <!-- MY BOOKS -->
-    <section class="card" style="margin-top:22px;">
+    <section class="infoBand">
 
-      <div style="margin-bottom:20px;">
+      <h2>
+        Are you an author?
+      </h2>
 
-        <h2 class="section-title">
-          My Books
-        </h2>
+      <p>
+        Approved Reader Reach authors can present multiple books,
+        maintain their author profile, communicate through the platform,
+        and participate in scheduled features.
+      </p>
 
-        <p class="section-description" style="margin-bottom:0;">
-          View every book submitted from your approved author account and
-          its current review status.
+      <a
+        class="btn"
+        href="auth.html?mode=author"
+      >
+        Author Access
+      </a>
+
+    </section>
+
+  </div>
+
+</main>
+
+
+<footer>
+
+  <div class="wrap">
+
+    <div class="footerGrid">
+
+      <div>
+
+        <div class="footerBrand">
+          Reader Reach
+        </div>
+
+        <p class="footerText">
+          Every Book Has Its Readers.
+          A place where books, authors, and readers can connect.
         </p>
 
       </div>
 
-      <div id="bookList" class="book-list">
 
-        <div class="empty">
-          Loading your books...
-        </div>
+      <div class="footerCol">
+
+        <h3>
+          Explore
+        </h3>
+
+        <a href="index.html">
+          Home
+        </a>
+
+        <a href="authors.html">
+          Authors
+        </a>
+
+        <a href="index.html#featured">
+          Featured Books
+        </a>
+
+        <a href="contact.html">
+          Contact Us
+        </a>
 
       </div>
 
-    </section>
 
-  </main>
+      <div class="footerCol">
 
-  <div id="toast" class="toast"></div>
+        <h3>
+          Access
+        </h3>
 
+        <a href="auth.html?mode=signin">
+          Sign In
+        </a>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <a href="auth.html?mode=signup">
+          Sign Up
+        </a>
 
-  <script>
+        <a href="auth.html?mode=author">
+          Author Access
+        </a>
 
-    const SUPABASE_URL =
-      'https://bublmnfhyyrefcdkloak.supabase.co';
+      </div>
 
-    const SUPABASE_PUBLISHABLE_KEY =
-      'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
-
-    const supabaseClient =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY,
-        {
-          auth:{
-            storageKey:'reader-reach-auth',
-            persistSession:true,
-            autoRefreshToken:true,
-            detectSessionInUrl:true,
-            storage:window.localStorage
-          }
-        }
-      );
+    </div>
 
 
-    let currentUser = null;
-    let currentProfile = null;
-    let currentAuthor = null;
+    <div class="footerBottom">
+
+      <span>
+        © <span id="year"></span> Reader Reach
+      </span>
+
+      <span>
+        Every Book Has Its Readers.
+      </span>
+
+    </div>
+
+  </div>
+
+</footer>
 
 
-    const bookForm =
-      document.getElementById('bookForm');
+<!-- LIVE CHAT -->
 
-    const bookList =
-      document.getElementById('bookList');
-
-    const submitBookBtn =
-      document.getElementById('submitBookBtn');
-
-    const submitNotice =
-      document.getElementById('submitNotice');
-
-    const toast =
-      document.getElementById('toast');
+<button
+  class="chatButton"
+  id="chatButton"
+  type="button"
+  aria-label="Open Live Chat"
+>
+  💬
+</button>
 
 
-    function escapeHtml(value){
+<div
+  class="chatPanel"
+  id="chatPanel"
+  aria-hidden="true"
+>
 
-      return String(value ?? '')
-        .replace(/&/g,'&amp;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;')
-        .replace(/'/g,'&#039;');
+  <div class="chatHeader">
 
-    }
+    <strong>
+      Reader Reach Live Chat
+    </strong>
 
+    <span>
+      Contact the Reader Reach team.
+    </span>
 
-    function showToast(message){
-
-      toast.textContent = message;
-
-      toast.classList.add('show');
-
-      setTimeout(() => {
-        toast.classList.remove('show');
-      },3500);
-
-    }
+  </div>
 
 
-    function showNotice(message,type='normal'){
+  <div class="chatBody">
 
-      submitNotice.textContent = message;
+    <div
+      class="chatMessages"
+      id="chatMessages"
+    >
 
-      submitNotice.className =
-        'notice ' +
-        (type === 'warning'
-          ? 'warning'
-          : type === 'success'
-            ? 'success'
-            : '');
+      <div class="chatMessage">
+        Send us a message and the Reader Reach team can respond here.
+      </div>
 
-      submitNotice.classList.remove('hidden');
-
-    }
+    </div>
 
 
-    function statusClass(status){
+    <form
+      class="chatForm"
+      id="chatForm"
+    >
 
-      if(status === 'approved'){
-        return 'approved';
+      <input
+        id="chatName"
+        type="text"
+        placeholder="Your name"
+        maxlength="120"
+        required
+      >
+
+      <input
+        id="chatEmail"
+        type="email"
+        placeholder="Your email"
+        maxlength="180"
+        required
+      >
+
+      <textarea
+        id="chatMessage"
+        placeholder="How can we help?"
+        maxlength="2000"
+        required
+      ></textarea>
+
+      <div
+        class="chatStatus"
+        id="chatStatus"
+      ></div>
+
+      <button
+        class="btn primary"
+        type="submit"
+      >
+        Send Message
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<div
+  class="toast"
+  id="toast"
+></div>
+
+
+<script>
+
+const SUPABASE_URL =
+  'https://bublmnfhyyrefcdkloak.supabase.co';
+
+const SUPABASE_PUBLISHABLE_KEY =
+  'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
+
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+let allAuthors = [];
+let visibleAuthors = [];
+
+let chatConversationId = null;
+let chatChannel = null;
+
+
+/* ============================================================
+   GENERAL HELPERS
+============================================================ */
+
+function escapeHtml(value){
+
+  return String(value ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+
+}
+
+
+function showToast(message){
+
+  const toast =
+    document.getElementById('toast');
+
+  toast.textContent = message;
+
+  toast.classList.add('show');
+
+  clearTimeout(
+    showToast.timer
+  );
+
+  showToast.timer =
+    setTimeout(() => {
+
+      toast.classList.remove('show');
+
+    },3200);
+
+}
+
+
+function getInitials(name){
+
+  const value =
+    String(name || 'Author')
+      .trim();
+
+  if(!value){
+    return 'A';
+  }
+
+  const parts =
+    value
+      .split(/\s+/)
+      .filter(Boolean);
+
+  if(parts.length === 1){
+    return parts[0]
+      .slice(0,2)
+      .toUpperCase();
+  }
+
+  return (
+    parts[0][0] +
+    parts[parts.length - 1][0]
+  ).toUpperCase();
+
+}
+
+
+/* ============================================================
+   AUTHOR DIRECTORY
+============================================================ */
+
+async function loadAuthors(){
+
+  const grid =
+    document.getElementById('authorGrid');
+
+  const resultsCount =
+    document.getElementById('resultsCount');
+
+
+  grid.innerHTML = `
+    <div class="loadingState">
+      <h3>Loading authors</h3>
+      <p>
+        Reader Reach is checking the approved author directory.
+      </p>
+    </div>
+  `;
+
+
+  const {
+    data:authors,
+    error:authorsError
+  } = await supabaseClient
+
+    .from('authors')
+
+    .select(`
+      id,
+      profile_id,
+      author_name,
+      bio,
+      status,
+      created_at,
+      reviewed_at
+    `)
+
+    .eq('status','approved')
+
+    .order(
+      'author_name',
+      {
+        ascending:true
       }
-
-      if(status === 'rejected'){
-        return 'rejected';
-      }
-
-      return 'pending';
-
-    }
-
-
-    function formatDate(value){
-
-      if(!value){
-        return '—';
-      }
-
-      const date =
-        new Date(value);
-
-      if(Number.isNaN(date.getTime())){
-        return value;
-      }
-
-      return date.toLocaleDateString();
-
-    }
-
-
-    function cleanFileName(fileName){
-
-      return fileName
-        .toLowerCase()
-        .replace(/[^a-z0-9._-]/g,'-');
-
-    }
-
-
-    async function getRealSession(){
-
-      const {
-        data,
-        error
-      } = await supabaseClient.auth.getSession();
-
-      if(error){
-
-        console.error(
-          'Session error:',
-          error
-        );
-
-        return null;
-      }
-
-      return data.session;
-
-    }
-
-
-    async function loadProfile(){
-
-      const {
-        data,
-        error
-      } = await supabaseClient
-        .from('profiles')
-        .select(`
-          id,
-          display_name,
-          role
-        `)
-        .eq('id',currentUser.id)
-        .maybeSingle();
-
-      if(error){
-        throw error;
-      }
-
-      return data;
-
-    }
-
-
-    async function loadAuthor(){
-
-      const {
-        data,
-        error
-      } = await supabaseClient
-        .from('authors')
-        .select(`
-          id,
-          profile_id,
-          author_name,
-          bio,
-          website_url,
-          status,
-          submitted_at,
-          reviewed_at,
-          reviewed_by
-        `)
-        .eq('profile_id',currentUser.id)
-        .maybeSingle();
-
-      if(error){
-        throw error;
-      }
-
-      return data;
-
-    }
-
-
-    async function uploadFile(
-      bucketName,
-      file,
-      folder
-    ){
-
-      if(!file){
-        return null;
-      }
-
-      const safeName =
-        cleanFileName(file.name);
-
-      const path =
-        folder +
-        '/' +
-        Date.now() +
-        '-' +
-        crypto.randomUUID() +
-        '-' +
-        safeName;
-
-
-      const {
-        error
-      } = await supabaseClient.storage
-        .from(bucketName)
-        .upload(
-          path,
-          file,
-          {
-            cacheControl:'3600',
-            upsert:false
-          }
-        );
-
-
-      if(error){
-        throw error;
-      }
-
-
-      const {
-        data
-      } = supabaseClient.storage
-        .from(bucketName)
-        .getPublicUrl(path);
-
-
-      return data.publicUrl;
-
-    }
-
-
-    async function createFlipperGuide(
-      bookId,
-      bookTitle,
-      guideLink
-    ){
-
-      if(!guideLink){
-        return;
-      }
-
-
-      const {
-        error
-      } = await supabaseClient
-        .from('flipper_guides')
-        .insert({
-          book_id:bookId,
-          title:bookTitle + ' — Flipper Guide',
-          description:'Flipper Guide for ' + bookTitle,
-          content_url:guideLink
-        });
-
-
-      if(error){
-        throw error;
-      }
-
-    }
-
-
-    async function createTrailer(
-      bookId,
-      trailerUrl
-    ){
-
-      if(!trailerUrl){
-        return;
-      }
-
-
-      const {
-        error
-      } = await supabaseClient
-        .from('book_trailers')
-        .insert({
-          book_id:bookId,
-          trailer_url:trailerUrl,
-          title:'Book Trailer',
-          description:'Book trailer for this Reader Reach submission.'
-        });
-
-
-      if(error){
-        throw error;
-      }
-
-    }
-
-
-    async function loadBooks(){
-
-      bookList.innerHTML =
-        '<div class="empty">Loading your books...</div>';
-
-
-      const {
-        data,
-        error
-      } = await supabaseClient
-        .from('books')
-        .select(`
-          id,
-          title,
-          description,
-          genre_topic,
-          who_its_for,
-          availability,
-          cover_url,
-          status,
-          submitted_at,
-          reviewed_at,
-          review_notes,
-          submission_complete,
-          missing_fields
-        `)
-        .eq('author_id',currentAuthor.id)
-        .order('submitted_at',{
-          ascending:false
-        });
-
-
-      if(error){
-
-        console.error(
-          'Books error:',
-          error
-        );
-
-        bookList.innerHTML =
-          '<div class="empty">Unable to load your books.</div>';
-
-        return;
-
-      }
-
-
-      renderBooks(data || []);
-
-    }
-
-
-    function renderBooks(books){
-
-      if(!books.length){
-
-        bookList.innerHTML =
-          '<div class="empty">' +
-          'You have not submitted any books yet. ' +
-          'Use the form above to submit your first book.' +
-          '</div>';
-
-        return;
-
-      }
-
-
-      bookList.innerHTML =
-        books.map(book => {
-
-          const missing =
-            Array.isArray(book.missing_fields)
-              ? book.missing_fields
-              : [];
-
-
-          return `
-            <div class="book-card">
-
-              <div class="book-title">
-                ${escapeHtml(book.title)}
-              </div>
-
-              <div class="book-meta">
-                Genre / Topic:
-                ${escapeHtml(book.genre_topic || '—')}
-                <br>
-                Submitted:
-                ${escapeHtml(formatDate(book.submitted_at))}
-              </div>
-
-              <div class="book-description">
-                ${escapeHtml(book.description || '')}
-              </div>
-
-              <span class="status ${statusClass(book.status)}">
-                ${escapeHtml(book.status || 'pending')}
-              </span>
-
-              <span class="completion ${
-                book.submission_complete
-                  ? 'complete'
-                  : ''
-              }">
-                ${
-                  book.submission_complete
-                    ? 'Submission Complete'
-                    : 'Submission Incomplete'
-                }
-              </span>
-
-              ${
-                missing.length
-                  ? `
-                    <div class="notice warning">
-                      Missing information:
-                      ${escapeHtml(missing.join(', '))}
-                    </div>
-                  `
-                  : ''
-              }
-
-              ${
-                book.review_notes
-                  ? `
-                    <div class="notice">
-                      Review note:
-                      ${escapeHtml(book.review_notes)}
-                    </div>
-                  `
-                  : ''
-              }
-
-              ${
-                book.cover_url
-                  ? `
-                    <div class="actions">
-                      <a
-                        class="btn secondary"
-                        href="${escapeHtml(book.cover_url)}"
-                        target="_blank"
-                        rel="noopener"
-                      >
-                        View Cover
-                      </a>
-                    </div>
-                  `
-                  : ''
-              }
-
-            </div>
-          `;
-
-        }).join('');
-
-    }
-
-
-    async function submitBook(event){
-
-      event.preventDefault();
-
-
-      if(!currentUser || !currentAuthor){
-
-        showToast(
-          'Your author account could not be verified.'
-        );
-
-        return;
-
-      }
-
-
-      submitBookBtn.disabled = true;
-      submitBookBtn.textContent =
-        'Submitting...';
-
-      showNotice(
-        'Submitting your book...',
-        'normal'
-      );
-
-
-      const authorName =
-        currentAuthor.author_name?.trim() || '';
-
-      const email =
-        currentUser.email?.trim() || '';
-
-      const aboutAuthor =
-        document.getElementById(
-          'aboutAuthor'
-        ).value.trim();
-
-      const title =
-        document.getElementById(
-          'bookTitle'
-        ).value.trim();
-
-      const genreTopic =
-        document.getElementById(
-          'bookGenre'
-        ).value.trim();
-
-      const description =
-        document.getElementById(
-          'bookDescription'
-        ).value.trim();
-
-      const whoItsFor =
-        document.getElementById(
-          'bookAudience'
-        ).value.trim();
-
-      const availability =
-        document.getElementById(
-          'bookAvailability'
-        ).value.trim();
-
-      const flipperGuideLink =
-        document.getElementById(
-          'flipperGuideLink'
-        ).value.trim();
-
-      const coverFile =
-        document.getElementById(
-          'coverFile'
-        ).files[0] || null;
-
-      const trailerFile =
-        document.getElementById(
-          'trailerFile'
-        ).files[0] || null;
-
-
-      /*
-       * These are the exact required fields requested
-       * for the Author Book Submission.
-       *
-       * Cover and Trailer are intentionally NOT included
-       * because they are optional in the requested form.
-       */
-      const missingFields = [];
-
-
-      if(!authorName){
-        missingFields.push('Author Name');
-      }
-
-      if(!email){
-        missingFields.push('Email Address');
-      }
-
-      if(!aboutAuthor){
-        missingFields.push('About the Author');
-      }
-
-      if(!title){
-        missingFields.push('Book Title');
-      }
-
-      if(!genreTopic){
-        missingFields.push('Genre / Topic');
-      }
-
-      if(!description){
-        missingFields.push('Book Description');
-      }
-
-      if(!whoItsFor){
-        missingFields.push('Who Is the Book For?');
-      }
-
-      if(!availability){
-        missingFields.push(
-          'Where Is the Book Currently Available?'
-        );
-      }
-
-      if(!flipperGuideLink){
-        missingFields.push('Flipper Guide Link');
-      }
-
-
-      const submissionComplete =
-        missingFields.length === 0;
-
-
-      /*
-       * Update the author's About the Author information
-       * when something was supplied.
-       */
-      if(aboutAuthor){
-
-        const {
-          error:authorUpdateError
-        } = await supabaseClient
-          .from('authors')
-          .update({
-            bio:aboutAuthor
-          })
-          .eq('id',currentAuthor.id);
-
-
-        if(authorUpdateError){
-
-          console.error(
-            'Author bio update error:',
-            authorUpdateError
-          );
-
-          showToast(
-            'Could not update your author information: ' +
-            authorUpdateError.message
-          );
-
-          submitBookBtn.disabled = false;
-          submitBookBtn.textContent =
-            'Submit Book for Review';
-
-          return;
-        }
-
-      }
-
-
-      /*
-       * Create the pending book first.
-       *
-       * This deliberately does NOT require every field,
-       * because incomplete submissions must still reach Admin.
-       */
-      const {
-        data:book,
-        error:bookError
-      } = await supabaseClient
-        .from('books')
-        .insert({
-          author_id:currentAuthor.id,
-          title:title || 'Untitled Book Submission',
-          description:description || null,
-          genre_topic:genreTopic || null,
-          who_its_for:whoItsFor || null,
-          availability:availability || null,
-          book_link:null,
-          cover_url:null,
-          status:'pending',
-          submission_complete:submissionComplete,
-          missing_fields:missingFields
-        })
-        .select('id,title')
-        .single();
-
-
-      if(bookError){
-
-        console.error(
-          'Book submission error:',
-          bookError
-        );
-
-        showToast(
-          'Could not submit book: ' +
-          bookError.message
-        );
-
-        submitBookBtn.disabled = false;
-        submitBookBtn.textContent =
-          'Submit Book for Review';
-
-        return;
-
-      }
-
-
-      let coverUrl = null;
-      let trailerUrl = null;
-      let mediaWarning = '';
-
-
-      /*
-       * Upload cover if supplied.
-       */
-      if(coverFile){
-
-        try{
-
-          coverUrl =
-            await uploadFile(
-              'book-covers',
-              coverFile,
-              currentAuthor.id + '/' + book.id
-            );
-
-
-          const {
-            error:updateCoverError
-          } = await supabaseClient
-            .from('books')
-            .update({
-              cover_url:coverUrl
-            })
-            .eq('id',book.id);
-
-
-          if(updateCoverError){
-            throw updateCoverError;
-          }
-
-        }catch(error){
-
-          console.error(
-            'Cover upload error:',
-            error
-          );
-
-          mediaWarning +=
-            ' The cover image could not be uploaded.';
-
-        }
-
-      }
-
-
-      /*
-       * Upload trailer if supplied.
-       */
-      if(trailerFile){
-
-        try{
-
-          trailerUrl =
-            await uploadFile(
-              'book-trailers',
-              trailerFile,
-              currentAuthor.id + '/' + book.id
-            );
-
-
-          await createTrailer(
-            book.id,
-            trailerUrl
-          );
-
-        }catch(error){
-
-          console.error(
-            'Trailer upload error:',
-            error
-          );
-
-          mediaWarning +=
-            ' The trailer video could not be uploaded.';
-
-        }
-
-      }
-
-
-      /*
-       * Create the protected Flipper Guide record
-       * when the author supplied the required link.
-       */
-      if(flipperGuideLink){
-
-        try{
-
-          await createFlipperGuide(
-            book.id,
-            title || 'Book Submission',
-            flipperGuideLink
-          );
-
-        }catch(error){
-
-          console.error(
-            'Flipper Guide error:',
-            error
-          );
-
-          mediaWarning +=
-            ' The Flipper Guide link could not be saved.';
-
-        }
-
-      }
-
-
-      submitBookBtn.disabled = false;
-      submitBookBtn.textContent =
-        'Submit Book for Review';
-
-
-      bookForm.reset();
-
-
-      /*
-       * Restore the account information after reset.
-       */
-      document.getElementById(
-        'authorName'
-      ).value =
-        currentAuthor.author_name || '';
-
-      document.getElementById(
-        'authorEmailField'
-      ).value =
-        currentUser.email || '';
-
-
-      if(submissionComplete){
-
-        showNotice(
-          'Your book has been submitted successfully and is now pending Admin review.' +
-          mediaWarning,
-          mediaWarning
-            ? 'warning'
-            : 'success'
-        );
-
-        showToast(
-          mediaWarning
-            ? 'Book submitted with a media warning.'
-            : 'Book submitted successfully.'
-        );
-
-      }else{
-
-        showNotice(
-          'Your book was submitted to Admin for review, but the submission is incomplete. Missing: ' +
-          missingFields.join(', ') +
-          '.' +
-          mediaWarning,
-          'warning'
-        );
-
-        showToast(
-          'Book submitted. Please check the missing information notification.'
-        );
-
-      }
-
-
-      await loadBooks();
-
-    }
-
-
-    async function initializeAuthorDashboard(){
-
-      const session =
-        await getRealSession();
-
-
-      if(!session){
-
-        window.location.href =
-          'auth.html?mode=signin';
-
-        return;
-
-      }
-
-
-      currentUser =
-        session.user;
-
-
-      document.getElementById(
-        'authorEmail'
-      ).textContent =
-        currentUser.email || '';
-
-
-      document.getElementById(
-        'authorEmailField'
-      ).value =
-        currentUser.email || '';
-
-
-      try{
-
-        currentProfile =
-          await loadProfile();
-
-
-        if(
-          !currentProfile ||
-          currentProfile.role !== 'author'
-        ){
-
-          await supabaseClient.auth.signOut();
-
-          window.location.href =
-            'auth.html?mode=signin';
-
-          return;
-
-        }
-
-
-        currentAuthor =
-          await loadAuthor();
-
-
-        if(
-          !currentAuthor ||
-          currentAuthor.status !== 'approved'
-        ){
-
-          document.getElementById(
-            'accountName'
-          ).textContent =
-            currentProfile.display_name ||
-            '—';
-
-
-          document.getElementById(
-            'accountEmail'
-          ).textContent =
-            currentUser.email ||
-            '—';
-
-
-          document.getElementById(
-            'accountRole'
-          ).textContent =
-            currentProfile.role ||
-            '—';
-
-
-          document.getElementById(
-            'accountAuthorStatus'
-          ).textContent =
-            currentAuthor?.status ||
-            'Not approved';
-
-
-          bookForm.classList.add('hidden');
-
-
-          showNotice(
-            'Your author account is not currently approved for book submission.'
-          );
-
-
-          return;
-
-        }
-
-
-        document.getElementById(
-          'authorName'
-        ).value =
-          currentAuthor.author_name ||
-          currentProfile.display_name ||
-          '';
-
-
-        document.getElementById(
-          'authorEmailField'
-        ).value =
-          currentUser.email ||
-          '';
-
-
-        document.getElementById(
-          'aboutAuthor'
-        ).value =
-          currentAuthor.bio ||
-          '';
-
-
-        document.getElementById(
-          'accountName'
-        ).textContent =
-          currentProfile.display_name ||
-          currentAuthor.author_name ||
-          '—';
-
-
-        document.getElementById(
-          'accountEmail'
-        ).textContent =
-          currentUser.email ||
-          '—';
-
-
-        document.getElementById(
-          'accountRole'
-        ).textContent =
-          currentProfile.role;
-
-
-        document.getElementById(
-          'accountAuthorStatus'
-        ).textContent =
-          currentAuthor.status;
-
-
-        await loadBooks();
-
-
-      }catch(error){
-
-        console.error(
-          'Author dashboard error:',
-          error
-        );
-
-        showToast(
-          'Unable to load your author account.'
-        );
-
-      }
-
-    }
-
-
-    bookForm.addEventListener(
-      'submit',
-      submitBook
     );
 
 
-    document
-      .getElementById('signOutBtn')
-      .addEventListener(
-        'click',
-        async () => {
+  if(authorsError){
 
-          await supabaseClient.auth.signOut();
+    console.error(
+      'Authors directory error:',
+      authorsError
+    );
 
-          window.location.href =
-            'auth.html?mode=signin';
 
-        }
+    grid.innerHTML = `
+      <div class="errorState">
+
+        <h3>
+          Authors are temporarily unavailable.
+        </h3>
+
+        <p>
+          Please try again shortly.
+        </p>
+
+      </div>
+    `;
+
+
+    resultsCount.textContent =
+      'Unable to load authors.';
+
+    return;
+
+  }
+
+
+  if(!authors || !authors.length){
+
+    allAuthors = [];
+
+    renderAuthors();
+
+    return;
+
+  }
+
+
+  const profileIds =
+    [
+      ...new Set(
+        authors
+          .map(author => author.profile_id)
+          .filter(Boolean)
+      )
+    ];
+
+
+  let profiles = [];
+
+
+  if(profileIds.length){
+
+    const {
+      data,
+      error
+    } = await supabaseClient
+
+      .from('profiles')
+
+      .select(`
+        id,
+        display_name,
+        role
+      `)
+
+      .in(
+        'id',
+        profileIds
       );
 
 
-    initializeAuthorDashboard();
+    if(error){
 
-  </script>
+      console.error(
+        'Author profiles error:',
+        error
+      );
+
+    }else{
+
+      profiles =
+        data || [];
+
+    }
+
+  }
+
+
+  const profileMap =
+    new Map(
+      profiles.map(
+        profile => [
+          profile.id,
+          profile
+        ]
+      )
+    );
+
+
+  const authorIds =
+    authors
+      .map(author => author.id)
+      .filter(Boolean);
+
+
+  let books = [];
+
+
+  if(authorIds.length){
+
+    const {
+      data,
+      error
+    } = await supabaseClient
+
+      .from('books')
+
+      .select(`
+        id,
+        author_id,
+        title,
+        status
+      `)
+
+      .eq('status','approved')
+
+      .in(
+        'author_id',
+        authorIds
+      );
+
+
+    if(error){
+
+      console.error(
+        'Author book count error:',
+        error
+      );
+
+    }else{
+
+      books =
+        data || [];
+
+    }
+
+  }
+
+
+  const booksByAuthor =
+    new Map();
+
+
+  for(const book of books){
+
+    if(!booksByAuthor.has(book.author_id)){
+
+      booksByAuthor.set(
+        book.author_id,
+        []
+      );
+
+    }
+
+    booksByAuthor
+      .get(book.author_id)
+      .push(book);
+
+  }
+
+
+  allAuthors =
+    authors.map(author => {
+
+      const profile =
+        profileMap.get(
+          author.profile_id
+        ) || {};
+
+
+      const authorBooks =
+        booksByAuthor.get(
+          author.id
+        ) || [];
+
+
+      return {
+
+        ...author,
+
+        profile,
+
+        books:
+          authorBooks,
+
+        bookCount:
+          authorBooks.length
+
+      };
+
+    });
+
+
+  applyAuthorFilters();
+
+}
+
+
+/* ============================================================
+   AUTHOR FILTERING
+============================================================ */
+
+function applyAuthorFilters(){
+
+  const search =
+    document
+      .getElementById('authorSearch')
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const bookFilter =
+    document
+      .getElementById('bookFilter')
+      .value;
+
+
+  visibleAuthors =
+    allAuthors.filter(author => {
+
+      const name =
+        String(
+          author.author_name ||
+          author.profile?.display_name ||
+          ''
+        ).toLowerCase();
+
+
+      const bio =
+        String(
+          author.bio || ''
+        ).toLowerCase();
+
+
+      const matchesSearch =
+        !search ||
+        name.includes(search) ||
+        bio.includes(search);
+
+
+      let matchesBookFilter =
+        true;
+
+
+      if(bookFilter === 'books'){
+
+        matchesBookFilter =
+          author.bookCount > 0;
+
+      }
+
+
+      if(bookFilter === 'none'){
+
+        matchesBookFilter =
+          author.bookCount === 0;
+
+      }
+
+
+      return (
+        matchesSearch &&
+        matchesBookFilter
+      );
+
+    });
+
+
+  renderAuthors();
+
+}
+
+
+/* ============================================================
+   AUTHOR CARDS
+============================================================ */
+
+function renderAuthors(){
+
+  const grid =
+    document.getElementById('authorGrid');
+
+  const resultsCount =
+    document.getElementById('resultsCount');
+
+
+  if(!allAuthors.length){
+
+    grid.innerHTML = `
+      <div class="emptyState">
+
+        <h3>
+          No approved authors yet.
+        </h3>
+
+        <p>
+          Approved authors will appear here when they are available.
+        </p>
+
+      </div>
+    `;
+
+    resultsCount.innerHTML =
+      '<strong>0</strong> authors';
+
+    return;
+
+  }
+
+
+  resultsCount.innerHTML =
+    `<strong>${visibleAuthors.length}</strong>
+     ${visibleAuthors.length === 1 ? 'author' : 'authors'}`;
+
+
+  if(!visibleAuthors.length){
+
+    grid.innerHTML = `
+      <div class="emptyState">
+
+        <h3>
+          No authors matched your search.
+        </h3>
+
+        <p>
+          Try another name or change the book filter.
+        </p>
+
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  grid.innerHTML =
+    visibleAuthors
+      .map(author => {
+
+        const name =
+          author.author_name ||
+          author.profile?.display_name ||
+          'Reader Reach Author';
+
+
+        const bio =
+          author.bio ||
+          'This author has not added a public biography yet.';
+
+
+        const initials =
+          getInitials(name);
+
+
+        const profileId =
+          author.id;
+
+
+        return `
+
+          <article class="authorCard">
+
+            <div class="authorTop">
+
+              <div class="authorIdentity">
+
+                <div class="avatar">
+                  ${initials}
+                </div>
+
+                <div>
+
+                  <h3 class="authorName">
+                    ${escapeHtml(name)}
+                  </h3>
+
+                  <div class="authorRole">
+                    Author
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="authorBody">
+
+              <p class="bio">
+                ${escapeHtml(bio)}
+              </p>
+
+
+              <div class="authorStats">
+
+                <div class="stat">
+
+                  <strong>
+                    ${author.bookCount}
+                  </strong>
+
+                  <span>
+                    ${author.bookCount === 1 ? 'Book' : 'Books'}
+                  </span>
+
+                </div>
+
+
+                <div class="stat">
+
+                  <strong>
+                    Approved
+                  </strong>
+
+                  <span>
+                    Author
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <div class="authorActions">
+
+                <a
+                  class="btn primary"
+                  href="author-profile.html?id=${encodeURIComponent(profileId)}"
+                >
+                  View Profile
+                </a>
+
+                <a
+                  class="btn soft"
+                  href="author-profile.html?id=${encodeURIComponent(profileId)}#books"
+                >
+                  View Books
+                </a>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        `;
+
+      })
+      .join('');
+
+}
+
+
+/* ============================================================
+   LIVE CHAT
+============================================================ */
+
+function openChat(){
+
+  const panel =
+    document.getElementById('chatPanel');
+
+  panel.classList.add('open');
+
+  panel.setAttribute(
+    'aria-hidden',
+    'false'
+  );
+
+}
+
+
+function closeChat(){
+
+  const panel =
+    document.getElementById('chatPanel');
+
+  panel.classList.remove('open');
+
+  panel.setAttribute(
+    'aria-hidden',
+    'true'
+  );
+
+}
+
+
+async function createChatConversation(){
+
+  if(chatConversationId){
+    return chatConversationId;
+  }
+
+
+  const name =
+    document
+      .getElementById('chatName')
+      .value
+      .trim();
+
+
+  const email =
+    document
+      .getElementById('chatEmail')
+      .value
+      .trim();
+
+
+  if(!name || !email){
+    return null;
+  }
+
+
+  /*
+    The public visitor chat uses a dedicated conversation
+    record. No private Reader or Author account information
+    is exposed through this public page.
+  */
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+
+    .from('conversations')
+
+    .insert({
+
+      visitor_name:name,
+
+      visitor_email:email,
+
+      subject:'Public Live Chat',
+
+      status:'open'
+
+    })
+
+    .select('id')
+
+    .single();
+
+
+  if(error){
+
+    console.error(
+      'Live chat conversation error:',
+      error
+    );
+
+    return null;
+
+  }
+
+
+  chatConversationId =
+    data.id;
+
+
+  subscribeToChat(
+    chatConversationId
+  );
+
+
+  return chatConversationId;
+
+}
+
+
+async function sendChatMessage(){
+
+  const conversationId =
+    await createChatConversation();
+
+
+  if(!conversationId){
+
+    throw new Error(
+      'Could not create the chat conversation.'
+    );
+
+  }
+
+
+  const message =
+    document
+      .getElementById('chatMessage')
+      .value
+      .trim();
+
+
+  if(!message){
+
+    throw new Error(
+      'Please enter a message.'
+    );
+
+  }
+
+
+  const {
+    error
+  } = await supabaseClient
+
+    .from('messages')
+
+    .insert({
+
+      conversation_id:
+        conversationId,
+
+      sender_type:
+        'visitor',
+
+      message:
+        message
+
+    });
+
+
+  if(error){
+
+    console.error(
+      'Live chat message error:',
+      error
+    );
+
+    throw new Error(
+      'The message could not be sent.'
+    );
+
+  }
+
+}
+
+
+function appendChatMessage(
+  message,
+  isReply = false
+){
+
+  const container =
+    document.getElementById(
+      'chatMessages'
+    );
+
+
+  const item =
+    document.createElement('div');
+
+
+  item.className =
+    'chatMessage' +
+    (isReply ? ' reply' : '');
+
+
+  item.textContent =
+    message;
+
+
+  container.appendChild(item);
+
+
+  container.scrollTop =
+    container.scrollHeight;
+
+}
+
+
+function subscribeToChat(
+  conversationId
+){
+
+  if(chatChannel){
+
+    supabaseClient
+      .removeChannel(
+        chatChannel
+      );
+
+  }
+
+
+  chatChannel =
+    supabaseClient
+
+      .channel(
+        `public-chat-${conversationId}`
+      )
+
+      .on(
+
+        'postgres_changes',
+
+        {
+          event:'INSERT',
+          schema:'public',
+          table:'messages',
+          filter:
+            `conversation_id=eq.${conversationId}`
+        },
+
+        payload => {
+
+          const row =
+            payload.new;
+
+
+          if(
+            row.sender_type &&
+            row.sender_type !== 'visitor'
+          ){
+
+            appendChatMessage(
+              row.message ||
+              '',
+              true
+            );
+
+          }
+
+        }
+
+      )
+
+      .subscribe();
+
+}
+
+
+async function handleChatSubmit(
+  event
+){
+
+  event.preventDefault();
+
+
+  const status =
+    document.getElementById(
+      'chatStatus'
+    );
+
+
+  status.textContent =
+    'Sending...';
+
+
+  try{
+
+    await sendChatMessage();
+
+
+    document
+      .getElementById('chatMessage')
+      .value = '';
+
+
+    status.textContent =
+      'Message sent.';
+
+
+    showToast(
+      'Your message has been sent to Reader Reach.'
+    );
+
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+
+    status.textContent =
+      error.message ||
+      'Unable to send your message.';
+
+  }
+
+}
+
+
+/* ============================================================
+   EVENTS
+============================================================ */
+
+document
+  .getElementById('authorSearch')
+  .addEventListener(
+    'input',
+    applyAuthorFilters
+  );
+
+
+document
+  .getElementById('bookFilter')
+  .addEventListener(
+    'change',
+    applyAuthorFilters
+  );
+
+
+document
+  .getElementById('chatButton')
+  .addEventListener(
+    'click',
+    () => {
+
+      const panel =
+        document.getElementById(
+          'chatPanel'
+        );
+
+
+      if(
+        panel.classList.contains(
+          'open'
+        )
+      ){
+
+        closeChat();
+
+      }else{
+
+        openChat();
+
+      }
+
+    }
+  );
+
+
+document
+  .getElementById('chatForm')
+  .addEventListener(
+    'submit',
+    handleChatSubmit
+  );
+
+
+/* ============================================================
+   INITIALIZATION
+============================================================ */
+
+document
+  .getElementById('year')
+  .textContent =
+  new Date().getFullYear();
+
+
+loadAuthors();
+
+</script>
 
 </body>
 </html>

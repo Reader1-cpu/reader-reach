@@ -22,13 +22,9 @@
   --shadow:0 12px 35px rgba(59,36,27,.08);
 }
 
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
-html{
-  scroll-behavior:smooth;
-}
+html{scroll-behavior:smooth}
 
 body{
   margin:0;
@@ -42,16 +38,11 @@ a{
   text-decoration:none;
 }
 
-button,
-input,
-textarea,
-select{
+button,input,textarea,select{
   font:inherit;
 }
 
-button{
-  cursor:pointer;
-}
+button{cursor:pointer}
 
 .wrap{
   width:min(1180px,92%);
@@ -116,9 +107,7 @@ nav{
   font-size:14px;
 }
 
-.links a:hover{
-  color:var(--brown);
-}
+.links a:hover{color:var(--brown)}
 
 .navActions{
   display:flex;
@@ -155,11 +144,6 @@ nav{
 .btn.soft{
   background:var(--soft);
   border-color:var(--soft);
-}
-
-.btn.danger{
-  color:var(--red);
-  border-color:#ead0cc;
 }
 
 .btn.small{
@@ -298,13 +282,9 @@ nav{
   color:var(--brown);
 }
 
-.content{
-  min-width:0;
-}
+.content{min-width:0}
 
-.section{
-  margin-bottom:25px;
-}
+.section{margin-bottom:25px}
 
 .card{
   padding:25px;
@@ -434,11 +414,6 @@ nav{
   color:#77611c;
 }
 
-.badge.red{
-  background:#faece9;
-  color:var(--red);
-}
-
 .empty{
   padding:30px 15px;
   text-align:center;
@@ -454,9 +429,7 @@ nav{
   gap:20px;
 }
 
-.field{
-  margin-bottom:15px;
-}
+.field{margin-bottom:15px}
 
 .field label{
   display:block;
@@ -724,9 +697,7 @@ footer a{
 }
 
 @media(max-width:950px){
-  .links{
-    display:none;
-  }
+  .links{display:none}
 
   .heroGrid{
     grid-template-columns:1fr;
@@ -743,9 +714,7 @@ footer a{
     gap:4px;
   }
 
-  .sideTitle{
-    display:none;
-  }
+  .sideTitle{display:none}
 
   .sideLink{
     min-width:max-content;
@@ -761,7 +730,7 @@ footer a{
   }
 
   .conversationList{
-    max-height:220px;
+    max-height:260px;
     border-right:0;
     border-bottom:1px solid var(--line);
   }
@@ -777,13 +746,9 @@ footer a{
     display:none;
   }
 
-  .nav{
-    min-height:65px;
-  }
+  .nav{min-height:65px}
 
-  .logo{
-    font-size:19px;
-  }
+  .logo{font-size:19px}
 
   .navActions .btn:first-child{
     display:none;
@@ -793,9 +758,7 @@ footer a{
     padding:50px 0 40px;
   }
 
-  .hero h1{
-    font-size:42px;
-  }
+  .hero h1{font-size:42px}
 
   .stats,
   .grid2,
@@ -804,13 +767,9 @@ footer a{
     grid-template-columns:1fr;
   }
 
-  .card{
-    padding:18px;
-  }
+  .card{padding:18px}
 
-  .sectionTitle{
-    font-size:24px;
-  }
+  .sectionTitle{font-size:24px}
 
   .itemTop{
     flex-direction:column;
@@ -955,8 +914,6 @@ footer a{
 
     <section class="content">
 
-      <!-- OVERVIEW -->
-
       <section id="overview" class="pageSection">
 
         <div class="stats">
@@ -988,7 +945,6 @@ footer a{
           <div class="card">
 
             <div class="sectionHead">
-
               <div>
                 <h2 class="sectionTitle">Moderator Workspace</h2>
 
@@ -997,7 +953,6 @@ footer a{
                   feature coordination, scheduling and moderation support.
                 </p>
               </div>
-
             </div>
 
             <div class="notice">
@@ -1020,7 +975,7 @@ footer a{
                 <div>
                   <h2 class="sectionTitle">Recent Approved Books</h2>
                   <p class="muted">
-                    Books recently approved by Admin and available for feature coordination.
+                    Books approved by Admin and available for feature coordination.
                   </p>
                 </div>
               </div>
@@ -1053,9 +1008,6 @@ footer a{
         </section>
 
       </section>
-
-
-      <!-- APPROVED AUTHORS -->
 
       <section id="authors" class="pageSection hidden">
 
@@ -1090,9 +1042,6 @@ footer a{
 
       </section>
 
-
-      <!-- APPROVED BOOKS -->
-
       <section id="books" class="pageSection hidden">
 
         <section class="section">
@@ -1125,9 +1074,6 @@ footer a{
 
       </section>
 
-
-      <!-- MESSAGES -->
-
       <section id="messages" class="pageSection hidden">
 
         <section class="section">
@@ -1140,8 +1086,7 @@ footer a{
                 <h2 class="sectionTitle">Author Messages</h2>
 
                 <p class="muted">
-                  Communicate with approved authors about features,
-                  schedules and Reader Reach coordination.
+                  Select an approved author to open or create a conversation.
                 </p>
               </div>
 
@@ -1162,11 +1107,11 @@ footer a{
                 <div class="chatHeader">
 
                   <div class="itemTitle" id="conversationTitle">
-                    Select a conversation
+                    Select an author
                   </div>
 
                   <div class="itemMeta" id="conversationMeta">
-                    Author conversations will appear here.
+                    Choose an author from Approved Authors.
                   </div>
 
                 </div>
@@ -1206,9 +1151,6 @@ footer a{
 
       </section>
 
-
-      <!-- CALENDAR -->
-
       <section id="calendar" class="pageSection hidden">
 
         <section class="section">
@@ -1247,9 +1189,7 @@ footer a{
                   </label>
 
                   <select id="scheduleBook">
-                    <option value="">
-                      Select an approved book
-                    </option>
+                    <option value="">Select an approved book</option>
                   </select>
 
                 </div>
@@ -1260,9 +1200,7 @@ footer a{
                     Feature Date
                   </label>
 
-                  <input
-                    id="scheduleDate"
-                    type="date">
+                  <input id="scheduleDate" type="date">
 
                 </div>
 
@@ -1272,9 +1210,7 @@ footer a{
                     Feature Time
                   </label>
 
-                  <input
-                    id="scheduleTime"
-                    type="time">
+                  <input id="scheduleTime" type="time">
 
                 </div>
 
@@ -1320,9 +1256,6 @@ footer a{
 
       </section>
 
-
-      <!-- NOTIFICATIONS -->
-
       <section id="notifications" class="pageSection hidden">
 
         <section class="section">
@@ -1358,9 +1291,6 @@ footer a{
 
       </section>
 
-
-      <!-- ACCOUNT -->
-
       <section id="account" class="pageSection hidden">
 
         <section class="section">
@@ -1393,7 +1323,7 @@ footer a{
 
               <div class="profileField">
                 <label>Role</label>
-                <div id="accountRole">Moderator</div>
+                <div>Moderator</div>
               </div>
 
               <div class="profileField">
@@ -1405,15 +1335,11 @@ footer a{
 
             <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;">
 
-              <a
-                class="btn"
-                href="reset-password.html">
+              <a class="btn" href="reset-password.html">
                 Reset Password
               </a>
 
-              <a
-                class="btn"
-                href="contact.html">
+              <a class="btn" href="contact.html">
                 Contact Reader Reach
               </a>
 
@@ -1431,7 +1357,6 @@ footer a{
 
 </main>
 
-
 <footer>
 
   <div class="wrap">
@@ -1441,9 +1366,7 @@ footer a{
       <div>
         <h3>Reader Reach</h3>
 
-        <p>
-          Every Book Has Its Readers.
-        </p>
+        <p>Every Book Has Its Readers.</p>
 
         <p>
           Moderator workspace for author communication,
@@ -1479,14 +1402,11 @@ footer a{
 
 </footer>
 
-
 <div id="toast" class="toast"></div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-
 const SUPABASE_URL =
   'https://bublmnfhyyrefcdkloak.supabase.co';
 
@@ -1499,7 +1419,6 @@ const supabaseClient =
     SUPABASE_KEY
   );
 
-
 let currentUser = null;
 let currentProfile = null;
 let currentModerator = null;
@@ -1508,40 +1427,31 @@ let approvedAuthors = [];
 let approvedBooks = [];
 let schedules = [];
 let notifications = [];
-
 let conversations = [];
 let selectedConversation = null;
 
-let realtimeChannel = null;
+let realtimeChannels = [];
 
 
 /* -------------------------
-   BASIC HELPERS
+   HELPERS
 ------------------------- */
 
 function escapeHtml(value){
-
   return String(value ?? '')
     .replace(/&/g,'&amp;')
     .replace(/</g,'&lt;')
     .replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;')
     .replace(/'/g,'&#039;');
-
 }
 
-
 function formatDate(value){
-
-  if(!value){
-    return '—';
-  }
+  if(!value) return '—';
 
   const date = new Date(value);
 
-  if(Number.isNaN(date.getTime())){
-    return '—';
-  }
+  if(Number.isNaN(date.getTime())) return '—';
 
   return date.toLocaleDateString(
     undefined,
@@ -1551,21 +1461,14 @@ function formatDate(value){
       day:'numeric'
     }
   );
-
 }
 
-
 function formatDateTime(value){
-
-  if(!value){
-    return '—';
-  }
+  if(!value) return '—';
 
   const date = new Date(value);
 
-  if(Number.isNaN(date.getTime())){
-    return '—';
-  }
+  if(Number.isNaN(date.getTime())) return '—';
 
   return date.toLocaleString(
     undefined,
@@ -1577,24 +1480,19 @@ function formatDateTime(value){
       minute:'2-digit'
     }
   );
-
 }
 
-
 function showToast(message){
-
   const toast =
     document.getElementById('toast');
 
   toast.textContent = message;
-
   toast.classList.add('show');
 
   setTimeout(
     () => toast.classList.remove('show'),
-    3000
+    3500
   );
-
 }
 
 
@@ -1606,9 +1504,9 @@ function showSection(section){
 
   document
     .querySelectorAll('.pageSection')
-    .forEach(item => {
-      item.classList.add('hidden');
-    });
+    .forEach(item =>
+      item.classList.add('hidden')
+    );
 
   const target =
     document.getElementById(section);
@@ -1620,12 +1518,10 @@ function showSection(section){
   document
     .querySelectorAll('.sideLink[data-section]')
     .forEach(link => {
-
       link.classList.toggle(
         'active',
         link.dataset.section === section
       );
-
     });
 
   window.scrollTo({
@@ -1643,14 +1539,11 @@ function showSection(section){
 async function requireModerator(){
 
   const {
-    data:{
-      user
-    }
+    data:{user}
   } =
     await supabaseClient.auth.getUser();
 
   if(!user){
-
     window.location.href =
       'auth.html?mode=signin';
 
@@ -1675,7 +1568,6 @@ async function requireModerator(){
       .single();
 
   if(profileError){
-
     console.error(
       'Profile lookup error:',
       profileError
@@ -1707,7 +1599,6 @@ async function requireModerator(){
     return false;
   }
 
-
   const {
     data:moderator,
     error:moderatorError
@@ -1723,7 +1614,6 @@ async function requireModerator(){
       .eq('profile_id',user.id)
       .maybeSingle();
 
-
   if(moderatorError){
 
     console.error(
@@ -1737,7 +1627,6 @@ async function requireModerator(){
 
     return false;
   }
-
 
   if(!moderator || moderator.active !== true){
 
@@ -1753,7 +1642,6 @@ async function requireModerator(){
     return false;
   }
 
-
   currentModerator = moderator;
 
   document.getElementById(
@@ -1761,13 +1649,10 @@ async function requireModerator(){
   ).textContent =
     'Active';
 
-
   loadAccount();
 
   return true;
-
 }
-
 
 async function signOut(){
 
@@ -1775,7 +1660,6 @@ async function signOut(){
 
   window.location.href =
     'auth.html?mode=signin';
-
 }
 
 
@@ -1798,15 +1682,11 @@ function loadAccount(){
     currentUser.email || '—';
 
   document.getElementById(
-    'accountRole'
-  ).textContent =
-    'Moderator';
-
-  document.getElementById(
     'accountCreated'
   ).textContent =
-    formatDate(currentProfile.created_at);
-
+    formatDate(
+      currentProfile.created_at
+    );
 }
 
 
@@ -1823,7 +1703,6 @@ async function loadApprovedAuthors(){
 
   container.innerHTML =
     '<div class="empty">Loading approved authors...</div>';
-
 
   const {
     data,
@@ -1843,11 +1722,8 @@ async function loadApprovedAuthors(){
       .eq('status','approved')
       .order(
         'author_name',
-        {
-          ascending:true
-        }
+        {ascending:true}
       );
-
 
   if(error){
 
@@ -1862,16 +1738,13 @@ async function loadApprovedAuthors(){
     return;
   }
 
-
   approvedAuthors =
     data || [];
-
 
   document.getElementById(
     'approvedAuthorsCount'
   ).textContent =
     approvedAuthors.length;
-
 
   if(!approvedAuthors.length){
 
@@ -1880,7 +1753,6 @@ async function loadApprovedAuthors(){
 
     return;
   }
-
 
   container.innerHTML =
     approvedAuthors
@@ -1935,7 +1807,7 @@ async function loadApprovedAuthors(){
 
               <button
                 class="btn small primary"
-                onclick="startAuthorConversation('${author.profile_id || ''}')">
+                onclick="startAuthorConversation('${author.id}')">
                 Message
               </button>
 
@@ -1946,7 +1818,6 @@ async function loadApprovedAuthors(){
 
       })
       .join('');
-
 }
 
 
@@ -1963,7 +1834,6 @@ async function loadApprovedBooks(){
 
   container.innerHTML =
     '<div class="empty">Loading approved books...</div>';
-
 
   const {
     data,
@@ -1983,11 +1853,8 @@ async function loadApprovedBooks(){
       .eq('status','approved')
       .order(
         'created_at',
-        {
-          ascending:false
-        }
+        {ascending:false}
       );
-
 
   if(error){
 
@@ -2002,28 +1869,28 @@ async function loadApprovedBooks(){
     return;
   }
 
-
   approvedBooks =
     data || [];
-
 
   document.getElementById(
     'approvedBooksCount'
   ).textContent =
     approvedBooks.length;
 
-
   populateBookSelect();
-
 
   if(!approvedBooks.length){
 
     container.innerHTML =
       '<div class="empty">No approved books are available.</div>';
 
+    document.getElementById(
+      'recentBooksList'
+    ).innerHTML =
+      '<div class="empty">No approved books yet.</div>';
+
     return;
   }
-
 
   const authorIds =
     [
@@ -2034,9 +1901,7 @@ async function loadApprovedBooks(){
       )
     ];
 
-
   let authors = [];
-
 
   if(authorIds.length){
 
@@ -2058,19 +1923,15 @@ async function loadApprovedBooks(){
       authorData || [];
   }
 
-
   const authorMap =
     new Map(
-      authors.map(
-        author => [
-          author.id,
-          author.author_name
-        ]
-      )
+      authors.map(author => [
+        author.id,
+        author.author_name
+      ])
     );
 
-
-  container.innerHTML =
+  const markup =
     approvedBooks
       .map(book => {
 
@@ -2134,6 +1995,40 @@ async function loadApprovedBooks(){
       })
       .join('');
 
+  container.innerHTML =
+    markup;
+
+  document.getElementById(
+    'recentBooksList'
+  ).innerHTML =
+    approvedBooks
+      .slice(0,5)
+      .map(book => {
+
+        return `
+          <div class="item">
+
+            <div class="itemTitle">
+              ${escapeHtml(
+                book.title ||
+                'Untitled Book'
+              )}
+            </div>
+
+            <div class="itemMeta">
+              ${escapeHtml(
+                authorMap.get(
+                  book.author_id
+                ) ||
+                'Unknown author'
+              )}
+            </div>
+
+          </div>
+        `;
+
+      })
+      .join('');
 }
 
 
@@ -2148,20 +2043,15 @@ function populateBookSelect(){
       'scheduleBook'
     );
 
-  if(!select){
-    return;
-  }
+  if(!select) return;
 
   select.innerHTML =
     '<option value="">Select an approved book</option>';
 
-
   approvedBooks.forEach(book => {
 
     const option =
-      document.createElement(
-        'option'
-      );
+      document.createElement('option');
 
     option.value =
       book.id;
@@ -2171,11 +2061,8 @@ function populateBookSelect(){
       'Untitled Book';
 
     select.appendChild(option);
-
   });
-
 }
-
 
 function prepareSchedule(bookId){
 
@@ -2188,12 +2075,14 @@ function prepareSchedule(bookId){
     bookId;
 
   showSection('calendar');
-
 }
 
 
 /* -------------------------
    SCHEDULES
+   Uses actual schema:
+   scheduled_date
+   scheduled_time
 ------------------------- */
 
 async function loadSchedules(){
@@ -2206,7 +2095,6 @@ async function loadSchedules(){
   container.innerHTML =
     '<div class="empty">Loading schedules...</div>';
 
-
   const {
     data,
     error
@@ -2217,24 +2105,21 @@ async function loadSchedules(){
         id,
         book_id,
         moderator_id,
-        feature_date,
-        feature_time,
+        scheduled_date,
+        scheduled_time,
         status,
-        notes
+        notes,
+        created_at,
+        updated_at
       `)
       .order(
-        'feature_date',
-        {
-          ascending:true
-        }
+        'scheduled_date',
+        {ascending:true}
       )
       .order(
-        'feature_time',
-        {
-          ascending:true
-        }
+        'scheduled_time',
+        {ascending:true}
       );
-
 
   if(error){
 
@@ -2249,10 +2134,8 @@ async function loadSchedules(){
     return;
   }
 
-
   schedules =
     data || [];
-
 
   const scheduled =
     schedules.filter(
@@ -2260,12 +2143,10 @@ async function loadSchedules(){
         item.status === 'scheduled'
     );
 
-
   document.getElementById(
     'scheduledFeaturesCount'
   ).textContent =
     scheduled.length;
-
 
   if(!schedules.length){
 
@@ -2277,7 +2158,6 @@ async function loadSchedules(){
     return;
   }
 
-
   const bookIds =
     [
       ...new Set(
@@ -2287,9 +2167,7 @@ async function loadSchedules(){
       )
     ];
 
-
   let books = [];
-
 
   if(bookIds.length){
 
@@ -2312,7 +2190,6 @@ async function loadSchedules(){
       bookData || [];
   }
 
-
   const authorIds =
     [
       ...new Set(
@@ -2322,9 +2199,7 @@ async function loadSchedules(){
       )
     ];
 
-
   let authors = [];
-
 
   if(authorIds.length){
 
@@ -2346,28 +2221,21 @@ async function loadSchedules(){
       authorData || [];
   }
 
-
   const bookMap =
     new Map(
-      books.map(
-        book => [
-          book.id,
-          book
-        ]
-      )
+      books.map(book => [
+        book.id,
+        book
+      ])
     );
-
 
   const authorMap =
     new Map(
-      authors.map(
-        author => [
-          author.id,
-          author.author_name
-        ]
-      )
+      authors.map(author => [
+        author.id,
+        author.author_name
+      ])
     );
-
 
   container.innerHTML =
     schedules
@@ -2384,15 +2252,18 @@ async function loadSchedules(){
             <div class="scheduleDate">
               ${escapeHtml(
                 formatDate(
-                  schedule.feature_date
+                  schedule.scheduled_date
                 )
               )}
-              ${schedule.feature_time
+
+              ${
+                schedule.scheduled_time
                 ? ' • ' +
                   escapeHtml(
-                    schedule.feature_time
+                    schedule.scheduled_time
                   )
-                : ''}
+                : ''
+              }
             </div>
 
             <div class="scheduleBook">
@@ -2442,13 +2313,10 @@ async function loadSchedules(){
       })
       .join('');
 
-
   renderUpcomingSchedules(
     scheduled
   );
-
 }
-
 
 function renderUpcomingSchedules(list){
 
@@ -2457,47 +2325,38 @@ function renderUpcomingSchedules(list){
       'upcomingList'
     );
 
-  if(!container){
-    return;
-  }
-
+  if(!container) return;
 
   const today =
     new Date();
 
   today.setHours(
-    0,
-    0,
-    0,
-    0
+    0,0,0,0
   );
-
 
   const upcoming =
     list
       .filter(item => {
 
-        if(!item.feature_date){
+        if(!item.scheduled_date){
           return false;
         }
 
         const date =
           new Date(
-            `${item.feature_date}T00:00:00`
+            `${item.scheduled_date}T00:00:00`
           );
 
         return date >= today;
-
       })
       .sort(
         (a,b) =>
-          String(a.feature_date)
+          String(a.scheduled_date)
             .localeCompare(
-              String(b.feature_date)
+              String(b.scheduled_date)
             )
       )
       .slice(0,5);
-
 
   if(!upcoming.length){
 
@@ -2506,7 +2365,6 @@ function renderUpcomingSchedules(list){
 
     return;
   }
-
 
   container.innerHTML =
     upcoming
@@ -2517,17 +2375,17 @@ function renderUpcomingSchedules(list){
 
             <div class="itemTitle">
               ${escapeHtml(
-                item.feature_date
+                item.scheduled_date
               )}
             </div>
 
             <div class="itemMeta">
               ${
-                item.feature_time
-                  ? escapeHtml(
-                      item.feature_time
-                    )
-                  : 'Time not specified'
+                item.scheduled_time
+                ? escapeHtml(
+                    item.scheduled_time
+                  )
+                : 'Time not specified'
               }
             </div>
 
@@ -2536,9 +2394,7 @@ function renderUpcomingSchedules(list){
 
       })
       .join('');
-
 }
-
 
 async function createSchedule(){
 
@@ -2562,42 +2418,31 @@ async function createSchedule(){
       'scheduleNotes'
     ).value.trim();
 
-
   if(!bookId){
-
     showToast(
       'Select an approved book.'
     );
-
     return;
   }
 
-
   if(!date){
-
     showToast(
       'Select a feature date.'
     );
-
     return;
   }
-
 
   const book =
     approvedBooks.find(
       item => item.id === bookId
     );
 
-
   if(!book || book.status !== 'approved'){
-
     showToast(
       'Only approved books can be scheduled.'
     );
-
     return;
   }
-
 
   const {
     error
@@ -2608,14 +2453,13 @@ async function createSchedule(){
         book_id:bookId,
         moderator_id:
           currentModerator.id,
-        feature_date:date,
-        feature_time:
+        scheduled_date:date,
+        scheduled_time:
           time || null,
         status:'scheduled',
         notes:
           notes || null
       });
-
 
   if(error){
 
@@ -2632,11 +2476,9 @@ async function createSchedule(){
     return;
   }
 
-
   showToast(
     'Feature scheduled.'
   );
-
 
   document.getElementById(
     'scheduleDate'
@@ -2650,9 +2492,7 @@ async function createSchedule(){
     'scheduleNotes'
   ).value = '';
 
-
   await loadSchedules();
-
 }
 
 
@@ -2669,7 +2509,6 @@ async function loadNotifications(){
 
   container.innerHTML =
     '<div class="empty">Loading notifications...</div>';
-
 
   const {
     data,
@@ -2693,12 +2532,9 @@ async function loadNotifications(){
       )
       .order(
         'created_at',
-        {
-          ascending:false
-        }
+        {ascending:false}
       )
       .limit(50);
-
 
   if(error){
 
@@ -2713,23 +2549,15 @@ async function loadNotifications(){
     return;
   }
 
-
   notifications =
     data || [];
-
-
-  const unread =
-    notifications.filter(
-      item =>
-        item.is_read !== true
-    ).length;
-
 
   document.getElementById(
     'unreadNotificationsCount'
   ).textContent =
-    unread;
-
+    notifications.filter(
+      item => !item.is_read
+    ).length;
 
   if(!notifications.length){
 
@@ -2738,7 +2566,6 @@ async function loadNotifications(){
 
     return;
   }
-
 
   container.innerHTML =
     notifications
@@ -2749,8 +2576,8 @@ async function loadNotifications(){
             class="item"
             style="${
               notification.is_read
-                ? ''
-                : 'border-left:4px solid var(--butter);'
+              ? ''
+              : 'border-left:4px solid var(--butter);'
             }">
 
             <div class="itemTop">
@@ -2789,30 +2616,26 @@ async function loadNotifications(){
               )}
             </div>
 
-            <div class="itemActions">
-
-              ${
-                notification.is_read
-                ? ''
-                : `
+            ${
+              notification.is_read
+              ? ''
+              : `
+                <div class="itemActions">
                   <button
                     class="btn small"
                     onclick="markNotificationRead('${notification.id}')">
                     Mark Read
                   </button>
-                `
-              }
-
-            </div>
+                </div>
+              `
+            }
 
           </div>
         `;
 
       })
       .join('');
-
 }
-
 
 async function markNotificationRead(id){
 
@@ -2833,7 +2656,6 @@ async function markNotificationRead(id){
         currentUser.id
       );
 
-
   if(error){
 
     console.error(
@@ -2848,15 +2670,32 @@ async function markNotificationRead(id){
     return;
   }
 
-
   await loadNotifications();
-
 }
 
 
 /* -------------------------
    CONVERSATIONS
 ------------------------- */
+
+/*
+  Actual database structure:
+  conversations:
+    id
+    author_id
+    moderator_id
+    book_id
+    created_at
+    updated_at
+
+  messages:
+    id
+    conversation_id
+    sender_profile_id
+    message
+    created_at
+    read_at
+*/
 
 async function loadConversations(){
 
@@ -2868,15 +2707,6 @@ async function loadConversations(){
   container.innerHTML =
     '<div class="empty">Loading conversations...</div>';
 
-
-  /*
-    Moderator communication uses the existing
-    conversations/messages system.
-
-    We intentionally do not expose unrelated
-    private reader information here.
-  */
-
   const {
     data,
     error
@@ -2885,18 +2715,20 @@ async function loadConversations(){
       .from('conversations')
       .select(`
         id,
-        subject,
-        status,
+        author_id,
+        moderator_id,
+        book_id,
         created_at,
         updated_at
       `)
+      .eq(
+        'moderator_id',
+        currentModerator.id
+      )
       .order(
         'updated_at',
-        {
-          ascending:false
-        }
+        {ascending:false}
       );
-
 
   if(error){
 
@@ -2911,47 +2743,90 @@ async function loadConversations(){
     return;
   }
 
-
   conversations =
     data || [];
 
-
   if(!conversations.length){
 
-    container.innerHTML =
-      '<div class="empty">No conversations yet.</div>';
+    container.innerHTML = `
+      <div class="empty">
+        No conversations yet.<br><br>
+        Open <strong>Approved Authors</strong>
+        and choose <strong>Message</strong>.
+      </div>
+    `;
 
     return;
   }
 
+  const authorIds =
+    [
+      ...new Set(
+        conversations
+          .map(item => item.author_id)
+          .filter(Boolean)
+      )
+    ];
+
+  let authors = [];
+
+  if(authorIds.length){
+
+    const {
+      data:authorData
+    } =
+      await supabaseClient
+        .from('authors')
+        .select(`
+          id,
+          author_name,
+          profile_id
+        `)
+        .in(
+          'id',
+          authorIds
+        );
+
+    authors =
+      authorData || [];
+  }
+
+  const authorMap =
+    new Map(
+      authors.map(author => [
+        author.id,
+        author
+      ])
+    );
 
   container.innerHTML =
     conversations
       .map(conversation => {
+
+        const author =
+          authorMap.get(
+            conversation.author_id
+          );
 
         return `
           <button
             class="conversation ${
               selectedConversation &&
               selectedConversation.id === conversation.id
-                ? 'active'
-                : ''
+              ? 'active'
+              : ''
             }"
             onclick="openConversation('${conversation.id}')">
 
             <div class="conversationTitle">
               ${escapeHtml(
-                conversation.subject ||
-                'Reader Reach Conversation'
+                author?.author_name ||
+                'Author Conversation'
               )}
             </div>
 
             <div class="conversationMeta">
-              ${escapeHtml(
-                conversation.status ||
-                'open'
-              )}
-              •
+              Last updated:
               ${escapeHtml(
                 formatDateTime(
                   conversation.updated_at ||
@@ -2965,7 +2840,147 @@ async function loadConversations(){
 
       })
       .join('');
+}
 
+
+async function startAuthorConversation(authorId){
+
+  if(!authorId){
+
+    showToast(
+      'This author could not be identified.'
+    );
+
+    return;
+  }
+
+  const author =
+    approvedAuthors.find(
+      item => item.id === authorId
+    );
+
+  if(!author){
+
+    showToast(
+      'Approved author not found.'
+    );
+
+    return;
+  }
+
+  showSection('messages');
+
+  /*
+    First look for an existing conversation
+    between this moderator and author.
+  */
+
+  const {
+    data:existing,
+    error:existingError
+  } =
+    await supabaseClient
+      .from('conversations')
+      .select(`
+        id,
+        author_id,
+        moderator_id,
+        book_id,
+        created_at,
+        updated_at
+      `)
+      .eq(
+        'author_id',
+        author.id
+      )
+      .eq(
+        'moderator_id',
+        currentModerator.id
+      )
+      .order(
+        'updated_at',
+        {ascending:false}
+      )
+      .limit(1);
+
+  if(existingError){
+
+    console.error(
+      'Existing conversation lookup error:',
+      existingError
+    );
+
+    showToast(
+      'Could not check the author conversation: ' +
+      existingError.message
+    );
+
+    return;
+  }
+
+  if(existing && existing.length){
+
+    await loadConversations();
+
+    await openConversation(
+      existing[0].id
+    );
+
+    return;
+  }
+
+  /*
+    No conversation exists yet.
+    Create one using the real conversations schema.
+  */
+
+  const {
+    data:newConversation,
+    error:createError
+  } =
+    await supabaseClient
+      .from('conversations')
+      .insert({
+        author_id:author.id,
+        moderator_id:currentModerator.id,
+        book_id:null
+      })
+      .select(`
+        id,
+        author_id,
+        moderator_id,
+        book_id,
+        created_at,
+        updated_at
+      `)
+      .single();
+
+  if(createError){
+
+    console.error(
+      'Conversation creation error:',
+      createError
+    );
+
+    showToast(
+      'Could not start the conversation: ' +
+      createError.message
+    );
+
+    return;
+  }
+
+  showToast(
+    'Conversation opened with ' +
+    (author.author_name || 'the author') +
+    '.'
+  );
+
+  await loadConversations();
+
+  await openConversation(
+    newConversation.id
+  );
 }
 
 
@@ -2973,32 +2988,86 @@ async function openConversation(id){
 
   selectedConversation =
     conversations.find(
-      item =>
-        item.id === id
+      item => item.id === id
     );
 
-
   if(!selectedConversation){
-    return;
+
+    /*
+      This can happen immediately after
+      creating a conversation, so retrieve it.
+    */
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from('conversations')
+        .select(`
+          id,
+          author_id,
+          moderator_id,
+          book_id,
+          created_at,
+          updated_at
+        `)
+        .eq(
+          'id',
+          id
+        )
+        .maybeSingle();
+
+    if(error || !data){
+
+      showToast(
+        'Could not open the conversation.'
+      );
+
+      return;
+    }
+
+    selectedConversation =
+      data;
+
+    conversations = [
+      selectedConversation,
+      ...conversations.filter(
+        item => item.id !== id
+      )
+    ];
   }
 
+  const {
+    data:author
+  } =
+    await supabaseClient
+      .from('authors')
+      .select(`
+        id,
+        author_name,
+        profile_id
+      `)
+      .eq(
+        'id',
+        selectedConversation.author_id
+      )
+      .maybeSingle();
 
   document.getElementById(
     'conversationTitle'
   ).textContent =
-    selectedConversation.subject ||
-    'Reader Reach Conversation';
-
+    author?.author_name ||
+    'Author Conversation';
 
   document.getElementById(
     'conversationMeta'
   ).textContent =
-    'Conversation status: ' +
+    'Private conversation with ' +
     (
-      selectedConversation.status ||
-      'open'
+      author?.author_name ||
+      'the author'
     );
-
 
   document.getElementById(
     'replyInput'
@@ -3008,11 +3077,76 @@ async function openConversation(id){
     'sendReplyBtn'
   ).disabled = false;
 
+  await loadConversationMessages(
+    selectedConversation.id
+  );
 
-  await loadConversationMessages(id);
+  renderConversationList();
+}
 
-  await loadConversations();
 
+function renderConversationList(){
+
+  const container =
+    document.getElementById(
+      'conversationList'
+    );
+
+  if(!conversations.length){
+
+    container.innerHTML =
+      '<div class="empty">No conversations yet.</div>';
+
+    return;
+  }
+
+  /*
+    We use the already-loaded approved author
+    list where possible.
+  */
+
+  container.innerHTML =
+    conversations
+      .map(conversation => {
+
+        const author =
+          approvedAuthors.find(
+            item =>
+              item.id ===
+              conversation.author_id
+          );
+
+        return `
+          <button
+            class="conversation ${
+              selectedConversation &&
+              selectedConversation.id === conversation.id
+              ? 'active'
+              : ''
+            }"
+            onclick="openConversation('${conversation.id}')">
+
+            <div class="conversationTitle">
+              ${escapeHtml(
+                author?.author_name ||
+                'Author Conversation'
+              )}
+            </div>
+
+            <div class="conversationMeta">
+              ${escapeHtml(
+                formatDateTime(
+                  conversation.updated_at ||
+                  conversation.created_at
+                )
+              )}
+            </div>
+
+          </button>
+        `;
+
+      })
+      .join('');
 }
 
 
@@ -3028,7 +3162,6 @@ async function loadConversationMessages(
   container.innerHTML =
     '<div class="empty">Loading messages...</div>';
 
-
   const {
     data,
     error
@@ -3038,9 +3171,10 @@ async function loadConversationMessages(
       .select(`
         id,
         conversation_id,
-        sender_type,
+        sender_profile_id,
         message,
-        created_at
+        created_at,
+        read_at
       `)
       .eq(
         'conversation_id',
@@ -3048,11 +3182,8 @@ async function loadConversationMessages(
       )
       .order(
         'created_at',
-        {
-          ascending:true
-        }
+        {ascending:true}
       );
-
 
   if(error){
 
@@ -3067,24 +3198,25 @@ async function loadConversationMessages(
     return;
   }
 
-
   if(!data || !data.length){
 
-    container.innerHTML =
-      '<div class="empty">No messages in this conversation yet.</div>';
+    container.innerHTML = `
+      <div class="empty">
+        No messages yet.<br><br>
+        Send the first message to this author.
+      </div>
+    `;
 
     return;
   }
-
 
   container.innerHTML =
     data
       .map(item => {
 
         const isModerator =
-          item.sender_type ===
-          'moderator';
-
+          item.sender_profile_id ===
+          currentUser.id;
 
         return `
           <div class="chatBubble ${
@@ -3094,8 +3226,7 @@ async function loadConversationMessages(
           }">
 
             ${escapeHtml(
-              item.message ||
-              ''
+              item.message || ''
             )}
 
             <small>
@@ -3112,10 +3243,8 @@ async function loadConversationMessages(
       })
       .join('');
 
-
   container.scrollTop =
     container.scrollHeight;
-
 }
 
 
@@ -3124,22 +3253,19 @@ async function sendReply(){
   if(!selectedConversation){
 
     showToast(
-      'Select a conversation first.'
+      'Select an author conversation first.'
     );
 
     return;
   }
-
 
   const input =
     document.getElementById(
       'replyInput'
     );
 
-
   const message =
     input.value.trim();
-
 
   if(!message){
 
@@ -3150,7 +3276,6 @@ async function sendReply(){
     return;
   }
 
-
   const {
     error
   } =
@@ -3159,11 +3284,12 @@ async function sendReply(){
       .insert({
         conversation_id:
           selectedConversation.id,
-        sender_type:
-          'moderator',
+
+        sender_profile_id:
+          currentUser.id,
+
         message:message
       });
-
 
   if(error){
 
@@ -3180,8 +3306,25 @@ async function sendReply(){
     return;
   }
 
-
   input.value = '';
+
+  /*
+    Touch conversation updated_at through
+    a normal update so the inbox sorts
+    correctly. If RLS prevents this update,
+    the message itself still remains saved.
+  */
+
+  await supabaseClient
+    .from('conversations')
+    .update({
+      updated_at:
+        new Date().toISOString()
+    })
+    .eq(
+      'id',
+      selectedConversation.id
+    );
 
   await loadConversationMessages(
     selectedConversation.id
@@ -3189,54 +3332,36 @@ async function sendReply(){
 
   await loadConversations();
 
-}
-
-
-async function startAuthorConversation(
-  profileId
-){
-
-  if(!profileId){
-
-    showToast(
-      'This author does not have a linked profile.'
-    );
-
-    return;
-  }
-
-
-  showSection('messages');
-
-
   /*
-    The existing conversation structure does not
-    guarantee a universal author-recipient column
-    across all deployments, so the moderator can
-    use an existing conversation from the inbox.
-
-    We avoid inventing a new conversation schema here.
+    Restore the selected conversation after
+    refreshing the inbox.
   */
 
-  showToast(
-    'Open the author conversation from Messages.'
-  );
+  const refreshed =
+    conversations.find(
+      item =>
+        item.id ===
+        selectedConversation.id
+    );
 
+  if(refreshed){
+    selectedConversation =
+      refreshed;
+  }
+
+  renderConversationList();
 }
 
 
 /* -------------------------
-   REALTIME NOTIFICATIONS
+   REALTIME
 ------------------------- */
 
 function subscribeToNotifications(){
 
-  if(!currentUser){
-    return;
-  }
+  if(!currentUser) return;
 
-
-  realtimeChannel =
+  const channel =
     supabaseClient
       .channel(
         'moderator-notifications-' +
@@ -3253,19 +3378,20 @@ function subscribeToNotifications(){
             currentUser.id
         },
         async () => {
-
           await loadNotifications();
-
         }
       )
       .subscribe();
 
+  realtimeChannels.push(channel);
 }
 
 
 function subscribeToMessages(){
 
-  realtimeChannel =
+  if(!currentUser) return;
+
+  const channel =
     supabaseClient
       .channel(
         'moderator-messages-' +
@@ -3290,15 +3416,14 @@ function subscribeToMessages(){
             await loadConversationMessages(
               selectedConversation.id
             );
-
           }
 
           await loadConversations();
-
         }
       )
       .subscribe();
 
+  realtimeChannels.push(channel);
 }
 
 
@@ -3315,7 +3440,6 @@ async function initialise(){
     return;
   }
 
-
   await Promise.all([
     loadApprovedAuthors(),
     loadApprovedBooks(),
@@ -3324,28 +3448,24 @@ async function initialise(){
     loadConversations()
   ]);
 
-
   subscribeToNotifications();
-
   subscribeToMessages();
-
 }
 
 
+/* -------------------------
+   BUTTON EVENTS
+------------------------- */
+
 document
-  .getElementById(
-    'scheduleBtn'
-  )
+  .getElementById('scheduleBtn')
   .addEventListener(
     'click',
     createSchedule
   );
 
-
 document
-  .getElementById(
-    'signOutBtn'
-  )
+  .getElementById('signOutBtn')
   .addEventListener(
     'click',
     signOut
@@ -3353,15 +3473,12 @@ document
 
 
 supabaseClient.auth.onAuthStateChange(
-  (event,session) => {
+  (event) => {
 
-    if(
-      event === 'SIGNED_OUT'
-    ){
+    if(event === 'SIGNED_OUT'){
 
       window.location.href =
         'auth.html?mode=signin';
-
     }
 
   }

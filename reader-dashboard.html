@@ -776,6 +776,81 @@
       justify-content:flex-end;
     }
 
+
+    .author-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+    }
+
+    .author-card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:18px;
+      box-shadow:0 8px 24px rgba(59,36,27,.05);
+    }
+
+    .author-card h3{
+      margin:0 0 6px;
+      font-size:18px;
+      color:var(--brown);
+    }
+
+    .author-card p{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.65;
+      margin:0 0 14px;
+    }
+
+    .author-card-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .book-status-controls{
+      margin-top:12px;
+      padding-top:12px;
+      border-top:1px solid var(--line);
+    }
+
+    .book-status-controls label{
+      display:block;
+      font-size:11px;
+      color:var(--muted);
+      margin-bottom:5px;
+    }
+
+    .book-status-select{
+      width:100%;
+      border:1px solid var(--line);
+      border-radius:9px;
+      padding:9px 10px;
+      background:#fff;
+      color:var(--text);
+      outline:none;
+    }
+
+    .book-status-select:focus{
+      border-color:#bd9a79;
+      box-shadow:0 0 0 3px rgba(189,154,121,.12);
+    }
+
+    .book-status-actions{
+      display:flex;
+      gap:7px;
+      margin-top:8px;
+      flex-wrap:wrap;
+    }
+
+    @media(max-width:800px){
+      .author-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
     @media(max-width:1050px){
       .dashboard-layout{
         grid-template-columns:190px minmax(0,1fr);
@@ -996,6 +1071,10 @@
             My Books
           </button>
 
+          <button data-target="following">
+            Following Authors
+          </button>
+
           <button data-target="reading">
             Currently Reading
           </button>
@@ -1098,6 +1177,21 @@
 
             <div class="stat-card">
               <div class="stat-label">
+                Following
+              </div>
+
+              <div class="stat-value" id="followingCount">
+                —
+              </div>
+
+              <div class="stat-note">
+                Authors you follow
+              </div>
+            </div>
+
+
+            <div class="stat-card">
+              <div class="stat-label">
                 Notifications
               </div>
 
@@ -1180,6 +1274,43 @@
 
             <div class="loading">
               Loading featured books...
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- FOLLOWING AUTHORS -->
+
+        <section id="following" class="section">
+
+          <div class="section-header">
+
+            <div>
+              <div class="section-kicker">
+                Your Community
+              </div>
+
+              <h2 class="section-title">
+                Following Authors
+              </h2>
+
+              <p class="section-description">
+                Authors you follow and their latest approved books.
+              </p>
+            </div>
+
+            <span class="section-count" id="followingSectionCount">
+              —
+            </span>
+
+          </div>
+
+          <div id="followingAuthorsGrid" class="author-grid">
+
+            <div class="loading">
+              Loading authors you follow...
             </div>
 
           </div>
@@ -1318,9 +1449,15 @@
               </p>
             </div>
 
-            <button class="btn" id="refreshNotifications">
-              Refresh
-            </button>
+            <div class="profile-actions" style="margin-top:0;">
+              <button class="btn" id="markNotificationsRead">
+                Mark All Read
+              </button>
+
+              <button class="btn" id="refreshNotifications">
+                Refresh
+              </button>
+            </div>
 
           </div>
 
@@ -1493,61 +1630,11 @@
   </footer>
 
 
-  <!-- LIVE CHAT -->
-
-  <button
+  <a
     class="chat-button"
-    id="chatButton"
-    type="button">
-    Live Chat
-  </button>
-
-
-  <div
-    class="chat-panel"
-    id="chatPanel">
-
-    <div class="chat-header">
-
-      <strong>
-        Reader Reach Support
-      </strong>
-
-      <button
-        class="chat-close"
-        id="chatClose"
-        type="button"
-        aria-label="Close chat">
-        ×
-      </button>
-
-    </div>
-
-
-    <div class="chat-body">
-
-      <p>
-        Need help with your Reader Reach account or reading experience?
-        Contact the Reader Reach support team.
-      </p>
-
-      <textarea
-        id="chatMessage"
-        placeholder="How can we help?"></textarea>
-
-      <div class="chat-actions">
-
-        <button
-          class="btn primary"
-          id="sendChatMessage">
-          Send Message
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
+    href="contact.html">
+    Contact Support
+  </a>
 
 
   <div id="toast" class="toast"></div>
@@ -1569,1564 +1656,721 @@
         SUPABASE_KEY
       );
 
-
     let currentUser = null;
     let currentProfile = null;
     let currentReader = null;
-
     let allMyBooks = [];
     let featuredBooks = [];
+    let followingAuthors = [];
+    let notificationChannel = null;
 
-    let chatConversationId = null;
-
+    const READER_BOOK_STATUSES = [
+      'my_book',
+      'currently_reading',
+      'completed'
+    ];
 
     function escapeHtml(value){
-
       if(value === null || value === undefined){
         return '';
       }
-
       return String(value)
         .replace(/&/g,'&amp;')
         .replace(/</g,'&lt;')
         .replace(/>/g,'&gt;')
         .replace(/"/g,'&quot;')
         .replace(/'/g,'&#039;');
-
     }
-
 
     function showToast(message){
-
-      const toast =
-        document.getElementById('toast');
-
-      toast.textContent =
-        message;
-
+      const toast = document.getElementById('toast');
+      if(!toast) return;
+      toast.textContent = message;
       toast.classList.add('show');
-
-      setTimeout(() => {
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => {
         toast.classList.remove('show');
       },3500);
-
     }
-
 
     function formatDate(value){
-
-      if(!value){
-        return '—';
-      }
-
-      const date =
-        new Date(value);
-
-      if(Number.isNaN(date.getTime())){
-        return '—';
-      }
-
-      return date.toLocaleDateString(
-        undefined,
-        {
-          year:'numeric',
-          month:'short',
-          day:'numeric'
-        }
-      );
-
+      if(!value) return '—';
+      const date = new Date(value);
+      if(Number.isNaN(date.getTime())) return '—';
+      return date.toLocaleDateString(undefined,{
+        year:'numeric',
+        month:'short',
+        day:'numeric'
+      });
     }
-
 
     function formatRelativeDate(value){
-
-      if(!value){
-        return '';
-      }
-
-      const date =
-        new Date(value);
-
-      if(Number.isNaN(date.getTime())){
-        return '';
-      }
-
-      const now =
-        new Date();
-
-      const difference =
-        now.getTime() -
-        date.getTime();
-
-      const minutes =
-        Math.floor(
-          difference /
-          60000
-        );
-
-      if(minutes < 1){
-        return 'Just now';
-      }
-
-      if(minutes < 60){
-        return minutes +
-          ' minute' +
-          (minutes === 1 ? '' : 's') +
-          ' ago';
-      }
-
-      const hours =
-        Math.floor(minutes / 60);
-
-      if(hours < 24){
-        return hours +
-          ' hour' +
-          (hours === 1 ? '' : 's') +
-          ' ago';
-      }
-
-      const days =
-        Math.floor(hours / 24);
-
-      if(days < 7){
-        return days +
-          ' day' +
-          (days === 1 ? '' : 's') +
-          ' ago';
-      }
-
+      if(!value) return '';
+      const date = new Date(value);
+      if(Number.isNaN(date.getTime())) return '';
+      const minutes = Math.floor((Date.now()-date.getTime())/60000);
+      if(minutes < 1) return 'Just now';
+      if(minutes < 60) return `${minutes} minute${minutes===1?'':'s'} ago`;
+      const hours = Math.floor(minutes/60);
+      if(hours < 24) return `${hours} hour${hours===1?'':'s'} ago`;
+      const days = Math.floor(hours/24);
+      if(days < 7) return `${days} day${days===1?'':'s'} ago`;
       return formatDate(value);
-
     }
-
 
     function getBookCover(book){
-
-      return (
-        book.cover_url ||
-        book.cover_image_url ||
-        book.cover ||
-        ''
-      );
-
+      return book?.cover_url || book?.cover_image_url || book?.cover || '';
     }
-
 
     function getBookAuthor(book){
-
-      return (
-        book.author_name ||
-        book.author ||
-        'Reader Reach Author'
-      );
-
+      return book?.author_name || book?.author || 'Reader Reach Author';
     }
 
+    function statusLabel(status){
+      const labels = {
+        my_book:'My Book',
+        currently_reading:'Currently Reading',
+        completed:'Completed'
+      };
+      return labels[status] || status || 'My Book';
+    }
+
+    function statusOptions(selected){
+      return READER_BOOK_STATUSES.map(status => `
+        <option value="${status}" ${selected===status?'selected':''}>
+          ${statusLabel(status)}
+        </option>
+      `).join('');
+    }
 
     function renderBookCard(book, options = {}){
-
-      const cover =
-        getBookCover(book);
-
-      const author =
-        getBookAuthor(book);
-
-      const title =
-        book.title ||
-        'Untitled Book';
-
-      const description =
-        book.description ||
-        'No book description is available yet.';
-
-      const status =
-        options.status ||
-        book.reading_status ||
-        '';
-
-      const bookId =
-        book.id;
+      const cover = getBookCover(book);
+      const author = getBookAuthor(book);
+      const title = book.title || 'Untitled Book';
+      const description = book.description || 'No book description is available yet.';
+      const status = options.status || book.reader_status || book.status || '';
+      const bookId = book.id;
+      const saved = Boolean(book.reader_book_id);
 
       return `
-
         <article class="book-card">
-
           <div class="book-cover">
-
-            ${
-              cover
-              ?
-
-              `<img
+            ${cover ? `
+              <img
                 src="${escapeHtml(cover)}"
                 alt="${escapeHtml(title)} book cover"
                 loading="lazy"
-                onerror="this.parentElement.innerHTML='<div class=&quot;book-cover-placeholder&quot;>Book cover unavailable</div>';">`
-
-              :
-
-              `<div class="book-cover-placeholder">
+                onerror="this.parentElement.innerHTML='<div class=&quot;book-cover-placeholder&quot;>Book cover unavailable</div>';
+              ">` : `
+              <div class="book-cover-placeholder">
                 Book cover unavailable
-              </div>`
-            }
-
+              </div>`}
           </div>
-
 
           <div class="book-body">
+            ${status ? `<span class="book-status">${escapeHtml(statusLabel(status))}</span>` : ''}
 
-            ${
-              status
-              ?
-
-              `<span class="book-status">
-                ${escapeHtml(status)}
-              </span>`
-
-              :
-
-              ''
-            }
-
-
-            <h3 class="book-title">
-              ${escapeHtml(title)}
-            </h3>
-
-
-            <div class="book-author">
-              ${escapeHtml(author)}
-            </div>
-
-
-            <p class="book-description">
-              ${escapeHtml(description)}
-            </p>
-
+            <h3 class="book-title">${escapeHtml(title)}</h3>
+            <div class="book-author">${escapeHtml(author)}</div>
+            <p class="book-description">${escapeHtml(description)}</p>
 
             <div class="book-actions">
-
-              <a
-                class="btn primary"
-                href="book.html?id=${encodeURIComponent(bookId)}">
+              <a class="btn primary" href="book.html?id=${encodeURIComponent(bookId)}">
                 View Book
               </a>
-
-              ${
-                book.author_id
-                ?
-
-                `<a
-                  class="btn"
-                  href="author-profile.html?id=${encodeURIComponent(book.author_id)}">
+              ${book.author_id ? `
+                <a class="btn" href="author-profile.html?id=${encodeURIComponent(book.author_id)}">
                   Author
-                </a>`
-
-                :
-
-                ''
-              }
-
+                </a>` : ''}
             </div>
 
+            ${saved ? `
+              <div class="book-status-controls">
+                <label for="status-${escapeHtml(book.reader_book_id)}">Shelf status</label>
+                <select
+                  class="book-status-select"
+                  id="status-${escapeHtml(book.reader_book_id)}"
+                  data-reader-book-id="${escapeHtml(book.reader_book_id)}"
+                  data-current-status="${escapeHtml(status)}">
+                  ${statusOptions(status)}
+                </select>
+                <div class="book-status-actions">
+                  <button
+                    type="button"
+                    class="btn primary status-save-button"
+                    data-reader-book-id="${escapeHtml(book.reader_book_id)}">
+                    Save Status
+                  </button>
+                  <button
+                    type="button"
+                    class="btn danger remove-book-button"
+                    data-reader-book-id="${escapeHtml(book.reader_book_id)}">
+                    Remove
+                  </button>
+                </div>
+              </div>` : ''}
           </div>
-
         </article>
-
       `;
-
     }
-
 
     function renderBooks(containerId, books, emptyTitle, emptyMessage){
-
-      const container =
-        document.getElementById(containerId);
-
-      if(!container){
-        return;
-      }
+      const container = document.getElementById(containerId);
+      if(!container) return;
 
       if(!books || books.length === 0){
-
-        container.innerHTML = `
-
-          <div class="empty" style="grid-column:1/-1;">
-
-            <strong>
-              ${escapeHtml(emptyTitle)}
-            </strong>
-
-            <div>
-              ${escapeHtml(emptyMessage)}
-            </div>
-
-            <a
-              class="btn primary"
-              href="index.html#featured">
-              Explore Books
-            </a>
-
-          </div>
-
-        `;
-
-        return;
-
-      }
-
-      container.innerHTML =
-        books.map(book =>
-          renderBookCard(book)
-        ).join('');
-
-    }
-
-
-    async function loadSession(){
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .auth
-          .getSession();
-
-      if(error){
-
-        console.error(
-          'Session error:',
-          error
-        );
-
-        showAccessError(
-          'We could not verify your Reader Reach session.'
-        );
-
-        return false;
-
-      }
-
-      if(!data.session){
-
-        window.location.href =
-          'auth.html?mode=reader';
-
-        return false;
-
-      }
-
-      currentUser =
-        data.session.user;
-
-      return true;
-
-    }
-
-
-    async function loadProfile(){
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('profiles')
-          .select(`
-            id,
-            display_name,
-            role,
-            created_at
-          `)
-          .eq('id',currentUser.id)
-          .maybeSingle();
-
-      if(error){
-
-        console.error(
-          'Profile loading error:',
-          error
-        );
-
-        showAccessError(
-          'Your account could not be loaded.'
-        );
-
-        return false;
-
-      }
-
-      currentProfile =
-        data || {};
-
-      if(
-        currentProfile.role &&
-        currentProfile.role !== 'reader'
-      ){
-
-        if(currentProfile.role === 'author'){
-          window.location.href =
-            'author-dashboard.html';
-          return false;
-        }
-
-        if(currentProfile.role === 'moderator'){
-          window.location.href =
-            'moderator-dashboard.html';
-          return false;
-        }
-
-        if(currentProfile.role === 'admin'){
-          window.location.href =
-            'admin.html';
-          return false;
-        }
-
-      }
-
-      return true;
-
-    }
-
-
-    async function loadReader(){
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('readers')
-          .select(`
-            id,
-            profile_id,
-            created_at,
-            updated_at
-          `)
-          .eq('profile_id',currentUser.id)
-          .maybeSingle();
-
-      if(error){
-
-        console.error(
-          'Reader record error:',
-          error
-        );
-
-        showAccessError(
-          'Your Reader account record could not be loaded.'
-        );
-
-        return false;
-
-      }
-
-      currentReader =
-        data || null;
-
-      if(!currentReader){
-
-        showAccessError(
-          'A Reader account record was not found for this account.'
-        );
-
-        return false;
-
-      }
-
-      return true;
-
-    }
-
-
-    function populateAccount(){
-
-      const displayName =
-        currentProfile?.display_name ||
-        currentUser?.user_metadata?.display_name ||
-        'Reader';
-
-      document.getElementById(
-        'headerReaderName'
-      ).textContent =
-        displayName;
-
-      document.getElementById(
-        'accountDisplayName'
-      ).textContent =
-        displayName;
-
-      document.getElementById(
-        'accountEmail'
-      ).textContent =
-        currentUser?.email ||
-        '—';
-
-      document.getElementById(
-        'accountRole'
-      ).textContent =
-        'Reader';
-
-      document.getElementById(
-        'accountCreated'
-      ).textContent =
-        formatDate(
-          currentProfile?.created_at ||
-          currentReader?.created_at ||
-          currentUser?.created_at
-        );
-
-    }
-
-
-    async function loadFeaturedBooks(){
-
-      const container =
-        document.getElementById(
-          'featuredBooksGrid'
-        );
-
-      container.innerHTML =
-        '<div class="loading">Loading featured books...</div>';
-
-      const {
-        data:featuredRows,
-        error:featuredError
-      } =
-        await supabaseClient
-          .from('homepage_featured_books')
-          .select(`
-            book_id
-          `);
-
-      if(featuredError){
-
-        console.error(
-          'Featured books error:',
-          featuredError
-        );
-
         container.innerHTML = `
           <div class="empty" style="grid-column:1/-1;">
-            <strong>Featured books unavailable</strong>
-            Reader Reach could not load the current featured selection.
+            <strong>${escapeHtml(emptyTitle)}</strong>
+            <div>${escapeHtml(emptyMessage)}</div>
+            <a class="btn primary" href="index.html#featured">Explore Books</a>
           </div>
         `;
-
         return;
-
       }
 
-      const ids =
-        (featuredRows || [])
-          .map(row => row.book_id)
-          .filter(Boolean);
-
-      if(ids.length === 0){
-
-        featuredBooks = [];
-
-        renderBooks(
-          'featuredBooksGrid',
-          [],
-          'No featured books yet',
-          'There are no books currently selected for the Reader Reach homepage.'
-        );
-
-        updateCount(
-          'featuredCount',
-          0
-        );
-
-        return;
-
-      }
-
-      const {
-        data:books,
-        error:booksError
-      } =
-        await supabaseClient
-          .from('books')
-          .select(`
-            id,
-            author_id,
-            title,
-            description,
-            genre_topic,
-            availability,
-            cover_url,
-            status,
-            created_at
-          `)
-          .in('id',ids)
-          .eq('status','approved');
-
-      if(booksError){
-
-        console.error(
-          'Featured book details error:',
-          booksError
-        );
-
-        renderBooks(
-          'featuredBooksGrid',
-          [],
-          'Featured books unavailable',
-          'The featured book information could not be loaded.'
-        );
-
-        return;
-
-      }
-
-      featuredBooks =
-        books || [];
-
-      await attachAuthorNames(
-        featuredBooks
-      );
-
-      renderBooks(
-        'featuredBooksGrid',
-        featuredBooks,
-        'No featured books yet',
-        'There are no books currently selected for the Reader Reach homepage.'
-      );
-
-      updateCount(
-        'featuredCount',
-        featuredBooks.length
-      );
-
+      container.innerHTML = books.map(book => renderBookCard(book)).join('');
+      bindBookStatusControls(container);
     }
 
-
-    async function attachAuthorNames(books){
-
-      const authorIds =
-        [...new Set(
-          (books || [])
-            .map(book => book.author_id)
-            .filter(Boolean)
-        )];
-
-      if(authorIds.length === 0){
-        return books;
-      }
-
-      const {
-        data:authors,
-        error
-      } =
-        await supabaseClient
-          .from('authors')
-          .select(`
-            id,
-            author_name
-          `)
-          .in('id',authorIds);
-
-      if(error){
-
-        console.warn(
-          'Author names could not be loaded:',
-          error
-        );
-
-        return books;
-
-      }
-
-      const map =
-        new Map(
-          (authors || []).map(author => [
-            author.id,
-            author.author_name
-          ])
-        );
-
-      books.forEach(book => {
-
-        book.author_name =
-          map.get(book.author_id) ||
-          'Reader Reach Author';
-
+    function bindBookStatusControls(container){
+      container.querySelectorAll('.status-save-button').forEach(button => {
+        button.addEventListener('click',async () => {
+          const readerBookId = button.dataset.readerBookId;
+          const select = container.querySelector(
+            `.book-status-select[data-reader-book-id="${CSS.escape(readerBookId)}"]`
+          );
+          if(!select) return;
+          await updateBookStatus(readerBookId,select.value,button);
+        });
       });
 
-      return books;
-
+      container.querySelectorAll('.remove-book-button').forEach(button => {
+        button.addEventListener('click',async () => {
+          const readerBookId = button.dataset.readerBookId;
+          const confirmed = window.confirm('Remove this book from your Reader Reach shelf?');
+          if(!confirmed) return;
+          await removeBook(readerBookId,button);
+        });
+      });
     }
 
+    async function updateBookStatus(readerBookId,status,button){
+      if(!READER_BOOK_STATUSES.includes(status)){
+        showToast('Please choose a valid shelf status.');
+        return;
+      }
+
+      button.disabled = true;
+      const oldText = button.textContent;
+      button.textContent = 'Saving...';
+
+      const { error } = await supabaseClient
+        .from('reader_books')
+        .update({status,updated_at:new Date().toISOString()})
+        .eq('id',readerBookId)
+        .eq('reader_id',currentReader.id);
+
+      if(error){
+        console.error('Reader book status update error:',error);
+        showToast('The book status could not be updated.');
+      }else{
+        showToast(`Book moved to ${statusLabel(status)}.`);
+        await loadMyBooks();
+      }
+
+      button.disabled = false;
+      button.textContent = oldText;
+    }
+
+    async function removeBook(readerBookId,button){
+      button.disabled = true;
+      button.textContent = 'Removing...';
+
+      const { error } = await supabaseClient
+        .from('reader_books')
+        .delete()
+        .eq('id',readerBookId)
+        .eq('reader_id',currentReader.id);
+
+      if(error){
+        console.error('Remove reader book error:',error);
+        showToast('The book could not be removed.');
+        button.disabled = false;
+        button.textContent = 'Remove';
+        return;
+      }
+
+      showToast('Book removed from your shelf.');
+      await loadMyBooks();
+    }
+
+    async function loadSession(){
+      const {data,error} = await supabaseClient.auth.getSession();
+      if(error || !data.session){
+        window.location.href='auth.html?mode=reader';
+        return false;
+      }
+      currentUser = data.session.user;
+      return true;
+    }
+
+    async function loadProfile(){
+      const {data,error} = await supabaseClient
+        .from('profiles')
+        .select('id,display_name,role,created_at')
+        .eq('id',currentUser.id)
+        .maybeSingle();
+
+      if(error){
+        console.error('Profile loading error:',error);
+        showAccessError('Your account could not be loaded.');
+        return false;
+      }
+
+      currentProfile = data || {};
+
+      if(currentProfile.role && currentProfile.role !== 'reader'){
+        if(currentProfile.role === 'author') window.location.href='author-dashboard.html';
+        if(currentProfile.role === 'moderator') window.location.href='moderator-dashboard.html';
+        if(currentProfile.role === 'admin') window.location.href='admin.html';
+        return false;
+      }
+
+      return true;
+    }
+
+    async function loadReader(){
+      const {data,error} = await supabaseClient
+        .from('readers')
+        .select('id,profile_id,created_at,updated_at')
+        .eq('profile_id',currentUser.id)
+        .maybeSingle();
+
+      if(error){
+        console.error('Reader record error:',error);
+        showAccessError('Your Reader account record could not be loaded.');
+        return false;
+      }
+
+      currentReader = data || null;
+
+      if(!currentReader){
+        showAccessError('A Reader account record was not found for this account.');
+        return false;
+      }
+
+      return true;
+    }
+
+    function populateAccount(){
+      const displayName = currentProfile?.display_name || currentUser?.user_metadata?.display_name || 'Reader';
+      document.getElementById('headerReaderName').textContent = displayName;
+      document.getElementById('accountDisplayName').textContent = displayName;
+      document.getElementById('accountEmail').textContent = currentUser?.email || '—';
+      document.getElementById('accountRole').textContent = 'Reader';
+      document.getElementById('accountCreated').textContent = formatDate(
+        currentProfile?.created_at || currentReader?.created_at || currentUser?.created_at
+      );
+    }
+
+    async function attachAuthorNames(books){
+      const authorIds = [...new Set((books || []).map(book=>book.author_id).filter(Boolean))];
+      if(authorIds.length===0) return books;
+
+      const {data:authors,error} = await supabaseClient
+        .from('authors')
+        .select('id,author_name')
+        .in('id',authorIds)
+        .eq('status','approved');
+
+      if(error){
+        console.warn('Author names could not be loaded:',error);
+        return books;
+      }
+
+      const map = new Map((authors || []).map(author=>[author.id,author.author_name]));
+      books.forEach(book=>{
+        book.author_name = map.get(book.author_id) || 'Reader Reach Author';
+      });
+      return books;
+    }
+
+    async function loadFeaturedBooks(){
+      const container = document.getElementById('featuredBooksGrid');
+      container.innerHTML='<div class="loading">Loading featured books...</div>';
+
+      let ids = [];
+      let featuredError = null;
+
+      const {data:featuredRows,error} = await supabaseClient
+        .from('homepage_featured_books')
+        .select('book_id');
+
+      if(!error){
+        ids=(featuredRows||[]).map(row=>row.book_id).filter(Boolean);
+      }else{
+        featuredError=error;
+        console.warn('Featured selection unavailable; using approved books fallback.',error);
+      }
+
+      let query = supabaseClient
+        .from('books')
+        .select('id,author_id,title,description,genre_topic,availability,cover_url,status,created_at')
+        .eq('status','approved')
+        .order('created_at',{ascending:false})
+        .limit(8);
+
+      if(ids.length>0){
+        query = supabaseClient
+          .from('books')
+          .select('id,author_id,title,description,genre_topic,availability,cover_url,status,created_at')
+          .in('id',ids)
+          .eq('status','approved');
+      }
+
+      const {data:books,error:booksError}=await query;
+
+      if(booksError){
+        console.error('Featured book details error:',booksError,featuredError);
+        renderBooks('featuredBooksGrid',[], 'Featured books unavailable','Reader Reach could not load approved books right now.');
+        updateCount('featuredCount',0);
+        return;
+      }
+
+      featuredBooks=books||[];
+      await attachAuthorNames(featuredBooks);
+      renderBooks('featuredBooksGrid',featuredBooks,'No approved books yet','Approved books will appear here when available.');
+      updateCount('featuredCount',featuredBooks.length);
+    }
 
     async function loadMyBooks(){
+      const container=document.getElementById('myBooksGrid');
+      container.innerHTML='<div class="loading">Loading your books...</div>';
 
-      const container =
-        document.getElementById(
-          'myBooksGrid'
-        );
-
-      container.innerHTML =
-        '<div class="loading">Loading your books...</div>';
-
-      const {
-        data:readerBooks,
-        error
-      } =
-        await supabaseClient
-          .from('reader_books')
-          .select(`
-            id,
-            reader_id,
-            book_id,
-            status,
-            created_at,
-            updated_at
-          `)
-          .eq('reader_id',currentReader.id)
-          .order('created_at',{
-            ascending:false
-          });
+      const {data:readerBooks,error}=await supabaseClient
+        .from('reader_books')
+        .select('id,reader_id,book_id,status,created_at,updated_at')
+        .eq('reader_id',currentReader.id)
+        .order('created_at',{ascending:false});
 
       if(error){
-
-        console.error(
-          'Reader books error:',
-          error
-        );
-
-        container.innerHTML = `
-
+        console.error('Reader books error:',error);
+        container.innerHTML=`
           <div class="empty" style="grid-column:1/-1;">
-
-            <strong>
-              Your shelf could not be loaded
-            </strong>
-
-            Reader Reach could not load your saved books.
-            Please try refreshing the page.
-
-          </div>
-
-        `;
-
+            <strong>Your shelf could not be loaded</strong>
+            <div>Reader Reach could not load your saved books. Please try refreshing the page.</div>
+          </div>`;
         return;
-
       }
 
-      if(!readerBooks || readerBooks.length === 0){
-
-        allMyBooks = [];
-
-        renderBooks(
-          'myBooksGrid',
-          [],
-          'Your shelf is empty',
-          'When you add an approved book to your Reader shelf, it will appear here.'
-        );
-
-        updateCount(
-          'myBooksCount',
-          0
-        );
-
-        updateCount(
-          'savedCount',
-          0
-        );
-
-        updateCount(
-          'readingCount',
-          0
-        );
-
-        updateCount(
-          'completedCount',
-          0
-        );
-
-        renderBooks(
-          'readingGrid',
-          [],
-          'Nothing currently being read',
-          'Books you mark as currently reading will appear here.'
-        );
-
-        renderBooks(
-          'completedGrid',
-          [],
-          'Nothing completed yet',
-          'Books you mark as completed will appear here.'
-        );
-
+      if(!readerBooks || readerBooks.length===0){
+        allMyBooks=[];
+        renderBooks('myBooksGrid',[], 'Your shelf is empty','When you add an approved book to your Reader shelf, it will appear here.');
+        renderBooks('readingGrid',[], 'Nothing currently being read','Books you mark as currently reading will appear here.');
+        renderBooks('completedGrid',[], 'Nothing completed yet','Books you mark as completed will appear here.');
+        updateShelfCounts();
         return;
-
       }
 
-      const bookIds =
-        readerBooks
-          .map(row => row.book_id)
-          .filter(Boolean);
-
-      const {
-        data:books,
-        error:bookError
-      } =
-        await supabaseClient
-          .from('books')
-          .select(`
-            id,
-            author_id,
-            title,
-            description,
-            genre_topic,
-            availability,
-            cover_url,
-            status,
-            created_at
-          `)
-          .in('id',bookIds)
-          .eq('status','approved');
+      const bookIds=[...new Set(readerBooks.map(row=>row.book_id).filter(Boolean))];
+      const {data:books,error:bookError}=await supabaseClient
+        .from('books')
+        .select('id,author_id,title,description,genre_topic,availability,cover_url,status,created_at')
+        .in('id',bookIds)
+        .eq('status','approved');
 
       if(bookError){
-
-        console.error(
-          'Shelf book details error:',
-          bookError
-        );
-
+        console.error('Shelf book details error:',bookError);
+        container.innerHTML=`
+          <div class="empty" style="grid-column:1/-1;">
+            <strong>Your shelf could not be loaded</strong>
+            <div>Your saved books were found, but their approved book details could not be loaded.</div>
+          </div>`;
         return;
-
       }
 
-      const bookMap =
-        new Map(
-          (books || []).map(book => [
-            book.id,
-            book
-          ])
-        );
-
-      allMyBooks =
-        readerBooks
-          .map(row => {
-
-            const book =
-              bookMap.get(row.book_id);
-
-            if(!book){
-              return null;
-            }
-
-            return {
-              ...book,
-              reader_book_id:row.id,
-              reading_status:row.status || '',
-              reader_created_at:
-                row.created_at,
-              reader_updated_at:
-                row.updated_at
-            };
-
-          })
-          .filter(Boolean);
-
-      await attachAuthorNames(
-        allMyBooks
-      );
-
-      renderBooks(
-        'myBooksGrid',
-        allMyBooks,
-        'Your shelf is empty',
-        'When you add an approved book to your Reader shelf, it will appear here.'
-      );
-
-      updateCount(
-        'myBooksCount',
-        allMyBooks.length
-      );
-
-      updateCount(
-        'savedCount',
-        allMyBooks.length
-      );
-
-
-      const currentlyReading =
-        allMyBooks.filter(book =>
-          isReadingBook(book)
-        );
-
-      const completed =
-        allMyBooks.filter(book =>
-          isCompletedBook(book)
-        );
-
-
-      renderBooks(
-        'readingGrid',
-        currentlyReading.map(book => ({
+      const bookMap=new Map((books||[]).map(book=>[book.id,book]));
+      allMyBooks=readerBooks.map(row=>{
+        const book=bookMap.get(row.book_id);
+        if(!book) return null;
+        return {
           ...book,
-          reading_status:'Currently Reading'
-        })),
-        'Nothing currently being read',
-        'Books you mark as currently reading will appear here.'
-      );
+          reader_book_id:row.id,
+          reader_status:row.status || 'my_book',
+          reader_created_at:row.created_at,
+          reader_updated_at:row.updated_at
+        };
+      }).filter(Boolean);
 
-      renderBooks(
-        'completedGrid',
-        completed.map(book => ({
-          ...book,
-          reading_status:'Completed'
-        })),
-        'Nothing completed yet',
-        'Books you mark as completed will appear here.'
-      );
+      await attachAuthorNames(allMyBooks);
 
+      renderBooks('myBooksGrid',allMyBooks,'Your shelf is empty','When you add an approved book to your Reader shelf, it will appear here.');
 
-      updateCount(
-        'readingCount',
-        currentlyReading.length
-      );
+      const currentlyReading=allMyBooks.filter(book=>book.reader_status==='currently_reading');
+      const completed=allMyBooks.filter(book=>book.reader_status==='completed');
 
-      updateCount(
-        'completedCount',
-        completed.length
-      );
-
-      updateCount(
-        'readingSectionCount',
-        currentlyReading.length
-      );
-
-      updateCount(
-        'completedSectionCount',
-        completed.length
-      );
-
+      renderBooks('readingGrid',currentlyReading,'Nothing currently being read','Books you mark as currently reading will appear here.');
+      renderBooks('completedGrid',completed,'Nothing completed yet','Books you mark as completed will appear here.');
+      updateShelfCounts();
     }
 
-
-    function isReadingBook(book){
-
-      const status =
-        String(
-          book.reading_status ||
-          ''
-        ).toLowerCase();
-
-      return (
-        status === 'reading' ||
-        status === 'currently_reading' ||
-        status === 'in_progress' ||
-        status === 'current'
-      );
-
+    function updateShelfCounts(){
+      const reading=allMyBooks.filter(book=>book.reader_status==='currently_reading').length;
+      const completed=allMyBooks.filter(book=>book.reader_status==='completed').length;
+      updateCount('myBooksCount',allMyBooks.length);
+      updateCount('savedCount',allMyBooks.length);
+      updateCount('readingCount',reading);
+      updateCount('readingSectionCount',reading);
+      updateCount('completedCount',completed);
+      updateCount('completedSectionCount',completed);
     }
 
+    function renderFollowingAuthors(){
+      const container=document.getElementById('followingAuthorsGrid');
+      if(!container) return;
 
-    function isCompletedBook(book){
+      if(followingAuthors.length===0){
+        container.innerHTML=`
+          <div class="empty" style="grid-column:1/-1;">
+            <strong>You are not following any authors yet</strong>
+            <div>Explore approved authors and follow the writers whose books you want to keep up with.</div>
+            <a class="btn primary" href="authors.html">Explore Authors</a>
+          </div>`;
+        return;
+      }
 
-      const status =
-        String(
-          book.reading_status ||
-          ''
-        ).toLowerCase();
+      container.innerHTML=followingAuthors.map(author=>`
+        <article class="author-card">
+          <h3>${escapeHtml(author.author_name || 'Reader Reach Author')}</h3>
+          <p>${escapeHtml(author.bio || 'No author bio is available yet.')}</p>
+          <div class="author-card-actions">
+            <a class="btn primary" href="author-profile.html?id=${encodeURIComponent(author.id)}">View Profile</a>
+            <button class="btn danger unfollow-author-button" data-author-id="${escapeHtml(author.id)}">Unfollow</button>
+          </div>
+        </article>
+      `).join('');
 
-      return (
-        status === 'completed' ||
-        status === 'complete' ||
-        status === 'finished'
-      );
+      container.querySelectorAll('.unfollow-author-button').forEach(button=>{
+        button.addEventListener('click',async()=>{
+          const authorId=button.dataset.authorId;
+          button.disabled=true;
+          button.textContent='Unfollowing...';
 
+          const {error}=await supabaseClient
+            .from('author_follows')
+            .delete()
+            .eq('follower_profile_id',currentUser.id)
+            .eq('author_id',authorId);
+
+          if(error){
+            console.error('Unfollow error:',error);
+            showToast('The author could not be unfollowed.');
+            button.disabled=false;
+            button.textContent='Unfollow';
+            return;
+          }
+
+          showToast('Author unfollowed.');
+          await loadFollowingAuthors();
+        });
+      });
     }
 
+    async function loadFollowingAuthors(){
+      const container=document.getElementById('followingAuthorsGrid');
+      if(container) container.innerHTML='<div class="loading">Loading authors you follow...</div>';
+
+      const {data:follows,error:followError}=await supabaseClient
+        .from('author_follows')
+        .select('author_id,created_at')
+        .eq('follower_profile_id',currentUser.id)
+        .order('created_at',{ascending:false});
+
+      if(followError){
+        console.error('Following authors error:',followError);
+        followingAuthors=[];
+        if(container) container.innerHTML=`<div class="empty" style="grid-column:1/-1;"><strong>Following could not be loaded</strong><div>Please refresh and try again.</div></div>`;
+        updateCount('followingCount',0);
+        updateCount('followingSectionCount',0);
+        return;
+      }
+
+      const ids=[...(follows||[]).map(row=>row.author_id).filter(Boolean)];
+      if(ids.length===0){
+        followingAuthors=[];
+        updateCount('followingCount',0);
+        updateCount('followingSectionCount',0);
+        renderFollowingAuthors();
+        return;
+      }
+
+      const {data:authors,error:authorError}=await supabaseClient
+        .from('authors')
+        .select('id,author_name,bio,status')
+        .in('id',ids)
+        .eq('status','approved');
+
+      if(authorError){
+        console.error('Followed author details error:',authorError);
+        followingAuthors=[];
+        updateCount('followingCount',0);
+        updateCount('followingSectionCount',0);
+        renderFollowingAuthors();
+        return;
+      }
+
+      const map=new Map((authors||[]).map(author=>[author.id,author]));
+      followingAuthors=ids.map(id=>map.get(id)).filter(Boolean);
+      updateCount('followingCount',followingAuthors.length);
+      updateCount('followingSectionCount',followingAuthors.length);
+      renderFollowingAuthors();
+    }
 
     async function loadNotifications(){
+      const list=document.getElementById('notificationList');
+      list.innerHTML='<div class="loading">Loading notifications...</div>';
 
-      const list =
-        document.getElementById(
-          'notificationList'
-        );
-
-      list.innerHTML =
-        '<div class="loading">Loading notifications...</div>';
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient
-          .from('notifications')
-          .select(`
-            id,
-            profile_id,
-            type,
-            title,
-            message,
-            related_book_id,
-            is_read,
-            created_at
-          `)
-          .eq('profile_id',currentUser.id)
-          .order('created_at',{
-            ascending:false
-          })
-          .limit(50);
+      const {data,error}=await supabaseClient
+        .from('notifications')
+        .select('id,profile_id,type,title,message,related_book_id,is_read,created_at')
+        .eq('profile_id',currentUser.id)
+        .order('created_at',{ascending:false})
+        .limit(50);
 
       if(error){
-
-        console.error(
-          'Notification error:',
-          error
-        );
-
-        list.innerHTML = `
-
-          <div class="empty">
-
-            <strong>
-              Notifications unavailable
-            </strong>
-
-            Reader Reach could not load your notifications.
-
-          </div>
-
-        `;
-
+        console.error('Notification error:',error);
+        list.innerHTML=`<div class="empty"><strong>Notifications unavailable</strong><div>Reader Reach could not load your notifications.</div></div>`;
+        updateCount('notificationCount',0);
         return;
-
       }
 
-      const notifications =
-        data || [];
+      const notifications=data||[];
+      updateCount('notificationCount',notifications.filter(item=>!item.is_read).length);
 
-      const unread =
-        notifications.filter(
-          item => !item.is_read
-        ).length;
-
-      updateCount(
-        'notificationCount',
-        unread
-      );
-
-
-      if(notifications.length === 0){
-
-        list.innerHTML = `
-
-          <div class="empty">
-
-            <strong>
-              No notifications yet
-            </strong>
-
-            Important Reader Reach account and book updates
-            will appear here.
-
-          </div>
-
-        `;
-
+      if(notifications.length===0){
+        list.innerHTML=`<div class="empty"><strong>No notifications yet</strong><div>Important Reader Reach account and book updates will appear here.</div></div>`;
         return;
-
       }
 
-
-      list.innerHTML =
-        notifications.map(notification => `
-
-          <article
-            class="notification ${
-              notification.is_read
-              ? ''
-              : 'unread'
-            }">
-
-            <div class="notification-main">
-
-              <div class="notification-title">
-                ${escapeHtml(
-                  notification.title ||
-                  'Reader Reach Notification'
-                )}
-              </div>
-
-              <div class="notification-message">
-                ${escapeHtml(
-                  notification.message ||
-                  ''
-                )}
-              </div>
-
-            </div>
-
-            <div class="notification-time">
-              ${escapeHtml(
-                formatRelativeDate(
-                  notification.created_at
-                )
-              )}
-            </div>
-
-          </article>
-
-        `).join('');
-
+      list.innerHTML=notifications.map(notification=>`
+        <article class="notification ${notification.is_read?'':'unread'}">
+          <div class="notification-main">
+            <div class="notification-title">${escapeHtml(notification.title || 'Reader Reach Notification')}</div>
+            <div class="notification-message">${escapeHtml(notification.message || '')}</div>
+          </div>
+          <div class="notification-time">${escapeHtml(formatRelativeDate(notification.created_at))}</div>
+        </article>
+      `).join('');
     }
-
 
     function updateCount(id,value){
-
-      const element =
-        document.getElementById(id);
-
-      if(element){
-        element.textContent =
-          String(value);
-      }
-
+      const element=document.getElementById(id);
+      if(element) element.textContent=String(value);
     }
-
 
     function showAccessError(message){
-
-      const pageMessage =
-        document.getElementById(
-          'pageMessage'
-        );
-
-      pageMessage.className =
-        'message-box warning';
-
-      pageMessage.textContent =
-        message;
-
+      const pageMessage=document.getElementById('pageMessage');
+      pageMessage.className='message-box warning';
+      pageMessage.textContent=message;
     }
-
 
     async function signOut(){
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .auth
-          .signOut();
-
+      const {error}=await supabaseClient.auth.signOut();
       if(error){
-
-        console.error(
-          'Sign out error:',
-          error
-        );
-
-        showToast(
-          'Could not sign out. Please try again.'
-        );
-
+        console.error('Sign out error:',error);
+        showToast('Could not sign out. Please try again.');
         return;
-
       }
-
-      window.location.href =
-        'auth.html?mode=signin';
-
+      window.location.href='auth.html?mode=signin';
     }
 
-
     async function markNotificationsRead(){
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .from('notifications')
-          .update({
-            is_read:true
-          })
-          .eq('profile_id',currentUser.id)
-          .eq('is_read',false);
+      const {error}=await supabaseClient
+        .from('notifications')
+        .update({is_read:true})
+        .eq('profile_id',currentUser.id)
+        .eq('is_read',false);
 
       if(error){
-
-        console.warn(
-          'Could not mark notifications read:',
-          error
-        );
-
+        console.warn('Could not mark notifications read:',error);
+        showToast('Notifications could not be marked as read.');
         return;
-
       }
 
       await loadNotifications();
-
+      showToast('Notifications marked as read.');
     }
-
 
     function setupNavigation(){
-
-      const buttons =
-        document.querySelectorAll(
-          '.sidebar-nav button'
-        );
-
-      buttons.forEach(button => {
-
-        button.addEventListener(
-          'click',
-          () => {
-
-            buttons.forEach(item =>
-              item.classList.remove(
-                'active'
-              )
-            );
-
-            button.classList.add(
-              'active'
-            );
-
-            const targetId =
-              button.dataset.target;
-
-            const target =
-              document.getElementById(
-                targetId
-              );
-
-            if(target){
-
-              target.scrollIntoView({
-                behavior:'smooth',
-                block:'start'
-              });
-
-            }
-
+      const buttons=document.querySelectorAll('.sidebar-nav button');
+      buttons.forEach(button=>{
+        button.addEventListener('click',()=>{
+          buttons.forEach(item=>item.classList.remove('active'));
+          button.classList.add('active');
+          const target=document.getElementById(button.dataset.target);
+          if(target){
+            target.scrollIntoView({behavior:'smooth',block:'start'});
           }
-        );
-
+        });
       });
-
     }
-
-
-    function setupChat(){
-
-      const button =
-        document.getElementById(
-          'chatButton'
-        );
-
-      const panel =
-        document.getElementById(
-          'chatPanel'
-        );
-
-      const close =
-        document.getElementById(
-          'chatClose'
-        );
-
-      button.addEventListener(
-        'click',
-        () => {
-
-          panel.classList.toggle(
-            'open'
-          );
-
-        }
-      );
-
-      close.addEventListener(
-        'click',
-        () => {
-
-          panel.classList.remove(
-            'open'
-          );
-
-        }
-      );
-
-
-      document
-        .getElementById('sendChatMessage')
-        .addEventListener(
-          'click',
-          sendChatMessage
-        );
-
-    }
-
-
-    async function sendChatMessage(){
-
-      const input =
-        document.getElementById(
-          'chatMessage'
-        );
-
-      const message =
-        input.value.trim();
-
-      if(!message){
-
-        showToast(
-          'Please enter a message.'
-        );
-
-        return;
-
-      }
-
-      const sendButton =
-        document.getElementById(
-          'sendChatMessage'
-        );
-
-      sendButton.disabled =
-        true;
-
-      sendButton.textContent =
-        'Sending...';
-
-
-      try{
-
-        if(!chatConversationId){
-
-          const {
-            data:conversation,
-            error:conversationError
-          } =
-            await supabaseClient
-              .from('conversations')
-              .insert({
-                visitor_name:
-                  currentProfile?.display_name ||
-                  'Reader',
-                visitor_email:
-                  currentUser?.email ||
-                  null,
-                subject:
-                  'Reader Dashboard Support',
-                status:
-                  'open'
-              })
-              .select('id')
-              .single();
-
-          if(conversationError){
-
-            throw conversationError;
-
-          }
-
-          chatConversationId =
-            conversation.id;
-
-        }
-
-
-        const {
-          error
-        } =
-          await supabaseClient
-            .from('messages')
-            .insert({
-              conversation_id:
-                chatConversationId,
-              sender_type:
-                'reader',
-              message:
-                message
-            });
-
-        if(error){
-
-          throw error;
-
-        }
-
-        input.value =
-          '';
-
-        showToast(
-          'Your message was sent to Reader Reach support.'
-        );
-
-      }catch(error){
-
-        console.error(
-          'Chat message error:',
-          error
-        );
-
-        showToast(
-          'Your message could not be sent right now. Please use Contact Us.'
-        );
-
-      }finally{
-
-        sendButton.disabled =
-          false;
-
-        sendButton.textContent =
-          'Send Message';
-
-      }
-
-    }
-
 
     function setupRealtime(){
-
-      if(!currentUser){
-        return;
-      }
-
-      supabaseClient
-        .channel(
-          'reader-notifications-' +
-          currentUser.id
-        )
-        .on(
-          'postgres_changes',
-          {
-            event:'*',
-            schema:'public',
-            table:'notifications',
-            filter:
-              'profile_id=eq.' +
-              currentUser.id
-          },
-          async () => {
-
-            await loadNotifications();
-
-            showToast(
-              'You have a new Reader Reach notification.'
-            );
-
-          }
-        )
+      if(!currentUser) return;
+      notificationChannel=supabaseClient
+        .channel('reader-notifications-'+currentUser.id)
+        .on('postgres_changes',{
+          event:'*',
+          schema:'public',
+          table:'notifications',
+          filter:'profile_id=eq.'+currentUser.id
+        },async()=>{
+          await loadNotifications();
+          showToast('You have a new Reader Reach notification.');
+        })
         .subscribe();
-
     }
 
-
     async function initialize(){
+      const sessionLoaded=await loadSession();
+      if(!sessionLoaded) return;
 
-      const sessionLoaded =
-        await loadSession();
+      const profileLoaded=await loadProfile();
+      if(!profileLoaded) return;
 
-      if(!sessionLoaded){
-        return;
-      }
-
-
-      const profileLoaded =
-        await loadProfile();
-
-      if(!profileLoaded){
-        return;
-      }
-
-
-      const readerLoaded =
-        await loadReader();
-
-      if(!readerLoaded){
-        return;
-      }
-
+      const readerLoaded=await loadReader();
+      if(!readerLoaded) return;
 
       populateAccount();
 
-
-      const pageMessage =
-        document.getElementById(
-          'pageMessage'
-        );
-
-      pageMessage.className =
-        'message-box success';
-
-      pageMessage.textContent =
-        'Your Reader Reach dashboard is ready.';
-
+      const pageMessage=document.getElementById('pageMessage');
+      pageMessage.className='message-box success';
+      pageMessage.textContent='Your Reader Reach dashboard is ready.';
 
       await Promise.all([
         loadFeaturedBooks(),
         loadMyBooks(),
+        loadFollowingAuthors(),
         loadNotifications()
       ]);
 
-
       setupRealtime();
-
     }
 
+    document.getElementById('signOutTop').addEventListener('click',signOut);
+    document.getElementById('signOutMobile').addEventListener('click',signOut);
+    document.getElementById('signOutSide').addEventListener('click',signOut);
+    document.getElementById('accountSignOut').addEventListener('click',signOut);
 
-    document
-      .getElementById('signOutTop')
-      .addEventListener(
-        'click',
-        signOut
-      );
+    document.getElementById('refreshNotifications').addEventListener('click',async()=>{
+      await loadNotifications();
+      showToast('Notifications refreshed.');
+    });
 
-
-    document
-      .getElementById('signOutMobile')
-      .addEventListener(
-        'click',
-        signOut
-      );
-
-
-    document
-      .getElementById('signOutSide')
-      .addEventListener(
-        'click',
-        signOut
-      );
-
-
-    document
-      .getElementById('accountSignOut')
-      .addEventListener(
-        'click',
-        signOut
-      );
-
-
-    document
-      .getElementById('refreshNotifications')
-      .addEventListener(
-        'click',
-        async () => {
-
-          await loadNotifications();
-
-          showToast(
-            'Notifications refreshed.'
-          );
-
-        }
-      );
-
+    document.getElementById('markNotificationsRead').addEventListener('click',markNotificationsRead);
 
     setupNavigation();
-
-    setupChat();
-
     initialize();
 
   </script>

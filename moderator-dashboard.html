@@ -11,24 +11,19 @@
   --cream:#f7f1e8;
   --paper:#fffaf4;
   --brown:#4a2f24;
-  --brown2:#6b4636;
+  --brown2:#6b4635;
   --gold:#b58a4a;
-  --gold-soft:#ead9b8;
-  --text:#2f211b;
+  --text:#2e211b;
   --muted:#75665d;
-  --line:#e7d9ca;
+  --line:#e5d8ca;
   --green:#4d7654;
-  --green-soft:#e4f0e6;
-  --red:#9b4d42;
-  --shadow:0 16px 45px rgba(74,47,36,.10);
+  --green-bg:#e5f0e6;
+  --red:#9a4b40;
+  --shadow:0 12px 35px rgba(74,47,36,.08);
 }
 
 *{
   box-sizing:border-box;
-}
-
-html{
-  scroll-behavior:smooth;
 }
 
 body{
@@ -36,11 +31,6 @@ body{
   background:var(--cream);
   color:var(--text);
   font-family:Arial,Helvetica,sans-serif;
-}
-
-a{
-  color:inherit;
-  text-decoration:none;
 }
 
 button,
@@ -54,6 +44,11 @@ button{
   cursor:pointer;
 }
 
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
 .wrap{
   width:min(1180px,calc(100% - 32px));
   margin:auto;
@@ -61,18 +56,17 @@ button{
 
 /* TOP */
 
-.top{
+.topbar{
   background:var(--brown);
   color:#f8eee5;
+  font-size:11px;
 }
 
-.top .wrap{
+.topbar .wrap{
   min-height:32px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:20px;
-  font-size:11px;
 }
 
 /* NAV */
@@ -83,16 +77,16 @@ nav{
 }
 
 .nav{
-  min-height:76px;
+  min-height:74px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:25px;
+  gap:20px;
 }
 
 .logo{
-  color:var(--brown);
   font-family:Georgia,serif;
+  color:var(--brown);
   font-size:25px;
   font-weight:bold;
 }
@@ -100,30 +94,24 @@ nav{
 .logo small{
   display:block;
   margin-top:3px;
-  color:var(--muted);
   font-family:Arial,sans-serif;
+  color:var(--muted);
   font-size:10px;
   font-weight:normal;
 }
 
-.links{
+.navlinks{
   display:flex;
   gap:20px;
-  align-items:center;
 }
 
-.links a{
+.navlinks a{
   color:var(--muted);
   font-size:13px;
 }
 
-.links a:hover{
+.navlinks a:hover{
   color:var(--brown);
-}
-
-.navActions{
-  display:flex;
-  gap:8px;
 }
 
 /* BUTTONS */
@@ -133,30 +121,24 @@ nav{
   background:#fff;
   color:var(--brown);
   border-radius:10px;
-  padding:10px 15px;
+  padding:10px 14px;
   font-size:13px;
   font-weight:bold;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
   transition:.18s ease;
 }
 
 .btn:hover{
   transform:translateY(-1px);
-  border-color:#d4c0aa;
 }
 
 .btn.primary{
   background:var(--brown);
-  color:#fff;
   border-color:var(--brown);
+  color:#fff;
 }
 
 .btn.soft{
-  background:#f0e5d8;
-  border-color:#e2d2c1;
+  background:#f0e4d7;
 }
 
 .btn.small{
@@ -173,10 +155,10 @@ nav{
 /* HERO */
 
 .hero{
+  padding:52px 0;
   background:
-    radial-gradient(circle at 85% 20%,rgba(181,138,74,.18),transparent 30%),
-    linear-gradient(135deg,#f8efe4,#f2e5d6);
-  padding:55px 0;
+    radial-gradient(circle at 85% 20%,rgba(181,138,74,.18),transparent 32%),
+    linear-gradient(135deg,#f8efe4,#f1e3d3);
 }
 
 .heroGrid{
@@ -188,23 +170,22 @@ nav{
 
 .eyebrow{
   color:var(--gold);
-  font-size:12px;
-  font-weight:bold;
   text-transform:uppercase;
   letter-spacing:1.5px;
+  font-size:11px;
+  font-weight:bold;
 }
 
 .hero h1{
   margin:10px 0 15px;
-  max-width:760px;
-  font-family:Georgia,serif;
-  font-size:48px;
-  line-height:1.05;
   color:var(--brown);
+  font-family:Georgia,serif;
+  font-size:47px;
+  line-height:1.05;
 }
 
 .hero p{
-  max-width:720px;
+  max-width:700px;
   color:var(--muted);
   line-height:1.7;
 }
@@ -217,28 +198,28 @@ nav{
 }
 
 .statusCard{
-  background:rgba(255,250,244,.88);
+  background:rgba(255,250,244,.9);
   border:1px solid var(--line);
   border-radius:18px;
-  padding:24px;
+  padding:23px;
   box-shadow:var(--shadow);
 }
 
 .statusLabel{
   color:var(--muted);
-  font-size:11px;
   text-transform:uppercase;
   letter-spacing:1px;
+  font-size:10px;
 }
 
 .statusValue{
-  margin:8px 0 12px;
+  margin-top:8px;
   display:flex;
   align-items:center;
   gap:9px;
+  color:var(--brown);
   font-family:Georgia,serif;
   font-size:24px;
-  color:var(--brown);
 }
 
 .statusDot{
@@ -248,7 +229,7 @@ nav{
   background:var(--green);
 }
 
-/* DASHBOARD */
+/* MAIN */
 
 .dashboard{
   padding:35px 0 70px;
@@ -263,40 +244,39 @@ nav{
 /* SIDEBAR */
 
 .sidebar{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:12px;
   height:max-content;
   position:sticky;
   top:18px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:11px;
 }
 
 .sideTitle{
   padding:10px;
   color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:1px;
   font-size:10px;
   font-weight:bold;
-  text-transform:uppercase;
-  letter-spacing:1.2px;
 }
 
-.sideLink{
+.sideBtn{
   width:100%;
-  display:block;
   border:0;
   background:transparent;
   color:var(--muted);
   text-align:left;
-  border-radius:10px;
   padding:11px 12px;
-  margin:2px 0;
+  border-radius:10px;
   font-size:13px;
+  margin:2px 0;
 }
 
-.sideLink:hover,
-.sideLink.active{
-  background:#f0e5d8;
+.sideBtn:hover,
+.sideBtn.active{
+  background:#efe2d4;
   color:var(--brown);
   font-weight:bold;
 }
@@ -311,23 +291,20 @@ nav{
   display:none!important;
 }
 
-.section{
-  margin-bottom:25px;
-}
-
 .card{
   background:var(--paper);
   border:1px solid var(--line);
   border-radius:17px;
   padding:23px;
-  box-shadow:0 7px 25px rgba(74,47,36,.05);
+  box-shadow:0 6px 25px rgba(74,47,36,.05);
+  margin-bottom:24px;
 }
 
 .sectionHead{
   display:flex;
   justify-content:space-between;
-  align-items:flex-start;
   gap:15px;
+  align-items:flex-start;
   margin-bottom:18px;
 }
 
@@ -340,8 +317,8 @@ nav{
 
 .muted{
   color:var(--muted);
-  line-height:1.65;
   font-size:13px;
+  line-height:1.65;
 }
 
 .stats{
@@ -366,16 +343,16 @@ nav{
 }
 
 .statLabel{
-  margin-top:5px;
   color:var(--muted);
+  margin-top:5px;
   font-size:12px;
 }
 
 /* ITEMS */
 
 .item{
-  padding:17px 0;
   border-bottom:1px solid var(--line);
+  padding:17px 0;
 }
 
 .item:last-child{
@@ -412,6 +389,7 @@ nav{
 
 .badge{
   display:inline-flex;
+  align-items:center;
   padding:5px 9px;
   border-radius:999px;
   font-size:10px;
@@ -419,80 +397,68 @@ nav{
 }
 
 .badge.green{
-  background:var(--green-soft);
+  background:var(--green-bg);
   color:var(--green);
 }
 
 .badge.gold{
-  background:#f2e8d5;
-  color:#87652f;
+  background:#f1e5d0;
+  color:#86632e;
 }
 
-.badge.brown{
-  background:#eaded4;
-  color:var(--brown);
-}
-
-/* MESSAGE AREA */
+/* MESSAGES */
 
 .messageLayout{
   display:grid;
-  grid-template-columns:290px 1fr;
-  min-height:560px;
+  grid-template-columns:300px 1fr;
+  min-height:570px;
   border:1px solid var(--line);
   border-radius:15px;
   overflow:hidden;
   background:#fff;
 }
 
-.conversationList{
-  background:#fbf6ef;
+.conversationPanel{
+  background:#fbf5ed;
   border-right:1px solid var(--line);
   overflow:auto;
 }
 
-.conversationHeader{
-  padding:15px;
+.conversationHeading{
+  padding:16px;
   border-bottom:1px solid var(--line);
-}
-
-.conversationHeader strong{
   color:var(--brown);
   font-family:Georgia,serif;
+  font-size:18px;
+  font-weight:bold;
 }
 
-.conversationItem{
+.authorChoice{
   width:100%;
+  display:block;
   border:0;
   border-bottom:1px solid var(--line);
   background:transparent;
   text-align:left;
   padding:14px;
-  color:var(--text);
 }
 
-.conversationItem:hover,
-.conversationItem.active{
-  background:#efe1d2;
+.authorChoice:hover,
+.authorChoice.active{
+  background:#eee0d1;
 }
 
-.conversationName{
+.authorChoiceName{
   color:var(--brown);
   font-weight:bold;
   font-size:13px;
 }
 
-.conversationPreview{
+.authorChoiceText{
   margin-top:5px;
   color:var(--muted);
   font-size:11px;
   line-height:1.45;
-}
-
-.conversationDate{
-  margin-top:6px;
-  color:#9b8a7e;
-  font-size:10px;
 }
 
 .messagePanel{
@@ -501,27 +467,26 @@ nav{
   min-width:0;
 }
 
-.messagePanelHeader{
+.messageHeader{
   padding:17px;
   border-bottom:1px solid var(--line);
   background:#fffaf4;
 }
 
-.messagePanelHeader strong{
+.messageHeader strong{
   color:var(--brown);
   font-family:Georgia,serif;
-  font-size:19px;
+  font-size:20px;
 }
 
 .messages{
   flex:1;
-  padding:18px;
   overflow:auto;
-  background:#fff;
+  padding:18px;
 }
 
-.chatBubble{
-  max-width:75%;
+.message{
+  max-width:76%;
   padding:11px 13px;
   border-radius:13px;
   margin-bottom:10px;
@@ -529,100 +494,49 @@ nav{
   line-height:1.55;
 }
 
-.chatBubble.author{
+.message.author{
   margin-right:auto;
-  background:#f2e7da;
-  color:var(--text);
+  background:#f1e6da;
 }
 
-.chatBubble.moderator{
+.message.moderator{
   margin-left:auto;
   background:var(--brown);
   color:#fff;
 }
 
-.chatBubble small{
-  display:block;
+.messageTime{
   margin-top:6px;
-  opacity:.65;
   font-size:9px;
+  opacity:.6;
 }
 
-.replyBox{
-  padding:13px;
-  border-top:1px solid var(--line);
+.reply{
   display:flex;
   gap:8px;
-  background:#fbf6ef;
+  padding:13px;
+  border-top:1px solid var(--line);
+  background:#fbf5ed;
 }
 
-.replyBox textarea{
+.reply textarea{
   flex:1;
-  min-height:55px;
-  max-height:140px;
+  min-height:58px;
   resize:vertical;
   border:1px solid var(--line);
   border-radius:11px;
   padding:11px;
   outline:none;
-  background:#fff;
 }
 
-.replyBox textarea:focus{
-  border-color:var(--gold);
-}
-
-/* FORMS */
-
-.formGrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-}
-
-.field{
-  margin-bottom:15px;
-}
-
-.field.full{
-  grid-column:1/-1;
-}
-
-.field label{
-  display:block;
-  margin-bottom:6px;
-  color:var(--brown);
-  font-size:12px;
-  font-weight:bold;
-}
-
-.field input,
-.field textarea,
-.field select{
-  width:100%;
-  border:1px solid var(--line);
-  border-radius:10px;
-  padding:11px;
-  background:#fff;
-  color:var(--text);
-  outline:none;
-}
-
-.field textarea{
-  min-height:100px;
-  resize:vertical;
-}
-
-.field input:focus,
-.field textarea:focus,
-.field select:focus{
+.reply textarea:focus{
   border-color:var(--gold);
 }
 
 /* EMPTY */
 
 .empty{
-  padding:30px 18px;
+  padding:28px 18px;
   text-align:center;
   color:var(--muted);
   font-size:13px;
@@ -637,14 +551,49 @@ nav{
   font-size:18px;
 }
 
+/* FORMS */
+
+.formGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+  margin-bottom:17px;
+}
+
+.field label{
+  display:block;
+  margin-bottom:6px;
+  color:var(--brown);
+  font-size:12px;
+  font-weight:bold;
+}
+
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:11px;
+  background:#fff;
+  color:var(--text);
+  outline:none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  border-color:var(--gold);
+}
+
 /* TOAST */
 
 .toast{
   position:fixed;
   right:20px;
   bottom:20px;
-  z-index:999;
-  max-width:360px;
+  z-index:9999;
+  max-width:380px;
   background:var(--brown);
   color:#fff;
   padding:13px 16px;
@@ -666,7 +615,7 @@ nav{
 
 @media(max-width:950px){
 
-  .links{
+  .navlinks{
     display:none;
   }
 
@@ -689,7 +638,7 @@ nav{
     display:none;
   }
 
-  .sideLink{
+  .sideBtn{
     min-width:max-content;
   }
 
@@ -701,8 +650,8 @@ nav{
     grid-template-columns:1fr;
   }
 
-  .conversationList{
-    max-height:240px;
+  .conversationPanel{
+    max-height:280px;
     border-right:0;
     border-bottom:1px solid var(--line);
   }
@@ -710,24 +659,8 @@ nav{
 
 @media(max-width:650px){
 
-  .top .wrap span:last-child{
+  .topbar .wrap span:last-child{
     display:none;
-  }
-
-  .nav{
-    min-height:66px;
-  }
-
-  .logo{
-    font-size:20px;
-  }
-
-  .navActions .btn:first-child{
-    display:none;
-  }
-
-  .hero{
-    padding:42px 0;
   }
 
   .hero h1{
@@ -742,19 +675,15 @@ nav{
     grid-template-columns:1fr;
   }
 
-  .field.full{
-    grid-column:auto;
-  }
-
   .card{
     padding:18px;
   }
 
-  .chatBubble{
+  .message{
     max-width:90%;
   }
 
-  .replyBox{
+  .reply{
     flex-direction:column;
   }
 }
@@ -763,10 +692,10 @@ nav{
 
 <body>
 
-<div class="top">
+<div class="topbar">
   <div class="wrap">
     <span>Reader Reach • Moderator Workspace</span>
-    <span>Author Communication • Scheduling • Feature Calendar</span>
+    <span>Communication • Features • Scheduling</span>
   </div>
 </div>
 
@@ -778,17 +707,15 @@ nav{
       <small>Every Book Has Its Readers</small>
     </a>
 
-    <div class="links">
+    <div class="navlinks">
       <a href="index.html">Home</a>
       <a href="authors.html">Authors</a>
-      <a href="index.html#featured">Featured</a>
       <a href="contact.html">Contact</a>
     </div>
 
-    <div class="navActions">
-      <a class="btn" href="index.html">Public Site</a>
-      <button class="btn primary" id="signOutBtn">Sign Out</button>
-    </div>
+    <button class="btn primary" onclick="signOut()">
+      Sign Out
+    </button>
 
   </div>
 </nav>
@@ -809,22 +736,21 @@ nav{
 
       <p>
         Communicate with approved authors, coordinate feature schedules,
-        manage the feature calendar and stay informed when new books
-        are approved.
+        manage the feature calendar and stay informed about Reader Reach activity.
       </p>
 
       <div class="heroActions">
 
         <button
           class="btn primary"
-          onclick="showSection('messages')">
-          Open Messages
+          onclick="showSection('authors')">
+          Select an Author
         </button>
 
         <button
           class="btn soft"
-          onclick="showSection('calendar')">
-          Feature Calendar
+          onclick="showSection('messages')">
+          Open Messages
         </button>
 
       </div>
@@ -846,7 +772,7 @@ nav{
 
       <p class="muted">
         Moderator permissions are separate from Admin permissions.
-        Approval, rejection and removal controls are not available here.
+        Approval and removal controls are not available here.
       </p>
 
     </div>
@@ -859,8 +785,6 @@ nav{
 
 <div class="wrap layout">
 
-<!-- SIDEBAR -->
-
 <aside class="sidebar">
 
   <div class="sideTitle">
@@ -868,63 +792,61 @@ nav{
   </div>
 
   <button
-    class="sideLink active"
+    class="sideBtn active"
     data-section="overview"
     onclick="showSection('overview')">
     Overview
   </button>
 
   <button
-    class="sideLink"
+    class="sideBtn"
     data-section="authors"
     onclick="showSection('authors')">
     Approved Authors
   </button>
 
   <button
-    class="sideLink"
+    class="sideBtn"
     data-section="books"
     onclick="showSection('books')">
     Approved Books
   </button>
 
   <button
-    class="sideLink"
+    class="sideBtn"
     data-section="messages"
     onclick="showSection('messages')">
     Messages
   </button>
 
   <button
-    class="sideLink"
+    class="sideBtn"
     data-section="calendar"
     onclick="showSection('calendar')">
     Feature Calendar
   </button>
 
   <button
-    class="sideLink"
+    class="sideBtn"
     data-section="notifications"
     onclick="showSection('notifications')">
     Notifications
   </button>
 
   <button
-    class="sideLink"
+    class="sideBtn"
     data-section="account"
     onclick="showSection('account')">
     My Account
   </button>
 
   <button
-    class="sideLink"
+    class="sideBtn"
     onclick="signOut()">
     Sign Out
   </button>
 
 </aside>
-
-<!-- CONTENT -->
 
 <section>
 
@@ -937,118 +859,83 @@ nav{
   <div class="stats">
 
     <div class="stat">
-      <div
-        class="statNumber"
-        id="approvedAuthorsCount">
-        —
-      </div>
-      <div class="statLabel">
-        Approved Authors
-      </div>
+      <div class="statNumber" id="approvedAuthorsCount">—</div>
+      <div class="statLabel">Approved Authors</div>
     </div>
 
     <div class="stat">
-      <div
-        class="statNumber"
-        id="approvedBooksCount">
-        —
-      </div>
-      <div class="statLabel">
-        Approved Books
-      </div>
+      <div class="statNumber" id="approvedBooksCount">—</div>
+      <div class="statLabel">Approved Books</div>
     </div>
 
     <div class="stat">
-      <div
-        class="statNumber"
-        id="scheduledCount">
-        —
-      </div>
-      <div class="statLabel">
-        Scheduled Features
-      </div>
+      <div class="statNumber" id="scheduledCount">—</div>
+      <div class="statLabel">Scheduled Features</div>
     </div>
 
     <div class="stat">
-      <div
-        class="statNumber"
-        id="unreadCount">
-        —
-      </div>
-      <div class="statLabel">
-        Unread Notifications
-      </div>
+      <div class="statNumber" id="unreadCount">—</div>
+      <div class="statLabel">Unread Notifications</div>
     </div>
 
   </div>
 
-  <div class="section">
+  <div class="card">
 
-    <div class="card">
+    <h2 class="sectionTitle">
+      Moderator Workspace
+    </h2>
 
-      <div class="sectionHead">
+    <p class="muted">
+      Start conversations with approved authors, coordinate feature schedules
+      and keep track of Reader Reach activity.
+    </p>
 
-        <div>
-          <h2 class="sectionTitle">
-            Moderator Workspace
-          </h2>
+    <div class="item">
 
-          <p class="muted">
-            Select an approved author to start a conversation,
-            review approved books and coordinate upcoming features.
-          </p>
-        </div>
+      <div class="itemTitle">
+        Author Communication
+      </div>
+
+      <div class="itemMeta">
+        Choose an approved author and click
+        <strong>Message Author</strong> to create or open a conversation.
+      </div>
+
+      <div class="itemActions">
+
+        <button
+          class="btn primary"
+          onclick="showSection('authors')">
+          Choose Author
+        </button>
+
+        <button
+          class="btn"
+          onclick="showSection('messages')">
+          Open Messages
+        </button>
 
       </div>
 
-      <div class="item">
+    </div>
 
-        <div class="itemTitle">
-          Communication
-        </div>
+    <div class="item">
 
-        <div class="itemMeta">
-          You can communicate directly with approved authors.
-          Starting a conversation will create a Reader Reach
-          conversation linked to that author.
-        </div>
-
-        <div class="itemActions">
-
-          <button
-            class="btn primary"
-            onclick="showSection('authors')">
-            Select an Author
-          </button>
-
-          <button
-            class="btn"
-            onclick="showSection('messages')">
-            Open Messages
-          </button>
-
-        </div>
-
+      <div class="itemTitle">
+        Permission Boundary
       </div>
 
-      <div class="item">
+      <div class="itemMeta">
+        Moderators do not approve, reject or remove authors or books.
+        Those actions remain under Admin control.
+      </div>
 
-        <div class="itemTitle">
-          Permission Boundary
-        </div>
+      <div class="itemActions">
 
-        <div class="itemMeta">
-          Moderators do not approve, reject or remove authors or books.
-          Those actions remain under Admin control.
-        </div>
-
-        <div class="itemActions">
-
-          <span class="badge green">
-            Moderator permissions active
-          </span>
-
-        </div>
+        <span class="badge green">
+          Moderator permissions active
+        </span>
 
       </div>
 
@@ -1064,36 +951,34 @@ nav{
   id="authors"
   class="pageSection hidden">
 
-  <div class="section">
+  <div class="card">
 
-    <div class="card">
+    <div class="sectionHead">
 
-      <div class="sectionHead">
+      <div>
 
-        <div>
-          <h2 class="sectionTitle">
-            Approved Authors
-          </h2>
+        <h2 class="sectionTitle">
+          Approved Authors
+        </h2>
 
-          <p class="muted">
-            Select an author to view their profile or start a conversation.
-          </p>
-        </div>
-
-        <button
-          class="btn small"
-          onclick="loadApprovedAuthors()">
-          Refresh
-        </button>
+        <p class="muted">
+          Every approved author below can be selected for communication.
+        </p>
 
       </div>
 
-      <div id="authorList">
+      <button
+        class="btn small"
+        onclick="loadApprovedAuthors()">
+        Refresh
+      </button>
 
-        <div class="empty">
-          Loading approved authors...
-        </div>
+    </div>
 
+    <div id="authorList">
+
+      <div class="empty">
+        Loading approved authors...
       </div>
 
     </div>
@@ -1108,36 +993,34 @@ nav{
   id="books"
   class="pageSection hidden">
 
-  <div class="section">
+  <div class="card">
 
-    <div class="card">
+    <div class="sectionHead">
 
-      <div class="sectionHead">
+      <div>
 
-        <div>
-          <h2 class="sectionTitle">
-            Approved Books
-          </h2>
+        <h2 class="sectionTitle">
+          Approved Books
+        </h2>
 
-          <p class="muted">
-            Approved books available for feature coordination.
-          </p>
-        </div>
-
-        <button
-          class="btn small"
-          onclick="loadApprovedBooks()">
-          Refresh
-        </button>
+        <p class="muted">
+          Approved books available for feature coordination.
+        </p>
 
       </div>
 
-      <div id="approvedBookList">
+      <button
+        class="btn small"
+        onclick="loadApprovedBooks()">
+        Refresh
+      </button>
 
-        <div class="empty">
-          Loading approved books...
-        </div>
+    </div>
 
+    <div id="approvedBookList">
+
+      <div class="empty">
+        Loading approved books...
       </div>
 
     </div>
@@ -1152,90 +1035,100 @@ nav{
   id="messages"
   class="pageSection hidden">
 
-  <div class="section">
+  <div class="card">
 
-    <div class="card">
+    <div class="sectionHead">
 
-      <div class="sectionHead">
+      <div>
 
-        <div>
-          <h2 class="sectionTitle">
-            Messages
-          </h2>
+        <h2 class="sectionTitle">
+          Messages
+        </h2>
 
-          <p class="muted">
-            Select an author from the left, then send messages directly.
-          </p>
-        </div>
-
-        <button
-          class="btn small"
-          onclick="loadConversations()">
-          Refresh
-        </button>
+        <p class="muted">
+          Select an author from the left, then send messages directly.
+        </p>
 
       </div>
 
-      <div class="messageLayout">
+      <button
+        class="btn small"
+        onclick="loadMessagesWorkspace()">
+        Refresh
+      </button>
 
-        <div class="conversationList">
+    </div>
 
-          <div class="conversationHeader">
-            <strong>Conversations</strong>
-          </div>
+    <div class="messageLayout">
 
-          <div id="conversationList">
+      <div class="conversationPanel">
 
-            <div class="empty">
-              Loading conversations...
-            </div>
+        <div class="conversationHeading">
+          Authors
+        </div>
 
+        <div id="messageAuthorList">
+
+          <div class="empty">
+            Loading authors...
           </div>
 
         </div>
 
-        <div class="messagePanel">
+        <div
+          style="
+            padding:12px;
+            border-top:1px solid var(--line);
+            color:var(--muted);
+            font-size:11px;
+            line-height:1.5;
+          ">
+          Click an author to create or open their conversation.
+        </div>
 
-          <div
-            class="messagePanelHeader"
-            id="messagePanelHeader">
+      </div>
 
-            <strong>
-              Select an author
-            </strong>
+      <div class="messagePanel">
 
-            <div class="muted">
-              Choose an approved author to start or continue a conversation.
-            </div>
+        <div
+          class="messageHeader"
+          id="messageHeader">
 
+          <strong>
+            Select an author
+          </strong>
+
+          <div class="muted">
+            Choose an approved author to start or continue a conversation.
           </div>
 
-          <div
-            class="messages"
-            id="messageList">
+        </div>
 
-            <div class="empty">
-              No conversation selected.
-            </div>
+        <div
+          class="messages"
+          id="messagesList">
 
+          <div class="empty">
+            <strong>No conversation selected.</strong>
+            Select an author from the left.
           </div>
 
-          <div class="replyBox">
+        </div>
 
-            <textarea
-              id="replyInput"
-              placeholder="Write a message to the author..."
-              disabled></textarea>
+        <div class="reply">
 
-            <button
-              class="btn primary"
-              id="sendReplyBtn"
-              onclick="sendReply()"
-              disabled>
-              Send
-            </button>
+          <textarea
+            id="messageInput"
+            placeholder="Write a message to the author..."
+            disabled></textarea>
 
-          </div>
+          <button
+            id="sendMessageButton"
+            class="btn primary"
+            onclick="sendMessage()"
+            disabled>
+            Send
+          </button>
 
         </div>
 
@@ -1253,111 +1146,103 @@ nav{
   id="calendar"
   class="pageSection hidden">
 
-  <div class="section">
+  <div class="card">
 
-    <div class="card">
+    <div class="sectionHead">
 
-      <div class="sectionHead">
+      <div>
 
-        <div>
-          <h2 class="sectionTitle">
-            Feature Calendar
-          </h2>
+        <h2 class="sectionTitle">
+          Feature Calendar
+        </h2>
 
-          <p class="muted">
-            Coordinate feature dates and times for approved books.
-          </p>
-        </div>
-
-        <button
-          class="btn small"
-          onclick="loadSchedules()">
-          Refresh
-        </button>
-
-      </div>
-
-      <div class="formGrid">
-
-        <div class="field">
-
-          <label>
-            Approved Book
-          </label>
-
-          <select id="scheduleBook">
-            <option value="">
-              Select a book
-            </option>
-          </select>
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Date
-          </label>
-
-          <input
-            type="date"
-            id="scheduleDate">
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Time
-          </label>
-
-          <input
-            type="time"
-            id="scheduleTime">
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Notes
-          </label>
-
-          <input
-            type="text"
-            id="scheduleNotes"
-            placeholder="Optional feature notes">
-
-        </div>
+        <p class="muted">
+          Schedule features for approved books.
+        </p>
 
       </div>
 
       <button
-        class="btn primary"
-        id="scheduleBtn">
-        Schedule Feature
+        class="btn small"
+        onclick="loadSchedules()">
+        Refresh
       </button>
 
     </div>
 
+    <div class="formGrid">
+
+      <div class="field">
+
+        <label>
+          Approved Book
+        </label>
+
+        <select id="scheduleBook">
+          <option value="">
+            Select a book
+          </option>
+        </select>
+
+      </div>
+
+      <div class="field">
+
+        <label>
+          Date
+        </label>
+
+        <input
+          type="date"
+          id="scheduleDate">
+
+      </div>
+
+      <div class="field">
+
+        <label>
+          Time
+        </label>
+
+        <input
+          type="time"
+          id="scheduleTime">
+
+      </div>
+
+      <div class="field">
+
+        <label>
+          Notes
+        </label>
+
+        <input
+          type="text"
+          id="scheduleNotes"
+          placeholder="Optional notes">
+
+      </div>
+
+    </div>
+
+    <button
+      class="btn primary"
+      onclick="createSchedule()">
+      Schedule Feature
+    </button>
+
   </div>
 
-  <div class="section">
+  <div class="card">
 
-    <div class="card">
+    <h2 class="sectionTitle">
+      Upcoming Features
+    </h2>
 
-      <h2 class="sectionTitle">
-        Upcoming Features
-      </h2>
+    <div id="scheduleList">
 
-      <div
-        id="scheduleList"
-        style="margin-top:15px;">
-
-        <div class="empty">
-          Loading schedules...
-        </div>
-
+      <div class="empty">
+        Loading schedules...
       </div>
 
     </div>
@@ -1372,37 +1257,34 @@ nav{
   id="notifications"
   class="pageSection hidden">
 
-  <div class="section">
+  <div class="card">
 
-    <div class="card">
+    <div class="sectionHead">
 
-      <div class="sectionHead">
+      <div>
 
-        <div>
-          <h2 class="sectionTitle">
-            Notifications
-          </h2>
+        <h2 class="sectionTitle">
+          Notifications
+        </h2>
 
-          <p class="muted">
-            Updates related to approved books, author messages,
-            schedules and moderator activity.
-          </p>
-        </div>
-
-        <button
-          class="btn small"
-          onclick="loadNotifications()">
-          Refresh
-        </button>
+        <p class="muted">
+          Your Reader Reach moderator notifications.
+        </p>
 
       </div>
 
-      <div id="notificationList">
+      <button
+        class="btn small"
+        onclick="loadNotifications()">
+        Refresh
+      </button>
 
-        <div class="empty">
-          Loading notifications...
-        </div>
+    </div>
 
+    <div id="notificationList">
+
+      <div class="empty">
+        Loading notifications...
       </div>
 
     </div>
@@ -1417,69 +1299,59 @@ nav{
   id="account"
   class="pageSection hidden">
 
-  <div class="section">
+  <div class="card">
 
-    <div class="card">
+    <h2 class="sectionTitle">
+      My Account
+    </h2>
 
-      <div class="sectionHead">
+    <p class="muted">
+      Your moderator account information.
+    </p>
 
-        <div>
-          <h2 class="sectionTitle">
-            My Account
-          </h2>
+    <div class="formGrid">
 
-          <p class="muted">
-            Moderator account information.
-          </p>
-        </div>
-
+      <div class="field">
+        <label>Name</label>
+        <input id="accountName" readonly>
       </div>
 
-      <div class="formGrid">
-
-        <div class="field">
-          <label>Name</label>
-          <input id="accountName" readonly>
-        </div>
-
-        <div class="field">
-          <label>Email</label>
-          <input id="accountEmail" readonly>
-        </div>
-
-        <div class="field">
-          <label>Role</label>
-          <input id="accountRole" readonly value="Moderator">
-        </div>
-
-        <div class="field">
-          <label>Member Since</label>
-          <input id="accountCreated" readonly>
-        </div>
-
+      <div class="field">
+        <label>Email</label>
+        <input id="accountEmail" readonly>
       </div>
 
-      <div class="itemActions">
-
-        <a
-          class="btn"
-          href="reset-password.html">
-          Reset Password
-        </a>
-
-        <a
-          class="btn"
-          href="contact.html">
-          Contact Reader Reach
-        </a>
-
-        <button
-          class="btn primary"
-          onclick="signOut()">
-          Sign Out
-        </button>
-
+      <div class="field">
+        <label>Role</label>
+        <input value="Moderator" readonly>
       </div>
+
+      <div class="field">
+        <label>Account Created</label>
+        <input id="accountCreated" readonly>
+      </div>
+
+    </div>
+
+    <div class="itemActions">
+
+      <a
+        class="btn"
+        href="reset-password.html">
+        Reset Password
+      </a>
+
+      <a
+        class="btn"
+        href="contact.html">
+        Contact Reader Reach
+      </a>
+
+      <button
+        class="btn primary"
+        onclick="signOut()">
+        Sign Out
+      </button>
 
     </div>
 
@@ -1501,75 +1373,37 @@ nav{
 
   <div class="wrap">
 
-    <div style="
-      display:flex;
-      justify-content:space-between;
-      gap:30px;
-      flex-wrap:wrap;
+    <strong style="
+      color:#fff;
+      font-family:Georgia,serif;
+      font-size:18px;
     ">
+      Reader Reach
+    </strong>
 
-      <div>
-        <h3 style="
-          margin:0 0 8px;
-          font-family:Georgia,serif;
-          color:#fff;
-        ">
-          Reader Reach
-        </h3>
-
-        <p style="
-          margin:0;
-          font-size:12px;
-          line-height:1.7;
-        ">
-          Every Book Has Its Readers.
-        </p>
-      </div>
-
-      <div style="
-        font-size:12px;
-        line-height:2;
-      ">
-
-        <a href="index.html">
-          Home
-        </a>
-
-        &nbsp; • &nbsp;
-
-        <a href="authors.html">
-          Authors
-        </a>
-
-        &nbsp; • &nbsp;
-
-        <a href="contact.html">
-          Contact
-        </a>
-
-      </div>
-
-    </div>
-
-    <div style="
-      margin-top:25px;
-      padding-top:15px;
-      border-top:1px solid rgba(255,255,255,.15);
-      font-size:10px;
-      color:#cdbdb2;
+    <p style="
+      font-size:12px;
+      line-height:1.7;
     ">
-      © 2026 Reader Reach. All rights reserved.
-    </div>
+      Every Book Has Its Readers.
+    </p>
 
   </div>
 
 </footer>
 
-<div id="toast" class="toast"></div>
+<div
+  id="toast"
+  class="toast">
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+
+/* =========================================
+   SUPABASE
+========================================= */
 
 const SUPABASE_URL =
   'https://bublmnfhyyrefcdkloak.supabase.co';
@@ -1577,12 +1411,16 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
   'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
 
-const supabaseClient =
+const db =
   window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
   );
 
+
+/* =========================================
+   STATE
+========================================= */
 
 let currentUser = null;
 let currentProfile = null;
@@ -1590,13 +1428,16 @@ let currentModerator = null;
 
 let approvedAuthors = [];
 let approvedBooks = [];
+
 let conversations = [];
+
+let selectedAuthor = null;
 let selectedConversation = null;
 
 
-/* -------------------------
+/* =========================================
    HELPERS
-------------------------- */
+========================================= */
 
 function escapeHtml(value){
 
@@ -1662,72 +1503,82 @@ function formatDateTime(value){
 }
 
 
-function showToast(message){
+function toast(message){
 
-  const toast =
+  const element =
     document.getElementById('toast');
 
-  toast.textContent =
+  element.textContent =
     message;
 
-  toast.classList.add('show');
+  element.classList.add('show');
 
-  setTimeout(
-    () => toast.classList.remove('show'),
-    3500
+  clearTimeout(
+    window.__toastTimer
   );
+
+  window.__toastTimer =
+    setTimeout(
+      () => {
+        element.classList.remove('show');
+      },
+      4000
+    );
 
 }
 
 
-/* -------------------------
+/* =========================================
    NAVIGATION
-------------------------- */
+========================================= */
 
-function showSection(section){
+function showSection(name){
 
   document
     .querySelectorAll('.pageSection')
-    .forEach(item => {
+    .forEach(section => {
 
-      item.classList.add('hidden');
+      section.classList.add('hidden');
 
     });
 
 
-  const target =
-    document.getElementById(section);
+  const section =
+    document.getElementById(name);
 
-  if(target){
-    target.classList.remove('hidden');
+  if(section){
+    section.classList.remove('hidden');
   }
 
 
   document
-    .querySelectorAll('.sideLink[data-section]')
-    .forEach(link => {
+    .querySelectorAll('.sideBtn[data-section]')
+    .forEach(button => {
 
-      link.classList.toggle(
+      button.classList.toggle(
         'active',
-        link.dataset.section === section
+        button.dataset.section === name
       );
 
     });
 
 
-  window.scrollTo({
-    top:0,
-    behavior:'smooth'
-  });
+  if(name === 'messages'){
+    loadMessagesWorkspace();
+  }
+
+  if(name === 'calendar'){
+    loadSchedules();
+  }
 
 }
 
 
-/* -------------------------
-   AUTH
-------------------------- */
+/* =========================================
+   AUTHENTICATION
+========================================= */
 
-async function requireModerator(){
+async function initializeModerator(){
 
   const {
     data:{
@@ -1735,20 +1586,18 @@ async function requireModerator(){
     },
     error:userError
   } =
-    await supabaseClient
-      .auth
-      .getUser();
+    await db.auth.getUser();
 
 
   if(userError){
 
     console.error(
-      'User error:',
+      'Auth user error:',
       userError
     );
 
-    showToast(
-      'We could not verify your session.'
+    toast(
+      'Could not verify your session.'
     );
 
     return false;
@@ -1768,16 +1617,18 @@ async function requireModerator(){
     user;
 
 
+  /* PROFILE */
+
   const {
     data:profile,
     error:profileError
   } =
-    await supabaseClient
+    await db
       .from('profiles')
       .select(`
         id,
-        display_name,
         role,
+        display_name,
         created_at
       `)
       .eq(
@@ -1794,8 +1645,8 @@ async function requireModerator(){
       profileError
     );
 
-    showToast(
-      'Your account could not be loaded.'
+    toast(
+      'Could not load your profile.'
     );
 
     return false;
@@ -1804,8 +1655,26 @@ async function requireModerator(){
 
   if(!profile){
 
-    showToast(
-      'Reader Reach profile not found.'
+    toast(
+      'Reader Reach profile was not found.'
+    );
+
+    return false;
+  }
+
+
+  if(profile.role !== 'moderator'){
+
+    toast(
+      'This account is not a moderator account.'
+    );
+
+    setTimeout(
+      () => {
+        window.location.href =
+          'index.html';
+      },
+      1200
     );
 
     return false;
@@ -1816,35 +1685,13 @@ async function requireModerator(){
     profile;
 
 
-  if(profile.role !== 'moderator'){
-
-    showToast(
-      'This dashboard is only for moderators.'
-    );
-
-    setTimeout(
-      () => {
-        window.location.href =
-          'index.html';
-      },
-      1500
-    );
-
-    return false;
-  }
-
-
-  /*
-    The project already has a moderators table.
-    The conversation moderator_id references
-    this moderator record, not the auth profile id.
-  */
+  /* MODERATOR */
 
   const {
     data:moderator,
     error:moderatorError
   } =
-    await supabaseClient
+    await db
       .from('moderators')
       .select(`
         id,
@@ -1862,12 +1709,13 @@ async function requireModerator(){
   if(moderatorError){
 
     console.error(
-      'Moderator lookup error:',
+      'Moderator record error:',
       moderatorError
     );
 
-    showToast(
-      'Could not load the moderator record.'
+    toast(
+      'Could not load your moderator record: ' +
+      moderatorError.message
     );
 
     return false;
@@ -1876,7 +1724,7 @@ async function requireModerator(){
 
   if(!moderator){
 
-    showToast(
+    toast(
       'No moderator record was found for this account.'
     );
 
@@ -1891,8 +1739,8 @@ async function requireModerator(){
     ).textContent =
       'Inactive';
 
-    showToast(
-      'Your moderator account is inactive.'
+    toast(
+      'This moderator account is inactive.'
     );
 
     return false;
@@ -1909,69 +1757,37 @@ async function requireModerator(){
     'Active';
 
 
-  populateAccount();
-
-  return true;
-
-}
-
-
-/* -------------------------
-   ACCOUNT
-------------------------- */
-
-function populateAccount(){
-
   document.getElementById(
     'accountName'
   ).value =
-    currentProfile.display_name ||
-    currentModerator.display_name ||
+    profile.display_name ||
+    moderator.display_name ||
     'Moderator';
 
 
   document.getElementById(
     'accountEmail'
   ).value =
-    currentUser.email ||
+    user.email ||
     '—';
-
-
-  document.getElementById(
-    'accountRole'
-  ).value =
-    'Moderator';
 
 
   document.getElementById(
     'accountCreated'
   ).value =
     formatDate(
-      currentProfile.created_at
+      profile.created_at
     );
 
-}
 
-
-/* -------------------------
-   SIGN OUT
-------------------------- */
-
-async function signOut(){
-
-  await supabaseClient
-    .auth
-    .signOut();
-
-  window.location.href =
-    'auth.html?mode=signin';
+  return true;
 
 }
 
 
-/* -------------------------
+/* =========================================
    APPROVED AUTHORS
-------------------------- */
+========================================= */
 
 async function loadApprovedAuthors(){
 
@@ -1979,6 +1795,7 @@ async function loadApprovedAuthors(){
     document.getElementById(
       'authorList'
     );
+
 
   container.innerHTML =
     '<div class="empty">Loading approved authors...</div>';
@@ -1988,7 +1805,7 @@ async function loadApprovedAuthors(){
     data,
     error
   } =
-    await supabaseClient
+    await db
       .from('authors')
       .select(`
         id,
@@ -2020,7 +1837,9 @@ async function loadApprovedAuthors(){
     );
 
     container.innerHTML =
-      '<div class="empty">Unable to load approved authors.</div>';
+      `<div class="empty">
+        Could not load approved authors.
+      </div>`;
 
     return;
   }
@@ -2036,12 +1855,31 @@ async function loadApprovedAuthors(){
     approvedAuthors.length;
 
 
+  renderAuthorList();
+
+  renderMessageAuthorList();
+
+}
+
+
+/* =========================================
+   AUTHOR LIST
+========================================= */
+
+function renderAuthorList(){
+
+  const container =
+    document.getElementById(
+      'authorList'
+    );
+
+
   if(!approvedAuthors.length){
 
     container.innerHTML = `
       <div class="empty">
         <strong>No approved authors yet.</strong>
-        Approved authors will appear here once Admin approves them.
+        Approved authors will appear here after Admin approval.
       </div>
     `;
 
@@ -2068,7 +1906,7 @@ async function loadApprovedAuthors(){
                 </div>
 
                 <div class="itemMeta">
-                  Approved:
+                  Approved
                   ${escapeHtml(
                     formatDate(
                       author.reviewed_at ||
@@ -2088,7 +1926,7 @@ async function loadApprovedAuthors(){
             <div class="itemMeta">
               ${escapeHtml(
                 author.bio ||
-                'No author biography available.'
+                'No biography available.'
               )}
             </div>
 
@@ -2102,7 +1940,7 @@ async function loadApprovedAuthors(){
 
               <button
                 class="btn small primary"
-                onclick="startAuthorConversation('${author.id}')">
+                onclick="openAuthorConversation('${author.id}')">
                 Message Author
               </button>
 
@@ -2117,32 +1955,83 @@ async function loadApprovedAuthors(){
 }
 
 
-/* -------------------------
-   START / OPEN AUTHOR
-   CONVERSATION
-------------------------- */
+/* =========================================
+   MESSAGE AUTHOR LIST
+========================================= */
 
-async function startAuthorConversation(authorId){
+function renderMessageAuthorList(){
 
-  if(!authorId){
-
-    showToast(
-      'Author could not be identified.'
+  const container =
+    document.getElementById(
+      'messageAuthorList'
     );
+
+
+  if(!approvedAuthors.length){
+
+    container.innerHTML = `
+      <div class="empty">
+        No approved authors.
+      </div>
+    `;
 
     return;
   }
 
 
+  container.innerHTML =
+    approvedAuthors
+      .map(author => {
+
+        const active =
+          selectedAuthor &&
+          selectedAuthor.id ===
+            author.id;
+
+
+        return `
+          <button
+            class="authorChoice ${active ? 'active' : ''}"
+            onclick="openAuthorConversation('${author.id}')">
+
+            <div class="authorChoiceName">
+              ${escapeHtml(
+                author.author_name ||
+                'Unnamed Author'
+              )}
+            </div>
+
+            <div class="authorChoiceText">
+              Click to start or open conversation
+            </div>
+
+          </button>
+        `;
+
+      })
+      .join('');
+
+}
+
+
+/* =========================================
+   OPEN / CREATE CONVERSATION
+========================================= */
+
+async function openAuthorConversation(
+  authorId
+){
+
   const author =
     approvedAuthors.find(
-      item => item.id === authorId
+      item =>
+        item.id === authorId
     );
 
 
   if(!author){
 
-    showToast(
+    toast(
       'Author could not be found.'
     );
 
@@ -2150,36 +2039,32 @@ async function startAuthorConversation(authorId){
   }
 
 
-  if(!currentModerator){
-
-    showToast(
-      'Your moderator account is not ready yet.'
-    );
-
-    return;
-  }
+  selectedAuthor =
+    author;
 
 
   showSection('messages');
 
+  renderMessageAuthorList();
+
 
   /*
-    IMPORTANT:
+    FIRST:
+    Look for an existing conversation
+    for this moderator + author.
 
-    conversations uses:
-      author_id
-      moderator_id
-      book_id
+    We intentionally do NOT require
+    book_id to be null here.
 
-    moderator_id is the ID from the
-    moderators table, NOT the auth user ID.
+    That means if a conversation already
+    exists for this author, we can open it.
   */
 
   const {
-    data:existing,
-    error:existingError
+    data:existingConversations,
+    error:findError
   } =
-    await supabaseClient
+    await db
       .from('conversations')
       .select(`
         id,
@@ -2197,10 +2082,6 @@ async function startAuthorConversation(authorId){
         'moderator_id',
         currentModerator.id
       )
-      .is(
-        'book_id',
-        null
-      )
       .order(
         'updated_at',
         {
@@ -2210,16 +2091,16 @@ async function startAuthorConversation(authorId){
       .limit(1);
 
 
-  if(existingError){
+  if(findError){
 
     console.error(
-      'Conversation lookup error:',
-      existingError
+      'Find conversation error:',
+      findError
     );
 
-    showToast(
-      'Could not check for an existing conversation: ' +
-      existingError.message
+    toast(
+      'Could not check conversations: ' +
+      findError.message
     );
 
     return;
@@ -2227,11 +2108,15 @@ async function startAuthorConversation(authorId){
 
 
   let conversation =
-    existing?.[0] || null;
+    existingConversations &&
+    existingConversations.length
+      ? existingConversations[0]
+      : null;
 
 
   /*
-    If one does not exist, create it.
+    IF THERE IS NO CONVERSATION:
+    CREATE ONE.
   */
 
   if(!conversation){
@@ -2240,7 +2125,7 @@ async function startAuthorConversation(authorId){
       data:newConversation,
       error:createError
     } =
-      await supabaseClient
+      await db
         .from('conversations')
         .insert({
           author_id:author.id,
@@ -2261,12 +2146,12 @@ async function startAuthorConversation(authorId){
     if(createError){
 
       console.error(
-        'Conversation creation error:',
+        'CREATE CONVERSATION ERROR:',
         createError
       );
 
-      showToast(
-        'Could not start the conversation: ' +
+      toast(
+        'Could not start conversation: ' +
         createError.message
       );
 
@@ -2277,50 +2162,46 @@ async function startAuthorConversation(authorId){
     conversation =
       newConversation;
 
-    showToast(
+
+    toast(
       'Conversation started with ' +
-      author.author_name + '.'
+      author.author_name
     );
 
   }else{
 
-    showToast(
+    toast(
       'Conversation opened with ' +
-      author.author_name + '.'
+      author.author_name
     );
 
   }
 
 
-  await loadConversations();
+  selectedConversation =
+    conversation;
 
-  await selectConversation(
-    conversation.id
+
+  await loadConversationsForModerator();
+
+  await openConversation(
+    conversation
   );
 
 }
 
 
-/* -------------------------
-   CONVERSATIONS
-------------------------- */
+/* =========================================
+   LOAD CONVERSATIONS
+========================================= */
 
-async function loadConversations(){
-
-  const container =
-    document.getElementById(
-      'conversationList'
-    );
-
-  container.innerHTML =
-    '<div class="empty">Loading conversations...</div>';
-
+async function loadConversationsForModerator(){
 
   const {
     data,
     error
   } =
-    await supabaseClient
+    await db
       .from('conversations')
       .select(`
         id,
@@ -2345,15 +2226,9 @@ async function loadConversations(){
   if(error){
 
     console.error(
-      'Conversations error:',
+      'Load conversations error:',
       error
     );
-
-    container.innerHTML = `
-      <div class="empty">
-        Unable to load conversations.
-      </div>
-    `;
 
     return;
   }
@@ -2362,151 +2237,16 @@ async function loadConversations(){
   conversations =
     data || [];
 
-
-  if(!conversations.length){
-
-    container.innerHTML = `
-      <div class="empty">
-        <strong>No conversations yet.</strong>
-        Go to Approved Authors and click
-        <b>Message Author</b>.
-      </div>
-    `;
-
-    return;
-  }
-
-
-  const authorIds =
-    [
-      ...new Set(
-        conversations
-          .map(item => item.author_id)
-          .filter(Boolean)
-      )
-    ];
-
-
-  let authorMap = {};
-
-
-  if(authorIds.length){
-
-    const {
-      data:authors,
-      error:authorError
-    } =
-      await supabaseClient
-        .from('authors')
-        .select(`
-          id,
-          author_name
-        `)
-        .in(
-          'id',
-          authorIds
-        );
-
-
-    if(authorError){
-
-      console.error(
-        'Conversation authors error:',
-        authorError
-      );
-
-    }else{
-
-      (authors || [])
-        .forEach(author => {
-
-          authorMap[author.id] =
-            author;
-
-        });
-
-    }
-
-  }
-
-
-  container.innerHTML =
-    conversations
-      .map(conversation => {
-
-        const author =
-          authorMap[
-            conversation.author_id
-          ];
-
-        const authorName =
-          author?.author_name ||
-          'Author';
-
-
-        const active =
-          selectedConversation &&
-          selectedConversation.id ===
-            conversation.id;
-
-
-        return `
-          <button
-            class="conversationItem ${active ? 'active' : ''}"
-            onclick="selectConversation('${conversation.id}')">
-
-            <div class="conversationName">
-              ${escapeHtml(authorName)}
-            </div>
-
-            <div class="conversationPreview">
-              ${conversation.book_id
-                ? 'Book conversation'
-                : 'Author conversation'}
-            </div>
-
-            <div class="conversationDate">
-              ${escapeHtml(
-                formatDateTime(
-                  conversation.updated_at ||
-                  conversation.created_at
-                )
-              )}
-            </div>
-
-          </button>
-        `;
-
-      })
-      .join('');
-
 }
 
 
-/* -------------------------
-   SELECT CONVERSATION
-------------------------- */
+/* =========================================
+   OPEN CONVERSATION
+========================================= */
 
-async function selectConversation(
-  conversationId
+async function openConversation(
+  conversation
 ){
-
-  const conversation =
-    conversations.find(
-      item =>
-        item.id === conversationId
-    );
-
-
-  if(!conversation){
-
-    showToast(
-      'Conversation could not be found.'
-    );
-
-    return;
-  }
-
 
   selectedConversation =
     conversation;
@@ -2516,87 +2256,57 @@ async function selectConversation(
     approvedAuthors.find(
       item =>
         item.id ===
-        conversation.author_id
+          conversation.author_id
     );
 
 
-  const authorName =
-    author?.author_name ||
-    'Author';
+  selectedAuthor =
+    author || selectedAuthor;
 
 
   document.getElementById(
-    'messagePanelHeader'
+    'messageHeader'
   ).innerHTML = `
 
     <strong>
-      ${escapeHtml(authorName)}
+      ${escapeHtml(
+        author?.author_name ||
+        'Author'
+      )}
     </strong>
 
     <div class="muted">
-      Direct moderator conversation
+      Reader Reach moderator conversation
     </div>
 
   `;
 
 
   document.getElementById(
-    'replyInput'
+    'messageInput'
   ).disabled =
     false;
 
 
   document.getElementById(
-    'sendReplyBtn'
+    'sendMessageButton'
   ).disabled =
     false;
+
+
+  renderMessageAuthorList();
 
 
   await loadConversationMessages(
     conversation.id
   );
 
-
-  document
-    .querySelectorAll('.conversationItem')
-    .forEach(button => {
-
-      button.classList.remove(
-        'active'
-      );
-
-    });
-
-
-  const activeButton =
-    [
-      ...document.querySelectorAll(
-        '.conversationItem'
-      )
-    ].find(
-      button =>
-        button.getAttribute(
-          'onclick'
-        )?.includes(
-          conversation.id
-        )
-    );
-
-
-  if(activeButton){
-
-    activeButton.classList.add(
-      'active'
-    );
-
-  }
-
 }
 
 
-/* -------------------------
-   MESSAGES
-------------------------- */
+/* =========================================
+   LOAD CONVERSATION MESSAGES
+========================================= */
 
 async function loadConversationMessages(
   conversationId
@@ -2604,7 +2314,7 @@ async function loadConversationMessages(
 
   const container =
     document.getElementById(
-      'messageList'
+      'messagesList'
     );
 
 
@@ -2616,7 +2326,7 @@ async function loadConversationMessages(
     data,
     error
   } =
-    await supabaseClient
+    await db
       .from('messages')
       .select(`
         id,
@@ -2641,13 +2351,13 @@ async function loadConversationMessages(
   if(error){
 
     console.error(
-      'Messages error:',
+      'Messages load error:',
       error
     );
 
     container.innerHTML = `
       <div class="empty">
-        Unable to load messages.
+        Could not load messages.
       </div>
     `;
 
@@ -2670,31 +2380,32 @@ async function loadConversationMessages(
 
   container.innerHTML =
     data
-      .map(item => {
+      .map(message => {
 
-        const isModerator =
-          item.sender_profile_id ===
+        const fromModerator =
+          message.sender_profile_id ===
           currentUser.id;
 
 
         return `
-          <div class="chatBubble ${
-            isModerator
+          <div class="message ${
+            fromModerator
               ? 'moderator'
               : 'author'
           }">
 
             ${escapeHtml(
-              item.message || ''
+              message.message ||
+              ''
             )}
 
-            <small>
+            <div class="messageTime">
               ${escapeHtml(
                 formatDateTime(
-                  item.created_at
+                  message.created_at
                 )
               )}
-            </small>
+            </div>
 
           </div>
         `;
@@ -2709,15 +2420,15 @@ async function loadConversationMessages(
 }
 
 
-/* -------------------------
+/* =========================================
    SEND MESSAGE
-------------------------- */
+========================================= */
 
-async function sendReply(){
+async function sendMessage(){
 
   if(!selectedConversation){
 
-    showToast(
+    toast(
       'Select an author first.'
     );
 
@@ -2727,7 +2438,7 @@ async function sendReply(){
 
   const input =
     document.getElementById(
-      'replyInput'
+      'messageInput'
     );
 
 
@@ -2737,7 +2448,7 @@ async function sendReply(){
 
   if(!message){
 
-    showToast(
+    toast(
       'Write a message first.'
     );
 
@@ -2745,23 +2456,23 @@ async function sendReply(){
   }
 
 
-  const sendButton =
+  const button =
     document.getElementById(
-      'sendReplyBtn'
+      'sendMessageButton'
     );
 
 
-  sendButton.disabled =
+  button.disabled =
     true;
 
-  sendButton.textContent =
+  button.textContent =
     'Sending...';
 
 
   const {
     error
   } =
-    await supabaseClient
+    await db
       .from('messages')
       .insert({
         conversation_id:
@@ -2778,19 +2489,19 @@ async function sendReply(){
   if(error){
 
     console.error(
-      'Send message error:',
+      'SEND MESSAGE ERROR:',
       error
     );
 
-    showToast(
+    toast(
       'Could not send message: ' +
       error.message
     );
 
-    sendButton.disabled =
+    button.disabled =
       false;
 
-    sendButton.textContent =
+    button.textContent =
       'Send';
 
     return;
@@ -2806,21 +2517,51 @@ async function sendReply(){
   );
 
 
-  await loadConversations();
+  await loadConversationsForModerator();
 
 
-  sendButton.disabled =
+  button.disabled =
     false;
 
-  sendButton.textContent =
+  button.textContent =
     'Send';
 
 }
 
 
-/* -------------------------
+/* =========================================
+   MESSAGE WORKSPACE
+========================================= */
+
+async function loadMessagesWorkspace(){
+
+  if(!approvedAuthors.length){
+
+    await loadApprovedAuthors();
+
+  }
+
+
+  await loadConversationsForModerator();
+
+
+  renderMessageAuthorList();
+
+
+  if(selectedConversation){
+
+    await loadConversationMessages(
+      selectedConversation.id
+    );
+
+  }
+
+}
+
+
+/* =========================================
    APPROVED BOOKS
-------------------------- */
+========================================= */
 
 async function loadApprovedBooks(){
 
@@ -2838,7 +2579,7 @@ async function loadApprovedBooks(){
     data,
     error
   } =
-    await supabaseClient
+    await db
       .from('books')
       .select(`
         id,
@@ -2846,6 +2587,9 @@ async function loadApprovedBooks(){
         title,
         description,
         genre_topic,
+        availability,
+        book_link,
+        cover_url,
         status,
         created_at
       `)
@@ -2869,7 +2613,7 @@ async function loadApprovedBooks(){
     );
 
     container.innerHTML =
-      '<div class="empty">Unable to load approved books.</div>';
+      '<div class="empty">Could not load approved books.</div>';
 
     return;
   }
@@ -2885,7 +2629,7 @@ async function loadApprovedBooks(){
     approvedBooks.length;
 
 
-  populateScheduleBookSelect();
+  populateBookSelect();
 
 
   if(!approvedBooks.length){
@@ -2951,7 +2695,7 @@ async function loadApprovedBooks(){
 
               <button
                 class="btn small primary"
-                onclick="prepareBookSchedule('${book.id}')">
+                onclick="prepareSchedule('${book.id}')">
                 Schedule Feature
               </button>
 
@@ -2966,11 +2710,11 @@ async function loadApprovedBooks(){
 }
 
 
-/* -------------------------
-   SCHEDULE SELECT
-------------------------- */
+/* =========================================
+   SCHEDULE
+========================================= */
 
-function populateScheduleBookSelect(){
+function populateBookSelect(){
 
   const select =
     document.getElementById(
@@ -3005,31 +2749,17 @@ function populateScheduleBookSelect(){
 }
 
 
-function prepareBookSchedule(bookId){
+function prepareSchedule(bookId){
 
-  showSection(
-    'calendar'
-  );
-
+  showSection('calendar');
 
   document.getElementById(
     'scheduleBook'
   ).value =
     bookId;
 
-
-  document
-    .getElementById(
-      'scheduleDate'
-    )
-    .focus();
-
 }
 
-
-/* -------------------------
-   CREATE SCHEDULE
-------------------------- */
 
 async function createSchedule(){
 
@@ -3059,7 +2789,7 @@ async function createSchedule(){
 
   if(!bookId){
 
-    showToast(
+    toast(
       'Select an approved book.'
     );
 
@@ -3069,8 +2799,8 @@ async function createSchedule(){
 
   if(!date){
 
-    showToast(
-      'Select a feature date.'
+    toast(
+      'Select a date.'
     );
 
     return;
@@ -3079,31 +2809,18 @@ async function createSchedule(){
 
   if(!time){
 
-    showToast(
-      'Select a feature time.'
+    toast(
+      'Select a time.'
     );
 
     return;
   }
 
 
-  const button =
-    document.getElementById(
-      'scheduleBtn'
-    );
-
-
-  button.disabled =
-    true;
-
-  button.textContent =
-    'Scheduling...';
-
-
   const {
     error
   } =
-    await supabaseClient
+    await db
       .from('feature_schedules')
       .insert({
         book_id:bookId,
@@ -3123,22 +2840,16 @@ async function createSchedule(){
       error
     );
 
-    showToast(
-      'Could not create schedule: ' +
+    toast(
+      'Could not schedule feature: ' +
       error.message
     );
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      'Schedule Feature';
 
     return;
   }
 
 
-  showToast(
+  toast(
     'Feature scheduled successfully.'
   );
 
@@ -3161,19 +2872,12 @@ async function createSchedule(){
 
   await loadSchedules();
 
-
-  button.disabled =
-    false;
-
-  button.textContent =
-    'Schedule Feature';
-
 }
 
 
-/* -------------------------
+/* =========================================
    LOAD SCHEDULES
-------------------------- */
+========================================= */
 
 async function loadSchedules(){
 
@@ -3183,15 +2887,11 @@ async function loadSchedules(){
     );
 
 
-  container.innerHTML =
-    '<div class="empty">Loading schedules...</div>';
-
-
   const {
     data,
     error
   } =
-    await supabaseClient
+    await db
       .from('feature_schedules')
       .select(`
         id,
@@ -3201,8 +2901,7 @@ async function loadSchedules(){
         scheduled_time,
         status,
         notes,
-        created_at,
-        updated_at
+        created_at
       `)
       .eq(
         'moderator_id',
@@ -3225,12 +2924,12 @@ async function loadSchedules(){
   if(error){
 
     console.error(
-      'Schedules error:',
+      'Schedule load error:',
       error
     );
 
     container.innerHTML =
-      '<div class="empty">Unable to load schedules.</div>';
+      '<div class="empty">Could not load schedules.</div>';
 
     return;
   }
@@ -3243,10 +2942,7 @@ async function loadSchedules(){
   document.getElementById(
     'scheduledCount'
   ).textContent =
-    schedules.filter(
-      item =>
-        item.status !== 'cancelled'
-    ).length;
+    schedules.length;
 
 
   if(!schedules.length){
@@ -3254,7 +2950,7 @@ async function loadSchedules(){
     container.innerHTML = `
       <div class="empty">
         <strong>No scheduled features yet.</strong>
-        Select an approved book above to create one.
+        Select an approved book to create a feature.
       </div>
     `;
 
@@ -3278,10 +2974,9 @@ async function loadSchedules(){
   if(bookIds.length){
 
     const {
-      data:books,
-      error:bookError
+      data:books
     } =
-      await supabaseClient
+      await db
         .from('books')
         .select(`
           id,
@@ -3293,17 +2988,12 @@ async function loadSchedules(){
         );
 
 
-    if(!bookError){
+    (books || []).forEach(book => {
 
-      (books || [])
-        .forEach(book => {
+      bookMap[book.id] =
+        book;
 
-          bookMap[book.id] =
-            book;
-
-        });
-
-    }
+    });
 
   }
 
@@ -3311,12 +3001,6 @@ async function loadSchedules(){
   container.innerHTML =
     schedules
       .map(schedule => {
-
-        const book =
-          bookMap[
-            schedule.book_id
-          ];
-
 
         return `
           <div class="item">
@@ -3327,7 +3011,9 @@ async function loadSchedules(){
 
                 <div class="itemTitle">
                   ${escapeHtml(
-                    book?.title ||
+                    bookMap[
+                      schedule.book_id
+                    ]?.title ||
                     'Book'
                   )}
                 </div>
@@ -3346,11 +3032,7 @@ async function loadSchedules(){
 
               </div>
 
-              <span class="badge ${
-                schedule.status === 'scheduled'
-                  ? 'green'
-                  : 'gold'
-              }">
+              <span class="badge green">
                 ${escapeHtml(
                   schedule.status ||
                   'scheduled'
@@ -3380,9 +3062,9 @@ async function loadSchedules(){
 }
 
 
-/* -------------------------
+/* =========================================
    NOTIFICATIONS
-------------------------- */
+========================================= */
 
 async function loadNotifications(){
 
@@ -3392,15 +3074,11 @@ async function loadNotifications(){
     );
 
 
-  container.innerHTML =
-    '<div class="empty">Loading notifications...</div>';
-
-
   const {
     data,
     error
   } =
-    await supabaseClient
+    await db
       .from('notifications')
       .select(`
         id,
@@ -3429,12 +3107,12 @@ async function loadNotifications(){
   if(error){
 
     console.error(
-      'Notifications error:',
+      'Notification error:',
       error
     );
 
     container.innerHTML =
-      '<div class="empty">Unable to load notifications.</div>';
+      '<div class="empty">Could not load notifications.</div>';
 
     return;
   }
@@ -3444,17 +3122,13 @@ async function loadNotifications(){
     data || [];
 
 
-  const unread =
+  document.getElementById(
+    'unreadCount'
+  ).textContent =
     notifications.filter(
       item =>
         item.is_read !== true
     ).length;
-
-
-  document.getElementById(
-    'unreadCount'
-  ).textContent =
-    unread;
 
 
   if(!notifications.length){
@@ -3526,14 +3200,28 @@ async function loadNotifications(){
 }
 
 
-/* -------------------------
-   INITIALISE
-------------------------- */
+/* =========================================
+   SIGN OUT
+========================================= */
 
-async function initialise(){
+async function signOut(){
+
+  await db.auth.signOut();
+
+  window.location.href =
+    'auth.html?mode=signin';
+
+}
+
+
+/* =========================================
+   INITIAL LOAD
+========================================= */
+
+async function initialize(){
 
   const allowed =
-    await requireModerator();
+    await initializeModerator();
 
 
   if(!allowed){
@@ -3541,44 +3229,47 @@ async function initialise(){
   }
 
 
-  await Promise.all([
-    loadApprovedAuthors(),
-    loadApprovedBooks(),
-    loadSchedules(),
-    loadNotifications(),
-    loadConversations()
-  ]);
+  await loadApprovedAuthors();
+
+  await loadApprovedBooks();
+
+  await loadConversationsForModerator();
+
+  await loadSchedules();
+
+  await loadNotifications();
 
 }
 
 
-/* -------------------------
-   EVENTS
-------------------------- */
+initialize();
+
+
+/* =========================================
+   AUTH STATE
+========================================= */
+
+db.auth.onAuthStateChange(
+  event => {
+
+    if(event === 'SIGNED_OUT'){
+
+      window.location.href =
+        'auth.html?mode=signin';
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   ENTER TO SEND
+========================================= */
 
 document
   .getElementById(
-    'scheduleBtn'
-  )
-  .addEventListener(
-    'click',
-    createSchedule
-  );
-
-
-document
-  .getElementById(
-    'signOutBtn'
-  )
-  .addEventListener(
-    'click',
-    signOut
-  );
-
-
-document
-  .getElementById(
-    'replyInput'
+    'messageInput'
   )
   .addEventListener(
     'keydown',
@@ -3591,31 +3282,12 @@ document
 
         event.preventDefault();
 
-        sendReply();
+        sendMessage();
 
       }
 
     }
   );
-
-
-supabaseClient.auth.onAuthStateChange(
-  (event) => {
-
-    if(
-      event === 'SIGNED_OUT'
-    ){
-
-      window.location.href =
-        'auth.html?mode=signin';
-
-    }
-
-  }
-);
-
-
-initialise();
 
 </script>
 

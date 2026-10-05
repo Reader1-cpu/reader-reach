@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Contact Reader Reach</title>
+
+  <style>
+    :root{
+      --cream:#f7f1e7;
+      --cream-2:#fffaf2;
+      --brown:#3d281d;
+      --brown-2:#5b3b2b;
+      --warm:#8a5a3b;
+      --gold:#c59a5a;
+      --border:#e6d8c7;
+      --muted:#76685e;
+      --white:#ffffff;
+      --success:#386b4b;
+      --error:#9b3d32;
+      --shadow:0 12px 35px rgba(61,40,29,.08);
+      --radius:18px;
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Arial, Helvetica, sans-serif;
+      background:var(--cream);
+      color:var(--brown);
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    button,
+    input,
+    textarea{
+      font:inherit;
+    }
+
+    .topbar{
+      background:var(--brown);
+      color:#fff;
+      padding:16px 24px;
+    }
+
+    .topbar-inner{
+      max-width:1100px;
+      margin:0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+    }
+
+    .brand{
+      font-family:Georgia, "Times New Roman", serif;
+      font-size:24px;
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .nav a{
+      padding:9px 13px;
+      border-radius:10px;
+      color:#fff;
+      font-size:14px;
+      opacity:.92;
+    }
+
+    .nav a:hover{
+      background:rgba(255,255,255,.1);
+      opacity:1;
+    }
+
+    .page{
+      width:min(1100px, calc(100% - 32px));
+      margin:0 auto;
+      padding:55px 0 70px;
+    }
+
+    .hero{
+      text-align:center;
+      max-width:720px;
+      margin:0 auto 34px;
+    }
+
+    .eyebrow{
+      display:inline-block;
+      margin-bottom:12px;
+      color:var(--warm);
+      font-size:13px;
+      font-weight:700;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+    }
+
+    h1{
+      margin:0 0 14px;
+      font-family:Georgia, "Times New Roman", serif;
+      font-size:46px;
+      line-height:1.08;
+      color:var(--brown);
+    }
+
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      font-size:17px;
+      line-height:1.7;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:1fr 1.5fr;
+      gap:24px;
+      align-items:start;
+    }
+
+    .card{
+      background:var(--cream-2);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+
+    .info-card{
+      padding:28px;
+    }
+
+    .info-card h2,
+    .form-card h2{
+      margin:0 0 10px;
+      font-family:Georgia, "Times New Roman", serif;
+      font-size:27px;
+    }
+
+    .info-card > p{
+      margin:0 0 24px;
+      color:var(--muted);
+      line-height:1.65;
+    }
+
+    .contact-item{
+      padding:18px 0;
+      border-top:1px solid var(--border);
+    }
+
+    .contact-item:first-of-type{
+      border-top:0;
+      padding-top:0;
+    }
+
+    .contact-label{
+      margin-bottom:5px;
+      font-size:12px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+      color:var(--warm);
+    }
+
+    .contact-value{
+      color:var(--brown);
+      line-height:1.5;
+      word-break:break-word;
+    }
+
+    .form-card{
+      padding:30px;
+    }
+
+    .form-intro{
+      margin:0 0 24px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .field{
+      margin-bottom:18px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:7px;
+      font-size:14px;
+      font-weight:700;
+      color:var(--brown);
+    }
+
+    .required{
+      color:var(--error);
+    }
+
+    input,
+    textarea{
+      width:100%;
+      border:1px solid var(--border);
+      background:#fffdf9;
+      color:var(--brown);
+      border-radius:12px;
+      padding:13px 14px;
+      outline:none;
+      transition:.2s ease;
+    }
+
+    input{
+      min-height:48px;
+    }
+
+    textarea{
+      min-height:155px;
+      resize:vertical;
+      line-height:1.55;
+    }
+
+    input:focus,
+    textarea:focus{
+      border-color:var(--gold);
+      box-shadow:0 0 0 3px rgba(197,154,90,.12);
+    }
+
+    .hint{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.4;
+    }
+
+    .submit-row{
+      margin-top:8px;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:0;
+      border-radius:12px;
+      padding:13px 20px;
+      cursor:pointer;
+      font-weight:700;
+      transition:.2s ease;
+    }
+
+    .btn-primary{
+      background:var(--brown);
+      color:#fff;
+    }
+
+    .btn-primary:hover{
+      background:var(--brown-2);
+      transform:translateY(-1px);
+    }
+
+    .btn-primary:disabled{
+      cursor:not-allowed;
+      opacity:.65;
+      transform:none;
+    }
+
+    .btn-secondary{
+      background:#eee3d5;
+      color:var(--brown);
+    }
+
+    .btn-secondary:hover{
+      background:#e4d5c3;
+    }
+
+    .status{
+      display:none;
+      margin-top:20px;
+      padding:13px 15px;
+      border-radius:12px;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .status.show{
+      display:block;
+    }
+
+    .status.success{
+      background:#e7f2e9;
+      color:var(--success);
+      border:1px solid #c8dfcc;
+    }
+
+    .status.error{
+      background:#f8e9e6;
+      color:var(--error);
+      border:1px solid #ebc8c2;
+    }
+
+    .footer{
+      max-width:1100px;
+      width:calc(100% - 32px);
+      margin:0 auto;
+      padding:22px 0 35px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    @media(max-width:800px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      h1{
+        font-size:38px;
+      }
+    }
+
+    @media(max-width:600px){
+      .topbar{
+        padding:14px 16px;
+      }
+
+      .topbar-inner{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .nav{
+        width:100%;
+      }
+
+      .nav a{
+        padding:8px 10px;
+      }
+
+      .page{
+        width:min(100% - 22px, 1100px);
+        padding:38px 0 50px;
+      }
+
+      .hero{
+        margin-bottom:26px;
+      }
+
+      h1{
+        font-size:34px;
+      }
+
+      .hero p{
+        font-size:15px;
+      }
+
+      .info-card,
+      .form-card{
+        padding:22px;
+      }
+
+      .submit-row{
+        align-items:stretch;
+        flex-direction:column;
+      }
+
+      .btn{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+
+      <a href="index.html" class="brand">
+        Reader Reach
+      </a>
+
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="authors.html">Authors</a>
+        <a href="reader-dashboard.html">Reader Dashboard</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main class="page">
+
+    <section class="hero">
+      <div class="eyebrow">Reader Reach Support</div>
+
+      <h1>Contact Reader Reach</h1>
+
+      <p>
+        Have a question, need help with your account, or want to tell us
+        something about Reader Reach? Send us a message and our team will
+        review it.
+      </p>
+    </section>
+
+    <section class="layout">
+
+      <aside class="card info-card">
+
+        <h2>Get in touch</h2>
+
+        <p>
+          Whether you are a reader, author, moderator, or simply exploring
+          Reader Reach, we are here to help.
+        </p>
+
+        <div class="contact-item">
+          <div class="contact-label">Support</div>
+          <div class="contact-value">
+            Use the contact form to send your message directly to the
+            Reader Reach team.
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-label">Readers</div>
+          <div class="contact-value">
+            Ask us about your account, saved books, following authors,
+            or anything affecting your Reader Reach experience.
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-label">Authors</div>
+          <div class="contact-value">
+            Questions about author accounts, book submissions,
+            approvals, or your public author profile are welcome.
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-label">Response</div>
+          <div class="contact-value">
+            Please include enough detail in your message for our team
+            to understand what you need help with.
+          </div>
+        </div>
+
+      </aside>
+
+      <section class="card form-card">
+
+        <h2>Send us a message</h2>
+
+        <p class="form-intro">
+          Fill in the form below. Your email address lets the Reader Reach
+          team know where to respond.
+        </p>
+
+        <form
+          action="https://formsubmit.co/readerreach.support@gmail.com"
+          method="POST"
+          id="contactForm"
+        >
+
+          <input
+            type="hidden"
+            name="_subject"
+            value="Reader Reach Contact Message"
+          />
+
+          <input
+            type="hidden"
+            name="_captcha"
+            value="false"
+          />
+
+          <input
+            type="hidden"
+            name="_template"
+            value="table"
+          />
+
+          <input
+            type="hidden"
+            name="_next"
+            value="https://reader1-cpu.github.io/reader-reach/contact.html?sent=1"
+          />
+
+          <div class="field">
+            <label for="name">
+              Your name <span class="required">*</span>
+            </label>
+
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Enter your name"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="email">
+              Email address <span class="required">*</span>
+            </label>
+
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="you@example.com"
+              required
+            />
+
+            <div class="hint">
+              Use an email address where we can reach you.
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="subject">
+              Subject <span class="required">*</span>
+            </label>
+
+            <input
+              type="text"
+              id="subject"
+              name="message_subject"
+              placeholder="What can we help you with?"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="message">
+              Message <span class="required">*</span>
+            </label>
+
+            <textarea
+              id="message"
+              name="message"
+              placeholder="Write your message here..."
+              required
+            ></textarea>
+          </div>
+
+          <div class="submit-row">
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+              id="submitBtn"
+            >
+              Send Message
+            </button>
+
+            <a
+              href="index.html"
+              class="btn btn-secondary"
+            >
+              Back to Home
+            </a>
+
+          </div>
+
+        </form>
+
+        <div
+          class="status success"
+          id="successMessage"
+        >
+          Your message has been submitted. Thank you for contacting
+          Reader Reach.
+        </div>
+
+        <div
+          class="status error"
+          id="errorMessage"
+        >
+          Please complete all required fields before sending your message.
+        </div>
+
+      </section>
+
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    © 2026 Reader Reach. Discover books. Connect with authors. Read more.
+  </footer>
+
+  <script>
+    const form = document.getElementById("contactForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const successMessage = document.getElementById("successMessage");
+    const errorMessage = document.getElementById("errorMessage");
+
+    const params = new URLSearchParams(window.location.search);
+
+    if(params.get("sent") === "1"){
+      successMessage.classList.add("show");
+      form.style.display = "none";
+    }
+
+    form.addEventListener("submit", function(event){
+
+      successMessage.classList.remove("show");
+      errorMessage.classList.remove("show");
+
+      if(!form.checkValidity()){
+        event.preventDefault();
+
+        errorMessage.classList.add("show");
+
+        form.reportValidity();
+
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending...";
+    });
+  </script>
+
+</body>
+</html>

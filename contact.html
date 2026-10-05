@@ -1,38 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Contact Reader Reach</title>
 
+  <meta
+    name="description"
+    content="Contact Reader Reach for support, questions, feedback, and book discovery enquiries."
+  >
+
   <style>
     :root{
-      --cream:#f7f1e7;
+      --cream:#f8f1e6;
       --cream-2:#fffaf2;
-      --brown:#3d281d;
-      --brown-2:#5b3b2b;
-      --warm:#8a5a3b;
-      --gold:#c59a5a;
-      --border:#e6d8c7;
-      --muted:#76685e;
+      --brown:#3b2418;
+      --brown-2:#5b3825;
+      --gold:#b88a44;
+      --gold-soft:#ead9b8;
+      --border:#e6d7c3;
+      --muted:#765f4d;
       --white:#ffffff;
-      --success:#386b4b;
-      --error:#9b3d32;
-      --shadow:0 12px 35px rgba(61,40,29,.08);
-      --radius:18px;
+      --success:#2f6b43;
+      --danger:#9b3d32;
+      --shadow:0 18px 45px rgba(59,36,24,.10);
+      --radius:20px;
     }
 
     *{
       box-sizing:border-box;
     }
 
+    html{
+      scroll-behavior:smooth;
+    }
+
     body{
       margin:0;
-      min-height:100vh;
-      font-family:Arial, Helvetica, sans-serif;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
       background:var(--cream);
       color:var(--brown);
+      line-height:1.6;
     }
 
     a{
@@ -40,21 +56,27 @@
       text-decoration:none;
     }
 
-    button,
-    input,
-    textarea{
-      font:inherit;
+    .page{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
     }
 
-    .topbar{
-      background:var(--brown);
-      color:#fff;
-      padding:16px 24px;
+    /* NAVIGATION */
+
+    header{
+      background:rgba(255,250,242,.96);
+      border-bottom:1px solid var(--border);
+      position:sticky;
+      top:0;
+      z-index:100;
+      backdrop-filter:blur(12px);
     }
 
-    .topbar-inner{
-      max-width:1100px;
-      margin:0 auto;
+    .nav{
+      width:min(1120px, calc(100% - 32px));
+      margin:auto;
+      min-height:74px;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -62,77 +84,104 @@
     }
 
     .brand{
-      font-family:Georgia, "Times New Roman", serif;
-      font-size:24px;
-      font-weight:700;
-      letter-spacing:.2px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:800;
+      letter-spacing:-.3px;
     }
 
-    .nav{
+    .brand-mark{
+      width:42px;
+      height:42px;
+      border-radius:13px;
+      display:grid;
+      place-items:center;
+      background:var(--brown);
+      color:#fff;
+      font-size:21px;
+      box-shadow:0 7px 18px rgba(59,36,24,.16);
+    }
+
+    .brand-text{
+      font-size:19px;
+    }
+
+    .nav-links{
       display:flex;
       align-items:center;
       gap:8px;
       flex-wrap:wrap;
     }
 
-    .nav a{
+    .nav-links a{
       padding:9px 13px;
       border-radius:10px;
-      color:#fff;
+      color:var(--brown-2);
+      font-weight:650;
       font-size:14px;
-      opacity:.92;
     }
 
-    .nav a:hover{
-      background:rgba(255,255,255,.1);
-      opacity:1;
+    .nav-links a:hover{
+      background:var(--gold-soft);
     }
 
-    .page{
-      width:min(1100px, calc(100% - 32px));
-      margin:0 auto;
-      padding:55px 0 70px;
+    /* HERO */
+
+    main{
+      flex:1;
     }
 
     .hero{
+      width:min(1120px, calc(100% - 32px));
+      margin:0 auto;
+      padding:64px 0 30px;
       text-align:center;
-      max-width:720px;
-      margin:0 auto 34px;
     }
 
     .eyebrow{
-      display:inline-block;
-      margin-bottom:12px;
-      color:var(--warm);
-      font-size:13px;
-      font-weight:700;
-      letter-spacing:1.2px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 12px;
+      border:1px solid var(--gold-soft);
+      background:#fff8eb;
+      color:var(--brown-2);
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
       text-transform:uppercase;
+      letter-spacing:.8px;
     }
 
     h1{
-      margin:0 0 14px;
+      margin:18px 0 10px;
       font-family:Georgia, "Times New Roman", serif;
-      font-size:46px;
-      line-height:1.08;
-      color:var(--brown);
+      font-size:clamp(38px, 6vw, 64px);
+      line-height:1.02;
+      letter-spacing:-1.7px;
     }
 
     .hero p{
-      margin:0;
+      max-width:690px;
+      margin:0 auto;
       color:var(--muted);
       font-size:17px;
-      line-height:1.7;
     }
 
-    .layout{
+    /* CONTACT AREA */
+
+    .contact-wrap{
+      width:min(1000px, calc(100% - 32px));
+      margin:20px auto 80px;
       display:grid;
-      grid-template-columns:1fr 1.5fr;
+      grid-template-columns: .8fr 1.2fr;
       gap:24px;
-      align-items:start;
+      align-items:stretch;
     }
 
-    .card{
+    .info-card,
+    .form-card{
       background:var(--cream-2);
       border:1px solid var(--border);
       border-radius:var(--radius);
@@ -140,24 +189,25 @@
     }
 
     .info-card{
-      padding:28px;
+      padding:30px;
+      display:flex;
+      flex-direction:column;
     }
 
     .info-card h2,
     .form-card h2{
       margin:0 0 10px;
       font-family:Georgia, "Times New Roman", serif;
-      font-size:27px;
+      font-size:28px;
     }
 
     .info-card > p{
-      margin:0 0 24px;
       color:var(--muted);
-      line-height:1.65;
+      margin:0 0 26px;
     }
 
     .contact-item{
-      padding:18px 0;
+      padding:16px 0;
       border-top:1px solid var(--border);
     }
 
@@ -167,18 +217,29 @@
     }
 
     .contact-label{
-      margin-bottom:5px;
+      display:block;
+      color:var(--muted);
       font-size:12px;
-      font-weight:700;
+      font-weight:800;
       text-transform:uppercase;
-      letter-spacing:.8px;
-      color:var(--warm);
+      letter-spacing:.6px;
+      margin-bottom:3px;
     }
 
     .contact-value{
+      font-weight:750;
       color:var(--brown);
-      line-height:1.5;
       word-break:break-word;
+    }
+
+    .contact-note{
+      margin-top:auto;
+      padding:15px;
+      border-radius:14px;
+      background:#f6ead7;
+      border:1px solid var(--gold-soft);
+      color:var(--brown-2);
+      font-size:13px;
     }
 
     .form-card{
@@ -186,187 +247,186 @@
     }
 
     .form-intro{
-      margin:0 0 24px;
       color:var(--muted);
-      line-height:1.6;
+      margin:0 0 24px;
+    }
+
+    form{
+      display:grid;
+      gap:17px;
     }
 
     .field{
-      margin-bottom:18px;
+      display:grid;
+      gap:7px;
     }
 
     label{
-      display:block;
-      margin-bottom:7px;
-      font-size:14px;
-      font-weight:700;
+      font-size:13px;
+      font-weight:800;
       color:var(--brown);
     }
 
-    .required{
-      color:var(--error);
-    }
-
     input,
-    textarea{
+    textarea,
+    select{
       width:100%;
       border:1px solid var(--border);
       background:#fffdf9;
       color:var(--brown);
-      border-radius:12px;
+      border-radius:13px;
       padding:13px 14px;
+      font:inherit;
       outline:none;
-      transition:.2s ease;
+      transition:
+        border-color .18s ease,
+        box-shadow .18s ease;
     }
 
-    input{
-      min-height:48px;
+    input:focus,
+    textarea:focus,
+    select:focus{
+      border-color:var(--gold);
+      box-shadow:0 0 0 4px rgba(184,138,68,.13);
     }
 
     textarea{
       min-height:155px;
       resize:vertical;
-      line-height:1.55;
     }
 
-    input:focus,
-    textarea:focus{
-      border-color:var(--gold);
-      box-shadow:0 0 0 3px rgba(197,154,90,.12);
-    }
-
-    .hint{
-      margin-top:6px;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.4;
+    .required{
+      color:#9b3d32;
     }
 
     .submit-row{
-      margin-top:8px;
       display:flex;
       align-items:center;
       gap:14px;
       flex-wrap:wrap;
+      margin-top:3px;
     }
 
-    .btn{
+    button{
       border:0;
-      border-radius:12px;
+      border-radius:13px;
       padding:13px 20px;
-      cursor:pointer;
-      font-weight:700;
-      transition:.2s ease;
-    }
-
-    .btn-primary{
       background:var(--brown);
       color:#fff;
+      font:inherit;
+      font-weight:800;
+      cursor:pointer;
+      transition:
+        transform .15s ease,
+        background .15s ease,
+        box-shadow .15s ease;
+      box-shadow:0 9px 20px rgba(59,36,24,.15);
     }
 
-    .btn-primary:hover{
+    button:hover{
       background:var(--brown-2);
       transform:translateY(-1px);
     }
 
-    .btn-primary:disabled{
-      cursor:not-allowed;
-      opacity:.65;
-      transform:none;
+    button:active{
+      transform:translateY(0);
     }
 
-    .btn-secondary{
-      background:#eee3d5;
-      color:var(--brown);
+    .small-note{
+      color:var(--muted);
+      font-size:12px;
     }
 
-    .btn-secondary:hover{
-      background:#e4d5c3;
+    /* HONEYPOT */
+
+    .hidden-field{
+      position:absolute !important;
+      left:-9999px !important;
+      width:1px !important;
+      height:1px !important;
+      opacity:0 !important;
+      pointer-events:none !important;
     }
 
-    .status{
-      display:none;
-      margin-top:20px;
-      padding:13px 15px;
-      border-radius:12px;
-      font-size:14px;
-      line-height:1.5;
+    /* FOOTER */
+
+    footer{
+      border-top:1px solid var(--border);
+      background:#f4eadc;
     }
 
-    .status.show{
-      display:block;
-    }
-
-    .status.success{
-      background:#e7f2e9;
-      color:var(--success);
-      border:1px solid #c8dfcc;
-    }
-
-    .status.error{
-      background:#f8e9e6;
-      color:var(--error);
-      border:1px solid #ebc8c2;
-    }
-
-    .footer{
-      max-width:1100px;
-      width:calc(100% - 32px);
-      margin:0 auto;
-      padding:22px 0 35px;
-      text-align:center;
+    .footer-inner{
+      width:min(1120px, calc(100% - 32px));
+      margin:auto;
+      padding:25px 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:wrap;
       color:var(--muted);
       font-size:13px;
     }
 
-    @media(max-width:800px){
-      .layout{
-        grid-template-columns:1fr;
-      }
-
-      h1{
-        font-size:38px;
-      }
+    .footer-links{
+      display:flex;
+      gap:15px;
+      flex-wrap:wrap;
     }
 
-    @media(max-width:600px){
-      .topbar{
-        padding:14px 16px;
-      }
+    .footer-links a:hover{
+      color:var(--brown);
+    }
 
-      .topbar-inner{
-        align-items:flex-start;
-        flex-direction:column;
-      }
+    /* MOBILE */
 
+    @media(max-width:780px){
       .nav{
-        width:100%;
+        min-height:68px;
       }
 
-      .nav a{
-        padding:8px 10px;
-      }
-
-      .page{
-        width:min(100% - 22px, 1100px);
-        padding:38px 0 50px;
+      .nav-links{
+        display:none;
       }
 
       .hero{
-        margin-bottom:26px;
+        padding-top:46px;
       }
 
-      h1{
-        font-size:34px;
+      .contact-wrap{
+        grid-template-columns:1fr;
       }
 
-      .hero p{
-        font-size:15px;
+      .info-card{
+        order:2;
+      }
+
+      .form-card{
+        order:1;
+      }
+    }
+
+    @media(max-width:520px){
+      .hero{
+        width:min(100% - 24px, 1120px);
+      }
+
+      .contact-wrap{
+        width:min(100% - 24px, 1000px);
       }
 
       .info-card,
       .form-card{
         padding:22px;
+        border-radius:17px;
+      }
+
+      h1{
+        font-size:42px;
+      }
+
+      .hero p{
+        font-size:15px;
       }
 
       .submit-row{
@@ -374,266 +434,265 @@
         flex-direction:column;
       }
 
-      .btn{
+      button{
         width:100%;
+      }
+
+      .footer-inner{
+        width:min(100% - 24px, 1120px);
       }
     }
   </style>
 </head>
 
 <body>
+  <div class="page">
 
-  <header class="topbar">
-    <div class="topbar-inner">
-
-      <a href="index.html" class="brand">
-        Reader Reach
-      </a>
-
+    <header>
       <nav class="nav">
-        <a href="index.html">Home</a>
-        <a href="authors.html">Authors</a>
-        <a href="reader-dashboard.html">Reader Dashboard</a>
+
+        <a class="brand" href="index.html" aria-label="Reader Reach home">
+          <span class="brand-mark">📖</span>
+          <span class="brand-text">Reader Reach</span>
+        </a>
+
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="authors.html">Authors</a>
+          <a href="reader-dashboard.html">Reader Dashboard</a>
+          <a href="author-dashboard.html">Author Dashboard</a>
+        </div>
+
       </nav>
+    </header>
 
-    </div>
-  </header>
+    <main>
 
-  <main class="page">
+      <section class="hero">
+        <span class="eyebrow">Reader Reach Support</span>
 
-    <section class="hero">
-      <div class="eyebrow">Reader Reach Support</div>
-
-      <h1>Contact Reader Reach</h1>
-
-      <p>
-        Have a question, need help with your account, or want to tell us
-        something about Reader Reach? Send us a message and our team will
-        review it.
-      </p>
-    </section>
-
-    <section class="layout">
-
-      <aside class="card info-card">
-
-        <h2>Get in touch</h2>
+        <h1>Let's hear from you.</h1>
 
         <p>
-          Whether you are a reader, author, moderator, or simply exploring
-          Reader Reach, we are here to help.
+          Have a question, need help, or want to share feedback?
+          Send us a message and we'll get back to you.
         </p>
+      </section>
 
-        <div class="contact-item">
-          <div class="contact-label">Support</div>
-          <div class="contact-value">
-            Use the contact form to send your message directly to the
-            Reader Reach team.
-          </div>
-        </div>
+      <section class="contact-wrap">
 
-        <div class="contact-item">
-          <div class="contact-label">Readers</div>
-          <div class="contact-value">
-            Ask us about your account, saved books, following authors,
-            or anything affecting your Reader Reach experience.
-          </div>
-        </div>
+        <!-- CONTACT INFORMATION -->
 
-        <div class="contact-item">
-          <div class="contact-label">Authors</div>
-          <div class="contact-value">
-            Questions about author accounts, book submissions,
-            approvals, or your public author profile are welcome.
-          </div>
-        </div>
+        <aside class="info-card">
 
-        <div class="contact-item">
-          <div class="contact-label">Response</div>
-          <div class="contact-value">
-            Please include enough detail in your message for our team
-            to understand what you need help with.
-          </div>
-        </div>
+          <h2>Contact Reader Reach</h2>
 
-      </aside>
+          <p>
+            We're here to help readers and authors get the most out of
+            Reader Reach.
+          </p>
 
-      <section class="card form-card">
+          <div class="contact-item">
+            <span class="contact-label">Support email</span>
 
-        <h2>Send us a message</h2>
-
-        <p class="form-intro">
-          Fill in the form below. Your email address lets the Reader Reach
-          team know where to respond.
-        </p>
-
-        <form
-          action="https://formsubmit.co/readerreach.support@gmail.com"
-          method="POST"
-          id="contactForm"
-        >
-
-          <input
-            type="hidden"
-            name="_subject"
-            value="Reader Reach Contact Message"
-          />
-
-          <input
-            type="hidden"
-            name="_captcha"
-            value="false"
-          />
-
-          <input
-            type="hidden"
-            name="_template"
-            value="table"
-          />
-
-          <input
-            type="hidden"
-            name="_next"
-            value="https://reader1-cpu.github.io/reader-reach/contact.html?sent=1"
-          />
-
-          <div class="field">
-            <label for="name">
-              Your name <span class="required">*</span>
-            </label>
-
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Enter your name"
-              required
-            />
+            <a
+              class="contact-value"
+              href="mailto:readerreach.support@gmail.com"
+            >
+              readerreach.support@gmail.com
+            </a>
           </div>
 
-          <div class="field">
-            <label for="email">
-              Email address <span class="required">*</span>
-            </label>
+          <div class="contact-item">
+            <span class="contact-label">What you can contact us about</span>
 
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="you@example.com"
-              required
-            />
-
-            <div class="hint">
-              Use an email address where we can reach you.
+            <div class="contact-value">
+              Account help, books, authors, technical issues,
+              feedback, and general enquiries.
             </div>
           </div>
 
-          <div class="field">
-            <label for="subject">
-              Subject <span class="required">*</span>
-            </label>
+          <div class="contact-note">
+            Please include enough detail in your message so we can
+            understand and respond to your request quickly.
+          </div>
+
+        </aside>
+
+
+        <!-- CONTACT FORM -->
+
+        <section class="form-card">
+
+          <h2>Send us a message</h2>
+
+          <p class="form-intro">
+            Complete the form below and your message will be sent
+            directly to the Reader Reach support mailbox.
+          </p>
+
+          <form
+            action="https://formsubmit.co/readerreach.support@gmail.com"
+            method="POST"
+          >
+
+            <!-- FormSubmit settings -->
 
             <input
+              type="hidden"
+              name="_subject"
+              value="New Reader Reach Contact Message"
+            >
+
+            <input
+              type="hidden"
+              name="_template"
+              value="table"
+            >
+
+            <input
+              type="hidden"
+              name="_captcha"
+              value="true"
+            >
+
+            <input
+              type="hidden"
+              name="_url"
+              value="https://reader1-cpu.github.io/reader-reach/contact.html"
+            >
+
+            <!-- Spam honeypot -->
+
+            <input
+              class="hidden-field"
               type="text"
-              id="subject"
-              name="message_subject"
-              placeholder="What can we help you with?"
-              required
-            />
-          </div>
-
-          <div class="field">
-            <label for="message">
-              Message <span class="required">*</span>
-            </label>
-
-            <textarea
-              id="message"
-              name="message"
-              placeholder="Write your message here..."
-              required
-            ></textarea>
-          </div>
-
-          <div class="submit-row">
-
-            <button
-              type="submit"
-              class="btn btn-primary"
-              id="submitBtn"
+              name="_honey"
+              tabindex="-1"
+              autocomplete="off"
+              aria-hidden="true"
             >
-              Send Message
-            </button>
 
-            <a
-              href="index.html"
-              class="btn btn-secondary"
-            >
-              Back to Home
-            </a>
+            <div class="field">
+              <label for="name">
+                Your name <span class="required">*</span>
+              </label>
 
-          </div>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                placeholder="Enter your name"
+                autocomplete="name"
+                required
+              >
+            </div>
 
-        </form>
 
-        <div
-          class="status success"
-          id="successMessage"
-        >
-          Your message has been submitted. Thank you for contacting
-          Reader Reach.
-        </div>
+            <div class="field">
+              <label for="email">
+                Your email <span class="required">*</span>
+              </label>
 
-        <div
-          class="status error"
-          id="errorMessage"
-        >
-          Please complete all required fields before sending your message.
-        </div>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+              >
+            </div>
+
+
+            <div class="field">
+              <label for="reason">
+                What can we help with?
+              </label>
+
+              <select id="reason" name="reason">
+                <option value="General enquiry">
+                  General enquiry
+                </option>
+
+                <option value="Reader account">
+                  Reader account
+                </option>
+
+                <option value="Author account">
+                  Author account
+                </option>
+
+                <option value="Book submission">
+                  Book submission
+                </option>
+
+                <option value="Technical issue">
+                  Technical issue
+                </option>
+
+                <option value="Feedback">
+                  Feedback
+                </option>
+
+                <option value="Other">
+                  Other
+                </option>
+              </select>
+            </div>
+
+
+            <div class="field">
+              <label for="message">
+                Message <span class="required">*</span>
+              </label>
+
+              <textarea
+                id="message"
+                name="message"
+                placeholder="Write your message here..."
+                required
+              ></textarea>
+            </div>
+
+
+            <div class="submit-row">
+
+              <button type="submit">
+                Send Message
+              </button>
+
+              <span class="small-note">
+                Your message will be delivered to Reader Reach support.
+              </span>
+
+            </div>
+
+          </form>
+
+        </section>
 
       </section>
 
-    </section>
+    </main>
 
-  </main>
 
-  <footer class="footer">
-    © 2026 Reader Reach. Discover books. Connect with authors. Read more.
-  </footer>
+    <footer>
+      <div class="footer-inner">
 
-  <script>
-    const form = document.getElementById("contactForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const successMessage = document.getElementById("successMessage");
-    const errorMessage = document.getElementById("errorMessage");
+        <div>
+          © 2026 Reader Reach. Discover books. Discover readers.
+        </div>
 
-    const params = new URLSearchParams(window.location.search);
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="authors.html">Authors</a>
+          <a href="contact.html">Contact</a>
+        </div>
 
-    if(params.get("sent") === "1"){
-      successMessage.classList.add("show");
-      form.style.display = "none";
-    }
+      </div>
+    </footer>
 
-    form.addEventListener("submit", function(event){
-
-      successMessage.classList.remove("show");
-      errorMessage.classList.remove("show");
-
-      if(!form.checkValidity()){
-        event.preventDefault();
-
-        errorMessage.classList.add("show");
-
-        form.reportValidity();
-
-        return;
-      }
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Sending...";
-    });
-  </script>
-
+  </div>
 </body>
 </html>

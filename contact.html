@@ -62,8 +62,6 @@
       flex-direction:column;
     }
 
-    /* NAVIGATION */
-
     header{
       background:rgba(255,250,242,.96);
       border-bottom:1px solid var(--border);
@@ -126,8 +124,6 @@
       background:var(--gold-soft);
     }
 
-    /* HERO */
-
     main{
       flex:1;
     }
@@ -169,13 +165,11 @@
       font-size:17px;
     }
 
-    /* CONTACT AREA */
-
     .contact-wrap{
       width:min(1000px, calc(100% - 32px));
       margin:20px auto 80px;
       display:grid;
-      grid-template-columns: .8fr 1.2fr;
+      grid-template-columns:.8fr 1.2fr;
       gap:24px;
       align-items:stretch;
     }
@@ -328,8 +322,10 @@
       transform:translateY(-1px);
     }
 
-    button:active{
-      transform:translateY(0);
+    button:disabled{
+      opacity:.65;
+      cursor:not-allowed;
+      transform:none;
     }
 
     .small-note{
@@ -337,18 +333,27 @@
       font-size:12px;
     }
 
-    /* HONEYPOT */
-
-    .hidden-field{
-      position:absolute !important;
-      left:-9999px !important;
-      width:1px !important;
-      height:1px !important;
-      opacity:0 !important;
-      pointer-events:none !important;
+    .status-message{
+      display:none;
+      padding:13px 15px;
+      border-radius:12px;
+      font-size:14px;
+      font-weight:650;
     }
 
-    /* FOOTER */
+    .status-message.success{
+      display:block;
+      background:#eaf5ed;
+      border:1px solid #bcdcc6;
+      color:var(--success);
+    }
+
+    .status-message.error{
+      display:block;
+      background:#fff0ee;
+      border:1px solid #e5bdb8;
+      color:var(--danger);
+    }
 
     footer{
       border-top:1px solid var(--border);
@@ -377,8 +382,6 @@
     .footer-links a:hover{
       color:var(--brown);
     }
-
-    /* MOBILE */
 
     @media(max-width:780px){
       .nav{
@@ -446,253 +449,318 @@
 </head>
 
 <body>
-  <div class="page">
 
-    <header>
-      <nav class="nav">
+<div class="page">
 
-        <a class="brand" href="index.html" aria-label="Reader Reach home">
-          <span class="brand-mark">📖</span>
-          <span class="brand-text">Reader Reach</span>
-        </a>
+  <header>
+    <nav class="nav">
 
-        <div class="nav-links">
-          <a href="index.html">Home</a>
-          <a href="authors.html">Authors</a>
-          <a href="reader-dashboard.html">Reader Dashboard</a>
-          <a href="author-dashboard.html">Author Dashboard</a>
-        </div>
+      <a class="brand" href="index.html" aria-label="Reader Reach home">
+        <span class="brand-mark">📖</span>
+        <span class="brand-text">Reader Reach</span>
+      </a>
 
-      </nav>
-    </header>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="authors.html">Authors</a>
+        <a href="reader-dashboard.html">Reader Dashboard</a>
+        <a href="author-dashboard.html">Author Dashboard</a>
+      </div>
 
-    <main>
+    </nav>
+  </header>
 
-      <section class="hero">
-        <span class="eyebrow">Reader Reach Support</span>
 
-        <h1>Let's hear from you.</h1>
+  <main>
+
+    <section class="hero">
+
+      <span class="eyebrow">
+        Reader Reach Support
+      </span>
+
+      <h1>Let's hear from you.</h1>
+
+      <p>
+        Have a question, need help, or want to share feedback?
+        Send us a message and we'll get back to you.
+      </p>
+
+    </section>
+
+
+    <section class="contact-wrap">
+
+      <aside class="info-card">
+
+        <h2>Contact Reader Reach</h2>
 
         <p>
-          Have a question, need help, or want to share feedback?
-          Send us a message and we'll get back to you.
+          We're here to help readers and authors get the most out
+          of Reader Reach.
         </p>
-      </section>
 
-      <section class="contact-wrap">
+        <div class="contact-item">
 
-        <!-- CONTACT INFORMATION -->
+          <span class="contact-label">
+            Support email
+          </span>
 
-        <aside class="info-card">
-
-          <h2>Contact Reader Reach</h2>
-
-          <p>
-            We're here to help readers and authors get the most out of
-            Reader Reach.
-          </p>
-
-          <div class="contact-item">
-            <span class="contact-label">Support email</span>
-
-            <a
-              class="contact-value"
-              href="mailto:readerreach.support@gmail.com"
-            >
-              readerreach.support@gmail.com
-            </a>
-          </div>
-
-          <div class="contact-item">
-            <span class="contact-label">What you can contact us about</span>
-
-            <div class="contact-value">
-              Account help, books, authors, technical issues,
-              feedback, and general enquiries.
-            </div>
-          </div>
-
-          <div class="contact-note">
-            Please include enough detail in your message so we can
-            understand and respond to your request quickly.
-          </div>
-
-        </aside>
-
-
-        <!-- CONTACT FORM -->
-
-        <section class="form-card">
-
-          <h2>Send us a message</h2>
-
-          <p class="form-intro">
-            Complete the form below and your message will be sent
-            directly to the Reader Reach support mailbox.
-          </p>
-
-          <form
-            action="https://formsubmit.co/readerreach.support@gmail.com"
-            method="POST"
+          <a
+            class="contact-value"
+            href="mailto:readerreach.support@gmail.com"
           >
+            readerreach.support@gmail.com
+          </a>
 
-            <!-- FormSubmit settings -->
+        </div>
+
+
+        <div class="contact-item">
+
+          <span class="contact-label">
+            What you can contact us about
+          </span>
+
+          <div class="contact-value">
+            Account help, books, authors, technical issues,
+            feedback, and general enquiries.
+          </div>
+
+        </div>
+
+
+        <div class="contact-note">
+
+          Please include enough detail in your message so we can
+          understand and respond to your request quickly.
+
+        </div>
+
+      </aside>
+
+
+      <section class="form-card">
+
+        <h2>Send us a message</h2>
+
+        <p class="form-intro">
+          Complete the form below and your message will be sent
+          directly to Reader Reach support.
+        </p>
+
+
+        <form id="contactForm">
+
+          <div class="field">
+
+            <label for="name">
+              Your name <span class="required">*</span>
+            </label>
 
             <input
-              type="hidden"
-              name="_subject"
-              value="New Reader Reach Contact Message"
-            >
-
-            <input
-              type="hidden"
-              name="_template"
-              value="table"
-            >
-
-            <input
-              type="hidden"
-              name="_captcha"
-              value="true"
-            >
-
-            <input
-              type="hidden"
-              name="_url"
-              value="https://reader1-cpu.github.io/reader-reach/contact.html"
-            >
-
-            <!-- Spam honeypot -->
-
-            <input
-              class="hidden-field"
+              id="name"
+              name="name"
               type="text"
-              name="_honey"
-              tabindex="-1"
-              autocomplete="off"
-              aria-hidden="true"
+              placeholder="Enter your name"
+              autocomplete="name"
+              required
             >
 
-            <div class="field">
-              <label for="name">
-                Your name <span class="required">*</span>
-              </label>
-
-              <input
-                id="name"
-                type="text"
-                name="name"
-                placeholder="Enter your name"
-                autocomplete="name"
-                required
-              >
-            </div>
+          </div>
 
 
-            <div class="field">
-              <label for="email">
-                Your email <span class="required">*</span>
-              </label>
+          <div class="field">
 
-              <input
-                id="email"
-                type="email"
-                name="email"
-                placeholder="you@example.com"
-                autocomplete="email"
-                required
-              >
-            </div>
+            <label for="email">
+              Your email <span class="required">*</span>
+            </label>
 
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              autocomplete="email"
+              required
+            >
 
-            <div class="field">
-              <label for="reason">
-                What can we help with?
-              </label>
-
-              <select id="reason" name="reason">
-                <option value="General enquiry">
-                  General enquiry
-                </option>
-
-                <option value="Reader account">
-                  Reader account
-                </option>
-
-                <option value="Author account">
-                  Author account
-                </option>
-
-                <option value="Book submission">
-                  Book submission
-                </option>
-
-                <option value="Technical issue">
-                  Technical issue
-                </option>
-
-                <option value="Feedback">
-                  Feedback
-                </option>
-
-                <option value="Other">
-                  Other
-                </option>
-              </select>
-            </div>
+          </div>
 
 
-            <div class="field">
-              <label for="message">
-                Message <span class="required">*</span>
-              </label>
+          <div class="field">
 
-              <textarea
-                id="message"
-                name="message"
-                placeholder="Write your message here..."
-                required
-              ></textarea>
-            </div>
+            <label for="reason">
+              What can we help with?
+            </label>
+
+            <select id="reason" name="reason">
+
+              <option value="General enquiry">
+                General enquiry
+              </option>
+
+              <option value="Reader account">
+                Reader account
+              </option>
+
+              <option value="Author account">
+                Author account
+              </option>
+
+              <option value="Book submission">
+                Book submission
+              </option>
+
+              <option value="Technical issue">
+                Technical issue
+              </option>
+
+              <option value="Feedback">
+                Feedback
+              </option>
+
+              <option value="Other">
+                Other
+              </option>
+
+            </select>
+
+          </div>
 
 
-            <div class="submit-row">
+          <div class="field">
 
-              <button type="submit">
-                Send Message
-              </button>
+            <label for="message">
+              Message <span class="required">*</span>
+            </label>
 
-              <span class="small-note">
-                Your message will be delivered to Reader Reach support.
-              </span>
+            <textarea
+              id="message"
+              name="message"
+              placeholder="Write your message here..."
+              required
+            ></textarea>
 
-            </div>
+          </div>
 
-          </form>
 
-        </section>
+          <div
+            id="statusMessage"
+            class="status-message"
+            role="status"
+            aria-live="polite"
+          ></div>
+
+
+          <div class="submit-row">
+
+            <button id="submitButton" type="submit">
+              Send Message
+            </button>
+
+            <span class="small-note">
+              Your message will be delivered to Reader Reach support.
+            </span>
+
+          </div>
+
+        </form>
 
       </section>
 
-    </main>
+    </section>
+
+  </main>
 
 
-    <footer>
-      <div class="footer-inner">
+  <footer>
 
-        <div>
-          © 2026 Reader Reach. Discover books. Discover readers.
-        </div>
+    <div class="footer-inner">
 
-        <div class="footer-links">
-          <a href="index.html">Home</a>
-          <a href="authors.html">Authors</a>
-          <a href="contact.html">Contact</a>
-        </div>
+      <div>
+        © 2026 Reader Reach. Discover books. Discover readers.
+      </div>
+
+      <div class="footer-links">
+
+        <a href="index.html">Home</a>
+
+        <a href="authors.html">Authors</a>
+
+        <a href="contact.html">Contact</a>
 
       </div>
-    </footer>
 
-  </div>
+    </div>
+
+  </footer>
+
+</div>
+
+
+<script>
+
+  const GOOGLE_SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycbzr915JDrxx0O1EFiSHSjznSxcMBIOl8fGbK0dlZKer9876elgsKInowXc148aaxMloCg/exec";
+
+
+  const form = document.getElementById("contactForm");
+  const button = document.getElementById("submitButton");
+  const statusMessage = document.getElementById("statusMessage");
+
+
+  form.addEventListener("submit", async function(event){
+
+    event.preventDefault();
+
+    statusMessage.className = "status-message";
+    statusMessage.textContent = "";
+
+    button.disabled = true;
+    button.textContent = "Sending...";
+
+
+    const formData = new FormData(form);
+
+
+    try{
+
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method:"POST",
+        body:formData,
+        mode:"no-cors"
+      });
+
+
+      form.reset();
+
+      statusMessage.className =
+        "status-message success";
+
+      statusMessage.textContent =
+        "Your message has been sent successfully. Thank you for contacting Reader Reach.";
+
+    }catch(error){
+
+      console.error("Contact form error:", error);
+
+      statusMessage.className =
+        "status-message error";
+
+      statusMessage.textContent =
+        "We couldn't send your message right now. Please try again or email readerreach.support@gmail.com directly.";
+
+    }finally{
+
+      button.disabled = false;
+      button.textContent = "Send Message";
+
+    }
+
+  });
+
+</script>
+
 </body>
 </html>

@@ -141,6 +141,12 @@ th{color:var(--muted);font-weight:bold}
   background:white;border-radius:9px;padding:12px;margin:7px 0;
 }
 .conversation-button.active{background:var(--soft);border-color:#c8ae7b}
+.new-conversation-box{margin:14px 0;padding:15px;border:1px solid var(--line);border-radius:12px;background:#fffdf9}
+.attachment-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.attachment-preview{margin-top:8px;padding:9px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.attachment-preview img{max-width:220px;max-height:180px;border-radius:7px;display:block}
+.attachment-preview video{max-width:100%;width:360px;max-height:260px;border-radius:7px;display:block}
+.attachment-link{display:inline-flex;align-items:center;gap:7px;padding:8px 10px;border-radius:8px;background:var(--soft);color:var(--brown);font-weight:bold;overflow-wrap:anywhere}
 hr{border:0;border-top:1px solid var(--line);margin:18px 0}
 #bootScreen{max-width:650px;margin:65px auto;padding:25px;width:92%}
 #bootScreen .panel{padding:28px}
@@ -418,6 +424,26 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
           <h2>Your Conversations</h2>
           <button class="btn" id="newConversationButton">New Message</button>
         </div>
+        <div id="newConversationPanel" class="new-conversation-box" hidden>
+          <div class="form-grid">
+            <div class="field">
+              <label for="newConversationBook">Book *</label>
+              <select id="newConversationBook">
+                <option value="">Select a book</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="newConversationModerator">Moderator *</label>
+              <select id="newConversationModerator">
+                <option value="">Select a Moderator</option>
+              </select>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn" type="button" id="createConversationButton">Start Conversation</button>
+            <button class="btn secondary" type="button" id="cancelConversationButton">Cancel</button>
+          </div>
+        </div>
         <div id="conversationStatus" class="notice info">
           Your conversations will load here.
         </div>
@@ -434,8 +460,14 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
         <form id="messageForm">
           <div class="field">
             <label for="messageText">Your message</label>
-            <textarea id="messageText" required maxlength="10000"
+            <textarea id="messageText" maxlength="10000"
               placeholder="Write your message…"></textarea>
+            <div class="attachment-row">
+              <input id="messageFile" type="file"
+                accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp,.mp4,.webm,.mov,.avi,.mkv,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,video/*,image/*,text/plain">
+              <span class="file-note">Optional attachment · max 50 MB</span>
+            </div>
+            <div id="messageFileName" class="file-note"></div>
           </div>
           <div class="actions">
             <button class="btn" type="submit" id="sendMessageButton">Send Message</button>
@@ -1113,6 +1145,62 @@ $("bookForm").addEventListener("submit", async event => {
 /* -------------------------------------------------------
    CONVERSATIONS AND MESSAGES
 ------------------------------------------------------- */
+const CHAT_BUCKET = "conversation-files";
+const MAX_CHAT_FILE_SIZE = 50 * 1024 * 1024;
+
+function formatFileSize(bytes) {
+  const size = Number(bytes || 0);
+  if (!size) return "";
+  if (size < 1024 * 1024) return Math.round(size / 1024) + " KB";
+  return (size / (1024 * 1024)).toFixed(1) + " MB";
+}
+
+function isAllowedChatFile(file) {
+  if (!file) return false;
+  if (file.size > MAX_CHAT_FILE_SIZE) {
+    setNotice("That file is larger than 50 MB. Please choose a smaller file.", "error");
+    return false;
+  }
+  const type = String(file.type || "").toLowerCase();
+  const name = String(file.name || "").toLowerCase();
+  const allowed = type.startsWith("image/") || type.startsWith("video/") ||
+    [".pdf",".doc",".docx",".txt"].some(ext => name.endsWith(ext));
+  if (!allowed) {
+    setNotice("That file type is not supported. Use PDF, Word, text, image, or video files.", "error");
+    return false;
+  }
+  return true;
+}
+
+function renderAttachment(attachment) {
+  const name = escapeHTML(attachment.file_name || "Attachment");
+  const size = attachment.file_size ? ` · ${escapeHTML(formatFileSize(attachment.file_size))}` : "";
+  const url = escapeHTML(attachment.url || "#");
+  const mime = String(attachment.mime_type || "").toLowerCase();
+
+  if (mime.startsWith("image/") && attachment.url) {
+    return `<div class="attachment-preview">
+      <a href="${url}" target="_blank" rel="noopener">
+        <img src="${url}" alt="${name}">
+      </a>
+      <div class="small muted">${name}${size}</div>
+    </div>`;
+  }
+
+  if (mime.startsWith("video/") && attachment.url) {
+    return `<div class="attachment-preview">
+      <video controls preload="metadata" src="${url}"></video>
+      <div class="small muted">${name}${size}</div>
+    </div>`;
+  }
+
+  return `<div class="attachment-preview">
+    <a class="attachment-link" href="${url}" target="_blank" rel="noopener" download>
+      📎 ${name}${size}
+    </a>
+  </div>`;
+}
+
 async function loadConversations() {
   if (!currentAuthor?.id) return;
 
@@ -1132,8 +1220,8 @@ async function loadConversations() {
 
   myConversations = data || [];
   $("conversationStatus").textContent = myConversations.length
-    ? "Select a conversation to read and reply."
-    : "You do not have any conversations yet. Use New Message to contact an available Moderator.";
+    ? "Select a book conversation to read and reply."
+    : "You do not have any conversations yet. Use New Message to choose a book and Moderator.";
 
   if (!myConversations.length) {
     $("conversationList").innerHTML = "";
@@ -1149,8 +1237,17 @@ async function loadConversations() {
 
   if (moderatorIds.length) {
     const result = await supabaseClient
-      .from("profiles").select("id,display_name").in("id", moderatorIds);
-    profiles = result.data || [];
+      .from("moderators")
+      .select("id,profile_id,active")
+      .in("id", moderatorIds);
+    const moderators = result.data || [];
+    const profileIds = moderators.map(m => m.profile_id).filter(Boolean);
+
+    if (profileIds.length) {
+      const profileResult = await supabaseClient
+        .from("profiles").select("id,display_name").in("id", profileIds);
+      profiles = profileResult.data || [];
+    }
   }
 
   if (bookIds.length) {
@@ -1160,21 +1257,20 @@ async function loadConversations() {
   }
 
   $("conversationList").innerHTML = myConversations.map(conversation => {
-    const moderator = profiles.find(p => p.id === conversation.moderator_id);
     const book = books.find(b => b.id === conversation.book_id);
-    const label = book?.title || "General author support";
+    const label = book?.title || "Book conversation";
     return `
       <button type="button" class="conversation-button ${conversation.id === activeConversationId ? "active" : ""}"
         data-conversation="${escapeHTML(conversation.id)}">
         <strong>${escapeHTML(label)}</strong>
-        <div class="small muted">Moderator: ${escapeHTML(moderator?.display_name || "Reader Reach Moderator")}</div>
+        <div class="small muted">Book-specific Moderator conversation</div>
       </button>`;
   }).join("");
 
   document.querySelectorAll("[data-conversation]").forEach(button => {
     button.addEventListener("click", () => {
       activeConversationId = button.dataset.conversation;
-      loadConversations().then(() => loadMessages());
+      loadConversations();
     });
   });
 
@@ -1183,12 +1279,10 @@ async function loadConversations() {
   }
 
   const active = myConversations.find(c => c.id === activeConversationId);
-  const moderator = profiles.find(p => p.id === active?.moderator_id);
   const book = books.find(b => b.id === active?.book_id);
 
-  $("messageHeading").textContent = book?.title || "General author support";
-  $("messageModerator").textContent =
-    "Moderator: " + (moderator?.display_name || "Reader Reach Moderator");
+  $("messageHeading").textContent = book?.title || "Book conversation";
+  $("messageModerator").textContent = "Book-specific Moderator conversation";
 
   await loadMessages();
 }
@@ -1209,20 +1303,41 @@ async function loadMessages() {
   }
 
   const messages = data || [];
+  let attachments = [];
+
+  if (messages.length) {
+    const messageIds = messages.map(m => m.id);
+    const attachmentResult = await supabaseClient
+      .from("message_attachments")
+      .select("id,message_id,file_path,file_name,mime_type,file_size,created_at")
+      .in("message_id", messageIds)
+      .order("created_at", {ascending:true});
+
+    if (!attachmentResult.error && attachmentResult.data?.length) {
+      attachments = await Promise.all(attachmentResult.data.map(async item => {
+        const signed = await supabaseClient.storage
+          .from(CHAT_BUCKET)
+          .createSignedUrl(item.file_path, 60 * 60);
+        return {...item, url:signed.data?.signedUrl || null};
+      }));
+    }
+  }
 
   if (!messages.length) {
     $("messageList").innerHTML = '<div class="empty">No messages yet. Start the conversation below.</div>';
-    return;
+  } else {
+    $("messageList").innerHTML = messages.map(message => {
+      const mine = message.sender_profile_id === currentUser.id;
+      const messageAttachments = attachments.filter(a => a.message_id === message.id);
+      const body = message.message ? escapeHTML(message.message) : "";
+      return `
+        <div class="message ${mine ? "mine" : ""}">
+          ${body ? `<div>${body}</div>` : ""}
+          ${messageAttachments.map(renderAttachment).join("")}
+          <small>${mine ? "You" : "Moderator"} · ${escapeHTML(formatDate(message.created_at))}</small>
+        </div>`;
+    }).join("");
   }
-
-  $("messageList").innerHTML = messages.map(message => {
-    const mine = message.sender_profile_id === currentUser.id;
-    return `
-      <div class="message ${mine ? "mine" : ""}">
-        ${escapeHTML(message.message)}
-        <small>${mine ? "You" : "Moderator"} · ${escapeHTML(formatDate(message.created_at))}</small>
-      </div>`;
-  }).join("");
 
   $("messageList").scrollTop = $("messageList").scrollHeight;
 
@@ -1237,35 +1352,75 @@ async function loadMessages() {
   }
 }
 
-$("newConversationButton").addEventListener("click", async () => {
+async function openNewConversationPanel() {
   if (!currentAuthor?.id || !currentUser?.id) return;
 
-  const button = $("newConversationButton");
+  const panel = $("newConversationPanel");
+  const bookSelect = $("newConversationBook");
+  const moderatorSelect = $("newConversationModerator");
+
+  if (!myBooks.length) await loadBooks();
+
+  const {data:moderators, error} = await supabaseClient
+    .from("moderators")
+    .select("id,profile_id,active")
+    .eq("active", true);
+
+  if (error) {
+    setNotice("Could not find available Moderators: " + friendlyError(error), "error");
+    return;
+  }
+
+  if (!moderators?.length) {
+    setNotice("No active Moderator is available in the database yet. Please try again later.", "info");
+    return;
+  }
+
+  const profileIds = moderators.map(m => m.profile_id).filter(Boolean);
+  const {data:profiles} = await supabaseClient
+    .from("profiles")
+    .select("id,display_name")
+    .in("id", profileIds);
+
+  bookSelect.innerHTML = '<option value="">Select a book</option>' +
+    myBooks.map(book =>
+      `<option value="${escapeHTML(book.id)}">${escapeHTML(book.title || "Untitled book")}</option>`
+    ).join("");
+
+  moderatorSelect.innerHTML = '<option value="">Select a Moderator</option>' +
+    moderators.map(mod => {
+      const profile = (profiles || []).find(p => p.id === mod.profile_id);
+      return `<option value="${escapeHTML(mod.id)}">${escapeHTML(profile?.display_name || "Reader Reach Moderator")}</option>`;
+    }).join("");
+
+  panel.hidden = false;
+  bookSelect.focus();
+}
+
+$("newConversationButton").addEventListener("click", openNewConversationPanel);
+
+$("cancelConversationButton").addEventListener("click", () => {
+  $("newConversationPanel").hidden = true;
+});
+
+$("createConversationButton").addEventListener("click", async () => {
+  const bookId = $("newConversationBook").value;
+  const moderatorId = $("newConversationModerator").value;
+  const button = $("createConversationButton");
+
+  if (!bookId || !moderatorId) {
+    setNotice("Choose both the book and Moderator before starting the conversation.", "info");
+    return;
+  }
+
   button.disabled = true;
-
   try {
-    const {data:moderators, error:moderatorError} = await supabaseClient
-      .from("moderators")
-      .select("id,profile_id,active")
-      .eq("active", true);
-
-    if (moderatorError) {
-      throw new Error("Could not find available Moderators: " + friendlyError(moderatorError));
-    }
-
-    if (!moderators?.length) {
-      setNotice("No active Moderator is available in the database yet. Please try again later.", "info");
-      return;
-    }
-
-    const chosen = moderators[0];
-
     const {data:existing, error:existingError} = await supabaseClient
       .from("conversations")
       .select("id")
       .eq("author_id", currentAuthor.id)
-      .eq("moderator_id", chosen.profile_id)
-      .is("book_id", null)
+      .eq("moderator_id", moderatorId)
+      .eq("book_id", bookId)
       .limit(1);
 
     if (existingError) throw existingError;
@@ -1277,8 +1432,8 @@ $("newConversationButton").addEventListener("click", async () => {
         .from("conversations")
         .insert({
           author_id:currentAuthor.id,
-          moderator_id:chosen.profile_id,
-          book_id:null
+          moderator_id:moderatorId,
+          book_id:bookId
         })
         .select("id")
         .single();
@@ -1287,40 +1442,98 @@ $("newConversationButton").addEventListener("click", async () => {
       activeConversationId = created.id;
     }
 
+    $("newConversationPanel").hidden = true;
     await loadConversations();
     showPage("messages");
-    setNotice("Your Moderator conversation is ready.", "success");
-
+    setNotice("Your book-specific Moderator conversation is ready.", "success");
   } catch (error) {
     console.error("Create conversation:", error);
-    setNotice(friendlyError(error), "error");
+    setNotice("Conversation could not be created: " + friendlyError(error), "error");
   } finally {
     button.disabled = false;
   }
+});
+
+$("messageFile").addEventListener("change", () => {
+  const file = $("messageFile").files?.[0];
+  if (!file) {
+    $("messageFileName").textContent = "";
+    return;
+  }
+  if (!isAllowedChatFile(file)) {
+    $("messageFile").value = "";
+    $("messageFileName").textContent = "";
+    return;
+  }
+  $("messageFileName").textContent = `Selected: ${file.name} · ${formatFileSize(file.size)}`;
 });
 
 $("messageForm").addEventListener("submit", async event => {
   event.preventDefault();
 
   const text = $("messageText").value.trim();
-  if (!text || !activeConversationId) {
-    setNotice("Select a conversation before sending a message.", "info");
+  const file = $("messageFile").files?.[0] || null;
+
+  if (!text && !file) {
+    setNotice("Write a message or attach a file before sending.", "info");
     return;
   }
 
+  if (!activeConversationId) {
+    setNotice("Select a book conversation before sending a message.", "info");
+    return;
+  }
+
+  if (file && !isAllowedChatFile(file)) return;
+
   const button = $("sendMessageButton");
   button.disabled = true;
+  button.textContent = "Sending…";
+
+  let uploadedPath = null;
 
   try {
-    const {error} = await supabaseClient
+    const {data:createdMessage, error:messageError} = await supabaseClient
       .from("messages")
       .insert({
         conversation_id:activeConversationId,
         sender_profile_id:currentUser.id,
-        message:text
-      });
+        message:text || ""
+      })
+      .select("id")
+      .single();
 
-    if (error) throw error;
+    if (messageError) throw messageError;
+
+    if (file) {
+      const safeName = normalizeStoragePath(file.name);
+      const path = `${currentUser.id}/${activeConversationId}/${Date.now()}-${safeName}`;
+
+      const {data:uploaded,error:uploadError} = await supabaseClient.storage
+        .from(CHAT_BUCKET)
+        .upload(path, file, {
+          upsert:false,
+          contentType:file.type || "application/octet-stream"
+        });
+
+      if (uploadError) throw new Error("File upload failed: " + friendlyError(uploadError));
+      uploadedPath = uploaded.path;
+
+      const {error:attachmentError} = await supabaseClient
+        .from("message_attachments")
+        .insert({
+          message_id:createdMessage.id,
+          file_path:uploadedPath,
+          file_name:file.name,
+          mime_type:file.type || null,
+          file_size:file.size
+        });
+
+      if (attachmentError) {
+        await supabaseClient.storage.from(CHAT_BUCKET).remove([uploadedPath]);
+        throw new Error("Attachment record could not be saved: " + friendlyError(attachmentError));
+      }
+    }
 
     await supabaseClient
       .from("conversations")
@@ -1328,12 +1541,16 @@ $("messageForm").addEventListener("submit", async event => {
       .eq("id", activeConversationId);
 
     $("messageText").value = "";
+    $("messageFile").value = "";
+    $("messageFileName").textContent = "";
+
     await loadMessages();
     await loadConversations();
   } catch (error) {
     setNotice("Message could not be sent: " + friendlyError(error), "error");
   } finally {
     button.disabled = false;
+    button.textContent = "Send Message";
   }
 });
 

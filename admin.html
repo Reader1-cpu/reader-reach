@@ -1,1362 +1,4058 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Reader Reach | Admin Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reader Reach — Admin Dashboard</title>
 
-<style>
-:root{
-  --brown:#3b241b;
-  --brown2:#5a3829;
-  --cream:#fffdf8;
-  --soft:#f7efe4;
-  --butter:#ead79b;
-  --text:#34251f;
-  --muted:#76665d;
-  --line:#e7dbcf;
-  --white:#fff;
-  --green:#dce9d9;
-  --greenText:#355b35;
-  --red:#f1d9cf;
-  --redText:#7b3024;
-  --gold:#f1dfc3;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  font-family:Georgia,"Times New Roman",serif;
-  background:var(--soft);
-  color:var(--text);
-}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-.topbar{
-  height:66px;
-  background:var(--brown);
-  color:#fffaf3;
-  display:flex;
-  align-items:center;
-  gap:20px;
-  padding:0 24px;
-  position:sticky;
-  top:0;
-  z-index:50;
-  box-shadow:0 4px 18px rgba(50,30,20,.15);
-}
-.brand{
-  font-size:23px;
-  font-weight:700;
-}
-.admin-label{
-  font-size:12px;
-  opacity:.75;
-}
-.admin-email{
-  margin-left:auto;
-  font-size:13px;
-  opacity:.9;
-}
-.logout{
-  border:0;
-  background:#ead9c6;
-  color:var(--brown);
-  padding:8px 13px;
-  border-radius:9px;
-  font-weight:700;
-}
+  <style>
+    :root{
+      --cream:#f7f1e7;
+      --cream-2:#fffaf2;
+      --brown:#3f2a20;
+      --brown-2:#5a3d2e;
+      --gold:#b08a52;
+      --gold-soft:#ead9b8;
+      --text:#2e211a;
+      --muted:#7d6d61;
+      --border:#e7dccc;
+      --white:#ffffff;
+      --green:#3d7653;
+      --green-bg:#eaf4ed;
+      --red:#a64a43;
+      --red-bg:#f9e9e7;
+      --blue:#496d8d;
+      --blue-bg:#eaf1f7;
+      --shadow:0 12px 35px rgba(63,42,32,.08);
+      --radius:18px;
+    }
 
-.layout{
-  display:grid;
-  grid-template-columns:235px minmax(0,1fr);
-  min-height:calc(100vh - 66px);
-}
-.sidebar{
-  background:#302018;
-  color:#fffaf3;
-  padding:20px 13px;
-  position:sticky;
-  top:66px;
-  height:calc(100vh - 66px);
-  overflow:auto;
-}
-.sidebar-title{
-  padding:8px 10px 20px;
-  border-bottom:1px solid rgba(255,255,255,.12);
-  margin-bottom:13px;
-}
-.sidebar-title strong{display:block;font-size:18px}
-.sidebar-title span{font-size:11px;opacity:.6}
-.nav{
-  display:grid;
-  gap:5px;
-}
-.nav a{
-  color:#fffaf3;
-  text-decoration:none;
-  padding:10px 12px;
-  border-radius:9px;
-  font-size:13px;
-}
-.nav a:hover,.nav a.active{background:#62402f}
+    *{
+      box-sizing:border-box;
+    }
 
-.main{
-  padding:28px 30px 70px;
-  min-width:0;
-}
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
-  gap:20px;
-  margin-bottom:22px;
-}
-.eyebrow{
-  text-transform:uppercase;
-  letter-spacing:.13em;
-  color:#9a7658;
-  font-size:11px;
-  font-weight:700;
-}
-h1{
-  color:var(--brown);
-  font-size:34px;
-  margin:7px 0;
-}
-.subtitle{
-  color:var(--muted);
-  line-height:1.6;
-  font-size:14px;
-}
+    html{
+      scroll-behavior:smooth;
+    }
 
-.stats{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:12px;
-  margin-bottom:22px;
-}
-.stat{
-  background:#fffaf3;
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:15px;
-  box-shadow:0 7px 20px rgba(70,45,30,.06);
-}
-.stat small{
-  color:var(--muted);
-  display:block;
-  line-height:1.3;
-}
-.stat strong{
-  display:block;
-  font-size:27px;
-  color:var(--brown);
-  margin-top:7px;
-}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:var(--cream);
+      color:var(--text);
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:16px;
-}
-.section{
-  scroll-margin-top:85px;
-}
-.card{
-  background:#fffaf3;
-  border:1px solid var(--line);
-  border-radius:17px;
-  padding:18px;
-  box-shadow:0 9px 25px rgba(70,45,30,.06);
-}
-.wide{grid-column:1/-1}
-.card-head{
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-  align-items:flex-start;
-  margin-bottom:15px;
-}
-.card h2{
-  color:var(--brown);
-  margin:0;
-  font-size:20px;
-}
-.card-head p{
-  color:var(--muted);
-  font-size:12px;
-  margin:5px 0 0;
-}
-.count{
-  background:#ead9c6;
-  color:var(--brown2);
-  min-width:28px;
-  height:28px;
-  border-radius:50px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;
-  font-size:12px;
-}
+    button,
+    input,
+    select,
+    textarea{
+      font:inherit;
+    }
 
-.list{
-  display:grid;
-  gap:10px;
-}
-.item{
-  background:#fffdf9;
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:14px;
-}
-.item-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:15px;
-}
-.item-title{
-  color:var(--brown);
-  font-weight:700;
-  font-size:15px;
-}
-.meta{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.5;
-  margin-top:4px;
-}
-.description{
-  color:#5d493d;
-  line-height:1.55;
-  font-size:13px;
-  margin-top:9px;
-}
-.actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:7px;
-  margin-top:11px;
-}
+    button{
+      cursor:pointer;
+    }
 
-.btn{
-  border:0;
-  border-radius:9px;
-  padding:9px 12px;
-  background:#ead9c6;
-  color:var(--brown);
-  font-weight:700;
-  font-size:12px;
-}
-.btn.primary{
-  background:#6b4634;
-  color:#fffaf3;
-}
-.btn.danger{
-  background:var(--red);
-  color:var(--redText);
-}
-.btn.green{
-  background:var(--green);
-  color:var(--greenText);
-}
-.btn:hover{transform:translateY(-1px)}
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
 
-.status{
-  display:inline-block;
-  padding:4px 8px;
-  border-radius:999px;
-  font-size:10px;
-  font-weight:700;
-}
-.pending{background:var(--gold);color:#765126}
-.approved{background:var(--green);color:var(--greenText)}
-.rejected{background:var(--red);color:var(--redText)}
-.on{background:var(--green);color:var(--greenText)}
-.off{background:#ead9c6;color:#765b48}
+    .hidden{
+      display:none!important;
+    }
 
-.empty{
-  text-align:center;
-  padding:22px;
-  border:1px dashed #d8c3af;
-  border-radius:11px;
-  color:var(--muted);
-  font-size:13px;
-}
+    .loading-screen{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--brown);
+      font-weight:700;
+    }
 
-.cover{
-  width:64px;
-  height:86px;
-  object-fit:cover;
-  border-radius:7px;
-  background:#f3e7d8;
-  border:1px solid var(--line);
-}
-.book-row{
-  display:flex;
-  gap:12px;
-  align-items:flex-start;
-}
+    .app{
+      min-height:100vh;
+      display:flex;
+    }
 
-.form{
-  display:grid;
-  gap:12px;
-}
-.field label{
-  display:block;
-  color:var(--brown2);
-  font-weight:700;
-  font-size:12px;
-  margin-bottom:6px;
-}
-.field input,
-.field select,
-.field textarea{
-  width:100%;
-  border:1px solid #dbc8b5;
-  background:#fffdf9;
-  border-radius:9px;
-  padding:10px 11px;
-  outline:none;
-}
-.field textarea{min-height:100px;resize:vertical}
-.field input:focus,
-.field select:focus,
-.field textarea:focus{
-  border-color:#a67850;
-  box-shadow:0 0 0 3px rgba(166,120,80,.12);
-}
+    /* SIDEBAR */
+    .sidebar{
+      width:260px;
+      background:var(--brown);
+      color:#fff;
+      position:fixed;
+      left:0;
+      top:0;
+      bottom:0;
+      padding:24px 16px;
+      overflow-y:auto;
+      z-index:50;
+    }
 
-.switch-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  padding:13px 0;
-  border-bottom:1px solid var(--line);
-}
-.switch-row:last-child{border-bottom:0}
-.switch-copy strong{display:block;color:var(--brown);font-size:14px}
-.switch-copy span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
-.switch{
-  width:45px;
-  height:25px;
-  position:relative;
-  flex:none;
-}
-.switch input{display:none}
-.slider{
-  position:absolute;
-  inset:0;
-  background:#cbb7a4;
-  border-radius:30px;
-}
-.slider:before{
-  content:"";
-  width:19px;
-  height:19px;
-  position:absolute;
-  left:3px;
-  top:3px;
-  background:#fff;
-  border-radius:50%;
-  transition:.2s;
-}
-.switch input:checked+.slider{background:#6b4634}
-.switch input:checked+.slider:before{transform:translateX(20px)}
+    .brand{
+      padding:4px 12px 24px;
+      border-bottom:1px solid rgba(255,255,255,.12);
+      margin-bottom:18px;
+    }
 
-.toast{
-  position:fixed;
-  right:22px;
-  bottom:22px;
-  background:var(--brown);
-  color:#fffaf3;
-  padding:13px 17px;
-  border-radius:10px;
-  opacity:0;
-  transform:translateY(10px);
-  transition:.2s;
-  pointer-events:none;
-  z-index:100;
-}
-.toast.show{
-  opacity:1;
-  transform:translateY(0);
-}
+    .brand-title{
+      font-family:Georgia,serif;
+      font-size:26px;
+      font-weight:700;
+      letter-spacing:-.4px;
+    }
 
-@media(max-width:1150px){
-  .stats{grid-template-columns:repeat(3,1fr)}
-}
-@media(max-width:850px){
-  .layout{grid-template-columns:1fr}
-  .sidebar{
-    position:static;
-    height:auto;
-  }
-  .nav{grid-template-columns:repeat(2,1fr)}
-  .grid{grid-template-columns:1fr}
-  .wide{grid-column:auto}
-  .main{padding:22px 16px 50px}
-}
-@media(max-width:560px){
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .nav{grid-template-columns:1fr}
-  .topbar{padding:0 15px}
-  .admin-email,.admin-label{display:none}
-}
-</style>
+    .brand-subtitle{
+      color:#d9cbbb;
+      font-size:12px;
+      margin-top:4px;
+    }
+
+    .nav-label{
+      color:#bca99a;
+      text-transform:uppercase;
+      letter-spacing:1.2px;
+      font-size:10px;
+      font-weight:800;
+      padding:10px 12px 8px;
+    }
+
+    .nav{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+
+    .nav button{
+      border:0;
+      background:transparent;
+      color:#eee5dc;
+      text-align:left;
+      width:100%;
+      padding:11px 12px;
+      border-radius:11px;
+      transition:.2s;
+    }
+
+    .nav button:hover,
+    .nav button.active{
+      background:rgba(255,255,255,.1);
+      color:#fff;
+    }
+
+    .sidebar-footer{
+      margin-top:24px;
+      padding:16px 12px;
+      border-top:1px solid rgba(255,255,255,.12);
+    }
+
+    .admin-email{
+      color:#d8cabe;
+      font-size:12px;
+      word-break:break-word;
+      margin-bottom:12px;
+    }
+
+    .signout{
+      width:100%;
+      border:1px solid rgba(255,255,255,.18);
+      background:transparent;
+      color:#fff;
+      border-radius:10px;
+      padding:10px 12px;
+    }
+
+    .signout:hover{
+      background:rgba(255,255,255,.08);
+    }
+
+    /* MAIN */
+    .main{
+      margin-left:260px;
+      width:calc(100% - 260px);
+      min-width:0;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:30;
+      background:rgba(247,241,231,.94);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border);
+      padding:18px 28px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+    }
+
+    .topbar h1{
+      margin:0;
+      font-family:Georgia,serif;
+      font-size:28px;
+      color:var(--brown);
+    }
+
+    .topbar p{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .mobile-menu{
+      display:none;
+      border:1px solid var(--border);
+      background:var(--white);
+      color:var(--brown);
+      border-radius:10px;
+      padding:9px 11px;
+    }
+
+    .content{
+      padding:28px;
+      max-width:1600px;
+      margin:auto;
+    }
+
+    .section{
+      margin-bottom:34px;
+      scroll-margin-top:90px;
+    }
+
+    .section-heading{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:15px;
+      margin-bottom:14px;
+    }
+
+    .section-heading h2{
+      margin:0;
+      font-family:Georgia,serif;
+      color:var(--brown);
+      font-size:24px;
+    }
+
+    .section-heading p{
+      margin:5px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* STATS */
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+      margin-bottom:32px;
+    }
+
+    .stat{
+      background:var(--white);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+
+    .stat-label{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+
+    .stat-value{
+      color:var(--brown);
+      font-size:27px;
+      font-weight:800;
+    }
+
+    /* CARDS */
+    .card{
+      background:var(--white);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .card-head{
+      padding:18px 20px;
+      border-bottom:1px solid var(--border);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .card-head h3{
+      margin:0;
+      color:var(--brown);
+      font-size:17px;
+    }
+
+    .card-body{
+      padding:20px;
+    }
+
+    /* TOOLBAR */
+    .toolbar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .input,
+    .select,
+    .textarea{
+      width:100%;
+      border:1px solid var(--border);
+      background:var(--cream-2);
+      color:var(--text);
+      border-radius:11px;
+      padding:11px 12px;
+      outline:none;
+    }
+
+    .input:focus,
+    .select:focus,
+    .textarea:focus{
+      border-color:var(--gold);
+      box-shadow:0 0 0 3px rgba(176,138,82,.12);
+    }
+
+    .toolbar .input{
+      flex:1 1 240px;
+    }
+
+    .toolbar .select{
+      flex:0 1 190px;
+    }
+
+    .textarea{
+      min-height:100px;
+      resize:vertical;
+    }
+
+    /* BUTTONS */
+    .btn{
+      border:0;
+      border-radius:10px;
+      padding:9px 13px;
+      font-weight:700;
+      transition:.2s;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .btn-primary{
+      background:var(--brown);
+      color:#fff;
+    }
+
+    .btn-primary:hover{
+      background:var(--brown-2);
+    }
+
+    .btn-secondary{
+      background:var(--gold-soft);
+      color:var(--brown);
+    }
+
+    .btn-danger{
+      background:var(--red-bg);
+      color:var(--red);
+    }
+
+    .btn-success{
+      background:var(--green-bg);
+      color:var(--green);
+    }
+
+    .btn-blue{
+      background:var(--blue-bg);
+      color:var(--blue);
+    }
+
+    .btn-light{
+      background:var(--cream);
+      color:var(--brown);
+      border:1px solid var(--border);
+    }
+
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .button-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+    }
+
+    /* TABLE */
+    .table-wrap{
+      overflow-x:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:760px;
+    }
+
+    th,
+    td{
+      padding:13px 12px;
+      text-align:left;
+      border-bottom:1px solid var(--border);
+      vertical-align:top;
+      font-size:13px;
+    }
+
+    th{
+      color:var(--muted);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.6px;
+      white-space:nowrap;
+      background:#fffdf9;
+    }
+
+    tr:last-child td{
+      border-bottom:0;
+    }
+
+    .muted{
+      color:var(--muted);
+    }
+
+    .small{
+      font-size:12px;
+    }
+
+    .title-cell{
+      font-weight:800;
+      color:var(--brown);
+    }
+
+    .sub-cell{
+      color:var(--muted);
+      margin-top:3px;
+      line-height:1.45;
+    }
+
+    .status{
+      display:inline-flex;
+      align-items:center;
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      text-transform:capitalize;
+      white-space:nowrap;
+    }
+
+    .status.pending{
+      color:#8a672b;
+      background:#f8eed8;
+    }
+
+    .status.approved,
+    .status.active{
+      color:var(--green);
+      background:var(--green-bg);
+    }
+
+    .status.rejected,
+    .status.inactive{
+      color:var(--red);
+      background:var(--red-bg);
+    }
+
+    .status.neutral{
+      color:var(--blue);
+      background:var(--blue-bg);
+    }
+
+    .empty{
+      padding:34px 18px;
+      text-align:center;
+      color:var(--muted);
+    }
+
+    .error{
+      padding:18px;
+      color:var(--red);
+      background:var(--red-bg);
+      border-radius:12px;
+    }
+
+    /* FORM GRID */
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:13px;
+    }
+
+    .form-field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .form-field.full{
+      grid-column:1 / -1;
+    }
+
+    .form-field label{
+      color:var(--brown);
+      font-size:12px;
+      font-weight:800;
+    }
+
+    /* FEATURED */
+    .featured-add{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:9px;
+      margin-bottom:18px;
+    }
+
+    /* CHAT */
+    .conversation-layout{
+      display:grid;
+      grid-template-columns:320px minmax(0,1fr);
+      min-height:600px;
+    }
+
+    .conversation-list{
+      border-right:1px solid var(--border);
+      max-height:700px;
+      overflow-y:auto;
+    }
+
+    .conversation-item{
+      padding:15px;
+      border-bottom:1px solid var(--border);
+      cursor:pointer;
+      transition:.2s;
+    }
+
+    .conversation-item:hover,
+    .conversation-item.active{
+      background:var(--cream-2);
+    }
+
+    .conversation-item-title{
+      color:var(--brown);
+      font-weight:800;
+      margin-bottom:5px;
+    }
+
+    .conversation-item-meta{
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.5;
+    }
+
+    .chat-panel{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .chat-header{
+      padding:15px 18px;
+      border-bottom:1px solid var(--border);
+    }
+
+    .chat-header h3{
+      margin:0;
+      color:var(--brown);
+      font-size:16px;
+    }
+
+    .chat-header p{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .messages{
+      flex:1;
+      min-height:360px;
+      max-height:520px;
+      overflow-y:auto;
+      padding:18px;
+      background:#fcf8f1;
+    }
+
+    .message-row{
+      display:flex;
+      margin-bottom:12px;
+    }
+
+    .message-row.mine{
+      justify-content:flex-end;
+    }
+
+    .message-bubble{
+      max-width:75%;
+      padding:11px 13px;
+      border-radius:15px;
+      background:#fff;
+      border:1px solid var(--border);
+    }
+
+    .message-row.mine .message-bubble{
+      background:var(--brown);
+      color:#fff;
+      border-color:var(--brown);
+    }
+
+    .message-sender{
+      font-size:10px;
+      font-weight:800;
+      margin-bottom:5px;
+      opacity:.75;
+    }
+
+    .message-text{
+      white-space:pre-wrap;
+      line-height:1.5;
+      font-size:13px;
+    }
+
+    .message-meta{
+      font-size:10px;
+      margin-top:6px;
+      opacity:.65;
+    }
+
+    .message-actions{
+      display:flex;
+      gap:5px;
+      margin-top:8px;
+    }
+
+    .message-actions button{
+      border:0;
+      background:rgba(255,255,255,.12);
+      color:inherit;
+      border-radius:7px;
+      padding:4px 7px;
+      font-size:10px;
+    }
+
+    .message-row:not(.mine) .message-actions button{
+      background:var(--cream);
+      color:var(--brown);
+    }
+
+    .chat-composer{
+      padding:15px;
+      border-top:1px solid var(--border);
+    }
+
+    .chat-compose-row{
+      display:flex;
+      gap:8px;
+    }
+
+    .chat-compose-row .input{
+      flex:1;
+    }
+
+    .discussion-monitor{
+      margin-top:18px;
+    }
+
+    /* TRAILER */
+    .trailer-preview{
+      width:150px;
+      height:85px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      object-fit:cover;
+      background:#eee;
+    }
+
+    /* TOAST */
+    .toast{
+      position:fixed;
+      right:22px;
+      bottom:22px;
+      z-index:100;
+      max-width:360px;
+      padding:13px 16px;
+      background:var(--brown);
+      color:#fff;
+      border-radius:12px;
+      box-shadow:0 15px 40px rgba(0,0,0,.2);
+      opacity:0;
+      transform:translateY(15px);
+      pointer-events:none;
+      transition:.25s;
+      font-size:13px;
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .toast.error-toast{
+      background:var(--red);
+    }
+
+    /* SETTINGS */
+    .settings-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .setting-box{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:16px;
+      background:var(--cream-2);
+    }
+
+    .setting-box h4{
+      margin:0 0 6px;
+      color:var(--brown);
+    }
+
+    .setting-box p{
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:1100px){
+      .stats{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+
+      .conversation-layout{
+        grid-template-columns:280px minmax(0,1fr);
+      }
+    }
+
+    @media(max-width:850px){
+      .sidebar{
+        transform:translateX(-100%);
+        transition:.25s;
+      }
+
+      .sidebar.open{
+        transform:translateX(0);
+      }
+
+      .main{
+        margin-left:0;
+        width:100%;
+      }
+
+      .mobile-menu{
+        display:block;
+      }
+
+      .topbar{
+        padding:15px 18px;
+      }
+
+      .content{
+        padding:18px;
+      }
+
+      .stats{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .conversation-layout{
+        grid-template-columns:1fr;
+      }
+
+      .conversation-list{
+        border-right:0;
+        border-bottom:1px solid var(--border);
+        max-height:280px;
+      }
+    }
+
+    @media(max-width:600px){
+      .stats{
+        grid-template-columns:1fr;
+      }
+
+      .form-grid,
+      .settings-grid{
+        grid-template-columns:1fr;
+      }
+
+      .form-field.full{
+        grid-column:auto;
+      }
+
+      .topbar h1{
+        font-size:22px;
+      }
+
+      .topbar p{
+        display:none;
+      }
+
+      .featured-add{
+        grid-template-columns:1fr;
+      }
+
+      .chat-compose-row{
+        flex-direction:column;
+      }
+
+      .message-bubble{
+        max-width:90%;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header class="topbar">
-  <div class="brand">Reader Reach</div>
-  <div class="admin-label">ADMIN DASHBOARD</div>
-  <div id="adminEmail" class="admin-email"></div>
-  <button class="logout" onclick="signOut()">Sign Out</button>
-</header>
+  <div id="loading" class="loading-screen">
+    Loading Reader Reach Admin…
+  </div>
 
-<div id="loading" style="padding:50px;text-align:center;color:#76665d">
-  Loading Admin Dashboard...
-</div>
+  <div id="app" class="app hidden">
 
-<div id="app" class="layout hidden">
+    <aside id="sidebar" class="sidebar">
 
-  <aside class="sidebar">
-    <div class="sidebar-title">
-      <strong>Administration</strong>
-      <span>Reader Reach control center</span>
-    </div>
+      <div class="brand">
+        <div class="brand-title">Reader Reach</div>
+        <div class="brand-subtitle">Administration Centre</div>
+      </div>
 
-    <nav class="nav">
-      <a href="#overview">Overview</a>
-      <a href="#authors">Authors</a>
-      <a href="#books">Books</a>
-      <a href="#featured">Featured Books</a>
-      <a href="#trailers">Book Trailers</a>
-      <a href="#schedule">Feature Schedule</a>
-      <a href="#readers">Readers</a>
-      <a href="#discussions">Discussions</a>
-      <a href="#notifications">Notifications</a>
-      <a href="#moderators">Moderators</a>
-      <a href="#settings">Settings</a>
-    </nav>
-  </aside>
+      <div class="nav-label">Management</div>
 
-  <main class="main">
+      <nav class="nav">
+        <button data-target="overview" class="active">Overview</button>
+        <button data-target="authors">Authors</button>
+        <button data-target="books">Books</button>
+        <button data-target="featured">Featured Books</button>
+        <button data-target="trailers">Book Trailers</button>
+        <button data-target="schedules">Feature Schedule</button>
+        <button data-target="readers">Readers</button>
+        <button data-target="discussions">Conversations</button>
+        <button data-target="notifications">Notifications</button>
+        <button data-target="moderators">Moderators</button>
+        <button data-target="settings">Settings</button>
+      </nav>
 
-    <section id="overview" class="section">
-      <div class="header">
+      <div class="sidebar-footer">
+        <div id="adminEmail" class="admin-email"></div>
+        <button id="signOutBtn" class="signout">Sign Out</button>
+      </div>
+
+    </aside>
+
+    <main class="main">
+
+      <header class="topbar">
         <div>
-          <div class="eyebrow">Platform administration</div>
+          <button id="mobileMenuBtn" class="mobile-menu">☰</button>
           <h1>Admin Dashboard</h1>
-          <p class="subtitle">
-            Manage authors, books, homepage content, schedules, readers,
-            moderators and platform activity.
-          </p>
+          <p>Manage Reader Reach without disturbing existing reader, author or moderator records.</p>
         </div>
-      </div>
+      </header>
 
-      <div class="stats">
-        <div class="stat"><small>Authors Pending</small><strong id="statAuthors">0</strong></div>
-        <div class="stat"><small>Books Pending</small><strong id="statBooks">0</strong></div>
-        <div class="stat"><small>Featured Books</small><strong id="statFeatured">0</strong></div>
-        <div class="stat"><small>Scheduled Features</small><strong id="statSchedules">0</strong></div>
-        <div class="stat"><small>Readers</small><strong id="statReaders">0</strong></div>
-        <div class="stat"><small>Unread Notifications</small><strong id="statNotifications">0</strong></div>
-      </div>
-    </section>
+      <div class="content">
 
-    <div class="grid">
+        <!-- OVERVIEW -->
+        <section id="overview" class="section">
 
-      <section id="authors" class="card section">
-        <div class="card-head">
-          <div>
-            <h2>Authors Awaiting Approval</h2>
-            <p>Approve or reject author accounts.</p>
+          <div class="section-heading">
+            <div>
+              <h2>Overview</h2>
+              <p>Current platform activity and approval status.</p>
+            </div>
+            <button class="btn btn-light" onclick="refreshAll()">Refresh</button>
           </div>
-          <div class="count" id="authorsCount">0</div>
-        </div>
-        <div id="authorsList" class="list"></div>
-      </section>
 
-      <section id="books" class="card section">
-        <div class="card-head">
-          <div>
-            <h2>Books Awaiting Approval</h2>
-            <p>Review submitted books before publication.</p>
+          <div class="stats">
+
+            <div class="stat">
+              <div class="stat-label">Total Authors</div>
+              <div id="statAuthorsTotal" class="stat-value">—</div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-label">Pending Authors</div>
+              <div id="statAuthorsPending" class="stat-value">—</div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-label">Approved Authors</div>
+              <div id="statAuthorsApproved" class="stat-value">—</div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-label">Total Books</div>
+              <div id="statBooksTotal" class="stat-value">—</div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-label">Pending Books</div>
+              <div id="statBooksPending" class="stat-value">—</div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-label">Approved Books</div>
+              <div id="statBooksApproved" class="stat-value">—</div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-label">Active Moderators</div>
+              <div id="statModerators" class="stat-value">—</div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-label">Readers</div>
+              <div id="statReaders" class="stat-value">—</div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-label">Featured Books</div>
+              <div id="statFeatured" class="stat-value">—</div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-label">Scheduled Features</div>
+              <div id="statSchedules" class="stat-value">—</div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-label">Unread Notifications</div>
+              <div id="statNotifications" class="stat-value">—</div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-label">Unread Messages</div>
+              <div id="statMessages" class="stat-value">—</div>
+            </div>
+
           </div>
-          <div class="count" id="booksCount">0</div>
-        </div>
-        <div id="booksList" class="list"></div>
-      </section>
 
-      <section id="featured" class="card section wide">
-        <div class="card-head">
-          <div>
-            <h2>Featured Books</h2>
-            <p>Select or remove approved books from the homepage Featured section.</p>
-          </div>
-          <div class="count" id="featuredCount">0</div>
-        </div>
-        <div id="featuredList" class="list"></div>
-      </section>
-
-      <section id="trailers" class="card section wide">
-        <div class="card-head">
-          <div>
-            <h2>Upcoming Book Trailers</h2>
-            <p>
-              Turn the homepage trailer display ON or OFF independently
-              from approval and Featured status.
-            </p>
-          </div>
-        </div>
-        <div id="trailersList" class="list"></div>
-      </section>
-
-      <section id="schedule" class="card section">
-        <div class="card-head">
-          <div>
-            <h2>Feature Schedule</h2>
-            <p>Review upcoming scheduled features.</p>
-          </div>
-          <div class="count" id="scheduleCount">0</div>
-        </div>
-        <div id="scheduleList" class="list"></div>
-      </section>
-
-      <section id="readers" class="card section">
-        <div class="card-head">
-          <div>
-            <h2>Readers</h2>
-            <p>Reader accounts registered on the platform.</p>
-          </div>
-          <div class="count" id="readerCount">0</div>
-        </div>
-        <div id="readerList" class="list"></div>
-      </section>
-
-      <section id="discussions" class="card section">
-        <div class="card-head">
-          <div>
-            <h2>Discussions</h2>
-            <p>Platform discussion oversight.</p>
-          </div>
-        </div>
-        <div id="discussionList" class="list"></div>
-      </section>
-
-      <section id="notifications" class="card section">
-        <div class="card-head">
-          <div>
-            <h2>Notifications</h2>
-            <p>Recent administrative activity.</p>
-          </div>
-          <div class="count" id="notificationCount">0</div>
-        </div>
-        <div id="notificationList" class="list"></div>
-      </section>
-
-      <section id="moderators" class="card section">
-        <div class="card-head">
-          <div>
-            <h2>Moderators</h2>
-            <p>Manage moderator status.</p>
-          </div>
-        </div>
-        <div id="moderatorList" class="list"></div>
-      </section>
-
-      <section id="settings" class="card section">
-        <div class="card-head">
-          <div>
-            <h2>Platform Settings</h2>
-            <p>Administrative controls.</p>
-          </div>
-        </div>
-
-        <div class="switch-row">
-          <div class="switch-copy">
-            <strong>Homepage Trailer System</strong>
-            <span>Allows approved trailer records to be displayed when individually enabled.</span>
-          </div>
-          <label class="switch">
-            <input id="trailerSystem" type="checkbox" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="switch-row">
-          <div class="switch-copy">
-            <strong>Homepage Featured System</strong>
-            <span>Allows Admin-selected books to appear in Featured Books.</span>
-          </div>
-          <label class="switch">
-            <input id="featuredSystem" type="checkbox" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="switch-row">
-          <div class="switch-copy">
-            <strong>Discussion Oversight</strong>
-            <span>Admin retains authority to remove inappropriate discussion messages.</span>
-          </div>
-          <label class="switch">
-            <input id="discussionSystem" type="checkbox" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
-      </section>
-
-    </div>
-  </main>
-</div>
-
-<div id="toast" class="toast"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const SUPABASE_URL = "https://bublmnfhyyrefcdkloak.supabase.co";
-const SUPABASE_KEY = "sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY";
-
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
-let currentUser = null;
-let currentProfile = null;
-
-const $ = id => document.getElementById(id);
-
-function toast(message){
-  $("toast").textContent = message;
-  $("toast").classList.add("show");
-  setTimeout(() => $("toast").classList.remove("show"), 2600);
-}
-
-function escapeHTML(value){
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-}
-
-function empty(container,message){
-  $(container).innerHTML = `<div class="empty">${escapeHTML(message)}</div>`;
-}
-
-async function requireAdmin(){
-
-  const {data:{session},error} =
-    await supabaseClient.auth.getSession();
-
-  if(error || !session){
-    window.location.href = "auth.html?mode=signin";
-    return false;
-  }
-
-  currentUser = session.user;
-
-  $("adminEmail").textContent = currentUser.email || "";
-
-  const {data:profile,error:profileError} =
-    await supabaseClient
-      .from("profiles")
-      .select("id,display_name,role")
-      .eq("id",currentUser.id)
-      .maybeSingle();
-
-  if(profileError || !profile || profile.role !== "admin"){
-    document.body.innerHTML = `
-      <div style="padding:60px;text-align:center;font-family:Georgia,serif">
-        <h1 style="color:#3b241b">Admin access required</h1>
-        <p style="color:#76665d;margin:15px 0">
-          This account does not have Admin permissions.
-        </p>
-        <a href="auth.html?mode=signin"
-           style="display:inline-block;padding:11px 16px;background:#6b4634;color:white;border-radius:9px;text-decoration:none">
-          Return to Sign In
-        </a>
-      </div>`;
-    return false;
-  }
-
-  currentProfile = profile;
-
-  $("loading").classList.add("hidden");
-  $("app").classList.remove("hidden");
-
-  return true;
-}
-
-async function signOut(){
-  await supabaseClient.auth.signOut();
-  window.location.href = "auth.html?mode=signin";
-}
-
-async function loadStats(){
-
-  const [
-    authors,
-    books,
-    featured,
-    schedules,
-    readers,
-    notifications
-  ] = await Promise.all([
-
-    supabaseClient
-      .from("authors")
-      .select("id",{count:"exact",head:true})
-      .eq("status","pending"),
-
-    supabaseClient
-      .from("books")
-      .select("id",{count:"exact",head:true})
-      .eq("status","pending"),
-
-    supabaseClient
-      .from("homepage_featured_books")
-      .select("id",{count:"exact",head:true}),
-
-    supabaseClient
-      .from("feature_schedules")
-      .select("id",{count:"exact",head:true})
-      .eq("status","scheduled"),
-
-    supabaseClient
-      .from("readers")
-      .select("id",{count:"exact",head:true}),
-
-    supabaseClient
-      .from("notifications")
-      .select("id",{count:"exact",head:true})
-      .eq("profile_id",currentUser.id)
-      .eq("is_read",false)
-  ]);
-
-  $("statAuthors").textContent = authors.count || 0;
-  $("statBooks").textContent = books.count || 0;
-  $("statFeatured").textContent = featured.count || 0;
-  $("statSchedules").textContent = schedules.count || 0;
-  $("statReaders").textContent = readers.count || 0;
-  $("statNotifications").textContent = notifications.count || 0;
-}
-
-async function loadAuthors(){
-
-  const {data,error} = await supabaseClient
-    .from("authors")
-    .select("id,profile_id,author_name,bio,status,created_at")
-    .eq("status","pending")
-    .order("created_at",{ascending:false});
-
-  if(error){
-    empty("authorsList","Unable to load author requests.");
-    return;
-  }
-
-  $("authorsCount").textContent = data?.length || 0;
-
-  if(!data?.length){
-    empty("authorsList","No authors are awaiting approval.");
-    return;
-  }
-
-  $("authorsList").innerHTML = data.map(author => `
-    <div class="item">
-      <div class="item-top">
-        <div>
-          <div class="item-title">${escapeHTML(author.author_name || "Unnamed Author")}</div>
-          <div class="meta">${escapeHTML(author.bio || "No biography supplied.")}</div>
-        </div>
-        <span class="status pending">PENDING</span>
-      </div>
-
-      <div class="actions">
-        <button class="btn green"
-          onclick="updateAuthor('${author.id}','approved')">
-          Approve
-        </button>
-
-        <button class="btn danger"
-          onclick="updateAuthor('${author.id}','rejected')">
-          Reject
-        </button>
-      </div>
-    </div>
-  `).join("");
-}
-
-async function updateAuthor(id,status){
-
-  const {error} = await supabaseClient
-    .from("authors")
-    .update({
-      status,
-      reviewed_at:new Date().toISOString(),
-      reviewed_by:currentUser.id
-    })
-    .eq("id",id);
-
-  if(error){
-    toast("Author update failed.");
-    return;
-  }
-
-  toast(`Author ${status}.`);
-  await loadAuthors();
-  await loadStats();
-}
-
-async function loadBooks(){
-
-  const {data,error} = await supabaseClient
-    .from("books")
-    .select(`
-      id,
-      author_id,
-      title,
-      description,
-      genre_topic,
-      who_its_for,
-      availability,
-      cover_url,
-      submission_complete,
-      missing_fields,
-      status,
-      created_at
-    `)
-    .eq("status","pending")
-    .order("created_at",{ascending:false});
-
-  if(error){
-    empty("booksList","Unable to load book submissions.");
-    return;
-  }
-
-  $("booksCount").textContent = data?.length || 0;
-
-  if(!data?.length){
-    empty("booksList","No books are awaiting approval.");
-    return;
-  }
-
-  $("booksList").innerHTML = data.map(book => {
-
-    const missing = Array.isArray(book.missing_fields)
-      ? book.missing_fields
-      : [];
-
-    return `
-      <div class="item">
-        <div class="book-row">
-
-          ${
-            book.cover_url
-            ? `<img class="cover" src="${escapeHTML(book.cover_url)}" alt="">`
-            : `<div class="cover"></div>`
-          }
-
-          <div style="flex:1">
-            <div class="item-top">
+          <div class="card">
+            <div class="card-head">
               <div>
-                <div class="item-title">${escapeHTML(book.title || "Untitled Book")}</div>
-                <div class="meta">
-                  ${escapeHTML(book.genre_topic || "No genre/topic")}
+                <h3>Recent Platform Activity</h3>
+              </div>
+            </div>
+
+            <div id="recentActivity" class="card-body">
+              <div class="empty">Loading recent activity…</div>
+            </div>
+          </div>
+
+        </section>
+
+
+        <!-- AUTHORS -->
+        <section id="authors" class="section">
+
+          <div class="section-heading">
+            <div>
+              <h2>Author Management</h2>
+              <p>Review authors, preserve their records, and manage approval status.</p>
+            </div>
+          </div>
+
+          <div class="card">
+
+            <div class="card-head">
+              <h3>Authors</h3>
+            </div>
+
+            <div class="card-body">
+
+              <div class="toolbar">
+                <input
+                  id="authorSearch"
+                  class="input"
+                  type="search"
+                  placeholder="Search author name or bio…"
+                />
+
+                <select id="authorStatusFilter" class="select">
+                  <option value="all">All statuses</option>
+                  <option value="pending">Pending</option>
+                  <option value="approved">Approved</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+              </div>
+
+              <div id="authorsTable"></div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- BOOKS -->
+        <section id="books" class="section">
+
+          <div class="section-heading">
+            <div>
+              <h2>Book Management</h2>
+              <p>Review submitted books and approve or reject them without deleting records.</p>
+            </div>
+          </div>
+
+          <div class="card">
+
+            <div class="card-head">
+              <h3>Books</h3>
+            </div>
+
+            <div class="card-body">
+
+              <div class="toolbar">
+                <input
+                  id="bookSearch"
+                  class="input"
+                  type="search"
+                  placeholder="Search title, genre or description…"
+                />
+
+                <select id="bookStatusFilter" class="select">
+                  <option value="all">All statuses</option>
+                  <option value="pending">Pending</option>
+                  <option value="approved">Approved</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+              </div>
+
+              <div id="booksTable"></div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- FEATURED -->
+        <section id="featured" class="section">
+
+          <div class="section-heading">
+            <div>
+              <h2>Featured Books</h2>
+              <p>Select approved books for homepage featuring. Existing records are preserved.</p>
+            </div>
+          </div>
+
+          <div class="card">
+
+            <div class="card-head">
+              <h3>Homepage Featured Books</h3>
+            </div>
+
+            <div class="card-body">
+
+              <div class="featured-add">
+                <select id="featuredBookSelect" class="select">
+                  <option value="">Select an approved book…</option>
+                </select>
+
+                <button class="btn btn-primary" onclick="addFeatured()">
+                  Add to Featured
+                </button>
+              </div>
+
+              <div id="featuredTable"></div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- TRAILERS -->
+        <section id="trailers" class="section">
+
+          <div class="section-heading">
+            <div>
+              <h2>Book Trailers</h2>
+              <p>Review existing book trailers and control whether they appear on the homepage.</p>
+            </div>
+          </div>
+
+          <div class="card">
+
+            <div class="card-head">
+              <h3>Trailers</h3>
+            </div>
+
+            <div class="card-body">
+              <div id="trailersTable"></div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- SCHEDULES -->
+        <section id="schedules" class="section">
+
+          <div class="section-heading">
+            <div>
+              <h2>Feature Schedule</h2>
+              <p>Manage scheduled homepage features while preventing duplicate book/date/time entries.</p>
+            </div>
+          </div>
+
+          <div class="card">
+
+            <div class="card-head">
+              <h3>Schedule a Feature</h3>
+            </div>
+
+            <div class="card-body">
+
+              <div class="form-grid">
+
+                <div class="form-field">
+                  <label for="scheduleBook">Approved Book</label>
+                  <select id="scheduleBook" class="select">
+                    <option value="">Select an approved book…</option>
+                  </select>
+                </div>
+
+                <div class="form-field">
+                  <label for="scheduleModerator">Moderator</label>
+                  <select id="scheduleModerator" class="select">
+                    <option value="">No moderator assigned</option>
+                  </select>
+                </div>
+
+                <div class="form-field">
+                  <label for="scheduleDate">Date</label>
+                  <input id="scheduleDate" class="input" type="date" />
+                </div>
+
+                <div class="form-field">
+                  <label for="scheduleTime">Time</label>
+                  <input id="scheduleTime" class="input" type="time" />
+                </div>
+
+                <div class="form-field full">
+                  <label for="scheduleNotes">Notes</label>
+                  <textarea
+                    id="scheduleNotes"
+                    class="textarea"
+                    placeholder="Optional scheduling notes…"
+                  ></textarea>
+                </div>
+
+              </div>
+
+              <div style="margin-top:13px;">
+                <button class="btn btn-primary" onclick="createSchedule()">
+                  Schedule Feature
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div style="height:14px;"></div>
+
+          <div class="card">
+
+            <div class="card-head">
+              <h3>Existing Schedules</h3>
+            </div>
+
+            <div class="card-body">
+              <div id="schedulesTable"></div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- READERS -->
+        <section id="readers" class="section">
+
+          <div class="section-heading">
+            <div>
+              <h2>Reader Management</h2>
+              <p>View basic reader information available to the administrator.</p>
+            </div>
+          </div>
+
+          <div class="card">
+
+            <div class="card-head">
+              <h3>Readers</h3>
+            </div>
+
+            <div class="card-body">
+
+              <div class="toolbar">
+                <input
+                  id="readerSearch"
+                  class="input"
+                  type="search"
+                  placeholder="Search reader name or bio…"
+                />
+              </div>
+
+              <div id="readersTable"></div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- CONVERSATIONS -->
+        <section id="discussions" class="section">
+
+          <div class="section-heading">
+            <div>
+              <h2>Author ↔ Moderator Conversations</h2>
+              <p>Admins can view all conversations, send messages, edit their own messages and delete their own admin messages.</p>
+            </div>
+          </div>
+
+          <div class="card">
+
+            <div class="conversation-layout">
+
+              <div id="conversationList" class="conversation-list">
+                <div class="empty">Loading conversations…</div>
+              </div>
+
+              <div class="chat-panel">
+
+                <div id="chatHeader" class="chat-header">
+                  <h3>Select a conversation</h3>
+                  <p>Choose a conversation from the left.</p>
+                </div>
+
+                <div id="messages" class="messages">
+                  <div class="empty">No conversation selected.</div>
+                </div>
+
+                <div class="chat-composer">
+                  <div class="chat-compose-row">
+                    <input
+                      id="messageInput"
+                      class="input"
+                      type="text"
+                      placeholder="Write a message…"
+                      disabled
+                    />
+                    <button
+                      id="sendMessageBtn"
+                      class="btn btn-primary"
+                      onclick="sendMessage()"
+                      disabled
+                    >
+                      Send
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="discussion-monitor">
+
+            <div class="card">
+
+              <div class="card-head">
+                <div>
+                  <h3>Public Book Discussions</h3>
+                  <div class="small muted">
+                    Existing discussion records associated with books.
+                  </div>
                 </div>
               </div>
 
-              <span class="status pending">PENDING</span>
+              <div class="card-body">
+                <div id="publicDiscussionsTable"></div>
+              </div>
+
             </div>
 
-            <div class="description">
-              ${escapeHTML(book.description || "No description supplied.")}
+          </div>
+
+        </section>
+
+
+        <!-- NOTIFICATIONS -->
+        <section id="notifications" class="section">
+
+          <div class="section-heading">
+            <div>
+              <h2>Notifications</h2>
+              <p>Review important administrator notifications and mark them as read.</p>
             </div>
 
-            ${
-              missing.length
-              ? `<div class="meta" style="margin-top:9px;color:#7b3024">
-                   Missing: ${escapeHTML(missing.join(", "))}
-                 </div>`
-              : ""
-            }
+            <button class="btn btn-light" onclick="markAllNotificationsRead()">
+              Mark All Read
+            </button>
+          </div>
 
-            <div class="actions">
-              <button class="btn green"
-                onclick="updateBook('${book.id}','approved')">
-                Approve
-              </button>
+          <div class="card">
 
-              <button class="btn danger"
-                onclick="updateBook('${book.id}','rejected')">
-                Reject
-              </button>
+            <div class="card-head">
+              <h3>Notifications</h3>
+            </div>
 
-              ${
-                book.cover_url
-                ? `<a class="btn"
-                    href="${escapeHTML(book.cover_url)}"
-                    target="_blank">
-                    View Cover
-                   </a>`
-                : ""
-              }
+            <div class="card-body">
+              <div id="notificationsTable"></div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- MODERATORS -->
+        <section id="moderators" class="section">
+
+          <div class="section-heading">
+            <div>
+              <h2>Moderator Management</h2>
+              <p>View moderator accounts and activate or deactivate existing moderators.</p>
             </div>
           </div>
 
-        </div>
+          <div class="card">
+
+            <div class="card-head">
+              <h3>Moderators</h3>
+            </div>
+
+            <div class="card-body">
+              <div id="moderatorsTable"></div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- SETTINGS -->
+        <section id="settings" class="section">
+
+          <div class="section-heading">
+            <div>
+              <h2>Settings</h2>
+              <p>Administrative system information. No unsupported settings are changed here.</p>
+            </div>
+          </div>
+
+          <div class="card">
+
+            <div class="card-body">
+
+              <div class="settings-grid">
+
+                <div class="setting-box">
+                  <h4>Authentication</h4>
+                  <p>
+                    Supabase authentication is active with persistent sessions and automatic token refresh.
+                    Refreshing this page does not intentionally sign the administrator out.
+                  </p>
+                </div>
+
+                <div class="setting-box">
+                  <h4>Administrator Access</h4>
+                  <p>
+                    This dashboard requires the signed-in profile to have the
+                    <strong>admin</strong> role.
+                  </p>
+                </div>
+
+                <div class="setting-box">
+                  <h4>Messaging</h4>
+                  <p>
+                    Admin conversation permissions remain limited to editing and deleting the administrator's own messages.
+                  </p>
+                </div>
+
+                <div class="setting-box">
+                  <h4>Data Preservation</h4>
+                  <p>
+                    This dashboard does not delete or recreate existing authors, books, moderators, conversations or users.
+                  </p>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
       </div>
-    `;
-  }).join("");
-}
+    </main>
+  </div>
 
-async function updateBook(id,status){
+  <div id="toast" class="toast"></div>
 
-  const {error} = await supabaseClient
-    .from("books")
-    .update({
-      status,
-      reviewed_at:new Date().toISOString(),
-      reviewed_by:currentUser.id
-    })
-    .eq("id",id);
+  <script>
+    const SUPABASE_URL = "https://bublmnfhyyrefcdkloak.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY";
 
-  if(error){
-    toast("Book update failed.");
-    return;
-  }
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY,
+      {
+        auth:{
+          persistSession:true,
+          autoRefreshToken:true,
+          detectSessionInUrl:true
+        }
+      }
+    );
 
-  toast(`Book ${status}.`);
-  await loadBooks();
-  await loadStats();
-}
+    let currentUser = null;
+    let currentProfile = null;
 
-async function loadFeatured(){
+    let authorsCache = [];
+    let booksCache = [];
+    let featuredCache = [];
+    let trailersCache = [];
+    let schedulesCache = [];
+    let readersCache = [];
+    let moderatorsCache = [];
+    let conversationsCache = [];
+    let notificationsCache = [];
+    let discussionsCache = [];
 
-  const {data,error} = await supabaseClient
-    .from("homepage_featured_books")
-    .select("id,book_id,created_at")
-    .order("created_at",{ascending:false});
+    let activeConversationId = null;
+    let messageChannel = null;
 
-  if(error){
-    empty("featuredList","Unable to load featured books.");
-    return;
-  }
+    const $ = id => document.getElementById(id);
 
-  $("featuredCount").textContent = data?.length || 0;
+    function escapeHTML(value){
+      return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+    }
 
-  if(!data?.length){
-    empty("featuredList","No books are currently Featured.");
-    return;
-  }
+    function safeURL(value){
+      try{
+        const url = new URL(String(value || ""));
+        if(url.protocol === "http:" || url.protocol === "https:"){
+          return url.href;
+        }
+      }catch(error){}
+      return "";
+    }
 
-  const bookIds = data.map(x => x.book_id);
+    function formatDate(value){
+      if(!value) return "—";
 
-  const {data:books} = await supabaseClient
-    .from("books")
-    .select("id,title,genre_topic,cover_url,author_id")
-    .in("id",bookIds);
+      const date = new Date(value);
 
-  $("featuredList").innerHTML = data.map(feature => {
-
-    const book = (books || []).find(x => x.id === feature.book_id);
-
-    if(!book) return "";
-
-    return `
-      <div class="item">
-        <div class="book-row">
-          ${
-            book.cover_url
-            ? `<img class="cover" src="${escapeHTML(book.cover_url)}" alt="">`
-            : `<div class="cover"></div>`
-          }
-
-          <div style="flex:1">
-            <div class="item-title">${escapeHTML(book.title)}</div>
-            <div class="meta">${escapeHTML(book.genre_topic || "")}</div>
-
-            <div class="actions">
-              <span class="status approved">FEATURED</span>
-              <button class="btn danger"
-                onclick="removeFeatured('${feature.id}')">
-                Remove from Featured
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-async function removeFeatured(id){
-
-  const {error} = await supabaseClient
-    .from("homepage_featured_books")
-    .delete()
-    .eq("id",id);
-
-  if(error){
-    toast("Could not remove Featured book.");
-    return;
-  }
-
-  toast("Removed from Featured.");
-  await loadFeatured();
-  await loadStats();
-}
-
-async function loadTrailers(){
-
-  const {data,error} = await supabaseClient
-    .from("book_trailers")
-    .select("id,book_id,title,description,trailer_url,show_on_homepage")
-    .order("id",{ascending:false});
-
-  if(error){
-    empty("trailersList","Unable to load trailer records.");
-    return;
-  }
-
-  if(!data?.length){
-    empty("trailersList","No book trailers have been submitted.");
-    return;
-  }
-
-  $("trailersList").innerHTML = data.map(trailer => `
-    <div class="item">
-
-      <div class="item-top">
-        <div>
-          <div class="item-title">
-            ${escapeHTML(trailer.title || "Book Trailer")}
-          </div>
-          <div class="meta">
-            ${escapeHTML(trailer.description || "")}
-          </div>
-        </div>
-
-        <span class="status ${trailer.show_on_homepage ? "on":"off"}">
-          ${trailer.show_on_homepage ? "SHOWING":"HIDDEN"}
-        </span>
-      </div>
-
-      ${
-        trailer.trailer_url
-        ? `
-          <video controls
-            style="width:100%;max-height:300px;margin-top:12px;border-radius:9px;background:#2f211a"
-            src="${escapeHTML(trailer.trailer_url)}">
-          </video>
-        `
-        : ""
+      if(Number.isNaN(date.getTime())){
+        return String(value);
       }
 
-      <div class="actions">
-        <button class="btn ${trailer.show_on_homepage ? "danger":"green"}"
-          onclick="toggleTrailer('${trailer.id}',${!trailer.show_on_homepage})">
-          ${trailer.show_on_homepage ? "Turn Show Trailer OFF":"Turn Show Trailer ON"}
-        </button>
-      </div>
+      return date.toLocaleString([],{
+        dateStyle:"medium",
+        timeStyle:"short"
+      });
+    }
 
-    </div>
-  `).join("");
-}
+    function formatDateOnly(value){
+      if(!value) return "—";
 
-async function toggleTrailer(id,value){
+      const date = new Date(value + "T00:00:00");
 
-  const {error} = await supabaseClient
-    .from("book_trailers")
-    .update({show_on_homepage:value})
-    .eq("id",id);
+      if(Number.isNaN(date.getTime())){
+        return String(value);
+      }
 
-  if(error){
-    toast("Trailer visibility update failed.");
-    return;
-  }
+      return date.toLocaleDateString([],{
+        dateStyle:"medium"
+      });
+    }
 
-  toast(value ? "Trailer is now ON." : "Trailer is now OFF.");
-  await loadTrailers();
-}
+    function statusClass(status){
+      const value = String(status || "").toLowerCase();
 
-async function loadSchedules(){
+      if(value === "approved" || value === "active"){
+        return "approved";
+      }
 
-  const {data,error} = await supabaseClient
-    .from("feature_schedules")
-    .select("id,book_id,feature_date,feature_time,status,notes")
-    .order("feature_date",{ascending:true})
-    .limit(30);
+      if(value === "pending"){
+        return "pending";
+      }
 
-  if(error){
-    empty("scheduleList","Unable to load schedules.");
-    return;
-  }
+      if(value === "rejected" || value === "inactive"){
+        return "rejected";
+      }
 
-  $("scheduleCount").textContent = data?.length || 0;
+      return "neutral";
+    }
 
-  if(!data?.length){
-    empty("scheduleList","No feature schedules found.");
-    return;
-  }
+    function statusBadge(status){
+      return `<span class="status ${statusClass(status)}">${escapeHTML(status || "unknown")}</span>`;
+    }
 
-  const bookIds = data.map(x => x.book_id);
+    function showToast(message,isError=false){
+      const toast = $("toast");
 
-  const {data:books} = await supabaseClient
-    .from("books")
-    .select("id,title")
-    .in("id",bookIds);
+      toast.textContent = message;
+      toast.className = "toast show" + (isError ? " error-toast" : "");
 
-  $("scheduleList").innerHTML = data.map(schedule => {
+      clearTimeout(window.__toastTimer);
 
-    const book = (books || []).find(x => x.id === schedule.book_id);
+      window.__toastTimer = setTimeout(()=>{
+        toast.className = "toast";
+      },3500);
+    }
 
-    return `
-      <div class="item">
-        <div class="item-title">
-          ${escapeHTML(book?.title || "Book")}
+    function renderError(containerId,message){
+      $(containerId).innerHTML = `
+        <div class="error">
+          ${escapeHTML(message)}
         </div>
+      `;
+    }
 
-        <div class="meta">
-          ${escapeHTML(schedule.feature_date || "")}
-          ${escapeHTML(schedule.feature_time || "")}
+    function renderEmpty(containerId,message="Nothing to display."){
+      $(containerId).innerHTML = `
+        <div class="empty">
+          ${escapeHTML(message)}
         </div>
+      `;
+    }
 
-        <div class="actions">
-          <span class="status ${schedule.status === "scheduled" ? "approved":"off"}">
-            ${escapeHTML(schedule.status || "unknown")}
-          </span>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
+    async function requireAdmin(){
 
-async function loadReaders(){
+      const {
+        data:{session},
+        error
+      } = await supabaseClient.auth.getSession();
 
-  const {data,error} = await supabaseClient
-    .from("readers")
-    .select("id,profile_id,created_at")
-    .order("created_at",{ascending:false})
-    .limit(30);
+      if(error || !session){
+        window.location.href = "auth.html?mode=signin";
+        return false;
+      }
 
-  if(error){
-    empty("readerList","Unable to load readers.");
-    return;
-  }
+      currentUser = session.user;
 
-  $("readerCount").textContent = data?.length || 0;
+      $("adminEmail").textContent = currentUser.email || "";
 
-  if(!data?.length){
-    empty("readerList","No reader accounts found.");
-    return;
-  }
+      const {
+        data:profile,
+        error:profileError
+      } = await supabaseClient
+        .from("profiles")
+        .select("id,display_name,role")
+        .eq("id",currentUser.id)
+        .maybeSingle();
 
-  const ids = data.map(x => x.profile_id);
+      if(
+        profileError ||
+        !profile ||
+        profile.role !== "admin"
+      ){
+        document.body.innerHTML = `
+          <div style="
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:30px;
+            background:#f7f1e7;
+            color:#3f2a20;
+            font-family:Arial,sans-serif;
+          ">
+            <div style="
+              max-width:480px;
+              width:100%;
+              background:#fff;
+              border:1px solid #e7dccc;
+              border-radius:18px;
+              padding:30px;
+              text-align:center;
+            ">
+              <h2>Admin access required</h2>
+              <p>You do not have permission to access this dashboard.</p>
+              <button
+                onclick="window.location.href='auth.html?mode=signin'"
+                style="
+                  border:0;
+                  background:#3f2a20;
+                  color:#fff;
+                  padding:11px 16px;
+                  border-radius:10px;
+                  cursor:pointer;
+                "
+              >
+                Return to Sign In
+              </button>
+            </div>
+          </div>
+        `;
 
-  const {data:profiles} = await supabaseClient
-    .from("profiles")
-    .select("id,display_name,role")
-    .in("id",ids);
+        return false;
+      }
 
-  $("readerList").innerHTML = data.map(reader => {
+      currentProfile = profile;
 
-    const profile = (profiles || []).find(x => x.id === reader.profile_id);
+      $("loading").classList.add("hidden");
+      $("app").classList.remove("hidden");
 
-    return `
-      <div class="item">
-        <div class="item-title">
-          ${escapeHTML(profile?.display_name || "Reader")}
-        </div>
+      return true;
+    }
 
-        <div class="meta">
-          ${escapeHTML(profile?.role || "reader")}
-          · Joined ${reader.created_at
-            ? new Date(reader.created_at).toLocaleDateString()
-            : ""}
-        </div>
-      </div>
-    `;
-  }).join("");
-}
+    async function signOut(){
+      await supabaseClient.auth.signOut();
+      window.location.href = "auth.html?mode=signin";
+    }
 
-async function loadDiscussions(){
+    supabaseClient.auth.onAuthStateChange((event)=>{
+      if(event === "SIGNED_OUT"){
+        window.location.href = "auth.html?mode=signin";
+      }
+    });
 
-  const {data,error} = await supabaseClient
-    .from("discussions")
-    .select("id,book_id,title,created_at")
-    .order("created_at",{ascending:false})
-    .limit(20);
+    /* NAVIGATION */
 
-  if(error){
-    empty("discussionList","Unable to load discussions.");
-    return;
-  }
+    function setupNavigation(){
 
-  if(!data?.length){
-    empty("discussionList","No discussions found.");
-    return;
-  }
+      document.querySelectorAll(".nav button").forEach(button=>{
 
-  $("discussionList").innerHTML = data.map(discussion => `
-    <div class="item">
-      <div class="item-title">
-        ${escapeHTML(discussion.title || "Book Discussion")}
-      </div>
+        button.addEventListener("click",()=>{
 
-      <div class="meta">
-        Created ${
-          discussion.created_at
-          ? new Date(discussion.created_at).toLocaleDateString()
-          : ""
+          const target = $(button.dataset.target);
+
+          if(target){
+            target.scrollIntoView({
+              behavior:"smooth",
+              block:"start"
+            });
+          }
+
+          document.querySelectorAll(".nav button")
+            .forEach(item=>item.classList.remove("active"));
+
+          button.classList.add("active");
+
+          $("sidebar").classList.remove("open");
+        });
+
+      });
+
+      $("mobileMenuBtn").addEventListener("click",()=>{
+        $("sidebar").classList.toggle("open");
+      });
+
+      $("signOutBtn").addEventListener("click",signOut);
+
+      $("authorSearch").addEventListener("input",renderAuthors);
+      $("authorStatusFilter").addEventListener("change",renderAuthors);
+
+      $("bookSearch").addEventListener("input",renderBooks);
+      $("bookStatusFilter").addEventListener("change",renderBooks);
+
+      $("readerSearch").addEventListener("input",renderReaders);
+
+      $("messageInput").addEventListener("keydown",(event)=>{
+        if(event.key === "Enter"){
+          event.preventDefault();
+          sendMessage();
         }
-      </div>
-    </div>
-  `).join("");
-}
+      });
+    }
 
-async function loadNotifications(){
+    /* OVERVIEW */
 
-  const {data,error} = await supabaseClient
-    .from("notifications")
-    .select("id,type,title,message,is_read,created_at")
-    .eq("profile_id",currentUser.id)
-    .order("created_at",{ascending:false})
-    .limit(20);
+    async function getCount(table,filters=[]){
 
-  if(error){
-    empty("notificationList","Unable to load notifications.");
-    return;
-  }
+      let query = supabaseClient
+        .from(table)
+        .select("id",{count:"exact",head:true});
 
-  $("notificationCount").textContent =
-    (data || []).filter(x => !x.is_read).length;
+      for(const filter of filters){
+        query = filter(query);
+      }
 
-  if(!data?.length){
-    empty("notificationList","No notifications.");
-    return;
-  }
+      const {count,error} = await query;
 
-  $("notificationList").innerHTML = data.map(notification => `
-    <div class="item">
-      <div class="item-top">
-        <div>
-          <div class="item-title">
-            ${escapeHTML(notification.title || notification.type || "Notification")}
-          </div>
-          <div class="description">
-            ${escapeHTML(notification.message || "")}
-          </div>
-        </div>
+      if(error){
+        console.error(table,error);
+        return 0;
+      }
 
-        ${
-          !notification.is_read
-          ? `<span class="status pending">NEW</span>`
-          : ""
+      return count || 0;
+    }
+
+    async function loadOverview(){
+
+      const [
+        authorsTotal,
+        authorsPending,
+        authorsApproved,
+        booksTotal,
+        booksPending,
+        booksApproved,
+        moderatorsActive,
+        readersTotal,
+        featuredTotal,
+        schedulesTotal,
+        notificationsUnread,
+        messagesUnread
+      ] = await Promise.all([
+
+        getCount("authors"),
+
+        getCount("authors",[
+          q => q.eq("status","pending")
+        ]),
+
+        getCount("authors",[
+          q => q.eq("status","approved")
+        ]),
+
+        getCount("books"),
+
+        getCount("books",[
+          q => q.eq("status","pending")
+        ]),
+
+        getCount("books",[
+          q => q.eq("status","approved")
+        ]),
+
+        getCount("moderators",[
+          q => q.eq("active",true)
+        ]),
+
+        getCount("readers"),
+
+        getCount("homepage_featured_books"),
+
+        getCount("feature_schedules"),
+
+        getCount("notifications",[
+          q => q.eq("profile_id",currentUser.id),
+          q => q.eq("is_read",false)
+        ]),
+
+        getCount("messages",[
+          q => q.neq("sender_profile_id",currentUser.id),
+          q => q.is("read_at",null)
+        ])
+
+      ]);
+
+      $("statAuthorsTotal").textContent = authorsTotal;
+      $("statAuthorsPending").textContent = authorsPending;
+      $("statAuthorsApproved").textContent = authorsApproved;
+
+      $("statBooksTotal").textContent = booksTotal;
+      $("statBooksPending").textContent = booksPending;
+      $("statBooksApproved").textContent = booksApproved;
+
+      $("statModerators").textContent = moderatorsActive;
+      $("statReaders").textContent = readersTotal;
+      $("statFeatured").textContent = featuredTotal;
+      $("statSchedules").textContent = schedulesTotal;
+      $("statNotifications").textContent = notificationsUnread;
+      $("statMessages").textContent = messagesUnread;
+    }
+
+    async function loadRecentActivity(){
+
+      const [
+        authorResult,
+        bookResult,
+        conversationResult
+      ] = await Promise.all([
+
+        supabaseClient
+          .from("authors")
+          .select("id,author_name,status,submitted_at")
+          .order("submitted_at",{ascending:false})
+          .limit(5),
+
+        supabaseClient
+          .from("books")
+          .select("id,title,status,submitted_at")
+          .order("submitted_at",{ascending:false})
+          .limit(5),
+
+        supabaseClient
+          .from("conversations")
+          .select("id,author_id,moderator_id,book_id,updated_at")
+          .order("updated_at",{ascending:false})
+          .limit(5)
+
+      ]);
+
+      let html = "";
+
+      if(!authorResult.error){
+        for(const author of authorResult.data || []){
+          html += `
+            <div style="
+              display:flex;
+              justify-content:space-between;
+              gap:15px;
+              padding:11px 0;
+              border-bottom:1px solid var(--border);
+            ">
+              <div>
+                <div class="title-cell">Author: ${escapeHTML(author.author_name)}</div>
+                <div class="sub-cell">Submitted ${escapeHTML(formatDate(author.submitted_at))}</div>
+              </div>
+              <div>${statusBadge(author.status)}</div>
+            </div>
+          `;
         }
-      </div>
-    </div>
-  `).join("");
-}
+      }
 
-async function loadModerators(){
+      if(!bookResult.error){
+        for(const book of bookResult.data || []){
+          html += `
+            <div style="
+              display:flex;
+              justify-content:space-between;
+              gap:15px;
+              padding:11px 0;
+              border-bottom:1px solid var(--border);
+            ">
+              <div>
+                <div class="title-cell">Book: ${escapeHTML(book.title)}</div>
+                <div class="sub-cell">Submitted ${escapeHTML(formatDate(book.submitted_at))}</div>
+              </div>
+              <div>${statusBadge(book.status)}</div>
+            </div>
+          `;
+        }
+      }
 
-  const {data,error} = await supabaseClient
-    .from("moderators")
-    .select("id,profile_id,display_name,active,created_at")
-    .order("created_at",{ascending:false});
+      if(!conversationResult.error){
+        for(const conversation of conversationResult.data || []){
+          html += `
+            <div style="
+              display:flex;
+              justify-content:space-between;
+              gap:15px;
+              padding:11px 0;
+              border-bottom:1px solid var(--border);
+            ">
+              <div>
+                <div class="title-cell">Conversation activity</div>
+                <div class="sub-cell">
+                  Updated ${escapeHTML(formatDate(conversation.updated_at))}
+                </div>
+              </div>
+              <div class="status neutral">Conversation</div>
+            </div>
+          `;
+        }
+      }
 
-  if(error){
-    empty("moderatorList","Unable to load moderators.");
-    return;
-  }
+      if(!html){
+        html = `<div class="empty">No recent activity found.</div>`;
+      }
 
-  if(!data?.length){
-    empty("moderatorList","No moderators found.");
-    return;
-  }
+      $("recentActivity").innerHTML = html;
+    }
 
-  $("moderatorList").innerHTML = data.map(mod => `
-    <div class="item">
-      <div class="item-top">
-        <div>
-          <div class="item-title">
-            ${escapeHTML(mod.display_name || "Moderator")}
-          </div>
-          <div class="meta">
-            Moderator account
-          </div>
+    /* AUTHORS */
+
+    async function loadAuthors(){
+
+      const {data,error} = await supabaseClient
+        .from("authors")
+        .select(`
+          id,
+          profile_id,
+          author_name,
+          bio,
+          website_url,
+          status,
+          submitted_at,
+          reviewed_at,
+          reviewed_by,
+          created_at,
+          updated_at
+        `)
+        .order("submitted_at",{ascending:false});
+
+      if(error){
+        console.error(error);
+        renderError("authorsTable",error.message);
+        return;
+      }
+
+      authorsCache = data || [];
+
+      const ids = authorsCache.map(author=>author.id);
+
+      if(ids.length){
+
+        const {
+          data:bookRows,
+          error:bookError
+        } = await supabaseClient
+          .from("books")
+          .select("id,author_id")
+          .in("author_id",ids);
+
+        if(!bookError){
+          const counts = {};
+
+          for(const row of bookRows || []){
+            counts[row.author_id] = (counts[row.author_id] || 0) + 1;
+          }
+
+          authorsCache = authorsCache.map(author=>({
+            ...author,
+            bookCount:counts[author.id] || 0
+          }));
+        }
+
+      }
+
+      renderAuthors();
+    }
+
+    function renderAuthors(){
+
+      const search = $("authorSearch").value.trim().toLowerCase();
+      const status = $("authorStatusFilter").value;
+
+      const rows = authorsCache.filter(author=>{
+
+        const matchesSearch =
+          !search ||
+          String(author.author_name || "").toLowerCase().includes(search) ||
+          String(author.bio || "").toLowerCase().includes(search);
+
+        const matchesStatus =
+          status === "all" ||
+          author.status === status;
+
+        return matchesSearch && matchesStatus;
+      });
+
+      if(!rows.length){
+        renderEmpty("authorsTable","No authors match the selected filters.");
+        return;
+      }
+
+      $("authorsTable").innerHTML = `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Author</th>
+                <th>Status</th>
+                <th>Books</th>
+                <th>Submitted</th>
+                <th>Website</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              ${rows.map(author=>{
+
+                const website = safeURL(author.website_url);
+
+                return `
+                  <tr>
+
+                    <td>
+                      <div class="title-cell">
+                        ${escapeHTML(author.author_name)}
+                      </div>
+
+                      <div class="sub-cell">
+                        ${escapeHTML(
+                          String(author.bio || "")
+                            .slice(0,140)
+                        )}
+                        ${String(author.bio || "").length > 140 ? "…" : ""}
+                      </div>
+                    </td>
+
+                    <td>
+                      ${statusBadge(author.status)}
+                    </td>
+
+                    <td>
+                      ${escapeHTML(author.bookCount || 0)}
+                    </td>
+
+                    <td>
+                      ${escapeHTML(formatDate(author.submitted_at))}
+                    </td>
+
+                    <td>
+                      ${
+                        website
+                        ? `<a
+                            href="${escapeHTML(website)}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="btn btn-light"
+                          >Visit</a>`
+                        : `<span class="muted">—</span>`
+                      }
+                    </td>
+
+                    <td>
+
+                      <div class="button-row">
+
+                        <a
+                          href="author-profile.html?id=${encodeURIComponent(author.id)}"
+                          class="btn btn-light"
+                          target="_blank"
+                        >
+                          Profile
+                        </a>
+
+                        ${
+                          author.status !== "approved"
+                          ? `
+                            <button
+                              class="btn btn-success"
+                              onclick="updateAuthorStatus('${author.id}','approved')"
+                            >
+                              Approve
+                            </button>
+                          `
+                          : ""
+                        }
+
+                        ${
+                          author.status !== "rejected"
+                          ? `
+                            <button
+                              class="btn btn-danger"
+                              onclick="updateAuthorStatus('${author.id}','rejected')"
+                            >
+                              Reject
+                            </button>
+                          `
+                          : ""
+                        }
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+                `;
+
+              }).join("")}
+
+            </tbody>
+          </table>
         </div>
+      `;
+    }
 
-        <span class="status ${mod.active ? "approved":"off"}">
-          ${mod.active ? "ACTIVE":"INACTIVE"}
-        </span>
-      </div>
+    async function updateAuthorStatus(authorId,status){
 
-      <div class="actions">
-        <button class="btn ${mod.active ? "danger":"green"}"
-          onclick="toggleModerator('${mod.id}',${!mod.active})">
-          ${mod.active ? "Deactivate":"Activate"}
-        </button>
-      </div>
-    </div>
-  `).join("");
-}
+      const {error} = await supabaseClient
+        .from("authors")
+        .update({
+          status,
+          reviewed_at:new Date().toISOString(),
+          reviewed_by:currentUser.id
+        })
+        .eq("id",authorId);
 
-async function toggleModerator(id,value){
+      if(error){
+        showToast(error.message,true);
+        return;
+      }
 
-  const {error} = await supabaseClient
-    .from("moderators")
-    .update({active:value})
-    .eq("id",id);
+      showToast(`Author marked ${status}.`);
 
-  if(error){
-    toast("Moderator update failed.");
-    return;
-  }
+      await Promise.all([
+        loadAuthors(),
+        loadOverview(),
+        loadRecentActivity()
+      ]);
+    }
 
-  toast(value ? "Moderator activated." : "Moderator deactivated.");
-  await loadModerators();
-}
+    /* BOOKS */
 
-async function loadEverything(){
+    async function loadBooks(){
 
-  await Promise.all([
-    loadStats(),
-    loadAuthors(),
-    loadBooks(),
-    loadFeatured(),
-    loadTrailers(),
-    loadSchedules(),
-    loadReaders(),
-    loadDiscussions(),
-    loadNotifications(),
-    loadModerators()
-  ]);
-}
+      const {data,error} = await supabaseClient
+        .from("books")
+        .select(`
+          id,
+          author_id,
+          title,
+          description,
+          genre_topic,
+          who_its_for,
+          availability,
+          book_link,
+          cover_url,
+          status,
+          submitted_at,
+          reviewed_at,
+          reviewed_by,
+          created_at,
+          updated_at,
+          submission_complete,
+          missing_fields
+        `)
+        .order("submitted_at",{ascending:false});
 
-async function start(){
+      if(error){
+        console.error(error);
+        renderError("booksTable",error.message);
+        return;
+      }
 
-  const allowed = await requireAdmin();
+      booksCache = data || [];
 
-  if(!allowed) return;
+      const authorIds = [
+        ...new Set(
+          booksCache
+            .map(book=>book.author_id)
+            .filter(Boolean)
+        )
+      ];
 
-  await loadEverything();
-}
+      const authorMap = {};
 
-start();
-</script>
+      if(authorIds.length){
+
+        const {
+          data:authors,
+          error:authorError
+        } = await supabaseClient
+          .from("authors")
+          .select("id,author_name")
+          .in("id",authorIds);
+
+        if(!authorError){
+          for(const author of authors || []){
+            authorMap[author.id] = author.author_name;
+          }
+        }
+      }
+
+      booksCache = booksCache.map(book=>({
+        ...book,
+        authorName:authorMap[book.author_id] || "Unknown author"
+      }));
+
+      renderBooks();
+    }
+
+    function renderBooks(){
+
+      const search = $("bookSearch").value.trim().toLowerCase();
+      const status = $("bookStatusFilter").value;
+
+      const rows = booksCache.filter(book=>{
+
+        const searchable = [
+          book.title,
+          book.description,
+          book.genre_topic,
+          book.who_its_for,
+          book.authorName
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+        const matchesSearch =
+          !search ||
+          searchable.includes(search);
+
+        const matchesStatus =
+          status === "all" ||
+          book.status === status;
+
+        return matchesSearch && matchesStatus;
+      });
+
+      if(!rows.length){
+        renderEmpty("booksTable","No books match the selected filters.");
+        return;
+      }
+
+      $("booksTable").innerHTML = `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Book</th>
+                <th>Author</th>
+                <th>Status</th>
+                <th>Genre</th>
+                <th>Submitted</th>
+                <th>Availability</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              ${rows.map(book=>{
+
+                const bookURL = safeURL(book.book_link);
+                const coverURL = safeURL(book.cover_url);
+
+                return `
+                  <tr>
+
+                    <td>
+                      <div class="title-cell">
+                        ${escapeHTML(book.title)}
+                      </div>
+
+                      <div class="sub-cell">
+                        ${escapeHTML(
+                          String(book.description || "")
+                            .slice(0,130)
+                        )}
+                        ${String(book.description || "").length > 130 ? "…" : ""}
+                      </div>
+                    </td>
+
+                    <td>
+                      ${escapeHTML(book.authorName)}
+                    </td>
+
+                    <td>
+                      ${statusBadge(book.status)}
+
+                      ${
+                        book.submission_complete === false
+                        ? `
+                          <div class="small muted" style="margin-top:5px;">
+                            Submission incomplete
+                          </div>
+                        `
+                        : ""
+                      }
+                    </td>
+
+                    <td>
+                      ${escapeHTML(book.genre_topic || "—")}
+                    </td>
+
+                    <td>
+                      ${escapeHTML(formatDate(book.submitted_at))}
+                    </td>
+
+                    <td>
+                      ${escapeHTML(book.availability || "—")}
+                    </td>
+
+                    <td>
+
+                      <div class="button-row">
+
+                        ${
+                          bookURL
+                          ? `
+                            <a
+                              class="btn btn-light"
+                              href="${escapeHTML(bookURL)}"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Book Link
+                            </a>
+                          `
+                          : ""
+                        }
+
+                        ${
+                          coverURL
+                          ? `
+                            <a
+                              class="btn btn-light"
+                              href="${escapeHTML(coverURL)}"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Cover
+                            </a>
+                          `
+                          : ""
+                        }
+
+                        ${
+                          book.status !== "approved"
+                          ? `
+                            <button
+                              class="btn btn-success"
+                              onclick="updateBookStatus('${book.id}','approved')"
+                            >
+                              Approve
+                            </button>
+                          `
+                          : ""
+                        }
+
+                        ${
+                          book.status !== "rejected"
+                          ? `
+                            <button
+                              class="btn btn-danger"
+                              onclick="updateBookStatus('${book.id}','rejected')"
+                            >
+                              Reject
+                            </button>
+                          `
+                          : ""
+                        }
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+                `;
+
+              }).join("")}
+
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    async function updateBookStatus(bookId,status){
+
+      const {error} = await supabaseClient
+        .from("books")
+        .update({
+          status,
+          reviewed_at:new Date().toISOString(),
+          reviewed_by:currentUser.id
+        })
+        .eq("id",bookId);
+
+      if(error){
+        showToast(error.message,true);
+        return;
+      }
+
+      showToast(`Book marked ${status}.`);
+
+      await Promise.all([
+        loadBooks(),
+        loadFeatured(),
+        loadScheduleOptions(),
+        loadOverview(),
+        loadRecentActivity()
+      ]);
+    }
+
+    /* FEATURED */
+
+    async function loadFeatured(){
+
+      const {data,error} = await supabaseClient
+        .from("homepage_featured_books")
+        .select(`
+          id,
+          book_id,
+          selected_at,
+          selected_by,
+          created_at
+        `)
+        .order("selected_at",{ascending:false});
+
+      if(error){
+        console.error(error);
+        renderError("featuredTable",error.message);
+        return;
+      }
+
+      featuredCache = data || [];
+
+      const bookIds = featuredCache
+        .map(row=>row.book_id)
+        .filter(Boolean);
+
+      const bookMap = {};
+
+      if(bookIds.length){
+
+        const {
+          data:books,
+          error:bookError
+        } = await supabaseClient
+          .from("books")
+          .select("id,title,author_id,status")
+          .in("id",bookIds);
+
+        if(!bookError){
+          for(const book of books || []){
+            bookMap[book.id] = book;
+          }
+        }
+      }
+
+      featuredCache = featuredCache.map(row=>({
+        ...row,
+        book:bookMap[row.book_id] || null
+      }));
+
+      renderFeatured();
+      populateFeaturedSelect();
+    }
+
+    function populateFeaturedSelect(){
+
+      const select = $("featuredBookSelect");
+
+      const featuredIds = new Set(
+        featuredCache.map(row=>row.book_id)
+      );
+
+      const approvedBooks = booksCache.filter(book=>
+        book.status === "approved" &&
+        !featuredIds.has(book.id)
+      );
+
+      select.innerHTML = `
+        <option value="">Select an approved book…</option>
+
+        ${approvedBooks.map(book=>`
+          <option value="${escapeHTML(book.id)}">
+            ${escapeHTML(book.title)} — ${escapeHTML(book.authorName || "")}
+          </option>
+        `).join("")}
+      `;
+    }
+
+    function renderFeatured(){
+
+      if(!featuredCache.length){
+        renderEmpty("featuredTable","No featured books have been selected.");
+        return;
+      }
+
+      $("featuredTable").innerHTML = `
+        <div class="table-wrap">
+          <table>
+
+            <thead>
+              <tr>
+                <th>Book</th>
+                <th>Author</th>
+                <th>Status</th>
+                <th>Selected</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              ${featuredCache.map(row=>`
+                <tr>
+
+                  <td>
+                    <div class="title-cell">
+                      ${escapeHTML(row.book?.title || "Book unavailable")}
+                    </div>
+                  </td>
+
+                  <td>
+                    ${escapeHTML(
+                      authorsCache.find(
+                        author=>author.id === row.book?.author_id
+                      )?.author_name || "—"
+                    )}
+                  </td>
+
+                  <td>
+                    ${statusBadge(row.book?.status || "unknown")}
+                  </td>
+
+                  <td>
+                    ${escapeHTML(formatDate(row.selected_at))}
+                  </td>
+
+                  <td>
+                    <button
+                      class="btn btn-danger"
+                      onclick="removeFeatured('${row.id}')"
+                    >
+                      Remove
+                    </button>
+                  </td>
+
+                </tr>
+              `).join("")}
+
+            </tbody>
+
+          </table>
+        </div>
+      `;
+    }
+
+    async function addFeatured(){
+
+      const bookId = $("featuredBookSelect").value;
+
+      if(!bookId){
+        showToast("Select an approved book first.",true);
+        return;
+      }
+
+      const duplicate = featuredCache.some(
+        row=>row.book_id === bookId
+      );
+
+      if(duplicate){
+        showToast("That book is already featured.",true);
+        return;
+      }
+
+      const {error} = await supabaseClient
+        .from("homepage_featured_books")
+        .insert({
+          book_id:bookId,
+          selected_by:currentUser.id,
+          selected_at:new Date().toISOString()
+        });
+
+      if(error){
+        showToast(error.message,true);
+        return;
+      }
+
+      showToast("Book added to featured books.");
+
+      await Promise.all([
+        loadFeatured(),
+        loadOverview()
+      ]);
+    }
+
+    async function removeFeatured(id){
+
+      const confirmed = window.confirm(
+        "Remove this book from homepage featured books?"
+      );
+
+      if(!confirmed){
+        return;
+      }
+
+      const {error} = await supabaseClient
+        .from("homepage_featured_books")
+        .delete()
+        .eq("id",id);
+
+      if(error){
+        showToast(error.message,true);
+        return;
+      }
+
+      showToast("Book removed from featured books.");
+
+      await Promise.all([
+        loadFeatured(),
+        loadOverview()
+      ]);
+    }
+
+    /* TRAILERS */
+
+    async function loadTrailers(){
+
+      const {data,error} = await supabaseClient
+        .from("book_trailers")
+        .select(`
+          id,
+          book_id,
+          trailer_url,
+          title,
+          description,
+          created_at,
+          updated_at,
+          show_on_homepage
+        `)
+        .order("created_at",{ascending:false});
+
+      if(error){
+        console.error(error);
+        renderError("trailersTable",error.message);
+        return;
+      }
+
+      trailersCache = data || [];
+
+      const bookIds = [
+        ...new Set(
+          trailersCache
+            .map(item=>item.book_id)
+            .filter(Boolean)
+        )
+      ];
+
+      const bookMap = {};
+
+      if(bookIds.length){
+
+        const {
+          data:books,
+          error:bookError
+        } = await supabaseClient
+          .from("books")
+          .select("id,title")
+          .in("id",bookIds);
+
+        if(!bookError){
+          for(const book of books || []){
+            bookMap[book.id] = book.title;
+          }
+        }
+      }
+
+      trailersCache = trailersCache.map(item=>({
+        ...item,
+        bookTitle:bookMap[item.book_id] || "Unknown book"
+      }));
+
+      renderTrailers();
+    }
+
+    function renderTrailers(){
+
+      if(!trailersCache.length){
+        renderEmpty("trailersTable","No book trailers found.");
+        return;
+      }
+
+      $("trailersTable").innerHTML = `
+        <div class="table-wrap">
+          <table>
+
+            <thead>
+              <tr>
+                <th>Trailer</th>
+                <th>Book</th>
+                <th>Title</th>
+                <th>Homepage</th>
+                <th>Created</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              ${trailersCache.map(trailer=>{
+
+                const url = safeURL(trailer.trailer_url);
+
+                return `
+                  <tr>
+
+                    <td>
+                      ${
+                        url
+                        ? `
+                          <a
+                            href="${escapeHTML(url)}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="btn btn-light"
+                          >
+                            Open Trailer
+                          </a>
+                        `
+                        : `<span class="muted">Invalid URL</span>`
+                      }
+                    </td>
+
+                    <td>
+                      ${escapeHTML(trailer.bookTitle)}
+                    </td>
+
+                    <td>
+                      <div class="title-cell">
+                        ${escapeHTML(trailer.title || "Untitled trailer")}
+                      </div>
+
+                      <div class="sub-cell">
+                        ${escapeHTML(trailer.description || "")}
+                      </div>
+                    </td>
+
+                    <td>
+                      ${
+                        trailer.show_on_homepage
+                        ? `<span class="status approved">Shown</span>`
+                        : `<span class="status neutral">Hidden</span>`
+                      }
+                    </td>
+
+                    <td>
+                      ${escapeHTML(formatDate(trailer.created_at))}
+                    </td>
+
+                    <td>
+                      <button
+                        class="btn ${
+                          trailer.show_on_homepage
+                          ? "btn-danger"
+                          : "btn-success"
+                        }"
+                        onclick="toggleTrailer('${trailer.id}',${!trailer.show_on_homepage})"
+                      >
+                        ${
+                          trailer.show_on_homepage
+                          ? "Hide"
+                          : "Show"
+                        }
+                      </button>
+                    </td>
+
+                  </tr>
+                `;
+
+              }).join("")}
+
+            </tbody>
+
+          </table>
+        </div>
+      `;
+    }
+
+    async function toggleTrailer(id,show){
+
+      const {error} = await supabaseClient
+        .from("book_trailers")
+        .update({
+          show_on_homepage:show,
+          updated_at:new Date().toISOString()
+        })
+        .eq("id",id);
+
+      if(error){
+        showToast(error.message,true);
+        return;
+      }
+
+      showToast(
+        show
+        ? "Trailer will appear on the homepage."
+        : "Trailer hidden from the homepage."
+      );
+
+      await loadTrailers();
+    }
+
+    /* SCHEDULES */
+
+    async function loadScheduleOptions(){
+
+      const approvedBooks = booksCache.filter(
+        book=>book.status === "approved"
+      );
+
+      $("scheduleBook").innerHTML = `
+        <option value="">Select an approved book…</option>
+
+        ${approvedBooks.map(book=>`
+          <option value="${escapeHTML(book.id)}">
+            ${escapeHTML(book.title)}
+          </option>
+        `).join("")}
+      `;
+
+      const {data,error} = await supabaseClient
+        .from("moderators")
+        .select("id,profile_id,display_name,active")
+        .eq("active",true)
+        .order("display_name");
+
+      if(error){
+        console.error(error);
+        return;
+      }
+
+      $("scheduleModerator").innerHTML = `
+        <option value="">No moderator assigned</option>
+
+        ${(data || []).map(mod=>`
+          <option value="${escapeHTML(mod.id)}">
+            ${escapeHTML(mod.display_name || "Unnamed moderator")}
+          </option>
+        `).join("")}
+      `;
+    }
+
+    async function loadSchedules(){
+
+      const {data,error} = await supabaseClient
+        .from("feature_schedules")
+        .select(`
+          id,
+          book_id,
+          moderator_id,
+          scheduled_date,
+          scheduled_time,
+          status,
+          notes,
+          created_at,
+          updated_at
+        `)
+        .order("scheduled_date",{ascending:false})
+        .order("scheduled_time",{ascending:false});
+
+      if(error){
+        console.error(error);
+        renderError("schedulesTable",error.message);
+        return;
+      }
+
+      schedulesCache = data || [];
+
+      const bookIds = [
+        ...new Set(
+          schedulesCache
+            .map(schedule=>schedule.book_id)
+            .filter(Boolean)
+        )
+      ];
+
+      const moderatorIds = [
+        ...new Set(
+          schedulesCache
+            .map(schedule=>schedule.moderator_id)
+            .filter(Boolean)
+        )
+      ];
+
+      const bookMap = {};
+      const moderatorMap = {};
+
+      if(bookIds.length){
+
+        const {data:books,error:bookError} =
+          await supabaseClient
+            .from("books")
+            .select("id,title")
+            .in("id",bookIds);
+
+        if(!bookError){
+          for(const book of books || []){
+            bookMap[book.id] = book.title;
+          }
+        }
+      }
+
+      if(moderatorIds.length){
+
+        const {data:moderators,error:moderatorError} =
+          await supabaseClient
+            .from("moderators")
+            .select("id,display_name")
+            .in("id",moderatorIds);
+
+        if(!moderatorError){
+          for(const moderator of moderators || []){
+            moderatorMap[moderator.id] =
+              moderator.display_name;
+          }
+        }
+      }
+
+      schedulesCache = schedulesCache.map(schedule=>({
+        ...schedule,
+        bookTitle:bookMap[schedule.book_id] || "Unknown book",
+        moderatorName:
+          moderatorMap[schedule.moderator_id] || "Unassigned"
+      }));
+
+      renderSchedules();
+    }
+
+    function renderSchedules(){
+
+      if(!schedulesCache.length){
+        renderEmpty("schedulesTable","No feature schedules found.");
+        return;
+      }
+
+      $("schedulesTable").innerHTML = `
+        <div class="table-wrap">
+          <table>
+
+            <thead>
+              <tr>
+                <th>Book</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Moderator</th>
+                <th>Status</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              ${schedulesCache.map(schedule=>`
+                <tr>
+
+                  <td>
+                    <div class="title-cell">
+                      ${escapeHTML(schedule.bookTitle)}
+                    </div>
+                  </td>
+
+                  <td>
+                    ${escapeHTML(
+                      formatDateOnly(schedule.scheduled_date)
+                    )}
+                  </td>
+
+                  <td>
+                    ${escapeHTML(schedule.scheduled_time || "—")}
+                  </td>
+
+                  <td>
+                    ${escapeHTML(schedule.moderatorName)}
+                  </td>
+
+                  <td>
+                    ${statusBadge(schedule.status)}
+                  </td>
+
+                  <td>
+                    ${escapeHTML(schedule.notes || "—")}
+                  </td>
+
+                </tr>
+              `).join("")}
+
+            </tbody>
+
+          </table>
+        </div>
+      `;
+    }
+
+    async function createSchedule(){
+
+      const bookId = $("scheduleBook").value;
+      const moderatorId = $("scheduleModerator").value || null;
+      const scheduledDate = $("scheduleDate").value;
+      const scheduledTime = $("scheduleTime").value;
+      const notes = $("scheduleNotes").value.trim();
+
+      if(!bookId || !scheduledDate || !scheduledTime){
+        showToast(
+          "Select a book, date and time before scheduling.",
+          true
+        );
+        return;
+      }
+
+      const {
+        data:existing,
+        error:checkError
+      } = await supabaseClient
+        .from("feature_schedules")
+        .select("id")
+        .eq("book_id",bookId)
+        .eq("scheduled_date",scheduledDate)
+        .eq("scheduled_time",scheduledTime)
+        .limit(1);
+
+      if(checkError){
+        showToast(checkError.message,true);
+        return;
+      }
+
+      if(existing && existing.length){
+        showToast(
+          "That book already has a schedule at that exact date and time.",
+          true
+        );
+        return;
+      }
+
+      const {error} = await supabaseClient
+        .from("feature_schedules")
+        .insert({
+          book_id:bookId,
+          moderator_id:moderatorId,
+          scheduled_date:scheduledDate,
+          scheduled_time:scheduledTime,
+          status:"scheduled",
+          notes:notes || null
+        });
+
+      if(error){
+        showToast(error.message,true);
+        return;
+      }
+
+      $("scheduleDate").value = "";
+      $("scheduleTime").value = "";
+      $("scheduleNotes").value = "";
+
+      showToast("Feature scheduled successfully.");
+
+      await Promise.all([
+        loadSchedules(),
+        loadOverview()
+      ]);
+    }
+
+    /* READERS */
+
+    async function loadReaders(){
+
+      const {data,error} = await supabaseClient
+        .from("readers")
+        .select(`
+          id,
+          profile_id,
+          display_name,
+          bio,
+          created_at,
+          updated_at
+        `)
+        .order("created_at",{ascending:false});
+
+      if(error){
+        console.error(error);
+        renderError("readersTable",error.message);
+        return;
+      }
+
+      readersCache = data || [];
+
+      renderReaders();
+    }
+
+    function renderReaders(){
+
+      const search = $("readerSearch").value.trim().toLowerCase();
+
+      const rows = readersCache.filter(reader=>{
+
+        const searchable = [
+          reader.display_name,
+          reader.bio
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+        return !search || searchable.includes(search);
+      });
+
+      if(!rows.length){
+        renderEmpty("readersTable","No readers match the search.");
+        return;
+      }
+
+      $("readersTable").innerHTML = `
+        <div class="table-wrap">
+          <table>
+
+            <thead>
+              <tr>
+                <th>Reader</th>
+                <th>Bio</th>
+                <th>Joined</th>
+                <th>Updated</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              ${rows.map(reader=>`
+                <tr>
+
+                  <td>
+                    <div class="title-cell">
+                      ${escapeHTML(reader.display_name || "Unnamed reader")}
+                    </div>
+                  </td>
+
+                  <td>
+                    ${escapeHTML(reader.bio || "—")}
+                  </td>
+
+                  <td>
+                    ${escapeHTML(formatDate(reader.created_at))}
+                  </td>
+
+                  <td>
+                    ${escapeHTML(formatDate(reader.updated_at))}
+                  </td>
+
+                </tr>
+              `).join("")}
+
+            </tbody>
+
+          </table>
+        </div>
+      `;
+    }
+
+    /* CONVERSATIONS */
+
+    async function loadConversations(){
+
+      const {data,error} = await supabaseClient
+        .from("conversations")
+        .select(`
+          id,
+          author_id,
+          moderator_id,
+          book_id,
+          created_at,
+          updated_at
+        `)
+        .order("updated_at",{ascending:false});
+
+      if(error){
+        console.error(error);
+        renderError("conversationList",error.message);
+        return;
+      }
+
+      conversationsCache = data || [];
+
+      const authorIds = [
+        ...new Set(
+          conversationsCache
+            .map(row=>row.author_id)
+            .filter(Boolean)
+        )
+      ];
+
+      const moderatorIds = [
+        ...new Set(
+          conversationsCache
+            .map(row=>row.moderator_id)
+            .filter(Boolean)
+        )
+      ];
+
+      const bookIds = [
+        ...new Set(
+          conversationsCache
+            .map(row=>row.book_id)
+            .filter(Boolean)
+        )
+      ];
+
+      const authorMap = {};
+      const moderatorMap = {};
+      const bookMap = {};
+
+      if(authorIds.length){
+
+        const {data,error} = await supabaseClient
+          .from("authors")
+          .select("id,author_name")
+          .in("id",authorIds);
+
+        if(!error){
+          for(const author of data || []){
+            authorMap[author.id] = author.author_name;
+          }
+        }
+      }
+
+      if(moderatorIds.length){
+
+        const {data,error} = await supabaseClient
+          .from("moderators")
+          .select("id,display_name")
+          .in("id",moderatorIds);
+
+        if(!error){
+          for(const moderator of data || []){
+            moderatorMap[moderator.id] =
+              moderator.display_name;
+          }
+        }
+      }
+
+      if(bookIds.length){
+
+        const {data,error} = await supabaseClient
+          .from("books")
+          .select("id,title")
+          .in("id",bookIds);
+
+        if(!error){
+          for(const book of data || []){
+            bookMap[book.id] = book.title;
+          }
+        }
+      }
+
+      conversationsCache = conversationsCache.map(row=>({
+        ...row,
+        authorName:authorMap[row.author_id] || "Unknown author",
+        moderatorName:
+          moderatorMap[row.moderator_id] || "Unknown moderator",
+        bookTitle:bookMap[row.book_id] || "Unknown book"
+      }));
+
+      renderConversations();
+
+      if(activeConversationId){
+        const stillExists = conversationsCache.some(
+          conversation =>
+            conversation.id === activeConversationId
+        );
+
+        if(!stillExists){
+          activeConversationId = null;
+          $("chatHeader").innerHTML = `
+            <h3>Select a conversation</h3>
+            <p>Choose a conversation from the left.</p>
+          `;
+          $("messages").innerHTML = `
+            <div class="empty">No conversation selected.</div>
+          `;
+          $("messageInput").disabled = true;
+          $("sendMessageBtn").disabled = true;
+        }
+      }
+    }
+
+    function renderConversations(){
+
+      if(!conversationsCache.length){
+        renderEmpty(
+          "conversationList",
+          "No author ↔ moderator conversations found."
+        );
+        return;
+      }
+
+      $("conversationList").innerHTML =
+        conversationsCache.map(conversation=>`
+          <div
+            class="conversation-item ${
+              activeConversationId === conversation.id
+              ? "active"
+              : ""
+            }"
+            onclick="openConversation('${conversation.id}')"
+          >
+
+            <div class="conversation-item-title">
+              ${escapeHTML(conversation.bookTitle)}
+            </div>
+
+            <div class="conversation-item-meta">
+              Author:
+              ${escapeHTML(conversation.authorName)}
+              <br>
+              Moderator:
+              ${escapeHTML(conversation.moderatorName)}
+              <br>
+              Updated:
+              ${escapeHTML(formatDate(conversation.updated_at))}
+            </div>
+
+          </div>
+        `).join("");
+    }
+
+    async function openConversation(conversationId){
+
+      activeConversationId = conversationId;
+
+      const conversation = conversationsCache.find(
+        item=>item.id === conversationId
+      );
+
+      if(!conversation){
+        return;
+      }
+
+      $("chatHeader").innerHTML = `
+        <h3>${escapeHTML(conversation.bookTitle)}</h3>
+        <p>
+          ${escapeHTML(conversation.authorName)}
+          ↔
+          ${escapeHTML(conversation.moderatorName)}
+        </p>
+      `;
+
+      $("messageInput").disabled = false;
+      $("sendMessageBtn").disabled = false;
+
+      renderConversations();
+
+      await loadMessages(conversationId);
+    }
+
+    async function loadMessages(conversationId){
+
+      const {data,error} = await supabaseClient
+        .from("messages")
+        .select(`
+          id,
+          conversation_id,
+          sender_profile_id,
+          message,
+          created_at,
+          read_at
+        `)
+        .eq("conversation_id",conversationId)
+        .order("created_at",{ascending:true});
+
+      if(error){
+        console.error(error);
+        renderError("messages",error.message);
+        return;
+      }
+
+      renderMessages(data || []);
+    }
+
+    function renderMessages(messages){
+
+      if(!messages.length){
+        $("messages").innerHTML = `
+          <div class="empty">
+            No messages in this conversation yet.
+          </div>
+        `;
+        return;
+      }
+
+      $("messages").innerHTML =
+        messages.map(message=>{
+
+          const mine =
+            message.sender_profile_id === currentUser.id;
+
+          return `
+            <div class="message-row ${mine ? "mine" : ""}">
+
+              <div class="message-bubble">
+
+                <div class="message-sender">
+                  ${mine ? "You" : "Participant"}
+                </div>
+
+                <div class="message-text">
+                  ${escapeHTML(message.message)}
+                </div>
+
+                <div class="message-meta">
+                  ${escapeHTML(formatDate(message.created_at))}
+                  ${
+                    message.read_at
+                    ? " • Read"
+                    : ""
+                  }
+                </div>
+
+                ${
+                  mine
+                  ? `
+                    <div class="message-actions">
+
+                      <button
+                        onclick="editMessage('${message.id}',${JSON.stringify(message.message).replace(/</g,"\\u003c")})"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        onclick="deleteMessage('${message.id}')"
+                      >
+                        Delete
+                      </button>
+
+                    </div>
+                  `
+                  : ""
+                }
+
+              </div>
+
+            </div>
+          `;
+
+        }).join("");
+
+      $("messages").scrollTop =
+        $("messages").scrollHeight;
+    }
+
+    async function sendMessage(){
+
+      if(!activeConversationId){
+        showToast("Select a conversation first.",true);
+        return;
+      }
+
+      const input = $("messageInput");
+      const message = input.value.trim();
+
+      if(!message){
+        return;
+      }
+
+      const {error} = await supabaseClient
+        .from("messages")
+        .insert({
+          conversation_id:activeConversationId,
+          sender_profile_id:currentUser.id,
+          message
+        });
+
+      if(error){
+        showToast(error.message,true);
+        return;
+      }
+
+      input.value = "";
+
+      await loadMessages(activeConversationId);
+      await loadConversations();
+    }
+
+    async function editMessage(messageId,currentMessage){
+
+      const nextMessage = window.prompt(
+        "Edit your message:",
+        currentMessage
+      );
+
+      if(nextMessage === null){
+        return;
+      }
+
+      const cleaned = nextMessage.trim();
+
+      if(!cleaned){
+        showToast("Message cannot be empty.",true);
+        return;
+      }
+
+      const {error} = await supabaseClient
+        .from("messages")
+        .update({
+          message:cleaned
+        })
+        .eq("id",messageId)
+        .eq("sender_profile_id",currentUser.id);
+
+      if(error){
+        showToast(error.message,true);
+        return;
+      }
+
+      showToast("Message updated.");
+
+      await loadMessages(activeConversationId);
+    }
+
+    async function deleteMessage(messageId){
+
+      const confirmed = window.confirm(
+        "Delete your message?"
+      );
+
+      if(!confirmed){
+        return;
+      }
+
+      const {error} = await supabaseClient
+        .from("messages")
+        .delete()
+        .eq("id",messageId)
+        .eq("sender_profile_id",currentUser.id);
+
+      if(error){
+        showToast(error.message,true);
+        return;
+      }
+
+      showToast("Message deleted.");
+
+      await loadMessages(activeConversationId);
+    }
+
+    function subscribeToMessages(){
+
+      if(messageChannel){
+        supabaseClient.removeChannel(messageChannel);
+      }
+
+      messageChannel = supabaseClient
+        .channel("admin-message-realtime")
+        .on(
+          "postgres_changes",
+          {
+            event:"*",
+            schema:"public",
+            table:"messages"
+          },
+          async payload=>{
+
+            const changedConversationId =
+              payload.new?.conversation_id ||
+              payload.old?.conversation_id;
+
+            if(
+              activeConversationId &&
+              changedConversationId === activeConversationId
+            ){
+              await loadMessages(activeConversationId);
+            }
+
+            await loadConversations();
+            await loadOverview();
+          }
+        )
+        .subscribe();
+    }
+
+    /* PUBLIC DISCUSSIONS */
+
+    async function loadPublicDiscussions(){
+
+      const {data,error} = await supabaseClient
+        .from("discussions")
+        .select(`
+          id,
+          book_id,
+          created_at
+        `)
+        .order("created_at",{ascending:false})
+        .limit(100);
+
+      if(error){
+        console.error(error);
+        renderError("publicDiscussionsTable",error.message);
+        return;
+      }
+
+      discussionsCache = data || [];
+
+      const bookIds = [
+        ...new Set(
+          discussionsCache
+            .map(item=>item.book_id)
+            .filter(Boolean)
+        )
+      ];
+
+      const bookMap = {};
+
+      if(bookIds.length){
+
+        const {data:books,error:bookError} =
+          await supabaseClient
+            .from("books")
+            .select("id,title")
+            .in("id",bookIds);
+
+        if(!bookError){
+          for(const book of books || []){
+            bookMap[book.id] = book.title;
+          }
+        }
+      }
+
+      discussionsCache = discussionsCache.map(item=>({
+        ...item,
+        bookTitle:bookMap[item.book_id] || "Unknown book"
+      }));
+
+      renderPublicDiscussions();
+    }
+
+    function renderPublicDiscussions(){
+
+      if(!discussionsCache.length){
+        renderEmpty(
+          "publicDiscussionsTable",
+          "No public discussion records found."
+        );
+        return;
+      }
+
+      $("publicDiscussionsTable").innerHTML = `
+        <div class="table-wrap">
+          <table>
+
+            <thead>
+              <tr>
+                <th>Book</th>
+                <th>Discussion ID</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              ${discussionsCache.map(item=>`
+                <tr>
+
+                  <td>
+                    <div class="title-cell">
+                      ${escapeHTML(item.bookTitle)}
+                    </div>
+                  </td>
+
+                  <td>
+                    <span class="small">
+                      ${escapeHTML(item.id)}
+                    </span>
+                  </td>
+
+                  <td>
+                    ${escapeHTML(formatDate(item.created_at))}
+                  </td>
+
+                </tr>
+              `).join("")}
+
+            </tbody>
+
+          </table>
+        </div>
+      `;
+    }
+
+    /* NOTIFICATIONS */
+
+    async function loadNotifications(){
+
+      const {data,error} = await supabaseClient
+        .from("notifications")
+        .select(`
+          id,
+          profile_id,
+          type,
+          title,
+          message,
+          related_book_id,
+          related_schedule_id,
+          is_read,
+          created_at
+        `)
+        .eq("profile_id",currentUser.id)
+        .order("created_at",{ascending:false})
+        .limit(100);
+
+      if(error){
+        console.error(error);
+        renderError("notificationsTable",error.message);
+        return;
+      }
+
+      notificationsCache = data || [];
+
+      renderNotifications();
+    }
+
+    function renderNotifications(){
+
+      if(!notificationsCache.length){
+        renderEmpty(
+          "notificationsTable",
+          "No administrator notifications found."
+        );
+        return;
+      }
+
+      $("notificationsTable").innerHTML = `
+        <div class="table-wrap">
+          <table>
+
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Notification</th>
+                <th>Type</th>
+                <th>Created</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              ${notificationsCache.map(notification=>`
+                <tr>
+
+                  <td>
+                    ${
+                      notification.is_read
+                      ? `<span class="status neutral">Read</span>`
+                      : `<span class="status pending">Unread</span>`
+                    }
+                  </td>
+
+                  <td>
+                    <div class="title-cell">
+                      ${escapeHTML(notification.title)}
+                    </div>
+
+                    <div class="sub-cell">
+                      ${escapeHTML(notification.message)}
+                    </div>
+                  </td>
+
+                  <td>
+                    ${escapeHTML(notification.type || "—")}
+                  </td>
+
+                  <td>
+                    ${escapeHTML(formatDate(notification.created_at))}
+                  </td>
+
+                  <td>
+                    ${
+                      notification.is_read
+                      ? ""
+                      : `
+                        <button
+                          class="btn btn-success"
+                          onclick="markNotificationRead('${notification.id}')"
+                        >
+                          Mark Read
+                        </button>
+                      `
+                    }
+                  </td>
+
+                </tr>
+              `).join("")}
+
+            </tbody>
+
+          </table>
+        </div>
+      `;
+    }
+
+    async function markNotificationRead(id){
+
+      const {error} = await supabaseClient
+        .from("notifications")
+        .update({
+          is_read:true
+        })
+        .eq("id",id)
+        .eq("profile_id",currentUser.id);
+
+      if(error){
+        showToast(error.message,true);
+        return;
+      }
+
+      await Promise.all([
+        loadNotifications(),
+        loadOverview()
+      ]);
+    }
+
+    async function markAllNotificationsRead(){
+
+      const {error} = await supabaseClient
+        .from("notifications")
+        .update({
+          is_read:true
+        })
+        .eq("profile_id",currentUser.id)
+        .eq("is_read",false);
+
+      if(error){
+        showToast(error.message,true);
+        return;
+      }
+
+      showToast("All administrator notifications marked as read.");
+
+      await Promise.all([
+        loadNotifications(),
+        loadOverview()
+      ]);
+    }
+
+    /* MODERATORS */
+
+    async function loadModerators(){
+
+      const {data,error} = await supabaseClient
+        .from("moderators")
+        .select(`
+          id,
+          profile_id,
+          display_name,
+          active,
+          created_at,
+          updated_at
+        `)
+        .order("created_at",{ascending:false});
+
+      if(error){
+        console.error(error);
+        renderError("moderatorsTable",error.message);
+        return;
+      }
+
+      moderatorsCache = data || [];
+
+      renderModerators();
+    }
+
+    function renderModerators(){
+
+      if(!moderatorsCache.length){
+        renderEmpty(
+          "moderatorsTable",
+          "No moderators found."
+        );
+        return;
+      }
+
+      $("moderatorsTable").innerHTML = `
+        <div class="table-wrap">
+          <table>
+
+            <thead>
+              <tr>
+                <th>Moderator</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Updated</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              ${moderatorsCache.map(moderator=>`
+                <tr>
+
+                  <td>
+                    <div class="title-cell">
+                      ${escapeHTML(
+                        moderator.display_name ||
+                        "Unnamed moderator"
+                      )}
+                    </div>
+
+                    <div class="sub-cell">
+                      ${escapeHTML(moderator.profile_id)}
+                    </div>
+                  </td>
+
+                  <td>
+                    ${
+                      moderator.active
+                      ? `<span class="status active">Active</span>`
+                      : `<span class="status inactive">Inactive</span>`
+                    }
+                  </td>
+
+                  <td>
+                    ${escapeHTML(formatDate(moderator.created_at))}
+                  </td>
+
+                  <td>
+                    ${escapeHTML(formatDate(moderator.updated_at))}
+                  </td>
+
+                  <td>
+
+                    <button
+                      class="btn ${
+                        moderator.active
+                        ? "btn-danger"
+                        : "btn-success"
+                      }"
+                      onclick="toggleModerator('${moderator.id}',${!moderator.active})"
+                    >
+                      ${
+                        moderator.active
+                        ? "Deactivate"
+                        : "Activate"
+                      }
+                    </button>
+
+                  </td>
+
+                </tr>
+              `).join("")}
+
+            </tbody>
+
+          </table>
+        </div>
+      `;
+    }
+
+    async function toggleModerator(id,active){
+
+      const confirmed = window.confirm(
+        active
+        ? "Activate this moderator?"
+        : "Deactivate this moderator?"
+      );
+
+      if(!confirmed){
+        return;
+      }
+
+      const {error} = await supabaseClient
+        .from("moderators")
+        .update({
+          active,
+          updated_at:new Date().toISOString()
+        })
+        .eq("id",id);
+
+      if(error){
+        showToast(error.message,true);
+        return;
+      }
+
+      showToast(
+        active
+        ? "Moderator activated."
+        : "Moderator deactivated."
+      );
+
+      await Promise.all([
+        loadModerators(),
+        loadScheduleOptions(),
+        loadOverview()
+      ]);
+    }
+
+    /* MASTER REFRESH */
+
+    async function refreshAll(){
+
+      showToast("Refreshing admin dashboard…");
+
+      await Promise.all([
+        loadAuthors(),
+        loadBooks(),
+        loadFeatured(),
+        loadTrailers(),
+        loadSchedules(),
+        loadReaders(),
+        loadConversations(),
+        loadPublicDiscussions(),
+        loadNotifications(),
+        loadModerators(),
+        loadOverview(),
+        loadRecentActivity()
+      ]);
+
+      await loadScheduleOptions();
+
+      showToast("Admin dashboard refreshed.");
+    }
+
+    /* START */
+
+    async function start(){
+
+      const allowed = await requireAdmin();
+
+      if(!allowed){
+        return;
+      }
+
+      setupNavigation();
+
+      await Promise.all([
+        loadAuthors(),
+        loadBooks(),
+        loadFeatured(),
+        loadTrailers(),
+        loadSchedules(),
+        loadReaders(),
+        loadConversations(),
+        loadPublicDiscussions(),
+        loadNotifications(),
+        loadModerators(),
+        loadOverview(),
+        loadRecentActivity()
+      ]);
+
+      await loadScheduleOptions();
+
+      subscribeToMessages();
+    }
+
+    start();
+  </script>
 
 </body>
 </html>

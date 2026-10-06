@@ -619,16 +619,6 @@ nav{
   gap:8px;
 }
 
-.replyBox input[type="file"]{
-  width:100%;
-  padding:9px;
-  border:1px solid var(--line);
-  border-radius:9px;
-  background:#fff;
-  color:var(--muted);
-  font-size:12px;
-}
-
 .replyBox textarea{
   flex:1;
   min-height:48px;
@@ -854,7 +844,7 @@ footer a{
       <a href="index.html">Home</a>
       <a href="authors.html">Authors</a>
       <a href="index.html#featured">Featured</a>
-      <a href="https://script.google.com/macros/s/AKfycbzr915JDrxx0O1EFiSHSjznSxcMBIOl8fGbK0dlZKer9876elgsKInowXc148aaxMloCg/exec">Contact</a>
+      <a href="mailto:readerreach.support@gmail.com">Contact</a>
     </div>
 
     <div class="navActions">
@@ -1191,17 +1181,10 @@ footer a{
 
                 <div class="replyBox">
 
-                  <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
-                    <textarea
-                      id="replyInput"
-                      placeholder="Write a reply to the author..."
-                      disabled></textarea>
-
-                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                      <input id="messageFile" type="file" disabled>
-                      <span id="attachmentStatus" class="itemMeta">Optional attachment</span>
-                    </div>
-                  </div>
+                  <textarea
+                    id="replyInput"
+                    placeholder="Write a reply to the author..."
+                    disabled></textarea>
 
                   <button
                     id="sendReplyBtn"
@@ -1430,7 +1413,7 @@ footer a{
 
               <a
                 class="btn"
-                href="https://script.google.com/macros/s/AKfycbzr915JDrxx0O1EFiSHSjznSxcMBIOl8fGbK0dlZKer9876elgsKInowXc148aaxMloCg/exec">
+                href="mailto:readerreach.support@gmail.com">
                 Contact Reader Reach
               </a>
 
@@ -1474,7 +1457,7 @@ footer a{
         <a href="index.html">Home</a>
         <a href="authors.html">Authors</a>
         <a href="index.html#featured">Featured Books</a>
-        <a href="https://script.google.com/macros/s/AKfycbzr915JDrxx0O1EFiSHSjznSxcMBIOl8fGbK0dlZKer9876elgsKInowXc148aaxMloCg/exec">Contact</a>
+        <a href="mailto:readerreach.support@gmail.com">Contact</a>
       </div>
 
       <div>
@@ -1507,258 +1490,211 @@ const SUPABASE_URL = 'https://bublmnfhyyrefcdkloak.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-  auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true }
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true
+  }
 });
 
-let currentUser=null;
-let currentProfile=null;
-let currentModerator=null;
-let approvedAuthors=[];
-let approvedBooks=[];
-let schedules=[];
-let notifications=[];
-let conversations=[];
-let selectedConversation=null;
-let realtimeNotificationsChannel=null;
-let realtimeMessagesChannel=null;
-let loadingConversation=false;
+let currentUser = null;
+let currentProfile = null;
+let currentModerator = null;
+let approvedAuthors = [];
+let approvedBooks = [];
+let schedules = [];
+let notifications = [];
+let conversations = [];
+let selectedConversation = null;
+let realtimeNotificationsChannel = null;
+let realtimeMessagesChannel = null;
+let loadingConversation = false;
 
-function $(id){return document.getElementById(id);}
-function escapeHtml(value){return String(value??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
-function formatDate(value){const d=new Date(value);return value&&!Number.isNaN(d.getTime())?d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}):'—';}
-function formatDateTime(value){const d=new Date(value);return value&&!Number.isNaN(d.getTime())?d.toLocaleString(undefined,{year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'—';}
-function formatTime(value){if(!value)return '—'; const parts=String(value).split(':'); if(parts.length<2)return value; const d=new Date(); d.setHours(Number(parts[0]),Number(parts[1]),0,0); return d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});}
-function friendlyError(error){return error?.message||error?.details||error?.hint||'An unexpected error occurred.';}
-function showToast(message){const toast=$('toast');if(!toast)return;toast.textContent=message;toast.classList.add('show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove('show'),3500);}
+function $(id){ return document.getElementById(id); }
+function escapeHtml(value){ return String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+function formatDate(value){ const d=new Date(value); return value && !Number.isNaN(d.getTime()) ? d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}) : '—'; }
+function formatDateTime(value){ const d=new Date(value); return value && !Number.isNaN(d.getTime()) ? d.toLocaleString(undefined,{year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '—'; }
+function friendlyError(error){ return error?.message || error?.details || error?.hint || 'An unexpected error occurred.'; }
+function showToast(message){ const toast=$('toast'); if(!toast)return; toast.textContent=message; toast.classList.add('show'); clearTimeout(showToast.timer); showToast.timer=setTimeout(()=>toast.classList.remove('show'),3500); }
 
 function showSection(section){
   document.querySelectorAll('.pageSection').forEach(x=>x.classList.add('hidden'));
-  const target=$(section);if(target)target.classList.remove('hidden');
+  const target=$(section); if(target) target.classList.remove('hidden');
   document.querySelectorAll('.sideLink[data-section]').forEach(x=>x.classList.toggle('active',x.dataset.section===section));
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
 async function requireModerator(){
-  const {data:{session}}=await supabaseClient.auth.getSession();
-  if(!session?.user){window.location.href='moderator-login.html';return false;}
+  const {data:{session}} = await supabaseClient.auth.getSession();
+  if(!session?.user){ window.location.href='moderator-login.html'; return false; }
   currentUser=session.user;
+
   const {data:profile,error:profileError}=await supabaseClient.from('profiles').select('id,display_name,role,created_at').eq('id',currentUser.id).single();
-  if(profileError){console.error(profileError);showToast('Could not load your profile: '+friendlyError(profileError));return false;}
+  if(profileError){ console.error(profileError); showToast('Could not load your profile.'); return false; }
   currentProfile=profile;
-  if(profile.role!=='moderator'){showToast('This dashboard is for moderators.');return false;}
+  if(profile.role!=='moderator'){ showToast('This dashboard is for moderators.'); return false; }
+
   const {data:moderator,error:moderatorError}=await supabaseClient.from('moderators').select('id,profile_id,active').eq('profile_id',currentUser.id).maybeSingle();
-  if(moderatorError){console.error(moderatorError);showToast('Could not load moderator record: '+friendlyError(moderatorError));return false;}
-  if(!moderator||moderator.active!==true){$('moderatorStatus').textContent='Inactive';showToast('Your moderator account is not active.');return false;}
-  currentModerator=moderator;$('moderatorStatus').textContent='Active';loadAccount();return true;
+  if(moderatorError){ console.error(moderatorError); showToast('Could not load moderator record.'); return false; }
+  if(!moderator || moderator.active!==true){ $('moderatorStatus').textContent='Inactive'; showToast('Your moderator account is not active.'); return false; }
+  currentModerator=moderator;
+  $('moderatorStatus').textContent='Active';
+  loadAccount();
+  return true;
 }
 
 function loadAccount(){
-  $('accountName').textContent=currentProfile?.display_name||'Moderator';
-  $('accountEmail').textContent=currentUser?.email||'—';
+  $('accountName').textContent=currentProfile?.display_name || 'Moderator';
+  $('accountEmail').textContent=currentUser?.email || '—';
   $('accountRole').textContent='Moderator';
   $('accountCreated').textContent=formatDate(currentProfile?.created_at);
 }
 
-async function signOut(){try{await supabaseClient.auth.signOut();}finally{window.location.href='moderator-login.html';}}
-
-function authorProfileUrl(author){
-  return 'author-profile.html?id='+encodeURIComponent(author.id);
-}
-
-function renderAuthorItem(a){
-  return `<div class="item"><div class="itemTop"><div><div class="itemTitle">${escapeHtml(a.author_name||'Unnamed Author')}</div><div class="itemMeta">Approved: ${escapeHtml(formatDate(a.reviewed_at||a.created_at))}</div></div><span class="badge green">Approved</span></div><div class="itemMeta">${escapeHtml(a.bio||'No author biography available.')}</div><div class="itemActions"><a class="btn small" href="${authorProfileUrl(a)}">View Profile</a><button class="btn small primary" onclick="startAuthorConversation('${escapeHtml(a.id)}')">Open Messages</button></div></div>`;
+async function signOut(){
+  try { await supabaseClient.auth.signOut(); }
+  finally { window.location.href='moderator-login.html'; }
 }
 
 async function loadApprovedAuthors(){
-  const container=$('authorList');if(!container)return;
+  const container=$('authorList'); if(!container)return;
   container.innerHTML='<div class="empty">Loading approved authors...</div>';
   const {data,error}=await supabaseClient.from('authors').select('id,profile_id,author_name,bio,status,reviewed_at,created_at').eq('status','approved').order('author_name',{ascending:true});
-  if(error){console.error(error);container.innerHTML='<div class="empty">Unable to load approved authors: '+escapeHtml(friendlyError(error))+'</div>';return;}
-  approvedAuthors=data||[];$('approvedAuthorsCount').textContent=approvedAuthors.length;
-  container.innerHTML=approvedAuthors.length?approvedAuthors.map(renderAuthorItem).join(''):'<div class="empty">No approved authors are available.</div>';
-}
-
-function renderBookItem(b,authorMap){
-  return `<div class="item"><div class="itemTop"><div><div class="itemTitle">${escapeHtml(b.title||'Untitled Book')}</div><div class="itemMeta">Author: ${escapeHtml(authorMap.get(b.author_id)||'Unknown author')}<br>Genre: ${escapeHtml(b.genre_topic||'—')}</div></div><span class="badge green">Approved</span></div><div class="itemActions"><a class="btn small" href="book.html?id=${encodeURIComponent(b.id)}">View Book</a><button class="btn small" onclick="prepareSchedule('${escapeHtml(b.id)}')">Schedule</button></div></div>`;
+  if(error){ console.error(error); container.innerHTML='<div class="empty">Unable to load approved authors.</div>'; return; }
+  approvedAuthors=data||[]; $('approvedAuthorsCount').textContent=approvedAuthors.length;
+  container.innerHTML=approvedAuthors.length?approvedAuthors.map(a=>`<div class="item"><div class="itemTop"><div><div class="itemTitle">${escapeHtml(a.author_name||'Unnamed Author')}</div><div class="itemMeta">Approved: ${escapeHtml(formatDate(a.reviewed_at||a.created_at))}</div></div><span class="badge green">Approved</span></div><div class="itemMeta">${escapeHtml(a.bio||'No author biography available.')}</div><div class="itemActions"><a class="btn small" href="author-profile.html?id=${encodeURIComponent(a.id)}">View Profile</a><button class="btn small primary" onclick="startAuthorConversation('${escapeHtml(a.id)}')">Open Messages</button></div></div>`).join(''):'<div class="empty">No approved authors are available.</div>';
 }
 
 async function loadApprovedBooks(){
-  const container=$('approvedBookList');if(!container)return;
+  const container=$('approvedBookList'); if(!container)return;
   container.innerHTML='<div class="empty">Loading approved books...</div>';
-  const {data,error}=await supabaseClient.from('books').select('id,author_id,title,genre_topic,status,created_at').eq('status','approved').order('created_at',{ascending:false});
-  if(error){console.error(error);container.innerHTML='<div class="empty">Unable to load approved books: '+escapeHtml(friendlyError(error))+'</div>';return;}
-  approvedBooks=data||[];$('approvedBooksCount').textContent=approvedBooks.length;populateBookSelect();
+  const {data,error}=await supabaseClient.from('books').select('id,author_id,title,genre_topic,description,status,created_at').eq('status','approved').order('created_at',{ascending:false});
+  if(error){ console.error(error); container.innerHTML='<div class="empty">Unable to load approved books.</div>'; return; }
+  approvedBooks=data||[]; $('approvedBooksCount').textContent=approvedBooks.length; populateBookSelect();
+  if(!approvedBooks.length){ container.innerHTML='<div class="empty">No approved books are available.</div>'; return; }
   const authorIds=[...new Set(approvedBooks.map(b=>b.author_id).filter(Boolean))];
   let authors=[];
-  if(authorIds.length){const r=await supabaseClient.from('authors').select('id,author_name').in('id',authorIds);if(r.error)console.error(r.error);authors=r.data||[];}
+  if(authorIds.length){ const r=await supabaseClient.from('authors').select('id,author_name').in('id',authorIds); authors=r.data||[]; }
   const authorMap=new Map(authors.map(a=>[a.id,a.author_name]));
-  const html=approvedBooks.map(b=>renderBookItem(b,authorMap)).join('');
-  container.innerHTML=html||'<div class="empty">No approved books are available.</div>';
-  const recent=$('recentBooksList');
-  if(recent)recent.innerHTML=approvedBooks.slice(0,5).map(b=>renderBookItem(b,authorMap)).join('')||'<div class="empty">No approved books are available.</div>';
+  container.innerHTML=approvedBooks.map(b=>`<div class="item"><div class="itemTop"><div><div class="itemTitle">${escapeHtml(b.title||'Untitled Book')}</div><div class="itemMeta">Author: ${escapeHtml(authorMap.get(b.author_id)||'Unknown author')}<br>Genre: ${escapeHtml(b.genre_topic||'—')}</div></div><span class="badge green">Approved</span></div><div class="itemActions"><a class="btn small" href="book.html?id=${encodeURIComponent(b.id)}">View Book</a><button class="btn small" onclick="prepareSchedule('${escapeHtml(b.id)}')">Schedule</button></div></div>`).join('');
 }
 
-function populateBookSelect(){const select=$('scheduleBook');if(!select)return;select.innerHTML='<option value="">Select an approved book</option>';approvedBooks.forEach(b=>{const o=document.createElement('option');o.value=b.id;o.textContent=b.title||'Untitled Book';select.appendChild(o);});}
-function prepareSchedule(bookId){showSection('calendar');$('scheduleBook').value=bookId;}
-
-function scheduleSortValue(s){return `${s.scheduled_date||''}T${s.scheduled_time||'00:00:00'}`;}
+function populateBookSelect(){
+  const select=$('scheduleBook'); if(!select)return;
+  select.innerHTML='<option value="">Select an approved book</option>';
+  approvedBooks.forEach(b=>{ const o=document.createElement('option'); o.value=b.id; o.textContent=b.title||'Untitled Book'; select.appendChild(o); });
+}
+function prepareSchedule(bookId){ $('scheduleBook').value=bookId; showSection('calendar'); }
 
 async function loadSchedules(){
-  const container=$('scheduleList');if(!container)return;
+  const container=$('scheduleList'); if(!container)return;
   container.innerHTML='<div class="empty">Loading schedules...</div>';
-  const {data,error}=await supabaseClient.from('feature_schedules').select('id,book_id,moderator_id,scheduled_date,scheduled_time,status,notes').order('scheduled_date',{ascending:true}).order('scheduled_time',{ascending:true});
-  if(error){console.error(error);container.innerHTML='<div class="empty">Unable to load schedules: '+escapeHtml(friendlyError(error))+'</div>';renderUpcomingSchedules([]);return;}
-  schedules=data||[];$('scheduledFeaturesCount').textContent=schedules.filter(x=>x.status==='scheduled').length;
-  if(!schedules.length){container.innerHTML='<div class="empty">No feature schedules yet.</div>';renderUpcomingSchedules([]);return;}
+  const {data,error}=await supabaseClient.from('feature_schedules').select('id,book_id,moderator_id,feature_date,feature_time,status,notes').order('feature_date',{ascending:true}).order('feature_time',{ascending:true});
+  if(error){ console.error(error); container.innerHTML='<div class="empty">Unable to load schedules.</div>'; return; }
+  schedules=data||[]; $('scheduledFeaturesCount').textContent=schedules.filter(x=>x.status==='scheduled').length;
+  if(!schedules.length){ container.innerHTML='<div class="empty">No feature schedules yet.</div>'; renderUpcomingSchedules([]); return; }
   const bookIds=[...new Set(schedules.map(x=>x.book_id).filter(Boolean))];
-  let books=[];if(bookIds.length){const r=await supabaseClient.from('books').select('id,title,author_id').in('id',bookIds);if(r.error)console.error(r.error);books=r.data||[];}
+  let books=[]; if(bookIds.length){ const r=await supabaseClient.from('books').select('id,title,author_id').in('id',bookIds); books=r.data||[]; }
   const authorIds=[...new Set(books.map(x=>x.author_id).filter(Boolean))];
-  let authors=[];if(authorIds.length){const r=await supabaseClient.from('authors').select('id,author_name').in('id',authorIds);if(r.error)console.error(r.error);authors=r.data||[];}
-  const bookMap=new Map(books.map(x=>[x.id,x]));const authorMap=new Map(authors.map(x=>[x.id,x.author_name]));
-  container.innerHTML=schedules.map(s=>{const b=bookMap.get(s.book_id)||{};return `<div class="scheduleItem"><div class="scheduleDate">${escapeHtml(formatDate(s.scheduled_date))} • ${escapeHtml(formatTime(s.scheduled_time))}</div><div class="scheduleBook">${escapeHtml(b.title||'Book')}</div><div class="scheduleAuthor">${escapeHtml(authorMap.get(b.author_id)||'Unknown author')}</div><div style="margin-top:8px"><span class="badge ${s.status==='scheduled'?'green':''}">${escapeHtml(s.status||'scheduled')}</span></div>${s.notes?`<div class="itemMeta">${escapeHtml(s.notes)}</div>`:''}</div>`;}).join('');
+  let authors=[]; if(authorIds.length){ const r=await supabaseClient.from('authors').select('id,author_name').in('id',authorIds); authors=r.data||[]; }
+  const bookMap=new Map(books.map(x=>[x.id,x])); const authorMap=new Map(authors.map(x=>[x.id,x.author_name]));
+  container.innerHTML=schedules.map(s=>{const b=bookMap.get(s.book_id)||{};return `<div class="scheduleItem"><div class="scheduleDate">${escapeHtml(formatDate(s.feature_date))}${s.feature_time?' • '+escapeHtml(s.feature_time):''}</div><div class="scheduleBook">${escapeHtml(b.title||'Book')}</div><div class="scheduleAuthor">${escapeHtml(authorMap.get(b.author_id)||'Unknown author')}</div><div style="margin-top:8px"><span class="badge ${s.status==='scheduled'?'green':''}">${escapeHtml(s.status||'scheduled')}</span></div>${s.notes?`<div class="itemMeta">${escapeHtml(s.notes)}</div>`:''}</div>`}).join('');
   renderUpcomingSchedules(schedules.filter(x=>x.status==='scheduled'));
 }
 
 function renderUpcomingSchedules(list){
-  const container=$('upcomingList');if(!container)return;
-  const now=new Date();
-  const upcoming=(list||[]).filter(x=>x.scheduled_date&&new Date(`${x.scheduled_date}T${x.scheduled_time||'00:00:00'}`)>=now).sort((a,b)=>scheduleSortValue(a).localeCompare(scheduleSortValue(b))).slice(0,5);
-  if(!upcoming.length){container.innerHTML='<div class="empty">No upcoming scheduled features.</div>';return;}
-  const bookIds=[...new Set(upcoming.map(x=>x.book_id).filter(Boolean))];
-  supabaseClient.from('books').select('id,title').in('id',bookIds).then(({data,error})=>{
-    if(error){console.error(error);container.innerHTML=upcoming.map(x=>`<div class="item"><div class="itemTitle">${escapeHtml(formatDate(x.scheduled_date))}</div><div class="itemMeta">${escapeHtml(formatTime(x.scheduled_time))}</div></div>`).join('');return;}
-    const map=new Map((data||[]).map(b=>[b.id,b.title]));
-    container.innerHTML=upcoming.map(x=>`<div class="item"><div class="itemTitle">${escapeHtml(map.get(x.book_id)||'Scheduled Feature')}</div><div class="itemMeta">${escapeHtml(formatDate(x.scheduled_date))} • ${escapeHtml(formatTime(x.scheduled_time))}</div></div>`).join('');
-  });
+  const container=$('upcomingList'); if(!container)return;
+  const today=new Date(); today.setHours(0,0,0,0);
+  const upcoming=(list||[]).filter(x=>x.feature_date&&new Date(`${x.feature_date}T00:00:00`)>=today).sort((a,b)=>String(a.feature_date).localeCompare(String(b.feature_date))).slice(0,5);
+  container.innerHTML=upcoming.length?upcoming.map(x=>`<div class="item"><div class="itemTitle">${escapeHtml(x.feature_date)}</div><div class="itemMeta">${x.feature_time?escapeHtml(x.feature_time):'Time not specified'}</div></div>`).join(''):'<div class="empty">No upcoming scheduled features.</div>';
 }
 
 async function createSchedule(){
   const bookId=$('scheduleBook').value,date=$('scheduleDate').value,time=$('scheduleTime').value,notes=$('scheduleNotes').value.trim();
-  if(!bookId){showToast('Select an approved book.');return;}
-  if(!date){showToast('Select a feature date.');return;}
-  if(!time){showToast('Select a feature time.');return;}
-  const book=approvedBooks.find(x=>x.id===bookId);if(!book||book.status!=='approved'){showToast('Only approved books can be scheduled.');return;}
-  const duplicate=schedules.find(x=>x.status==='scheduled'&&x.scheduled_date===date&&x.scheduled_time===time);
-  if(duplicate){showToast('That date and time is already scheduled.');return;}
-  const {error}=await supabaseClient.from('feature_schedules').insert({book_id:bookId,moderator_id:currentModerator.id,scheduled_date:date,scheduled_time:time,status:'scheduled',notes:notes||null});
-  if(error){console.error(error);showToast('Could not create the schedule: '+friendlyError(error));return;}
+  if(!bookId){showToast('Select an approved book.');return;} if(!date){showToast('Select a feature date.');return;}
+  const book=approvedBooks.find(x=>x.id===bookId); if(!book||book.status!=='approved'){showToast('Only approved books can be scheduled.');return;}
+  const {error}=await supabaseClient.from('feature_schedules').insert({book_id:bookId,moderator_id:currentModerator.id,feature_date:date,feature_time:time||null,status:'scheduled',notes:notes||null});
+  if(error){showToast('Could not create the schedule: '+friendlyError(error));return;}
   $('scheduleDate').value='';$('scheduleTime').value='';$('scheduleNotes').value='';showToast('Feature scheduled.');await loadSchedules();
 }
 
 async function loadNotifications(){
-  const container=$('notificationList');if(!container||!currentUser)return;
+  const container=$('notificationList'); if(!container)return;
   container.innerHTML='<div class="empty">Loading notifications...</div>';
   const {data,error}=await supabaseClient.from('notifications').select('id,type,title,message,related_book_id,related_schedule_id,is_read,created_at').eq('profile_id',currentUser.id).order('created_at',{ascending:false}).limit(50);
-  if(error){console.error(error);container.innerHTML='<div class="empty">Unable to load notifications: '+escapeHtml(friendlyError(error))+'</div>';return;}
+  if(error){console.error(error);container.innerHTML='<div class="empty">Unable to load notifications.</div>';return;}
   notifications=data||[];$('unreadNotificationsCount').textContent=notifications.filter(x=>!x.is_read).length;
   container.innerHTML=notifications.length?notifications.map(n=>`<div class="item" style="${n.is_read?'':'border-left:4px solid var(--butter);'}"><div class="itemTop"><div><div class="itemTitle">${escapeHtml(n.title||'Notification')}</div><div class="itemMeta">${escapeHtml(formatDateTime(n.created_at))}</div></div>${n.is_read?'<span class="badge">Read</span>':'<span class="badge gold">New</span>'}</div><div class="itemMeta">${escapeHtml(n.message||'')}</div>${n.is_read?'':`<div class="itemActions"><button class="btn small" onclick="markNotificationRead('${escapeHtml(n.id)}')">Mark Read</button></div>`}</div>`).join(''):'<div class="empty">No notifications yet.</div>';
 }
-async function markNotificationRead(id){const {error}=await supabaseClient.from('notifications').update({is_read:true}).eq('id',id).eq('profile_id',currentUser.id);if(error){showToast('Could not update notification: '+friendlyError(error));return;}await loadNotifications();}
+async function markNotificationRead(id){const {error}=await supabaseClient.from('notifications').update({is_read:true}).eq('id',id).eq('profile_id',currentUser.id);if(error){showToast('Could not update notification.');return;}await loadNotifications();}
 
 async function loadConversations(preferredId=null){
-  const container=$('conversationList');if(!container||!currentModerator)return;
+  const container=$('conversationList'); if(!container||!currentModerator)return;
   container.innerHTML='<div class="empty">Loading conversations...</div>';
   const {data,error}=await supabaseClient.from('conversations').select('id,author_id,moderator_id,book_id,created_at,updated_at').eq('moderator_id',currentModerator.id).order('updated_at',{ascending:false});
   if(error){console.error('Conversation lookup error:',error);container.innerHTML=`<div class="empty">Unable to load conversations: ${escapeHtml(friendlyError(error))}</div>`;return;}
   conversations=data||[];
   if(!conversations.length){selectedConversation=null;container.innerHTML='<div class="empty">No conversations yet.</div>';resetChat();return;}
   const authorIds=[...new Set(conversations.map(c=>c.author_id).filter(Boolean))];const bookIds=[...new Set(conversations.map(c=>c.book_id).filter(Boolean))];
-  let authors=[],books=[];
-  if(authorIds.length){const r=await supabaseClient.from('authors').select('id,author_name').in('id',authorIds);authors=r.data||[];}
-  if(bookIds.length){const r=await supabaseClient.from('books').select('id,title').in('id',bookIds);books=r.data||[];}
+  let authors=[],books=[]; if(authorIds.length){const r=await supabaseClient.from('authors').select('id,author_name').in('id',authorIds);authors=r.data||[];} if(bookIds.length){const r=await supabaseClient.from('books').select('id,title').in('id',bookIds);books=r.data||[];}
   const authorMap=new Map(authors.map(a=>[a.id,a.author_name]));const bookMap=new Map(books.map(b=>[b.id,b.title]));
-  if(preferredId&&conversations.some(c=>c.id===preferredId))selectedConversation=conversations.find(c=>c.id===preferredId);
-  if(!selectedConversation||!conversations.some(c=>c.id===selectedConversation.id))selectedConversation=conversations[0];
+  if(preferredId&&conversations.some(c=>c.id===preferredId)) selectedConversation=conversations.find(c=>c.id===preferredId);
+  if(!selectedConversation||!conversations.some(c=>c.id===selectedConversation.id)) selectedConversation=conversations[0];
   container.innerHTML=conversations.map(c=>`<button class="conversation ${selectedConversation?.id===c.id?'active':''}" onclick="openConversation('${escapeHtml(c.id)}')"><div class="conversationTitle">${escapeHtml(bookMap.get(c.book_id)||'Author Support')}</div><div class="conversationMeta">${escapeHtml(authorMap.get(c.author_id)||'Author')} • ${escapeHtml(formatDateTime(c.updated_at||c.created_at))}</div></button>`).join('');
   await renderSelectedConversation();
 }
 
-function resetChat(){$('conversationTitle').textContent='Select a conversation';$('conversationMeta').textContent='Author conversations will appear here.';$('chatMessages').innerHTML='<div class="empty">Select an author conversation to view messages.</div>';$('replyInput').disabled=true;$('sendReplyBtn').disabled=true;$('messageFile').disabled=true;$('messageFile').value='';$('attachmentStatus').textContent='Optional attachment';}
+function resetChat(){ $('conversationTitle').textContent='Select a conversation';$('conversationMeta').textContent='Author conversations will appear here.';$('chatMessages').innerHTML='<div class="empty">Select an author conversation to view messages.</div>';$('replyInput').disabled=true;$('sendReplyBtn').disabled=true; }
 async function openConversation(id){selectedConversation=conversations.find(c=>c.id===id)||null;if(!selectedConversation)return;await renderSelectedConversation();}
 async function renderSelectedConversation(){
   if(!selectedConversation){resetChat();return;}
-  $('conversationTitle').textContent='Author Conversation';
-  $('conversationMeta').textContent=`Book: ${selectedConversation.book_id||'Assigned conversation'} • ${formatDateTime(selectedConversation.updated_at||selectedConversation.created_at)}`;
-  $('replyInput').disabled=false;$('sendReplyBtn').disabled=false;$('messageFile').disabled=false;
+  $('conversationTitle').textContent='Author Conversation';$('conversationMeta').textContent=`Book: ${selectedConversation.book_id||'Assigned conversation'} • ${formatDateTime(selectedConversation.updated_at||selectedConversation.created_at)}`;$('replyInput').disabled=false;$('sendReplyBtn').disabled=false;
   document.querySelectorAll('.conversation').forEach(btn=>btn.classList.toggle('active',btn.getAttribute('onclick')?.includes(selectedConversation.id)));
   await loadConversationMessages(selectedConversation.id);
 }
 
 async function loadConversationMessages(conversationId){
-  if(loadingConversation)return;loadingConversation=true;
+  if(loadingConversation)return; loadingConversation=true;
   const container=$('chatMessages');container.innerHTML='<div class="empty">Loading messages...</div>';
   const {data,error}=await supabaseClient.from('messages').select('id,conversation_id,sender_profile_id,message,created_at,read_at').eq('conversation_id',conversationId).order('created_at',{ascending:true});
   if(error){console.error(error);container.innerHTML=`<div class="empty">Unable to load messages: ${escapeHtml(friendlyError(error))}</div>`;loadingConversation=false;return;}
   const messages=data||[];
-  const messageIds=messages.map(m=>m.id);
-  let attachments=[];
-  if(messageIds.length){const a=await supabaseClient.from('message_attachments').select('id,message_id,file_path,file_name,mime_type,file_size,created_at').in('message_id',messageIds);if(a.error)console.error('Attachment lookup error:',a.error);attachments=a.data||[];}
-  const attachmentMap=new Map();attachments.forEach(a=>{if(!attachmentMap.has(a.message_id))attachmentMap.set(a.message_id,[]);attachmentMap.get(a.message_id).push(a);});
-  const senderIds=[...new Set(messages.map(m=>m.sender_profile_id).filter(Boolean))];
-  let profiles=[];if(senderIds.length){const r=await supabaseClient.from('profiles').select('id,display_name,role').in('id',senderIds);profiles=r.data||[];}
-  const profileMap=new Map(profiles.map(p=>[p.id,p]));
-  container.innerHTML=messages.length?messages.map(m=>{
-    const mine=m.sender_profile_id===currentUser.id;const p=profileMap.get(m.sender_profile_id);const canEdit=mine;const canDelete=mine&&p?.role==='moderator';
-    const files=(attachmentMap.get(m.id)||[]).map(a=>`<button type="button" class="btn small soft" onclick="openAttachment('${escapeHtml(a.id)}')">📎 ${escapeHtml(a.file_name||'Attachment')}</button>`).join('');
-    return `<div class="chatBubble ${mine?'moderator':'author'}"><div>${escapeHtml(m.message||'')}</div>${files?`<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${files}</div>`:''}<small>${escapeHtml(p?.display_name||p?.role||'User')} · ${escapeHtml(formatDateTime(m.created_at))}</small>${canEdit?`<div style="margin-top:7px;display:flex;gap:6px;flex-wrap:wrap"><button class="btn small" type="button" onclick="editMessage('${escapeHtml(m.id)}')">Edit</button>${canDelete?`<button class="btn small danger" type="button" onclick="deleteMessage('${escapeHtml(m.id)}')">Delete</button>`:''}</div>`:''}</div>`;
-  }).join(''):'<div class="empty">No messages in this conversation yet.</div>';
+  const senderIds=[...new Set(messages.map(m=>m.sender_profile_id).filter(Boolean))];let profiles=[];if(senderIds.length){const r=await supabaseClient.from('profiles').select('id,display_name,role').in('id',senderIds);profiles=r.data||[];}const profileMap=new Map(profiles.map(p=>[p.id,p]));
+  container.innerHTML=messages.length?messages.map(m=>{const mine=m.sender_profile_id===currentUser.id;const p=profileMap.get(m.sender_profile_id);const canEdit=mine;const canDelete=mine&&p?.role==='moderator';return `<div class="chatBubble ${mine?'moderator':'author'}"><div>${escapeHtml(m.message||'')}</div><small>${escapeHtml(p?.display_name||p?.role||'User')} · ${escapeHtml(formatDateTime(m.created_at))}</small>${canEdit?`<div style="margin-top:7px;display:flex;gap:6px;flex-wrap:wrap"><button class="btn small" type="button" onclick="editMessage('${escapeHtml(m.id)}')">Edit</button>${canDelete?`<button class="btn small danger" type="button" onclick="deleteMessage('${escapeHtml(m.id)}')">Delete</button>`:''}</div>`:''}</div>`}).join(''):'<div class="empty">No messages in this conversation yet.</div>';
   container.scrollTop=container.scrollHeight;
   const unread=messages.filter(m=>m.sender_profile_id!==currentUser.id&&!m.read_at).map(m=>m.id);if(unread.length)await supabaseClient.from('messages').update({read_at:new Date().toISOString()}).in('id',unread);
   loadingConversation=false;
 }
 
-async function uploadAttachment(messageId,file){
-  if(!selectedConversation||!file)return null;
-  const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
-  const path=`${selectedConversation.id}/${Date.now()}-${safeName}`;
-  const upload=await supabaseClient.storage.from('conversation-files').upload(path,file,{upsert:false});
-  if(upload.error)throw upload.error;
-  const insert=await supabaseClient.from('message_attachments').insert({message_id:messageId,file_path:path,file_name:file.name,mime_type:file.type||'application/octet-stream',file_size:file.size});
-  if(insert.error){await supabaseClient.storage.from('conversation-files').remove([path]);throw insert.error;}
-  return path;
-}
-
-async function openAttachment(id){
-  const {data,error}=await supabaseClient.from('message_attachments').select('id,file_path,file_name').eq('id',id).single();
-  if(error){showToast('Could not load attachment: '+friendlyError(error));return;}
-  const signed=await supabaseClient.storage.from('conversation-files').createSignedUrl(data.file_path,300);
-  if(signed.error){showToast('Could not open attachment: '+friendlyError(signed.error));return;}
-  window.open(signed.data.signedUrl,'_blank','noopener');
-}
-
 async function sendReply(){
   if(!selectedConversation){showToast('Select a conversation first.');return;}
-  const input=$('replyInput'),message=input.value.trim(),file=$('messageFile').files[0];
-  if(!message&&!file){showToast('Write a message or choose a file first.');return;}
-  const button=$('sendReplyBtn');button.disabled=true;$('messageFile').disabled=true;
-  try{
-    const {data,error}=await supabaseClient.from('messages').insert({conversation_id:selectedConversation.id,sender_profile_id:currentUser.id,message:message||'Attachment'}).select('id').single();
-    if(error)throw error;
-    if(file)await uploadAttachment(data.id,file);
-    await supabaseClient.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',selectedConversation.id);
-    input.value='';$('messageFile').value='';$('attachmentStatus').textContent='Optional attachment';
-    await loadConversationMessages(selectedConversation.id);await loadConversations(selectedConversation.id);
-  }catch(error){console.error(error);showToast('Could not send reply: '+friendlyError(error));}
-  finally{button.disabled=false;if(selectedConversation){$('messageFile').disabled=false;}}
+  const input=$('replyInput'),message=input.value.trim();if(!message){showToast('Write a message first.');return;}
+  const button=$('sendReplyBtn');button.disabled=true;
+  try{const {error}=await supabaseClient.from('messages').insert({conversation_id:selectedConversation.id,sender_profile_id:currentUser.id,message});if(error)throw error;await supabaseClient.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',selectedConversation.id);input.value='';await loadConversationMessages(selectedConversation.id);await loadConversations(selectedConversation.id);}catch(error){showToast('Could not send reply: '+friendlyError(error));}finally{button.disabled=false;}
 }
 
 async function editMessage(id){
   const {data,error}=await supabaseClient.from('messages').select('id,message,sender_profile_id').eq('id',id).single();
-  if(error){showToast('Could not load that message.');return;}if(data.sender_profile_id!==currentUser.id){showToast('You can only edit your own messages.');return;}
+  if(error){showToast('Could not load that message.');return;} if(data.sender_profile_id!==currentUser.id){showToast('You can only edit your own messages.');return;}
   const updated=window.prompt('Edit your message:',data.message||'');if(updated===null)return;const message=updated.trim();if(!message){showToast('Message cannot be empty.');return;}
   const result=await supabaseClient.from('messages').update({message}).eq('id',id).eq('sender_profile_id',currentUser.id);if(result.error){showToast('Could not edit message: '+friendlyError(result.error));return;}await loadConversationMessages(selectedConversation.id);showToast('Message updated.');
 }
 
 async function deleteMessage(id){
-  const {data,error}=await supabaseClient.from('messages').select('id,sender_profile_id').eq('id',id).single();
-  if(error){showToast('Could not load that message.');return;}if(data.sender_profile_id!==currentUser.id){showToast('You can only delete your own moderator messages.');return;}if(!window.confirm('Delete this moderator message?'))return;
-  const result=await supabaseClient.from('messages').delete().eq('id',id).eq('sender_profile_id',currentUser.id);if(result.error){showToast('Could not delete message: '+friendlyError(result.error));return;}await loadConversationMessages(selectedConversation.id);showToast('Message deleted.');
+  const {data,error}=await supabaseClient.from('messages').select('id,sender_profile_id').eq('id',id).single();if(error){showToast('Could not load that message.');return;}if(data.sender_profile_id!==currentUser.id){showToast('You can only delete your own moderator messages.');return;}if(!window.confirm('Delete this moderator message?'))return;const result=await supabaseClient.from('messages').delete().eq('id',id).eq('sender_profile_id',currentUser.id);if(result.error){showToast('Could not delete message: '+friendlyError(result.error));return;}await loadConversationMessages(selectedConversation.id);showToast('Message deleted.');
 }
 
-function startAuthorConversation(authorId){const candidate=conversations.find(c=>c.author_id===authorId);showSection('messages');if(candidate){selectedConversation=candidate;renderSelectedConversation();}else showToast('No conversation exists for this author yet.');}
+function startAuthorConversation(authorId){
+  const candidate=conversations.find(c=>c.author_id===authorId);showSection('messages');if(candidate){selectedConversation=candidate;renderSelectedConversation();}else showToast('No conversation exists for this author yet.');
+}
 
-function subscribeToNotifications(){if(realtimeNotificationsChannel)supabaseClient.removeChannel(realtimeNotificationsChannel);realtimeNotificationsChannel=supabaseClient.channel('moderator-notifications-'+currentUser.id).on('postgres_changes',{event:'*',schema:'public',table:'notifications',filter:'profile_id=eq.'+currentUser.id},()=>loadNotifications()).subscribe();}
-function subscribeToMessages(){if(realtimeMessagesChannel)supabaseClient.removeChannel(realtimeMessagesChannel);realtimeMessagesChannel=supabaseClient.channel('moderator-messages-'+currentUser.id).on('postgres_changes',{event:'*',schema:'public',table:'messages'},async payload=>{const newId=payload.new?.conversation_id,oldId=payload.old?.conversation_id;if(selectedConversation?.id===newId||selectedConversation?.id===oldId)await loadConversationMessages(selectedConversation.id);await loadConversations(selectedConversation?.id);}).subscribe();}
+function subscribeToNotifications(){
+  if(realtimeNotificationsChannel) supabaseClient.removeChannel(realtimeNotificationsChannel);
+  realtimeNotificationsChannel=supabaseClient.channel('moderator-notifications-'+currentUser.id).on('postgres_changes',{event:'*',schema:'public',table:'notifications',filter:'profile_id=eq.'+currentUser.id},()=>loadNotifications()).subscribe();
+}
+function subscribeToMessages(){
+  if(realtimeMessagesChannel) supabaseClient.removeChannel(realtimeMessagesChannel);
+  realtimeMessagesChannel=supabaseClient.channel('moderator-messages-'+currentUser.id).on('postgres_changes',{event:'*',schema:'public',table:'messages'},async payload=>{if(selectedConversation?.id===payload.new?.conversation_id||selectedConversation?.id===payload.old?.conversation_id){await loadConversationMessages(selectedConversation.id);}await loadConversations(selectedConversation?.id);}).subscribe();
+}
 
 async function initialise(){
   const allowed=await requireModerator();if(!allowed)return;
@@ -1769,9 +1705,11 @@ async function initialise(){
 $('scheduleBtn').addEventListener('click',createSchedule);
 $('signOutBtn').addEventListener('click',signOut);
 $('replyInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();sendReply();}});
-$('messageFile').addEventListener('change',()=>{const file=$('messageFile').files[0];$('attachmentStatus').textContent=file?`${file.name} (${Math.ceil(file.size/1024)} KB)`:'Optional attachment';});
 
-supabaseClient.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT')window.location.href='moderator-login.html';});
+supabaseClient.auth.onAuthStateChange((event,session)=>{
+  if(event==='SIGNED_OUT'){window.location.href='moderator-login.html';}
+});
+
 initialise();
 </script>
 </body>

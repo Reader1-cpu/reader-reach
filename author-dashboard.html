@@ -129,19 +129,20 @@ th{color:var(--muted);font-weight:bold}
 .book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .book-card{border:1px solid var(--line);border-radius:12px;padding:17px;min-width:0}
 .book-card h3{overflow-wrap:anywhere}
-.message-list{display:flex;flex-direction:column;gap:10px;max-height:380px;overflow:auto;margin:15px 0}
-.message{
-  max-width:85%;background:var(--soft);padding:12px 14px;border-radius:12px;
-  overflow-wrap:anywhere;white-space:pre-wrap;
-}
-.message.mine{align-self:flex-end;background:var(--brown);color:white}
-.message small{display:block;margin-top:7px;opacity:.7}
-.conversation-button{
-  display:block;width:100%;text-align:left;border:1px solid var(--line);
-  background:white;border-radius:9px;padding:12px;margin:7px 0;
-}
-.conversation-button.active{background:var(--soft);border-color:#c8ae7b}
+.message-layout{display:grid;grid-template-columns:280px minmax(0,1fr);border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.message-list-wrap{min-width:0;display:flex;flex-direction:column}
+.conversation-list{background:#fcf8f1;border-right:1px solid var(--line);min-height:560px;max-height:620px;overflow:auto}
+.message-list{display:flex;flex-direction:column;gap:10px;height:390px;overflow:auto;padding:18px;margin:0;background:#fffdf9}
+.message{max-width:78%;padding:11px 13px;border-radius:13px;overflow-wrap:anywhere;white-space:pre-wrap;background:var(--soft);border:1px solid #eee1d4;align-self:flex-start}
+.message.mine{align-self:flex-end;background:var(--brown);color:white;border-color:var(--brown)}
+.message-meta{display:flex;justify-content:space-between;gap:12px;margin-top:8px;font-size:10px;opacity:.68}
+.message-actions{display:flex;gap:6px;justify-content:flex-end;margin-top:8px}
+.message-actions button{border:0;background:rgba(255,255,255,.14);color:inherit;border-radius:6px;padding:4px 7px;font-size:10px}
+.conversation-button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;padding:14px}
+.conversation-button:hover,.conversation-button.active{background:#fff}
+.conversation-button strong{display:block;color:var(--brown);overflow-wrap:anywhere}
 .new-conversation-box{margin:14px 0;padding:15px;border:1px solid var(--line);border-radius:12px;background:#fffdf9}
+.chat-compose{padding:13px;border-top:1px solid var(--line);background:#fff}
 .attachment-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
 .attachment-preview{margin-top:8px;padding:9px;border:1px solid var(--line);border-radius:9px;background:#fff}
 .attachment-preview img{max-width:220px;max-height:180px;border-radius:7px;display:block}
@@ -163,6 +164,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
   .brand{font-size:21px}
   .container{width:94%;margin-top:15px}
   .grid,.form-grid,.book-grid{grid-template-columns:1fr}
+  .message-layout{grid-template-columns:1fr}
+  .conversation-list{min-height:0;max-height:230px;border-right:0;border-bottom:1px solid var(--line)}
   .field.full{grid-column:auto}
   .panel{padding:17px}
   .sidebar nav{grid-template-columns:1fr 1fr}
@@ -428,15 +431,11 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
           <div class="form-grid">
             <div class="field">
               <label for="newConversationBook">Book *</label>
-              <select id="newConversationBook">
-                <option value="">Select a book</option>
-              </select>
+              <select id="newConversationBook"><option value="">Select a book</option></select>
             </div>
             <div class="field">
               <label for="newConversationModerator">Moderator *</label>
-              <select id="newConversationModerator">
-                <option value="">Select a Moderator</option>
-              </select>
+              <select id="newConversationModerator"><option value="">Select a Moderator</option></select>
             </div>
           </div>
           <div class="actions">
@@ -444,35 +443,30 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
             <button class="btn secondary" type="button" id="cancelConversationButton">Cancel</button>
           </div>
         </div>
-        <div id="conversationStatus" class="notice info">
-          Your conversations will load here.
-        </div>
-        <div id="conversationList"></div>
-      </div>
-      <div class="panel">
-        <div class="panel-head">
-          <h2 id="messageHeading">Conversation</h2>
-          <span id="messageModerator" class="muted small"></span>
-        </div>
-        <div id="messageList" class="message-list">
-          <div class="empty">Select a conversation to view messages.</div>
-        </div>
-        <form id="messageForm">
-          <div class="field">
-            <label for="messageText">Your message</label>
-            <textarea id="messageText" maxlength="10000"
-              placeholder="Write your message…"></textarea>
-            <div class="attachment-row">
-              <input id="messageFile" type="file"
-                accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp,.mp4,.webm,.mov,.avi,.mkv,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,video/*,image/*,text/plain">
-              <span class="file-note">Optional attachment · max 50 MB</span>
+        <div id="conversationStatus" class="notice info">Your conversations will load here.</div>
+        <div class="message-layout">
+          <div id="conversationList" class="conversation-list"></div>
+          <div class="message-list-wrap">
+            <div class="chat-compose" style="border-top:0;border-bottom:1px solid var(--line)">
+              <div class="panel-head" style="margin:0">
+                <div><h2 id="messageHeading" style="margin:0 0 4px">Conversation</h2><span id="messageModerator" class="muted small"></span></div>
+              </div>
             </div>
-            <div id="messageFileName" class="file-note"></div>
+            <div id="messageList" class="message-list"><div class="empty">Select a conversation to view messages.</div></div>
+            <form id="messageForm" class="chat-compose">
+              <div class="field">
+                <label for="messageText">Your message</label>
+                <textarea id="messageText" maxlength="10000" placeholder="Write your message…"></textarea>
+                <div class="attachment-row">
+                  <input id="messageFile" type="file" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp,.mp4,.webm,.mov,.avi,.mkv,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,video/*,image/*,text/plain">
+                  <span class="file-note">Files: PDF, Word, text, image or video · max 50 MB each · up to 5 files</span>
+                </div>
+                <div id="messageFileName" class="file-note"></div>
+              </div>
+              <div class="actions"><button class="btn" type="submit" id="sendMessageButton">Send Message</button></div>
+            </form>
           </div>
-          <div class="actions">
-            <button class="btn" type="submit" id="sendMessageButton">Send Message</button>
-          </div>
-        </form>
+        </div>
       </div>
     </section>
 
@@ -647,6 +641,10 @@ document.querySelectorAll("[data-go]").forEach(button => {
 
 async function safeSignOut() {
   try {
+    if (messageRealtimeChannel) {
+      await supabaseClient.removeChannel(messageRealtimeChannel);
+      messageRealtimeChannel = null;
+    }
     await supabaseClient.auth.signOut();
   } finally {
     window.location.replace("auth.html?mode=author");
@@ -1147,18 +1145,19 @@ $("bookForm").addEventListener("submit", async event => {
 ------------------------------------------------------- */
 const CHAT_BUCKET = "conversation-files";
 const MAX_CHAT_FILE_SIZE = 50 * 1024 * 1024;
+let messageRealtimeChannel = null;
 
 function formatFileSize(bytes) {
   const size = Number(bytes || 0);
   if (!size) return "";
-  if (size < 1024 * 1024) return Math.round(size / 1024) + " KB";
+  if (size < 1024 * 1024) return Math.max(1, Math.round(size / 1024)) + " KB";
   return (size / (1024 * 1024)).toFixed(1) + " MB";
 }
 
 function isAllowedChatFile(file) {
   if (!file) return false;
   if (file.size > MAX_CHAT_FILE_SIZE) {
-    setNotice("That file is larger than 50 MB. Please choose a smaller file.", "error");
+    setNotice(`“${file.name}” is larger than 50 MB.`, "error");
     return false;
   }
   const type = String(file.type || "").toLowerCase();
@@ -1166,7 +1165,7 @@ function isAllowedChatFile(file) {
   const allowed = type.startsWith("image/") || type.startsWith("video/") ||
     [".pdf",".doc",".docx",".txt"].some(ext => name.endsWith(ext));
   if (!allowed) {
-    setNotice("That file type is not supported. Use PDF, Word, text, image, or video files.", "error");
+    setNotice(`“${file.name}” is not a supported file type.`, "error");
     return false;
   }
   return true;
@@ -1175,384 +1174,184 @@ function isAllowedChatFile(file) {
 function renderAttachment(attachment) {
   const name = escapeHTML(attachment.file_name || "Attachment");
   const size = attachment.file_size ? ` · ${escapeHTML(formatFileSize(attachment.file_size))}` : "";
-  const url = escapeHTML(attachment.url || "#");
+  const url = attachment.url ? escapeHTML(attachment.url) : "#";
   const mime = String(attachment.mime_type || "").toLowerCase();
-
-  if (mime.startsWith("image/") && attachment.url) {
-    return `<div class="attachment-preview">
-      <a href="${url}" target="_blank" rel="noopener">
-        <img src="${url}" alt="${name}">
-      </a>
-      <div class="small muted">${name}${size}</div>
-    </div>`;
-  }
-
-  if (mime.startsWith("video/") && attachment.url) {
-    return `<div class="attachment-preview">
-      <video controls preload="metadata" src="${url}"></video>
-      <div class="small muted">${name}${size}</div>
-    </div>`;
-  }
-
-  return `<div class="attachment-preview">
-    <a class="attachment-link" href="${url}" target="_blank" rel="noopener" download>
-      📎 ${name}${size}
-    </a>
-  </div>`;
+  if (mime.startsWith("image/") && attachment.url) return `<div class="attachment-preview"><a href="${url}" target="_blank" rel="noopener"><img src="${url}" alt="${name}"></a><div class="small muted">${name}${size}</div></div>`;
+  if (mime.startsWith("video/") && attachment.url) return `<div class="attachment-preview"><video controls preload="metadata" src="${url}"></video><div class="small muted">${name}${size}</div></div>`;
+  return `<div class="attachment-preview"><a class="attachment-link" href="${url}" target="_blank" rel="noopener" download>📎 ${name}${size}</a></div>`;
 }
 
 async function loadConversations() {
   if (!currentAuthor?.id) return;
-
   $("conversationStatus").textContent = "Loading conversations…";
-
-  const {data, error} = await supabaseClient
-    .from("conversations")
+  const {data, error} = await supabaseClient.from("conversations")
     .select("id,author_id,moderator_id,book_id,created_at,updated_at")
-    .eq("author_id", currentAuthor.id)
-    .order("updated_at", {ascending:false});
-
+    .eq("author_id", currentAuthor.id).order("updated_at", {ascending:false});
   if (error) {
-    $("conversationStatus").textContent =
-      "Could not load conversations: " + friendlyError(error);
+    $("conversationStatus").textContent = "Could not load conversations: " + friendlyError(error);
     return;
   }
-
   myConversations = data || [];
-  $("conversationStatus").textContent = myConversations.length
-    ? "Select a book conversation to read and reply."
-    : "You do not have any conversations yet. Use New Message to choose a book and Moderator.";
-
   if (!myConversations.length) {
-    $("conversationList").innerHTML = "";
+    $("conversationStatus").textContent = "No conversations yet. Click New Message to choose a book and Moderator.";
+    $("conversationList").innerHTML = '<div class="empty">No conversations yet.</div>';
     $("messageList").innerHTML = '<div class="empty">No conversation selected.</div>';
     return;
   }
-
+  $("conversationStatus").textContent = "Each conversation is tied to one book. Select a conversation to reply.";
   const moderatorIds = [...new Set(myConversations.map(c => c.moderator_id).filter(Boolean))];
   const bookIds = [...new Set(myConversations.map(c => c.book_id).filter(Boolean))];
-
-  let profiles = [];
-  let books = [];
-
+  let moderators = [], profiles = [], books = [];
   if (moderatorIds.length) {
-    const result = await supabaseClient
-      .from("moderators")
-      .select("id,profile_id,active")
-      .in("id", moderatorIds);
-    const moderators = result.data || [];
+    const r = await supabaseClient.from("moderators").select("id,profile_id,active").in("id", moderatorIds);
+    moderators = r.data || [];
     const profileIds = moderators.map(m => m.profile_id).filter(Boolean);
-
-    if (profileIds.length) {
-      const profileResult = await supabaseClient
-        .from("profiles").select("id,display_name").in("id", profileIds);
-      profiles = profileResult.data || [];
-    }
+    if (profileIds.length) profiles = (await supabaseClient.from("profiles").select("id,display_name").in("id", profileIds)).data || [];
   }
-
-  if (bookIds.length) {
-    const result = await supabaseClient
-      .from("books").select("id,title").in("id", bookIds);
-    books = result.data || [];
-  }
-
-  $("conversationList").innerHTML = myConversations.map(conversation => {
-    const book = books.find(b => b.id === conversation.book_id);
-    const label = book?.title || "Book conversation";
-    return `
-      <button type="button" class="conversation-button ${conversation.id === activeConversationId ? "active" : ""}"
-        data-conversation="${escapeHTML(conversation.id)}">
-        <strong>${escapeHTML(label)}</strong>
-        <div class="small muted">Book-specific Moderator conversation</div>
-      </button>`;
+  if (bookIds.length) books = (await supabaseClient.from("books").select("id,title").in("id", bookIds)).data || [];
+  $("conversationList").innerHTML = myConversations.map(c => {
+    const book = books.find(b => b.id === c.book_id);
+    const mod = moderators.find(m => m.id === c.moderator_id);
+    const profile = profiles.find(p => p.id === mod?.profile_id);
+    return `<button type="button" class="conversation-button ${c.id === activeConversationId ? "active" : ""}" data-conversation="${escapeHTML(c.id)}">
+      <strong>${escapeHTML(book?.title || "Book conversation")}</strong>
+      <div class="small muted">Moderator: ${escapeHTML(profile?.display_name || "Reader Reach Moderator")}</div>
+    </button>`;
   }).join("");
-
-  document.querySelectorAll("[data-conversation]").forEach(button => {
-    button.addEventListener("click", () => {
-      activeConversationId = button.dataset.conversation;
-      loadConversations();
-    });
-  });
-
-  if (!activeConversationId || !myConversations.some(c => c.id === activeConversationId)) {
-    activeConversationId = myConversations[0].id;
-  }
-
+  document.querySelectorAll("[data-conversation]").forEach(button => button.addEventListener("click", async () => {
+    activeConversationId = button.dataset.conversation;
+    await loadConversations();
+  }));
+  if (!activeConversationId || !myConversations.some(c => c.id === activeConversationId)) activeConversationId = myConversations[0].id;
   const active = myConversations.find(c => c.id === activeConversationId);
   const book = books.find(b => b.id === active?.book_id);
-
+  const mod = moderators.find(m => m.id === active?.moderator_id);
+  const profile = profiles.find(p => p.id === mod?.profile_id);
   $("messageHeading").textContent = book?.title || "Book conversation";
-  $("messageModerator").textContent = "Book-specific Moderator conversation";
-
+  $("messageModerator").textContent = `Moderator: ${profile?.display_name || "Reader Reach Moderator"}`;
   await loadMessages();
 }
 
 async function loadMessages() {
   if (!activeConversationId) return;
-
-  const {data, error} = await supabaseClient
-    .from("messages")
+  const {data:messages, error} = await supabaseClient.from("messages")
     .select("id,conversation_id,sender_profile_id,message,created_at,read_at")
-    .eq("conversation_id", activeConversationId)
-    .order("created_at", {ascending:true});
-
+    .eq("conversation_id", activeConversationId).order("created_at", {ascending:true});
   if (error) {
-    $("messageList").innerHTML =
-      `<div class="empty">Could not load messages: ${escapeHTML(friendlyError(error))}</div>`;
+    $("messageList").innerHTML = `<div class="empty">Could not load messages: ${escapeHTML(friendlyError(error))}</div>`;
     return;
   }
-
-  const messages = data || [];
+  const rows = messages || [];
   let attachments = [];
-
-  if (messages.length) {
-    const messageIds = messages.map(m => m.id);
-    const attachmentResult = await supabaseClient
-      .from("message_attachments")
+  if (rows.length) {
+    const ids = rows.map(m => m.id);
+    const ar = await supabaseClient.from("message_attachments")
       .select("id,message_id,file_path,file_name,mime_type,file_size,created_at")
-      .in("message_id", messageIds)
-      .order("created_at", {ascending:true});
-
-    if (!attachmentResult.error && attachmentResult.data?.length) {
-      attachments = await Promise.all(attachmentResult.data.map(async item => {
-        const signed = await supabaseClient.storage
-          .from(CHAT_BUCKET)
-          .createSignedUrl(item.file_path, 60 * 60);
-        return {...item, url:signed.data?.signedUrl || null};
-      }));
-    }
+      .in("message_id", ids).order("created_at", {ascending:true});
+    if (!ar.error) attachments = await Promise.all((ar.data || []).map(async item => {
+      const signed = await supabaseClient.storage.from(CHAT_BUCKET).createSignedUrl(item.file_path, 3600);
+      return {...item, url:signed.data?.signedUrl || null};
+    }));
   }
-
-  if (!messages.length) {
+  if (!rows.length) {
     $("messageList").innerHTML = '<div class="empty">No messages yet. Start the conversation below.</div>';
   } else {
-    $("messageList").innerHTML = messages.map(message => {
-      const mine = message.sender_profile_id === currentUser.id;
-      const messageAttachments = attachments.filter(a => a.message_id === message.id);
-      const body = message.message ? escapeHTML(message.message) : "";
-      return `
-        <div class="message ${mine ? "mine" : ""}">
-          ${body ? `<div>${body}</div>` : ""}
-          ${messageAttachments.map(renderAttachment).join("")}
-          <small>${mine ? "You" : "Moderator"} · ${escapeHTML(formatDate(message.created_at))}</small>
-        </div>`;
+    $("messageList").innerHTML = rows.map(m => {
+      const mine = m.sender_profile_id === currentUser.id;
+      const files = attachments.filter(a => a.message_id === m.id);
+      return `<div class="message ${mine ? "mine" : ""}">
+        ${m.message ? `<div>${escapeHTML(m.message)}</div>` : ""}
+        ${files.map(renderAttachment).join("")}
+        <div class="message-meta"><span>${mine ? "You" : "Moderator"}</span><span>${escapeHTML(formatDate(m.created_at))}</span></div>
+      </div>`;
     }).join("");
   }
-
   $("messageList").scrollTop = $("messageList").scrollHeight;
-
-  const unreadIds = messages
-    .filter(m => m.sender_profile_id !== currentUser.id && !m.read_at)
-    .map(m => m.id);
-
-  if (unreadIds.length) {
-    await supabaseClient.from("messages")
-      .update({read_at:new Date().toISOString()})
-      .in("id", unreadIds);
-  }
+  const unread = rows.filter(m => m.sender_profile_id !== currentUser.id && !m.read_at).map(m => m.id);
+  if (unread.length) await supabaseClient.from("messages").update({read_at:new Date().toISOString()}).in("id", unread);
 }
 
 async function openNewConversationPanel() {
   if (!currentAuthor?.id || !currentUser?.id) return;
-
-  const panel = $("newConversationPanel");
-  const bookSelect = $("newConversationBook");
-  const moderatorSelect = $("newConversationModerator");
-
   if (!myBooks.length) await loadBooks();
-
-  const {data:moderators, error} = await supabaseClient
-    .from("moderators")
-    .select("id,profile_id,active")
-    .eq("active", true);
-
-  if (error) {
-    setNotice("Could not find available Moderators: " + friendlyError(error), "error");
-    return;
-  }
-
-  if (!moderators?.length) {
-    setNotice("No active Moderator is available in the database yet. Please try again later.", "info");
-    return;
-  }
-
-  const profileIds = moderators.map(m => m.profile_id).filter(Boolean);
-  const {data:profiles} = await supabaseClient
-    .from("profiles")
-    .select("id,display_name")
-    .in("id", profileIds);
-
-  bookSelect.innerHTML = '<option value="">Select a book</option>' +
-    myBooks.map(book =>
-      `<option value="${escapeHTML(book.id)}">${escapeHTML(book.title || "Untitled book")}</option>`
-    ).join("");
-
-  moderatorSelect.innerHTML = '<option value="">Select a Moderator</option>' +
-    moderators.map(mod => {
-      const profile = (profiles || []).find(p => p.id === mod.profile_id);
-      return `<option value="${escapeHTML(mod.id)}">${escapeHTML(profile?.display_name || "Reader Reach Moderator")}</option>`;
-    }).join("");
-
-  panel.hidden = false;
-  bookSelect.focus();
+  const {data:mods, error} = await supabaseClient.from("moderators").select("id,profile_id,active").eq("active", true);
+  if (error) { setNotice("Could not find available Moderators: " + friendlyError(error), "error"); return; }
+  const profileIds = (mods || []).map(m => m.profile_id).filter(Boolean);
+  const profiles = profileIds.length ? ((await supabaseClient.from("profiles").select("id,display_name").in("id", profileIds)).data || []) : [];
+  $("newConversationBook").innerHTML = '<option value="">Select a book</option>' + myBooks.map(b => `<option value="${escapeHTML(b.id)}">${escapeHTML(b.title || "Untitled book")}</option>`).join("");
+  $("newConversationModerator").innerHTML = '<option value="">Select a Moderator</option>' + (mods || []).map(m => `<option value="${escapeHTML(m.id)}">${escapeHTML(profiles.find(p => p.id === m.profile_id)?.display_name || "Reader Reach Moderator")}</option>`).join("");
+  $("newConversationPanel").hidden = false;
 }
 
 $("newConversationButton").addEventListener("click", openNewConversationPanel);
-
-$("cancelConversationButton").addEventListener("click", () => {
-  $("newConversationPanel").hidden = true;
-});
-
+$("cancelConversationButton").addEventListener("click", () => $("newConversationPanel").hidden = true);
 $("createConversationButton").addEventListener("click", async () => {
-  const bookId = $("newConversationBook").value;
-  const moderatorId = $("newConversationModerator").value;
-  const button = $("createConversationButton");
-
-  if (!bookId || !moderatorId) {
-    setNotice("Choose both the book and Moderator before starting the conversation.", "info");
-    return;
-  }
-
-  button.disabled = true;
+  const bookId = $("newConversationBook").value, moderatorId = $("newConversationModerator").value;
+  if (!bookId || !moderatorId) { setNotice("Choose both the book and Moderator before starting the conversation.", "info"); return; }
+  const button = $("createConversationButton"); button.disabled = true;
   try {
-    const {data:existing, error:existingError} = await supabaseClient
-      .from("conversations")
-      .select("id")
-      .eq("author_id", currentAuthor.id)
-      .eq("moderator_id", moderatorId)
-      .eq("book_id", bookId)
-      .limit(1);
-
-    if (existingError) throw existingError;
-
-    if (existing?.length) {
-      activeConversationId = existing[0].id;
-    } else {
-      const {data:created, error:createError} = await supabaseClient
-        .from("conversations")
-        .insert({
-          author_id:currentAuthor.id,
-          moderator_id:moderatorId,
-          book_id:bookId
-        })
-        .select("id")
-        .single();
-
-      if (createError) throw createError;
+    const {data:existing,error:ee} = await supabaseClient.from("conversations").select("id").eq("author_id",currentAuthor.id).eq("moderator_id",moderatorId).eq("book_id",bookId).limit(1);
+    if (ee) throw ee;
+    activeConversationId = existing?.[0]?.id || null;
+    if (!activeConversationId) {
+      const {data:created,error:ce} = await supabaseClient.from("conversations").insert({author_id:currentAuthor.id,moderator_id:moderatorId,book_id:bookId}).select("id").single();
+      if (ce) throw ce;
       activeConversationId = created.id;
     }
-
     $("newConversationPanel").hidden = true;
-    await loadConversations();
     showPage("messages");
-    setNotice("Your book-specific Moderator conversation is ready.", "success");
-  } catch (error) {
-    console.error("Create conversation:", error);
-    setNotice("Conversation could not be created: " + friendlyError(error), "error");
-  } finally {
-    button.disabled = false;
-  }
+    await loadConversations();
+    setNotice("Your book-specific conversation is ready.", "success");
+  } catch (e) { setNotice("Conversation could not be created: " + friendlyError(e), "error"); }
+  finally { button.disabled = false; }
 });
 
 $("messageFile").addEventListener("change", () => {
-  const file = $("messageFile").files?.[0];
-  if (!file) {
-    $("messageFileName").textContent = "";
-    return;
-  }
-  if (!isAllowedChatFile(file)) {
-    $("messageFile").value = "";
-    $("messageFileName").textContent = "";
-    return;
-  }
-  $("messageFileName").textContent = `Selected: ${file.name} · ${formatFileSize(file.size)}`;
+  const files = [...($("messageFile").files || [])];
+  if (files.length > 5) { $("messageFile").value = ""; $("messageFileName").textContent = ""; setNotice("Choose up to 5 files per message.", "error"); return; }
+  if (files.some(f => !isAllowedChatFile(f))) { $("messageFile").value = ""; $("messageFileName").textContent = ""; return; }
+  $("messageFileName").textContent = files.length ? `Selected ${files.length} file${files.length === 1 ? "" : "s"}: ${files.map(f => f.name).join(", ")}` : "";
 });
 
 $("messageForm").addEventListener("submit", async event => {
   event.preventDefault();
-
   const text = $("messageText").value.trim();
-  const file = $("messageFile").files?.[0] || null;
-
-  if (!text && !file) {
-    setNotice("Write a message or attach a file before sending.", "info");
-    return;
-  }
-
-  if (!activeConversationId) {
-    setNotice("Select a book conversation before sending a message.", "info");
-    return;
-  }
-
-  if (file && !isAllowedChatFile(file)) return;
-
-  const button = $("sendMessageButton");
-  button.disabled = true;
-  button.textContent = "Sending…";
-
-  let uploadedPath = null;
-
+  const files = [...($("messageFile").files || [])];
+  if (!text && !files.length) { setNotice("Write a message or attach a file before sending.", "info"); return; }
+  if (!activeConversationId) { setNotice("Select a book conversation before sending.", "info"); return; }
+  if (files.length > 5 || files.some(f => !isAllowedChatFile(f))) return;
+  const button = $("sendMessageButton"); button.disabled = true; button.textContent = "Sending…";
   try {
-    const {data:createdMessage, error:messageError} = await supabaseClient
-      .from("messages")
-      .insert({
-        conversation_id:activeConversationId,
-        sender_profile_id:currentUser.id,
-        message:text || ""
-      })
-      .select("id")
-      .single();
-
-    if (messageError) throw messageError;
-
-    if (file) {
-      const safeName = normalizeStoragePath(file.name);
-      const path = `${currentUser.id}/${activeConversationId}/${Date.now()}-${safeName}`;
-
-      const {data:uploaded,error:uploadError} = await supabaseClient.storage
-        .from(CHAT_BUCKET)
-        .upload(path, file, {
-          upsert:false,
-          contentType:file.type || "application/octet-stream"
-        });
-
-      if (uploadError) throw new Error("File upload failed: " + friendlyError(uploadError));
-      uploadedPath = uploaded.path;
-
-      const {error:attachmentError} = await supabaseClient
-        .from("message_attachments")
-        .insert({
-          message_id:createdMessage.id,
-          file_path:uploadedPath,
-          file_name:file.name,
-          mime_type:file.type || null,
-          file_size:file.size
-        });
-
-      if (attachmentError) {
-        await supabaseClient.storage.from(CHAT_BUCKET).remove([uploadedPath]);
-        throw new Error("Attachment record could not be saved: " + friendlyError(attachmentError));
-      }
+    const {data:created,error:me} = await supabaseClient.from("messages").insert({conversation_id:activeConversationId,sender_profile_id:currentUser.id,message:text || "Attachment"}).select("id").single();
+    if (me) throw me;
+    const failed = [];
+    for (const file of files) {
+      const path = `${currentUser.id}/${activeConversationId}/${Date.now()}-${Math.random().toString(36).slice(2,8)}-${normalizeStoragePath(file.name)}`;
+      const {data:up,error:ue} = await supabaseClient.storage.from(CHAT_BUCKET).upload(path,file,{upsert:false,contentType:file.type || "application/octet-stream"});
+      if (ue) { failed.push(file.name); continue; }
+      const {error:ae} = await supabaseClient.from("message_attachments").insert({message_id:created.id,file_path:up.path,file_name:file.name,mime_type:file.type || null,file_size:file.size});
+      if (ae) { await supabaseClient.storage.from(CHAT_BUCKET).remove([up.path]); failed.push(file.name); }
     }
-
-    await supabaseClient
-      .from("conversations")
-      .update({updated_at:new Date().toISOString()})
-      .eq("id", activeConversationId);
-
-    $("messageText").value = "";
-    $("messageFile").value = "";
-    $("messageFileName").textContent = "";
-
-    await loadMessages();
-    await loadConversations();
-  } catch (error) {
-    setNotice("Message could not be sent: " + friendlyError(error), "error");
-  } finally {
-    button.disabled = false;
-    button.textContent = "Send Message";
-  }
+    await supabaseClient.from("conversations").update({updated_at:new Date().toISOString()}).eq("id",activeConversationId);
+    $("messageText").value = ""; $("messageFile").value = ""; $("messageFileName").textContent = "";
+    await loadMessages(); await loadConversations();
+    if (failed.length) setNotice("Message sent, but these files failed: " + failed.join(", "), "error");
+  } catch (e) { setNotice("Message could not be sent: " + friendlyError(e), "error"); }
+  finally { button.disabled = false; button.textContent = "Send Message"; }
 });
+
+function subscribeToAuthorMessages() {
+  if (messageRealtimeChannel) supabaseClient.removeChannel(messageRealtimeChannel);
+  messageRealtimeChannel = supabaseClient.channel("author-message-realtime-" + currentUser.id)
+    .on("postgres_changes", {event:"*", schema:"public", table:"messages"}, async payload => {
+      if (activeConversationId && payload.new?.conversation_id === activeConversationId) await loadMessages();
+      await loadConversations();
+    })
+    .on("postgres_changes", {event:"*", schema:"public", table:"message_attachments"}, async () => {
+      if (activeConversationId) await loadMessages();
+    })
+    .subscribe();
+}
 
 /* -------------------------------------------------------
    FEATURE SCHEDULE

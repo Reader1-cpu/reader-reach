@@ -541,6 +541,8 @@ nav{
 .messageActions button{border:1px solid currentColor;border-radius:7px;padding:5px 8px;font-size:10px;background:transparent;color:inherit;cursor:pointer;font-weight:700;opacity:.9}
 .messageActions button:hover{opacity:1;transform:translateY(-1px)}
 .chatBubble.author .messageActions{display:none}
+.editMessageForm{display:flex;gap:6px;margin-top:8px}
+.editMessageForm textarea{flex:1;min-height:55px;padding:8px;border:1px solid var(--line);border-radius:8px;color:var(--text)}
 .chatBubble.moderator .deleteMessageButton{color:#fff;border-color:rgba(255,255,255,.55)}
 .attachmentPreview{margin-top:8px;padding:8px;border-radius:9px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15)}
 .chatBubble.author .attachmentPreview{background:#fff;border-color:var(--line)}
@@ -1540,12 +1542,13 @@ function showSection(section){
 
 async function requireModerator(){
 
-  const {
-    data:{
-      user
-    }
-  } =
-    await supabaseClient.auth.getUser();
+  const {data:sessionData,error:sessionError}=await supabaseClient.auth.getSession();
+  if(sessionError){
+    console.error('Session restore error:',sessionError);
+    showToast('Could not restore your sign-in session.');
+    return false;
+  }
+  const user=sessionData?.session?.user || null;
 
   if(!user){
 
@@ -2851,11 +2854,20 @@ async function loadConversationMessages(conversationId){
       <div class="messageBody">${item.message?escapeHtml(item.message):''}</div>
       ${files.map(renderChatAttachment).join('')}
       <small>${mine?'You':escapeHtml(selectedConversation?.author_name||'Author')} · ${escapeHtml(formatDateTime(item.created_at))}</small>
-      ${mine ? `<div class="messageActions" aria-label="Moderator message actions">
+      ${mine ? `<div class="messageActions" aria-label="Your message actions">
+        <button type="button" class="editMessageButton" data-message-id="${escapeHtml(item.id)}">Edit</button>
         <button type="button" class="deleteMessageButton" data-message-id="${escapeHtml(item.id)}">Delete</button>
       </div>` : ''}
     </div>`;
   }).join('');
+
+  container.querySelectorAll('.editMessageButton').forEach(button=>{
+    button.addEventListener('click',(event)=>{
+      event.preventDefault();
+      event.stopPropagation();
+      startEditConversationMessage(button.dataset.messageId);
+    });
+  });
 
   container.querySelectorAll('.deleteMessageButton').forEach(button=>{
     button.addEventListener('click',(event)=>{
@@ -2896,6 +2908,44 @@ async function sendReply(){
     if(failed.length) showToast('Message sent, but some files failed: '+failed.join(', '));
   }catch(e){console.error('Reply error:',e);showToast('Could not send reply: '+e.message);}
   finally{button.disabled=false;button.textContent='Send Message';}
+}
+
+async function startEditConversationMessage(messageId){
+  const bubble=document.querySelector(`.chatBubble[data-message-id="${CSS.escape(messageId)}"]`);
+  if(!bubble) return;
+  if(bubble.querySelector('.editMessageForm')) return;
+  const body=bubble.querySelector('.messageBody');
+  const currentText=body?.textContent || '';
+  const actions=bubble.querySelector('.messageActions');
+  if(actions) actions.style.display='none';
+
+  const form=document.createElement('form');
+  form.className='editMessageForm';
+  form.innerHTML=`<textarea aria-label="Edit message">${escapeHtml(currentText)}</textarea><button type="submit" class="btn small">Save</button><button type="button" class="btn small">Cancel</button>`;
+  bubble.appendChild(form);
+  const textarea=form.querySelector('textarea');
+  textarea.focus();
+  textarea.setSelectionRange(textarea.value.length,textarea.value.length);
+
+  form.querySelectorAll('button')[1].addEventListener('click',()=>{ form.remove(); if(actions) actions.style.display='flex'; });
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();
+    const value=textarea.value.trim();
+    if(!value){ showToast('Message cannot be empty.'); return; }
+    const save=form.querySelector('button[type="submit"]');
+    save.disabled=true; save.textContent='Saving…';
+    try{
+      const {error}=await supabaseClient.from('messages').update({message:value}).eq('id',messageId).eq('sender_profile_id',currentUser.id);
+      if(error) throw error;
+      await loadConversationMessages(selectedConversation.id);
+      await loadConversations();
+      showToast('Message updated.');
+    }catch(e){
+      console.error('Edit message error:',e);
+      showToast('Could not edit message: '+(e?.message||'Unknown error'));
+      save.disabled=false; save.textContent='Save';
+    }
+  });
 }
 
 async function deleteConversationMessage(messageId){
@@ -3019,7 +3069,8 @@ function subscribeToMessages(){
   if(messageRealtimeChannel) supabaseClient.removeChannel(messageRealtimeChannel);
   messageRealtimeChannel=supabaseClient.channel('moderator-message-realtime-'+currentUser.id)
     .on('postgres_changes',{event:'*',schema:'public',table:'messages'},async payload=>{
-      if(selectedConversation&&payload.new?.conversation_id===selectedConversation.id) await loadConversationMessages(selectedConversation.id);
+      const conversationId=payload.new?.conversation_id || payload.old?.conversation_id;
+      if(selectedConversation&&conversationId===selectedConversation.id) await loadConversationMessages(selectedConversation.id);
       await loadConversations();
     })
     .on('postgres_changes',{event:'*',schema:'public',table:'message_attachments'},async payload=>{

@@ -854,7 +854,7 @@ footer a{
       <a href="index.html">Home</a>
       <a href="authors.html">Authors</a>
       <a href="index.html#featured">Featured</a>
-      <a href="https://script.google.com/macros/s/AKfycbzr915JDrxx0O1EFiSHSjznSxcMBIOl8fGbK0dlZKer9876elgsKInowXc148aaxMloCg/exec">Contact</a>
+      <a href="#contact" onclick="showSection('contact');return false;">Contact</a>
     </div>
 
     <div class="navActions">
@@ -949,6 +949,12 @@ footer a{
               data-section="notifications"
               onclick="showSection('notifications')">
         Notifications
+      </button>
+
+      <button class="sideLink"
+              data-section="contact"
+              onclick="showSection('contact')">
+        Contact Reader Reach
       </button>
 
       <button class="sideLink"
@@ -1376,6 +1382,74 @@ footer a{
       </section>
 
 
+      <!-- CONTACT READER REACH -->
+
+      <section id="contact" class="pageSection hidden">
+
+        <section class="section">
+
+          <div class="card">
+
+            <div class="sectionHead">
+
+              <div>
+                <h2 class="sectionTitle">Contact Reader Reach</h2>
+                <p class="muted">
+                  Send a message directly to the Reader Reach support team.
+                  Your message will be sent to Reader Reach support by email.
+                </p>
+              </div>
+
+            </div>
+
+            <form action="https://script.google.com/macros/s/AKfycbzr915JDrxx0O1EFiSHSjznSxcMBIOl8fGbK0dlZKer9876elgsKInowXc148aaxMloCg/exec" method="POST" target="contactResponse" onsubmit="showContactSending()">
+
+              <div class="grid2">
+
+                <div class="field">
+                  <label for="contactName">Name</label>
+                  <input id="contactName" name="name" type="text" placeholder="Your name" required>
+                </div>
+
+                <div class="field">
+                  <label for="contactEmail">Email</label>
+                  <input id="contactEmail" name="email" type="email" placeholder="Your email address" required>
+                </div>
+
+              </div>
+
+              <div class="field">
+                <label for="contactReason">Reason</label>
+                <select id="contactReason" name="reason">
+                  <option value="General enquiry">General enquiry</option>
+                  <option value="Technical support">Technical support</option>
+                  <option value="Account support">Account support</option>
+                  <option value="Author or book support">Author or book support</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="contactMessage">Message</label>
+                <textarea id="contactMessage" name="message" placeholder="Write your message to Reader Reach support..." required></textarea>
+              </div>
+
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <button class="btn primary" type="submit" id="contactSubmitBtn">Send Message</button>
+                <span id="contactStatus" class="itemMeta">Reader Reach support will receive your message by email.</span>
+              </div>
+
+            </form>
+
+            <iframe name="contactResponse" id="contactResponse" title="Contact response" style="width:100%;height:190px;border:1px solid var(--line);border-radius:12px;margin-top:20px;background:var(--cream);"></iframe>
+
+          </div>
+
+        </section>
+
+      </section>
+
+
       <!-- ACCOUNT -->
 
       <section id="account" class="pageSection hidden">
@@ -1430,7 +1504,7 @@ footer a{
 
               <a
                 class="btn"
-                href="https://script.google.com/macros/s/AKfycbzr915JDrxx0O1EFiSHSjznSxcMBIOl8fGbK0dlZKer9876elgsKInowXc148aaxMloCg/exec">
+                href="#contact" onclick="showSection('contact');return false;">
                 Contact Reader Reach
               </a>
 
@@ -1474,7 +1548,7 @@ footer a{
         <a href="index.html">Home</a>
         <a href="authors.html">Authors</a>
         <a href="index.html#featured">Featured Books</a>
-        <a href="https://script.google.com/macros/s/AKfycbzr915JDrxx0O1EFiSHSjznSxcMBIOl8fGbK0dlZKer9876elgsKInowXc148aaxMloCg/exec">Contact</a>
+        <a href="#contact" onclick="showSection('contact');return false;">Contact</a>
       </div>
 
       <div>
@@ -1484,6 +1558,7 @@ footer a{
         <a href="#messages">Messages</a>
         <a href="#calendar">Feature Calendar</a>
         <a href="#notifications">Notifications</a>
+        <a href="#contact" onclick="showSection('contact');return false;">Contact Reader Reach</a>
       </div>
 
     </div>
@@ -1759,6 +1834,17 @@ function startAuthorConversation(authorId){const candidate=conversations.find(c=
 
 function subscribeToNotifications(){if(realtimeNotificationsChannel)supabaseClient.removeChannel(realtimeNotificationsChannel);realtimeNotificationsChannel=supabaseClient.channel('moderator-notifications-'+currentUser.id).on('postgres_changes',{event:'*',schema:'public',table:'notifications',filter:'profile_id=eq.'+currentUser.id},()=>loadNotifications()).subscribe();}
 function subscribeToMessages(){if(realtimeMessagesChannel)supabaseClient.removeChannel(realtimeMessagesChannel);realtimeMessagesChannel=supabaseClient.channel('moderator-messages-'+currentUser.id).on('postgres_changes',{event:'*',schema:'public',table:'messages'},async payload=>{const newId=payload.new?.conversation_id,oldId=payload.old?.conversation_id;if(selectedConversation?.id===newId||selectedConversation?.id===oldId)await loadConversationMessages(selectedConversation.id);await loadConversations(selectedConversation?.id);}).subscribe();}
+
+function showContactSending(){
+  const button=$('contactSubmitBtn');
+  const status=$('contactStatus');
+  if(button){button.disabled=true;button.textContent='Sending...';}
+  if(status)status.textContent='Sending your message to Reader Reach support...';
+  setTimeout(()=>{
+    if(button){button.disabled=false;button.textContent='Send Message';}
+    if(status)status.textContent='If the response panel shows a success message, your message was sent.';
+  },3000);
+}
 
 async function initialise(){
   const allowed=await requireModerator();if(!allowed)return;

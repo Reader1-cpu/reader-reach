@@ -188,6 +188,7 @@ button.login:disabled{
   font-size:12px;
   line-height:1.45;
   margin-bottom:14px;
+  word-break:break-word;
 }
 
 .message.show{
@@ -272,6 +273,7 @@ button.login:disabled{
 
       <div class="field">
         <label for="email">Moderator Email</label>
+
         <input
           id="email"
           type="email"
@@ -285,6 +287,7 @@ button.login:disabled{
         <label for="password">Password</label>
 
         <div class="password-wrap">
+
           <input
             id="password"
             type="password"
@@ -299,6 +302,7 @@ button.login:disabled{
             id="togglePassword">
             Show
           </button>
+
         </div>
       </div>
 
@@ -356,87 +360,187 @@ const supabaseClient =
     }
   );
 
-const form = document.getElementById("loginForm");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const loginButton = document.getElementById("loginButton");
-const messageBox = document.getElementById("message");
-const togglePassword = document.getElementById("togglePassword");
+const form =
+  document.getElementById("loginForm");
+
+const emailInput =
+  document.getElementById("email");
+
+const passwordInput =
+  document.getElementById("password");
+
+const loginButton =
+  document.getElementById("loginButton");
+
+const messageBox =
+  document.getElementById("message");
+
+const togglePassword =
+  document.getElementById("togglePassword");
+
 
 function showMessage(message,type){
+
   messageBox.textContent = message;
-  messageBox.className = "message show " + type;
+
+  messageBox.className =
+    "message show " + type;
 }
 
-togglePassword.addEventListener("click",()=>{
-  if(passwordInput.type === "password"){
-    passwordInput.type = "text";
-    togglePassword.textContent = "Hide";
-  }else{
-    passwordInput.type = "password";
-    togglePassword.textContent = "Show";
-  }
-});
 
+togglePassword.addEventListener(
+  "click",
+  ()=>{
+    if(passwordInput.type === "password"){
+
+      passwordInput.type = "text";
+
+      togglePassword.textContent =
+        "Hide";
+
+    }else{
+
+      passwordInput.type = "password";
+
+      togglePassword.textContent =
+        "Show";
+    }
+  }
+);
+
+
+/*
+  Verify the authenticated Supabase user
+  against the Reader Reach profile and
+  moderator record.
+
+  Important:
+  We use maybeSingle() instead of single()
+  so that a missing row does not produce
+  an ambiguous PostgREST error.
+*/
 async function verifyModerator(userId){
 
-  const {data:profile,error:profileError} =
+  console.log(
+    "Verifying Moderator account for user:",
+    userId
+  );
+
+
+  /*
+    STEP 1:
+    Load Reader Reach profile.
+  */
+  const {
+    data:profile,
+    error:profileError
+  } =
     await supabaseClient
       .from("profiles")
-      .select("id,display_name,role")
+      .select(
+        "id,display_name,role"
+      )
       .eq("id",userId)
-      .single();
+      .maybeSingle();
+
+
+  console.log(
+    "Profile lookup result:",
+    {
+      data:profile,
+      error:profileError
+    }
+  );
+
 
   if(profileError){
+
     throw new Error(
-      "Could not verify your Reader Reach profile: " +
-      (profileError.message || "Unknown error.")
+      "Profile lookup failed: " +
+      (
+        profileError.message ||
+        "Unknown database error."
+      )
     );
   }
+
 
   if(!profile){
+
     throw new Error(
-      "Your account does not have a Reader Reach profile."
+      "No Reader Reach profile was found for this signed-in account."
     );
   }
 
+
   if(profile.role !== "moderator"){
+
     throw new Error(
       "This account is not registered as a Moderator."
     );
   }
 
-  const {data:moderator,error:moderatorError} =
+
+  /*
+    STEP 2:
+    Load the Moderator record.
+  */
+  const {
+    data:moderator,
+    error:moderatorError
+  } =
     await supabaseClient
       .from("moderators")
-      .select("id,profile_id,active")
+      .select(
+        "id,profile_id,active"
+      )
       .eq("profile_id",userId)
-      .single();
+      .maybeSingle();
 
+
+  console.log(
+    "Moderator lookup result:",
+    {
+      data:moderator,
+      error:moderatorError
+    }
+  );
+
+
+  /*
+    IMPORTANT:
+    If Supabase is rejecting the query,
+    show the real database error rather
+    than incorrectly saying the record
+    does not exist.
+  */
   if(moderatorError){
 
-    console.error(
-      "Moderator lookup error:",
-      moderatorError
-    );
-
     throw new Error(
-      "Unable to verify your Moderator record: " +
-      (moderatorError.message || "Unknown database error.")
+      "Moderator lookup failed: " +
+      (
+        moderatorError.message ||
+        "Unknown database error."
+      )
     );
   }
+
 
   if(!moderator){
+
     throw new Error(
-      "No Moderator record exists for this account."
+      "The signed-in user has no visible Moderator record."
     );
   }
 
+
   if(moderator.active !== true){
+
     throw new Error(
       "This Moderator account is currently inactive."
     );
   }
+
 
   return {
     profile,
@@ -444,120 +548,190 @@ async function verifyModerator(userId){
   };
 }
 
-form.addEventListener("submit",async(event)=>{
 
-  event.preventDefault();
+/*
+  SIGN IN
+*/
+form.addEventListener(
+  "submit",
+  async(event)=>{
 
-  const email =
-    emailInput.value.trim();
+    event.preventDefault();
 
-  const password =
-    passwordInput.value;
 
-  if(!email || !password){
-    showMessage(
-      "Please enter your email and password.",
-      "error"
-    );
-    return;
-  }
+    const email =
+      emailInput.value.trim();
 
-  loginButton.disabled = true;
-  loginButton.textContent = "Signing In...";
+    const password =
+      passwordInput.value;
 
-  showMessage(
-    "Checking your Moderator account...",
-    "success"
-  );
 
-  try{
+    if(!email || !password){
 
-    const {data,error} =
-      await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
-
-    if(error){
-      throw error;
-    }
-
-    if(!data?.session || !data?.user){
-      throw new Error(
-        "Sign-in did not create a valid session."
+      showMessage(
+        "Please enter your email and password.",
+        "error"
       );
+
+      return;
     }
 
-    /*
-      Give Supabase a moment to persist the authenticated
-      session before querying protected tables.
-    */
-    await new Promise(resolve => setTimeout(resolve,250));
 
-    const {
-      data:sessionData,
-      error:sessionError
-    } = await supabaseClient.auth.getSession();
+    loginButton.disabled = true;
 
-    if(sessionError){
-      throw sessionError;
-    }
+    loginButton.textContent =
+      "Signing In...";
 
-    if(!sessionData?.session?.user){
-      throw new Error(
-        "The Moderator session could not be confirmed."
-      );
-    }
-
-    const userId =
-      sessionData.session.user.id;
-
-    console.log(
-      "Authenticated Moderator user:",
-      userId
-    );
-
-    const verified =
-      await verifyModerator(userId);
-
-    console.log(
-      "Verified Moderator:",
-      verified.moderator.id
-    );
 
     showMessage(
-      "Moderator sign-in successful. Opening dashboard...",
+      "Checking your Moderator account...",
       "success"
     );
 
-    /*
-      Do not sign out here.
-      The dashboard will use the same persisted session.
-    */
-    window.location.replace(
-      "moderator-dashboard.html"
-    );
 
-  }catch(error){
+    try{
 
-    console.error(
-      "Moderator login error:",
-      error
-    );
+      /*
+        Authenticate with Supabase.
+      */
+      const {
+        data,
+        error
+      } =
+        await supabaseClient.auth
+          .signInWithPassword({
+            email,
+            password
+          });
 
-    showMessage(
-      error?.message ||
-      "Unable to sign in. Please check your credentials.",
-      "error"
-    );
 
-    loginButton.disabled = false;
-    loginButton.textContent =
-      "Sign In as Moderator";
+      if(error){
+
+        throw error;
+      }
+
+
+      if(
+        !data ||
+        !data.session ||
+        !data.user
+      ){
+
+        throw new Error(
+          "Sign-in did not create a valid session."
+        );
+      }
+
+
+      /*
+        Confirm the persisted session.
+      */
+      const {
+        data:sessionData,
+        error:sessionError
+      } =
+        await supabaseClient.auth
+          .getSession();
+
+
+      if(sessionError){
+
+        throw sessionError;
+      }
+
+
+      if(
+        !sessionData ||
+        !sessionData.session ||
+        !sessionData.session.user
+      ){
+
+        throw new Error(
+          "The Moderator session could not be confirmed."
+        );
+      }
+
+
+      const userId =
+        sessionData.session.user.id;
+
+
+      console.log(
+        "Authenticated Supabase user ID:",
+        userId
+      );
+
+
+      /*
+        Verify profile + moderator record.
+      */
+      const verified =
+        await verifyModerator(userId);
+
+
+      console.log(
+        "Verified Moderator ID:",
+        verified.moderator.id
+      );
+
+
+      showMessage(
+        "Moderator sign-in successful. Opening dashboard...",
+        "success"
+      );
+
+
+      /*
+        IMPORTANT:
+        Do NOT call signOut().
+        The Supabase session is intentionally
+        persisted for moderator-dashboard.html.
+      */
+      window.location.replace(
+        "moderator-dashboard.html"
+      );
+
+    }catch(error){
+
+      console.error(
+        "Moderator login error:",
+        error
+      );
+
+
+      showMessage(
+        error?.message ||
+        "Unable to sign in. Please check your credentials.",
+        "error"
+      );
+
+
+      loginButton.disabled = false;
+
+      loginButton.textContent =
+        "Sign In as Moderator";
+    }
+
   }
+);
 
-});
 
+/*
+  If Supabase signs the user out,
+  return to the Moderator login page.
+*/
+supabaseClient.auth.onAuthStateChange(
+  (event)=>{
+
+    if(event === "SIGNED_OUT"){
+
+      window.location.replace(
+        "moderator-login.html"
+      );
+    }
+
+  }
+);
 </script>
 
 </body>

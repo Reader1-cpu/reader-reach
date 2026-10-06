@@ -4,33 +4,42 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Moderator Dashboard • Reader Reach</title>
+<title>Moderator Dashboard — Reader Reach</title>
 
 <style>
 :root{
-  --cream:#f7f1e8;
-  --paper:#fffaf4;
-  --brown:#4a2f24;
-  --brown2:#6b4635;
-  --gold:#b58a4a;
-  --text:#2e211b;
-  --muted:#75665d;
-  --line:#e5d8ca;
-  --green:#4d7654;
-  --green-bg:#e5f0e6;
-  --red:#9a4b40;
-  --shadow:0 12px 35px rgba(74,47,36,.08);
+  --brown:#3b241b;
+  --brown2:#5a3829;
+  --cream:#fffdf8;
+  --soft:#f7efe4;
+  --butter:#ead79b;
+  --text:#34251f;
+  --muted:#76665d;
+  --line:#e7dbcf;
+  --white:#fff;
+  --green:#4e7555;
+  --red:#a74a42;
+  --shadow:0 12px 35px rgba(59,36,27,.08);
 }
 
 *{
   box-sizing:border-box;
 }
 
+html{
+  scroll-behavior:smooth;
+}
+
 body{
   margin:0;
   background:var(--cream);
   color:var(--text);
-  font-family:Arial,Helvetica,sans-serif;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
 }
 
 button,
@@ -44,333 +53,349 @@ button{
   cursor:pointer;
 }
 
-a{
-  color:inherit;
-  text-decoration:none;
-}
-
 .wrap{
-  width:min(1180px,calc(100% - 32px));
+  width:min(1180px,92%);
   margin:auto;
 }
 
-/* TOP */
-
-.topbar{
+.top{
   background:var(--brown);
-  color:#f8eee5;
-  font-size:11px;
+  color:#fff;
+  font-size:12px;
 }
 
-.topbar .wrap{
-  min-height:32px;
+.top .wrap{
+  min-height:34px;
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
+  gap:20px;
 }
-
-/* NAV */
 
 nav{
-  background:var(--paper);
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:rgba(255,253,248,.96);
+  backdrop-filter:blur(12px);
   border-bottom:1px solid var(--line);
 }
 
 .nav{
-  min-height:74px;
+  min-height:78px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:20px;
+  gap:25px;
 }
 
 .logo{
-  font-family:Georgia,serif;
   color:var(--brown);
-  font-size:25px;
-  font-weight:bold;
+  font-family:Georgia,serif;
+  font-size:22px;
+  font-weight:700;
+  line-height:1.05;
 }
 
 .logo small{
   display:block;
-  margin-top:3px;
-  font-family:Arial,sans-serif;
+  margin-top:5px;
   color:var(--muted);
+  font-family:Inter,sans-serif;
   font-size:10px;
-  font-weight:normal;
+  font-weight:500;
+  letter-spacing:.08em;
+  text-transform:uppercase;
 }
 
-.navlinks{
+.links{
   display:flex;
-  gap:20px;
-}
-
-.navlinks a{
+  align-items:center;
+  gap:22px;
   color:var(--muted);
-  font-size:13px;
+  font-size:14px;
 }
 
-.navlinks a:hover{
+.links a:hover{
   color:var(--brown);
 }
 
-/* BUTTONS */
+.navActions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
 
 .btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:42px;
+  padding:10px 17px;
   border:1px solid var(--line);
-  background:#fff;
+  border-radius:12px;
+  background:var(--white);
   color:var(--brown);
-  border-radius:10px;
-  padding:10px 14px;
+  font-weight:700;
   font-size:13px;
-  font-weight:bold;
-  transition:.18s ease;
+  transition:.2s ease;
 }
 
 .btn:hover{
   transform:translateY(-1px);
+  box-shadow:0 7px 18px rgba(59,36,27,.08);
 }
 
 .btn.primary{
   background:var(--brown);
-  border-color:var(--brown);
   color:#fff;
+  border-color:var(--brown);
 }
 
 .btn.soft{
-  background:#f0e4d7;
+  background:var(--soft);
+  border-color:var(--soft);
+}
+
+.btn.danger{
+  color:var(--red);
+  border-color:#ead0cc;
 }
 
 .btn.small{
-  padding:8px 11px;
+  min-height:36px;
+  padding:8px 12px;
+  border-radius:9px;
   font-size:12px;
 }
 
-.btn:disabled{
-  opacity:.55;
-  cursor:not-allowed;
-  transform:none;
-}
-
-/* HERO */
-
 .hero{
-  padding:52px 0;
+  padding:70px 0 55px;
   background:
-    radial-gradient(circle at 85% 20%,rgba(181,138,74,.18),transparent 32%),
-    linear-gradient(135deg,#f8efe4,#f1e3d3);
+    radial-gradient(circle at 80% 20%,rgba(234,215,155,.35),transparent 30%),
+    linear-gradient(135deg,#fffdf8 0%,#f7efe4 100%);
+  border-bottom:1px solid var(--line);
 }
 
 .heroGrid{
   display:grid;
-  grid-template-columns:1.4fr .6fr;
+  grid-template-columns:1.45fr .8fr;
   gap:35px;
   align-items:center;
 }
 
 .eyebrow{
-  color:var(--gold);
+  color:var(--brown2);
   text-transform:uppercase;
-  letter-spacing:1.5px;
+  letter-spacing:.13em;
   font-size:11px;
-  font-weight:bold;
+  font-weight:800;
 }
 
 .hero h1{
-  margin:10px 0 15px;
-  color:var(--brown);
+  margin:12px 0 14px;
+  max-width:760px;
   font-family:Georgia,serif;
-  font-size:47px;
-  line-height:1.05;
+  font-size:clamp(40px,6vw,68px);
+  line-height:1;
+  color:var(--brown);
 }
 
 .hero p{
   max-width:700px;
   color:var(--muted);
-  line-height:1.7;
+  font-size:17px;
+  line-height:1.75;
 }
 
 .heroActions{
   display:flex;
+  gap:10px;
   flex-wrap:wrap;
-  gap:9px;
-  margin-top:22px;
+  margin-top:25px;
 }
 
 .statusCard{
-  background:rgba(255,250,244,.9);
+  padding:25px;
   border:1px solid var(--line);
-  border-radius:18px;
-  padding:23px;
+  border-radius:22px;
+  background:rgba(255,255,255,.75);
   box-shadow:var(--shadow);
 }
 
 .statusLabel{
   color:var(--muted);
+  font-size:12px;
   text-transform:uppercase;
-  letter-spacing:1px;
-  font-size:10px;
+  letter-spacing:.08em;
+  font-weight:800;
 }
 
 .statusValue{
   margin-top:8px;
-  display:flex;
-  align-items:center;
-  gap:9px;
   color:var(--brown);
   font-family:Georgia,serif;
-  font-size:24px;
+  font-size:28px;
+  font-weight:700;
 }
 
 .statusDot{
-  width:11px;
-  height:11px;
+  display:inline-block;
+  width:9px;
+  height:9px;
+  margin-right:7px;
   border-radius:50%;
   background:var(--green);
 }
 
-/* MAIN */
-
 .dashboard{
-  padding:35px 0 70px;
+  padding:45px 0 80px;
 }
 
 .layout{
   display:grid;
-  grid-template-columns:215px 1fr;
-  gap:28px;
+  grid-template-columns:235px 1fr;
+  gap:25px;
 }
 
-/* SIDEBAR */
-
 .sidebar{
-  height:max-content;
   position:sticky;
-  top:18px;
-  background:var(--paper);
+  top:103px;
+  align-self:start;
+  padding:16px;
   border:1px solid var(--line);
-  border-radius:16px;
-  padding:11px;
+  border-radius:18px;
+  background:var(--white);
+  box-shadow:var(--shadow);
 }
 
 .sideTitle{
-  padding:10px;
+  padding:7px 10px 13px;
   color:var(--muted);
+  font-size:11px;
   text-transform:uppercase;
-  letter-spacing:1px;
-  font-size:10px;
-  font-weight:bold;
+  letter-spacing:.1em;
+  font-weight:800;
 }
 
-.sideBtn{
+.sideLink{
+  display:block;
   width:100%;
+  padding:11px 12px;
+  margin-bottom:3px;
   border:0;
+  border-radius:9px;
   background:transparent;
   color:var(--muted);
   text-align:left;
-  padding:11px 12px;
-  border-radius:10px;
   font-size:13px;
-  margin:2px 0;
+  font-weight:650;
 }
 
-.sideBtn:hover,
-.sideBtn.active{
-  background:#efe2d4;
+.sideLink:hover,
+.sideLink.active{
+  background:var(--soft);
   color:var(--brown);
-  font-weight:bold;
 }
 
-/* SECTIONS */
-
-.pageSection{
-  display:block;
+.content{
+  min-width:0;
 }
 
-.hidden{
-  display:none!important;
+.section{
+  margin-bottom:25px;
 }
 
 .card{
-  background:var(--paper);
+  padding:25px;
   border:1px solid var(--line);
-  border-radius:17px;
-  padding:23px;
-  box-shadow:0 6px 25px rgba(74,47,36,.05);
-  margin-bottom:24px;
+  border-radius:20px;
+  background:var(--white);
+  box-shadow:var(--shadow);
 }
 
 .sectionHead{
   display:flex;
   justify-content:space-between;
-  gap:15px;
   align-items:flex-start;
-  margin-bottom:18px;
+  gap:15px;
+  margin-bottom:20px;
 }
 
 .sectionTitle{
   margin:0;
   color:var(--brown);
   font-family:Georgia,serif;
-  font-size:27px;
+  font-size:28px;
 }
 
 .muted{
+  margin:6px 0 0;
   color:var(--muted);
-  font-size:13px;
   line-height:1.65;
+  font-size:14px;
 }
 
 .stats{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:13px;
+  gap:15px;
   margin-bottom:25px;
 }
 
 .stat{
-  background:var(--paper);
+  padding:20px;
   border:1px solid var(--line);
-  border-radius:15px;
-  padding:18px;
+  border-radius:17px;
+  background:var(--white);
 }
 
 .statNumber{
   color:var(--brown);
   font-family:Georgia,serif;
-  font-size:29px;
-  font-weight:bold;
+  font-size:32px;
+  font-weight:700;
 }
 
 .statLabel{
-  color:var(--muted);
   margin-top:5px;
+  color:var(--muted);
   font-size:12px;
 }
 
-/* ITEMS */
-
-.item{
-  border-bottom:1px solid var(--line);
-  padding:17px 0;
+.notice{
+  padding:15px 17px;
+  border:1px solid #eadfba;
+  border-radius:13px;
+  background:#fff9df;
+  color:#6d5b24;
+  font-size:13px;
+  line-height:1.6;
 }
 
-.item:last-child{
-  border-bottom:0;
+.list{
+  display:grid;
+  gap:12px;
+}
+
+.item{
+  padding:17px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:#fff;
 }
 
 .itemTop{
   display:flex;
+  align-items:flex-start;
   justify-content:space-between;
   gap:15px;
-  align-items:flex-start;
 }
 
 .itemTitle{
   color:var(--brown);
-  font-family:Georgia,serif;
-  font-size:20px;
-  font-weight:bold;
+  font-weight:800;
+  font-size:15px;
 }
 
 .itemMeta{
@@ -382,226 +407,239 @@ nav{
 
 .itemActions{
   display:flex;
+  gap:7px;
   flex-wrap:wrap;
-  gap:8px;
   margin-top:13px;
 }
 
 .badge{
   display:inline-flex;
   align-items:center;
-  padding:5px 9px;
+  min-height:26px;
+  padding:4px 9px;
   border-radius:999px;
-  font-size:10px;
-  font-weight:bold;
+  background:var(--soft);
+  color:var(--brown2);
+  font-size:11px;
+  font-weight:800;
 }
 
 .badge.green{
-  background:var(--green-bg);
+  background:#edf5ee;
   color:var(--green);
 }
 
 .badge.gold{
-  background:#f1e5d0;
-  color:#86632e;
+  background:#fff8dc;
+  color:#77611c;
 }
 
-/* MESSAGES */
-
-.messageLayout{
-  display:grid;
-  grid-template-columns:300px 1fr;
-  min-height:570px;
-  border:1px solid var(--line);
-  border-radius:15px;
-  overflow:hidden;
-  background:#fff;
+.badge.red{
+  background:#faece9;
+  color:var(--red);
 }
-
-.conversationPanel{
-  background:#fbf5ed;
-  border-right:1px solid var(--line);
-  overflow:auto;
-}
-
-.conversationHeading{
-  padding:16px;
-  border-bottom:1px solid var(--line);
-  color:var(--brown);
-  font-family:Georgia,serif;
-  font-size:18px;
-  font-weight:bold;
-}
-
-.authorChoice{
-  width:100%;
-  display:block;
-  border:0;
-  border-bottom:1px solid var(--line);
-  background:transparent;
-  text-align:left;
-  padding:14px;
-}
-
-.authorChoice:hover,
-.authorChoice.active{
-  background:#eee0d1;
-}
-
-.authorChoiceName{
-  color:var(--brown);
-  font-weight:bold;
-  font-size:13px;
-}
-
-.authorChoiceText{
-  margin-top:5px;
-  color:var(--muted);
-  font-size:11px;
-  line-height:1.45;
-}
-
-.messagePanel{
-  display:flex;
-  flex-direction:column;
-  min-width:0;
-}
-
-.messageHeader{
-  padding:17px;
-  border-bottom:1px solid var(--line);
-  background:#fffaf4;
-}
-
-.messageHeader strong{
-  color:var(--brown);
-  font-family:Georgia,serif;
-  font-size:20px;
-}
-
-.messages{
-  flex:1;
-  overflow:auto;
-  padding:18px;
-}
-
-.message{
-  max-width:76%;
-  padding:11px 13px;
-  border-radius:13px;
-  margin-bottom:10px;
-  font-size:13px;
-  line-height:1.55;
-}
-
-.message.author{
-  margin-right:auto;
-  background:#f1e6da;
-}
-
-.message.moderator{
-  margin-left:auto;
-  background:var(--brown);
-  color:#fff;
-}
-
-.messageTime{
-  margin-top:6px;
-  font-size:9px;
-  opacity:.6;
-}
-
-.reply{
-  display:flex;
-  gap:8px;
-  padding:13px;
-  border-top:1px solid var(--line);
-  background:#fbf5ed;
-}
-
-.reply textarea{
-  flex:1;
-  min-height:58px;
-  resize:vertical;
-  border:1px solid var(--line);
-  border-radius:11px;
-  padding:11px;
-  outline:none;
-}
-
-.reply textarea:focus{
-  border-color:var(--gold);
-}
-
-/* EMPTY */
 
 .empty{
-  padding:28px 18px;
+  padding:30px 15px;
   text-align:center;
   color:var(--muted);
+  border:1px dashed var(--line);
+  border-radius:14px;
   font-size:13px;
-  line-height:1.6;
 }
 
-.empty strong{
-  display:block;
-  margin-bottom:5px;
-  color:var(--brown);
-  font-family:Georgia,serif;
-  font-size:18px;
-}
-
-/* FORMS */
-
-.formGrid{
+.grid2{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:15px;
-  margin-bottom:17px;
+  gap:20px;
+}
+
+.field{
+  margin-bottom:15px;
 }
 
 .field label{
   display:block;
-  margin-bottom:6px;
+  margin-bottom:7px;
   color:var(--brown);
   font-size:12px;
-  font-weight:bold;
+  font-weight:800;
 }
 
 .field input,
-.field select,
-.field textarea{
+.field textarea,
+.field select{
   width:100%;
+  padding:12px 13px;
   border:1px solid var(--line);
   border-radius:10px;
-  padding:11px;
+  outline:none;
   background:#fff;
   color:var(--text);
-  outline:none;
+}
+
+.field textarea{
+  min-height:105px;
+  resize:vertical;
 }
 
 .field input:focus,
-.field select:focus,
-.field textarea:focus{
-  border-color:var(--gold);
+.field textarea:focus,
+.field select:focus{
+  border-color:var(--brown2);
+  box-shadow:0 0 0 3px rgba(90,56,41,.08);
 }
 
-/* TOAST */
+.scheduleList{
+  display:grid;
+  gap:10px;
+  max-height:650px;
+  overflow:auto;
+}
+
+.scheduleItem{
+  padding:15px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:var(--cream);
+}
+
+.scheduleDate{
+  color:var(--brown2);
+  font-weight:800;
+  font-size:12px;
+}
+
+.scheduleBook{
+  margin-top:5px;
+  color:var(--brown);
+  font-family:Georgia,serif;
+  font-size:17px;
+  font-weight:700;
+}
+
+.scheduleAuthor{
+  margin-top:3px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.messageLayout{display:grid;grid-template-columns:320px minmax(0,1fr);min-height:600px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.conversationList{border-right:1px solid var(--line);background:#fcf8f1;overflow:auto;max-height:680px}
+.conversation{width:100%;padding:15px;border:0;border-bottom:1px solid var(--line);background:transparent;text-align:left}
+.conversation:hover,.conversation.active{background:#fff}
+.conversationTitle{color:var(--brown);font-size:13px;font-weight:800}
+.conversationMeta{margin-top:5px;color:var(--muted);font-size:11px;line-height:1.45}
+.chatPanel{display:flex;flex-direction:column;min-width:0}
+.chatHeader{padding:17px;border-bottom:1px solid var(--line)}
+.chatMessages{flex:1;min-height:360px;max-height:500px;overflow:auto;padding:18px;background:#fffdf9}
+.chatBubble{max-width:78%;padding:11px 13px;margin-bottom:12px;border-radius:13px;font-size:13px;line-height:1.55;overflow-wrap:anywhere;white-space:pre-wrap}
+.chatBubble.author{background:var(--soft);margin-right:auto;border:1px solid #eee1d4}
+.chatBubble.moderator{background:var(--brown);color:#fff;margin-left:auto}
+.chatBubble small{display:block;margin-top:6px;opacity:.68;font-size:10px}
+.messageActions{display:flex;justify-content:flex-end;gap:6px;margin-top:8px}
+.messageActions button{border:0;border-radius:7px;padding:5px 8px;font-size:10px;background:rgba(255,255,255,.14);color:inherit}
+.attachmentPreview{margin-top:8px;padding:8px;border-radius:9px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15)}
+.chatBubble.author .attachmentPreview{background:#fff;border-color:var(--line)}
+.attachmentPreview img{max-width:240px;max-height:180px;border-radius:7px;display:block}
+.attachmentPreview video{width:360px;max-width:100%;max-height:260px;border-radius:7px;display:block}
+.attachmentLink{display:inline-flex;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.14);color:inherit;font-weight:700;overflow-wrap:anywhere}
+.chatBubble.author .attachmentLink{background:var(--soft);color:var(--brown)}
+.replyBox{padding:13px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px;background:#fff}
+.replyBox textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:9px;padding:12px;background:#fffdf9;color:var(--text);resize:vertical}
+.chatAttachmentRow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+
+.replyBox textarea{
+  flex:1;
+  min-height:48px;
+  max-height:120px;
+  padding:11px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  resize:vertical;
+}
+
+.profileGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.profileField{
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--cream);
+}
+
+.profileField label{
+  display:block;
+  margin-bottom:5px;
+  color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  font-weight:800;
+}
+
+.profileField div{
+  color:var(--brown);
+  font-weight:700;
+  font-size:14px;
+}
+
+footer{
+  padding:45px 0;
+  background:var(--brown);
+  color:#fff;
+}
+
+.footerGrid{
+  display:grid;
+  grid-template-columns:1.5fr 1fr 1fr;
+  gap:30px;
+}
+
+footer h3,
+footer h4{
+  margin:0 0 10px;
+  font-family:Georgia,serif;
+}
+
+footer p,
+footer a{
+  color:#ddcec4;
+  font-size:13px;
+  line-height:1.7;
+}
+
+footer a{
+  display:block;
+  margin-bottom:5px;
+}
+
+.copy{
+  margin-top:35px;
+  padding-top:18px;
+  border-top:1px solid rgba(255,255,255,.15);
+  color:#cdbdb2;
+  font-size:11px;
+}
 
 .toast{
   position:fixed;
   right:20px;
   bottom:20px;
-  z-index:9999;
-  max-width:380px;
+  z-index:100;
+  max-width:350px;
+  padding:13px 16px;
+  border-radius:12px;
   background:var(--brown);
   color:#fff;
-  padding:13px 16px;
-  border-radius:11px;
   box-shadow:var(--shadow);
   opacity:0;
-  transform:translateY(10px);
   pointer-events:none;
+  transform:translateY(10px);
   transition:.2s ease;
   font-size:13px;
 }
@@ -611,11 +649,12 @@ nav{
   transform:translateY(0);
 }
 
-/* RESPONSIVE */
+.hidden{
+  display:none!important;
+}
 
 @media(max-width:950px){
-
-  .navlinks{
+  .links{
     display:none;
   }
 
@@ -638,8 +677,9 @@ nav{
     display:none;
   }
 
-  .sideBtn{
+  .sideLink{
     min-width:max-content;
+    margin:0;
   }
 
   .stats{
@@ -650,28 +690,47 @@ nav{
     grid-template-columns:1fr;
   }
 
-  .conversationPanel{
-    max-height:280px;
+  .conversationList{
+    max-height:220px;
     border-right:0;
     border-bottom:1px solid var(--line);
   }
 }
 
 @media(max-width:650px){
+  .top .wrap{
+    min-height:30px;
+    font-size:10px;
+  }
 
-  .topbar .wrap span:last-child{
+  .top .wrap span:last-child{
     display:none;
   }
 
+  .nav{
+    min-height:65px;
+  }
+
+  .logo{
+    font-size:19px;
+  }
+
+  .navActions .btn:first-child{
+    display:none;
+  }
+
+  .hero{
+    padding:50px 0 40px;
+  }
+
   .hero h1{
-    font-size:37px;
+    font-size:42px;
   }
 
-  .stats{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .formGrid{
+  .stats,
+  .grid2,
+  .profileGrid,
+  .footerGrid{
     grid-template-columns:1fr;
   }
 
@@ -679,11 +738,15 @@ nav{
     padding:18px;
   }
 
-  .message{
-    max-width:90%;
+  .sectionTitle{
+    font-size:24px;
   }
 
-  .reply{
+  .itemTop{
+    flex-direction:column;
+  }
+
+  .replyBox{
     flex-direction:column;
   }
 }
@@ -692,10 +755,10 @@ nav{
 
 <body>
 
-<div class="topbar">
+<div class="top">
   <div class="wrap">
     <span>Reader Reach • Moderator Workspace</span>
-    <span>Communication • Features • Scheduling</span>
+    <span>Author Communication • Scheduling • Feature Calendar</span>
   </div>
 </div>
 
@@ -707,703 +770,617 @@ nav{
       <small>Every Book Has Its Readers</small>
     </a>
 
-    <div class="navlinks">
+    <div class="links">
       <a href="index.html">Home</a>
       <a href="authors.html">Authors</a>
+      <a href="index.html#featured">Featured</a>
       <a href="contact.html">Contact</a>
     </div>
 
-    <button class="btn primary" onclick="signOut()">
-      Sign Out
-    </button>
+    <div class="navActions">
+      <a class="btn" href="index.html">Public Site</a>
+      <button class="btn primary" id="signOutBtn">Sign Out</button>
+    </div>
 
   </div>
 </nav>
 
 <header class="hero">
-
   <div class="wrap heroGrid">
 
     <div>
+      <div class="eyebrow">Moderator Dashboard</div>
 
-      <div class="eyebrow">
-        Moderator Dashboard
-      </div>
-
-      <h1>
-        Keep authors, books and features moving.
-      </h1>
+      <h1>Keep authors, books and features moving.</h1>
 
       <p>
         Communicate with approved authors, coordinate feature schedules,
-        manage the feature calendar and stay informed about Reader Reach activity.
+        manage the feature calendar, and stay informed when new books
+        are approved.
       </p>
 
       <div class="heroActions">
-
-        <button
-          class="btn primary"
-          onclick="showSection('authors')">
-          Select an Author
-        </button>
-
-        <button
-          class="btn soft"
-          onclick="showSection('messages')">
+        <button class="btn primary" onclick="showSection('messages')">
           Open Messages
         </button>
 
+        <button class="btn soft" onclick="showSection('calendar')">
+          Feature Calendar
+        </button>
       </div>
-
     </div>
 
     <div class="statusCard">
-
-      <div class="statusLabel">
-        Moderator Status
-      </div>
+      <div class="statusLabel">Moderator Status</div>
 
       <div class="statusValue">
         <span class="statusDot"></span>
-        <span id="moderatorStatus">
-          Checking...
-        </span>
+        <span id="moderatorStatus">Checking...</span>
       </div>
 
       <p class="muted">
         Moderator permissions are separate from Admin permissions.
         Approval and removal controls are not available here.
       </p>
-
     </div>
 
   </div>
-
 </header>
 
 <main class="dashboard">
 
-<div class="wrap layout">
+  <div class="wrap layout">
 
-<aside class="sidebar">
+    <aside class="sidebar">
 
-  <div class="sideTitle">
-    Workspace
-  </div>
+      <div class="sideTitle">Workspace</div>
 
-  <button
-    class="sideBtn active"
-    data-section="overview"
-    onclick="showSection('overview')">
-    Overview
-  </button>
-
-  <button
-    class="sideBtn"
-    data-section="authors"
-    onclick="showSection('authors')">
-    Approved Authors
-  </button>
-
-  <button
-    class="sideBtn"
-    data-section="books"
-    onclick="showSection('books')">
-    Approved Books
-  </button>
-
-  <button
-    class="sideBtn"
-    data-section="messages"
-    onclick="showSection('messages')">
-    Messages
-  </button>
-
-  <button
-    class="sideBtn"
-    data-section="calendar"
-    onclick="showSection('calendar')">
-    Feature Calendar
-  </button>
-
-  <button
-    class="sideBtn"
-    data-section="notifications"
-    onclick="showSection('notifications')">
-    Notifications
-  </button>
-
-  <button
-    class="sideBtn"
-    data-section="account"
-    onclick="showSection('account')">
-    My Account
-  </button>
-
-  <button
-    class="sideBtn"
-    onclick="signOut()">
-    Sign Out
-  </button>
-
-</aside>
-
-<section>
-
-<!-- OVERVIEW -->
-
-<section
-  id="overview"
-  class="pageSection">
-
-  <div class="stats">
-
-    <div class="stat">
-      <div class="statNumber" id="approvedAuthorsCount">—</div>
-      <div class="statLabel">Approved Authors</div>
-    </div>
-
-    <div class="stat">
-      <div class="statNumber" id="approvedBooksCount">—</div>
-      <div class="statLabel">Approved Books</div>
-    </div>
-
-    <div class="stat">
-      <div class="statNumber" id="scheduledCount">—</div>
-      <div class="statLabel">Scheduled Features</div>
-    </div>
-
-    <div class="stat">
-      <div class="statNumber" id="unreadCount">—</div>
-      <div class="statLabel">Unread Notifications</div>
-    </div>
-
-  </div>
-
-  <div class="card">
-
-    <h2 class="sectionTitle">
-      Moderator Workspace
-    </h2>
-
-    <p class="muted">
-      Start conversations with approved authors, coordinate feature schedules
-      and keep track of Reader Reach activity.
-    </p>
-
-    <div class="item">
-
-      <div class="itemTitle">
-        Author Communication
-      </div>
-
-      <div class="itemMeta">
-        Choose an approved author and click
-        <strong>Message Author</strong> to create or open a conversation.
-      </div>
-
-      <div class="itemActions">
-
-        <button
-          class="btn primary"
-          onclick="showSection('authors')">
-          Choose Author
-        </button>
-
-        <button
-          class="btn"
-          onclick="showSection('messages')">
-          Open Messages
-        </button>
-
-      </div>
-
-    </div>
-
-    <div class="item">
-
-      <div class="itemTitle">
-        Permission Boundary
-      </div>
-
-      <div class="itemMeta">
-        Moderators do not approve, reject or remove authors or books.
-        Those actions remain under Admin control.
-      </div>
-
-      <div class="itemActions">
-
-        <span class="badge green">
-          Moderator permissions active
-        </span>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- AUTHORS -->
-
-<section
-  id="authors"
-  class="pageSection hidden">
-
-  <div class="card">
-
-    <div class="sectionHead">
-
-      <div>
-
-        <h2 class="sectionTitle">
-          Approved Authors
-        </h2>
-
-        <p class="muted">
-          Every approved author below can be selected for communication.
-        </p>
-
-      </div>
-
-      <button
-        class="btn small"
-        onclick="loadApprovedAuthors()">
-        Refresh
+      <button class="sideLink active"
+              data-section="overview"
+              onclick="showSection('overview')">
+        Overview
       </button>
 
-    </div>
-
-    <div id="authorList">
-
-      <div class="empty">
-        Loading approved authors...
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- BOOKS -->
-
-<section
-  id="books"
-  class="pageSection hidden">
-
-  <div class="card">
-
-    <div class="sectionHead">
-
-      <div>
-
-        <h2 class="sectionTitle">
-          Approved Books
-        </h2>
-
-        <p class="muted">
-          Approved books available for feature coordination.
-        </p>
-
-      </div>
-
-      <button
-        class="btn small"
-        onclick="loadApprovedBooks()">
-        Refresh
+      <button class="sideLink"
+              data-section="authors"
+              onclick="showSection('authors')">
+        Approved Authors
       </button>
 
-    </div>
-
-    <div id="approvedBookList">
-
-      <div class="empty">
-        Loading approved books...
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- MESSAGES -->
-
-<section
-  id="messages"
-  class="pageSection hidden">
-
-  <div class="card">
-
-    <div class="sectionHead">
-
-      <div>
-
-        <h2 class="sectionTitle">
-          Messages
-        </h2>
-
-        <p class="muted">
-          Select an author from the left, then send messages directly.
-        </p>
-
-      </div>
-
-      <button
-        class="btn small"
-        onclick="loadMessagesWorkspace()">
-        Refresh
+      <button class="sideLink"
+              data-section="books"
+              onclick="showSection('books')">
+        Approved Books
       </button>
 
-    </div>
-
-    <div class="messageLayout">
-
-      <div class="conversationPanel">
-
-        <div class="conversationHeading">
-          Authors
-        </div>
-
-        <div id="messageAuthorList">
-
-          <div class="empty">
-            Loading authors...
-          </div>
-
-        </div>
-
-        <div
-          style="
-            padding:12px;
-            border-top:1px solid var(--line);
-            color:var(--muted);
-            font-size:11px;
-            line-height:1.5;
-          ">
-          Click an author to create or open their conversation.
-        </div>
-
-      </div>
-
-      <div class="messagePanel">
-
-        <div
-          class="messageHeader"
-          id="messageHeader">
-
-          <strong>
-            Select an author
-          </strong>
-
-          <div class="muted">
-            Choose an approved author to start or continue a conversation.
-          </div>
-
-        </div>
-
-        <div
-          class="messages"
-          id="messagesList">
-
-          <div class="empty">
-            <strong>No conversation selected.</strong>
-            Select an author from the left.
-          </div>
-
-        </div>
-
-        <div class="reply">
-
-          <textarea
-            id="messageInput"
-            placeholder="Write a message to the author..."
-            disabled></textarea>
-
-          <button
-            id="sendMessageButton"
-            class="btn primary"
-            onclick="sendMessage()"
-            disabled>
-            Send
-          </button>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- CALENDAR -->
-
-<section
-  id="calendar"
-  class="pageSection hidden">
-
-  <div class="card">
-
-    <div class="sectionHead">
-
-      <div>
-
-        <h2 class="sectionTitle">
-          Feature Calendar
-        </h2>
-
-        <p class="muted">
-          Schedule features for approved books.
-        </p>
-
-      </div>
-
-      <button
-        class="btn small"
-        onclick="loadSchedules()">
-        Refresh
+      <button class="sideLink"
+              data-section="messages"
+              onclick="showSection('messages')">
+        Messages
       </button>
 
-    </div>
-
-    <div class="formGrid">
-
-      <div class="field">
-
-        <label>
-          Approved Book
-        </label>
-
-        <select id="scheduleBook">
-          <option value="">
-            Select a book
-          </option>
-        </select>
-
-      </div>
-
-      <div class="field">
-
-        <label>
-          Date
-        </label>
-
-        <input
-          type="date"
-          id="scheduleDate">
-
-      </div>
-
-      <div class="field">
-
-        <label>
-          Time
-        </label>
-
-        <input
-          type="time"
-          id="scheduleTime">
-
-      </div>
-
-      <div class="field">
-
-        <label>
-          Notes
-        </label>
-
-        <input
-          type="text"
-          id="scheduleNotes"
-          placeholder="Optional notes">
-
-      </div>
-
-    </div>
-
-    <button
-      class="btn primary"
-      onclick="createSchedule()">
-      Schedule Feature
-    </button>
-
-  </div>
-
-  <div class="card">
-
-    <h2 class="sectionTitle">
-      Upcoming Features
-    </h2>
-
-    <div id="scheduleList">
-
-      <div class="empty">
-        Loading schedules...
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- NOTIFICATIONS -->
-
-<section
-  id="notifications"
-  class="pageSection hidden">
-
-  <div class="card">
-
-    <div class="sectionHead">
-
-      <div>
-
-        <h2 class="sectionTitle">
-          Notifications
-        </h2>
-
-        <p class="muted">
-          Your Reader Reach moderator notifications.
-        </p>
-
-      </div>
-
-      <button
-        class="btn small"
-        onclick="loadNotifications()">
-        Refresh
+      <button class="sideLink"
+              data-section="calendar"
+              onclick="showSection('calendar')">
+        Feature Calendar
       </button>
 
-    </div>
+      <button class="sideLink"
+              data-section="notifications"
+              onclick="showSection('notifications')">
+        Notifications
+      </button>
 
-    <div id="notificationList">
+      <button class="sideLink"
+              data-section="account"
+              onclick="showSection('account')">
+        My Account
+      </button>
 
-      <div class="empty">
-        Loading notifications...
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- ACCOUNT -->
-
-<section
-  id="account"
-  class="pageSection hidden">
-
-  <div class="card">
-
-    <h2 class="sectionTitle">
-      My Account
-    </h2>
-
-    <p class="muted">
-      Your moderator account information.
-    </p>
-
-    <div class="formGrid">
-
-      <div class="field">
-        <label>Name</label>
-        <input id="accountName" readonly>
-      </div>
-
-      <div class="field">
-        <label>Email</label>
-        <input id="accountEmail" readonly>
-      </div>
-
-      <div class="field">
-        <label>Role</label>
-        <input value="Moderator" readonly>
-      </div>
-
-      <div class="field">
-        <label>Account Created</label>
-        <input id="accountCreated" readonly>
-      </div>
-
-    </div>
-
-    <div class="itemActions">
-
-      <a
-        class="btn"
-        href="reset-password.html">
-        Reset Password
-      </a>
-
-      <a
-        class="btn"
-        href="contact.html">
-        Contact Reader Reach
-      </a>
-
-      <button
-        class="btn primary"
-        onclick="signOut()">
+      <button class="sideLink" onclick="signOut()">
         Sign Out
       </button>
 
-    </div>
+    </aside>
+
+    <section class="content">
+
+      <!-- OVERVIEW -->
+
+      <section id="overview" class="pageSection">
+
+        <div class="stats">
+
+          <div class="stat">
+            <div class="statNumber" id="approvedAuthorsCount">—</div>
+            <div class="statLabel">Approved Authors</div>
+          </div>
+
+          <div class="stat">
+            <div class="statNumber" id="approvedBooksCount">—</div>
+            <div class="statLabel">Approved Books</div>
+          </div>
+
+          <div class="stat">
+            <div class="statNumber" id="scheduledFeaturesCount">—</div>
+            <div class="statLabel">Scheduled Features</div>
+          </div>
+
+          <div class="stat">
+            <div class="statNumber" id="unreadNotificationsCount">—</div>
+            <div class="statLabel">Unread Notifications</div>
+          </div>
+
+        </div>
+
+        <section class="section">
+
+          <div class="card">
+
+            <div class="sectionHead">
+
+              <div>
+                <h2 class="sectionTitle">Moderator Workspace</h2>
+
+                <p class="muted">
+                  Your main responsibilities are author communication,
+                  feature coordination, scheduling and moderation support.
+                </p>
+              </div>
+
+            </div>
+
+            <div class="notice">
+              <strong>Permission boundary:</strong>
+              moderators do not approve, reject or remove authors or books.
+              Those actions remain under Admin control.
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="section">
+
+          <div class="grid2">
+
+            <div class="card">
+
+              <div class="sectionHead">
+                <div>
+                  <h2 class="sectionTitle">Recent Approved Books</h2>
+                  <p class="muted">
+                    Books recently approved by Admin and available for feature coordination.
+                  </p>
+                </div>
+              </div>
+
+              <div id="recentBooksList" class="list">
+                <div class="empty">Loading approved books...</div>
+              </div>
+
+            </div>
+
+            <div class="card">
+
+              <div class="sectionHead">
+                <div>
+                  <h2 class="sectionTitle">Upcoming Features</h2>
+                  <p class="muted">
+                    Scheduled Reader Reach features.
+                  </p>
+                </div>
+              </div>
+
+              <div id="upcomingList" class="list">
+                <div class="empty">Loading schedules...</div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </section>
+
+
+      <!-- APPROVED AUTHORS -->
+
+      <section id="authors" class="pageSection hidden">
+
+        <section class="section">
+
+          <div class="card">
+
+            <div class="sectionHead">
+
+              <div>
+                <h2 class="sectionTitle">Approved Authors</h2>
+
+                <p class="muted">
+                  Communicate and coordinate with authors whose accounts
+                  have already been approved by Admin.
+                </p>
+              </div>
+
+              <button class="btn small" onclick="loadApprovedAuthors()">
+                Refresh
+              </button>
+
+            </div>
+
+            <div id="authorList" class="list">
+              <div class="empty">Loading approved authors...</div>
+            </div>
+
+          </div>
+
+        </section>
+
+      </section>
+
+
+      <!-- APPROVED BOOKS -->
+
+      <section id="books" class="pageSection hidden">
+
+        <section class="section">
+
+          <div class="card">
+
+            <div class="sectionHead">
+
+              <div>
+                <h2 class="sectionTitle">Approved Books</h2>
+
+                <p class="muted">
+                  Approved books can be coordinated for features and schedules.
+                </p>
+              </div>
+
+              <button class="btn small" onclick="loadApprovedBooks()">
+                Refresh
+              </button>
+
+            </div>
+
+            <div id="approvedBookList" class="list">
+              <div class="empty">Loading approved books...</div>
+            </div>
+
+          </div>
+
+        </section>
+
+      </section>
+
+
+      <!-- MESSAGES -->
+
+      <section id="messages" class="pageSection hidden">
+        <section class="section">
+          <div class="card">
+            <div class="sectionHead">
+              <div>
+                <h2 class="sectionTitle">Author Messages</h2>
+                <p class="muted">Every conversation belongs to one author, one Moderator and one book.</p>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="btn small" onclick="openModeratorNewConversation()">New Conversation</button>
+                <button class="btn small" onclick="loadConversations()">Refresh</button>
+              </div>
+            </div>
+            <div id="moderatorNewConversation" class="card" style="margin-bottom:14px;background:#fffdf9" hidden>
+              <div class="sectionHead"><div><h3 class="sectionTitle">Start a book conversation</h3><p class="muted">Choose the approved author and the exact book you are discussing.</p></div></div>
+              <div class="formGrid">
+                <div class="field"><label for="modConversationAuthor">Author</label><select id="modConversationAuthor"><option value="">Select author</option></select></div>
+                <div class="field"><label for="modConversationBook">Book</label><select id="modConversationBook"><option value="">Select book</option></select></div>
+              </div>
+              <div class="itemActions" style="margin-top:12px"><button class="btn primary small" onclick="createModeratorConversation()">Start Conversation</button><button class="btn small" onclick="document.getElementById('moderatorNewConversation').hidden=true">Cancel</button></div>
+            </div>
+            <div class="messageLayout">
+              <div id="conversationList" class="conversationList"><div class="empty">Loading conversations...</div></div>
+              <div class="chatPanel">
+                <div class="chatHeader">
+                  <div class="itemTitle" id="conversationTitle">Select a conversation</div>
+                  <div class="itemMeta" id="conversationMeta">Book, author and Moderator details will appear here.</div>
+                </div>
+                <div id="chatMessages" class="chatMessages"><div class="empty">Select a conversation to view messages.</div></div>
+                <div class="replyBox">
+                  <textarea id="replyInput" placeholder="Write a reply to the author..." disabled></textarea>
+                  <div class="chatAttachmentRow">
+                    <input id="replyFiles" type="file" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp,.mp4,.webm,.mov,.avi,.mkv,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,video/*,image/*,text/plain" disabled>
+                    <span id="replyFileNames">Up to 5 files · 50 MB each</span>
+                  </div>
+                  <button id="sendReplyBtn" class="btn primary" disabled onclick="sendReply()">Send Message</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+
+      <!-- CALENDAR -->
+
+      <section id="calendar" class="pageSection hidden">
+
+        <section class="section">
+
+          <div class="card">
+
+            <div class="sectionHead">
+
+              <div>
+                <h2 class="sectionTitle">Feature Calendar</h2>
+
+                <p class="muted">
+                  Schedule approved books for Reader Reach features.
+                </p>
+              </div>
+
+              <button class="btn small" onclick="loadSchedules()">
+                Refresh
+              </button>
+
+            </div>
+
+            <div class="grid2">
+
+              <div>
+
+                <div class="notice" style="margin-bottom:18px;">
+                  Only approved books can be scheduled.
+                  Admin remains responsible for book approval.
+                </div>
+
+                <div class="field">
+
+                  <label for="scheduleBook">
+                    Approved Book
+                  </label>
+
+                  <select id="scheduleBook">
+                    <option value="">
+                      Select an approved book
+                    </option>
+                  </select>
+
+                </div>
+
+                <div class="field">
+
+                  <label for="scheduleDate">
+                    Feature Date
+                  </label>
+
+                  <input
+                    id="scheduleDate"
+                    type="date">
+
+                </div>
+
+                <div class="field">
+
+                  <label for="scheduleTime">
+                    Feature Time
+                  </label>
+
+                  <input
+                    id="scheduleTime"
+                    type="time">
+
+                </div>
+
+                <div class="field">
+
+                  <label for="scheduleNotes">
+                    Notes
+                  </label>
+
+                  <textarea
+                    id="scheduleNotes"
+                    placeholder="Optional scheduling notes"></textarea>
+
+                </div>
+
+                <button
+                  class="btn primary"
+                  id="scheduleBtn">
+                  Schedule Feature
+                </button>
+
+              </div>
+
+              <div>
+
+                <h3 style="margin-top:0;color:var(--brown);">
+                  Scheduled Features
+                </h3>
+
+                <div id="scheduleList" class="scheduleList">
+                  <div class="empty">
+                    Loading schedules...
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </section>
+
+
+      <!-- NOTIFICATIONS -->
+
+      <section id="notifications" class="pageSection hidden">
+
+        <section class="section">
+
+          <div class="card">
+
+            <div class="sectionHead">
+
+              <div>
+                <h2 class="sectionTitle">Notifications</h2>
+
+                <p class="muted">
+                  New approved books, author messages, schedule changes
+                  and other moderator activity.
+                </p>
+              </div>
+
+              <button class="btn small" onclick="loadNotifications()">
+                Refresh
+              </button>
+
+            </div>
+
+            <div id="notificationList" class="list">
+              <div class="empty">
+                Loading notifications...
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+      </section>
+
+
+      <!-- ACCOUNT -->
+
+      <section id="account" class="pageSection hidden">
+
+        <section class="section">
+
+          <div class="card">
+
+            <div class="sectionHead">
+
+              <div>
+                <h2 class="sectionTitle">My Account</h2>
+
+                <p class="muted">
+                  Moderator account information.
+                </p>
+              </div>
+
+            </div>
+
+            <div class="profileGrid">
+
+              <div class="profileField">
+                <label>Name</label>
+                <div id="accountName">—</div>
+              </div>
+
+              <div class="profileField">
+                <label>Email</label>
+                <div id="accountEmail">—</div>
+              </div>
+
+              <div class="profileField">
+                <label>Role</label>
+                <div id="accountRole">Moderator</div>
+              </div>
+
+              <div class="profileField">
+                <label>Member Since</label>
+                <div id="accountCreated">—</div>
+              </div>
+
+            </div>
+
+            <div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;">
+
+              <a
+                class="btn"
+                href="reset-password.html">
+                Reset Password
+              </a>
+
+              <a
+                class="btn"
+                href="contact.html">
+                Contact Reader Reach
+              </a>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </section>
+
+    </section>
 
   </div>
 
-</section>
-
-</section>
-
-</div>
-
 </main>
 
-<footer style="
-  background:#4a2f24;
-  color:#eaded4;
-  padding:35px 0;
-">
+
+<footer>
 
   <div class="wrap">
 
-    <strong style="
-      color:#fff;
-      font-family:Georgia,serif;
-      font-size:18px;
-    ">
-      Reader Reach
-    </strong>
+    <div class="footerGrid">
 
-    <p style="
-      font-size:12px;
-      line-height:1.7;
-    ">
-      Every Book Has Its Readers.
-    </p>
+      <div>
+        <h3>Reader Reach</h3>
+
+        <p>
+          Every Book Has Its Readers.
+        </p>
+
+        <p>
+          Moderator workspace for author communication,
+          feature coordination and scheduling.
+        </p>
+      </div>
+
+      <div>
+        <h4>Explore</h4>
+
+        <a href="index.html">Home</a>
+        <a href="authors.html">Authors</a>
+        <a href="index.html#featured">Featured Books</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <div>
+        <h4>Workspace</h4>
+
+        <a href="#authors">Approved Authors</a>
+        <a href="#messages">Messages</a>
+        <a href="#calendar">Feature Calendar</a>
+        <a href="#notifications">Notifications</a>
+      </div>
+
+    </div>
+
+    <div class="copy">
+      © 2026 Reader Reach. All rights reserved.
+    </div>
 
   </div>
 
 </footer>
 
-<div
-  id="toast"
-  class="toast">
-</div>
+
+<div id="toast" class="toast"></div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-
-/* =========================================
-   SUPABASE
-========================================= */
 
 const SUPABASE_URL =
   'https://bublmnfhyyrefcdkloak.supabase.co';
@@ -1411,16 +1388,12 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
   'sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY';
 
-const db =
+const supabaseClient =
   window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
   );
 
-
-/* =========================================
-   STATE
-========================================= */
 
 let currentUser = null;
 let currentProfile = null;
@@ -1428,16 +1401,18 @@ let currentModerator = null;
 
 let approvedAuthors = [];
 let approvedBooks = [];
+let schedules = [];
+let notifications = [];
 
 let conversations = [];
-
-let selectedAuthor = null;
 let selectedConversation = null;
 
+let realtimeChannel = null;
 
-/* =========================================
-   HELPERS
-========================================= */
+
+/* -------------------------
+   BASIC HELPERS
+------------------------- */
 
 function escapeHtml(value){
 
@@ -1457,8 +1432,7 @@ function formatDate(value){
     return '—';
   }
 
-  const date =
-    new Date(value);
+  const date = new Date(value);
 
   if(Number.isNaN(date.getTime())){
     return '—';
@@ -1482,8 +1456,7 @@ function formatDateTime(value){
     return '—';
   }
 
-  const date =
-    new Date(value);
+  const date = new Date(value);
 
   if(Number.isNaN(date.getTime())){
     return '—';
@@ -1503,106 +1476,73 @@ function formatDateTime(value){
 }
 
 
-function toast(message){
+function showToast(message){
 
-  const element =
+  const toast =
     document.getElementById('toast');
 
-  element.textContent =
-    message;
+  toast.textContent = message;
 
-  element.classList.add('show');
+  toast.classList.add('show');
 
-  clearTimeout(
-    window.__toastTimer
+  setTimeout(
+    () => toast.classList.remove('show'),
+    3000
   );
-
-  window.__toastTimer =
-    setTimeout(
-      () => {
-        element.classList.remove('show');
-      },
-      4000
-    );
 
 }
 
 
-/* =========================================
+/* -------------------------
    NAVIGATION
-========================================= */
+------------------------- */
 
-function showSection(name){
+function showSection(section){
 
   document
     .querySelectorAll('.pageSection')
-    .forEach(section => {
-
-      section.classList.add('hidden');
-
+    .forEach(item => {
+      item.classList.add('hidden');
     });
 
+  const target =
+    document.getElementById(section);
 
-  const section =
-    document.getElementById(name);
-
-  if(section){
-    section.classList.remove('hidden');
+  if(target){
+    target.classList.remove('hidden');
   }
 
-
   document
-    .querySelectorAll('.sideBtn[data-section]')
-    .forEach(button => {
+    .querySelectorAll('.sideLink[data-section]')
+    .forEach(link => {
 
-      button.classList.toggle(
+      link.classList.toggle(
         'active',
-        button.dataset.section === name
+        link.dataset.section === section
       );
 
     });
 
-
-  if(name === 'messages'){
-    loadMessagesWorkspace();
-  }
-
-  if(name === 'calendar'){
-    loadSchedules();
-  }
+  window.scrollTo({
+    top:0,
+    behavior:'smooth'
+  });
 
 }
 
 
-/* =========================================
-   AUTHENTICATION
-========================================= */
+/* -------------------------
+   AUTH
+------------------------- */
 
-async function initializeModerator(){
+async function requireModerator(){
 
   const {
     data:{
       user
-    },
-    error:userError
+    }
   } =
-    await db.auth.getUser();
-
-
-  if(userError){
-
-    console.error(
-      'Auth user error:',
-      userError
-    );
-
-    toast(
-      'Could not verify your session.'
-    );
-
-    return false;
-  }
-
+    await supabaseClient.auth.getUser();
 
   if(!user){
 
@@ -1612,61 +1552,43 @@ async function initializeModerator(){
     return false;
   }
 
-
-  currentUser =
-    user;
-
-
-  /* PROFILE */
+  currentUser = user;
 
   const {
     data:profile,
     error:profileError
   } =
-    await db
+    await supabaseClient
       .from('profiles')
       .select(`
         id,
-        role,
         display_name,
+        role,
         created_at
       `)
-      .eq(
-        'id',
-        user.id
-      )
-      .maybeSingle();
-
+      .eq('id',user.id)
+      .single();
 
   if(profileError){
 
     console.error(
-      'Profile error:',
+      'Profile lookup error:',
       profileError
     );
 
-    toast(
-      'Could not load your profile.'
+    showToast(
+      'Could not load your account.'
     );
 
     return false;
   }
 
-
-  if(!profile){
-
-    toast(
-      'Reader Reach profile was not found.'
-    );
-
-    return false;
-  }
-
+  currentProfile = profile;
 
   if(profile.role !== 'moderator'){
 
-    toast(
-      'This account is not a moderator account.'
+    showToast(
+      'This dashboard is for approved moderators.'
     );
 
     setTimeout(
@@ -1674,82 +1596,59 @@ async function initializeModerator(){
         window.location.href =
           'index.html';
       },
-      1200
+      1500
     );
 
     return false;
   }
 
 
-  currentProfile =
-    profile;
-
-
-  /* MODERATOR */
-
   const {
     data:moderator,
     error:moderatorError
   } =
-    await db
+    await supabaseClient
       .from('moderators')
       .select(`
         id,
         profile_id,
-        display_name,
         active
       `)
-      .eq(
-        'profile_id',
-        user.id
-      )
+      .eq('profile_id',user.id)
       .maybeSingle();
 
 
   if(moderatorError){
 
     console.error(
-      'Moderator record error:',
+      'Moderator lookup error:',
       moderatorError
     );
 
-    toast(
-      'Could not load your moderator record: ' +
-      moderatorError.message
+    showToast(
+      'Could not load moderator record.'
     );
 
     return false;
   }
 
 
-  if(!moderator){
-
-    toast(
-      'No moderator record was found for this account.'
-    );
-
-    return false;
-  }
-
-
-  if(moderator.active !== true){
+  if(!moderator || moderator.active !== true){
 
     document.getElementById(
       'moderatorStatus'
     ).textContent =
       'Inactive';
 
-    toast(
-      'This moderator account is inactive.'
+    showToast(
+      'Your moderator account is not active.'
     );
 
     return false;
   }
 
 
-  currentModerator =
-    moderator;
-
+  currentModerator = moderator;
 
   document.getElementById(
     'moderatorStatus'
@@ -1757,37 +1656,62 @@ async function initializeModerator(){
     'Active';
 
 
-  document.getElementById(
-    'accountName'
-  ).value =
-    profile.display_name ||
-    moderator.display_name ||
-    'Moderator';
-
-
-  document.getElementById(
-    'accountEmail'
-  ).value =
-    user.email ||
-    '—';
-
-
-  document.getElementById(
-    'accountCreated'
-  ).value =
-    formatDate(
-      profile.created_at
-    );
-
+  loadAccount();
 
   return true;
 
 }
 
 
-/* =========================================
+async function signOut(){
+
+  if(messageRealtimeChannel){
+    await supabaseClient.removeChannel(messageRealtimeChannel);
+    messageRealtimeChannel=null;
+  }
+
+  await supabaseClient.auth.signOut();
+
+  window.location.href =
+    'auth.html?mode=signin';
+
+}
+
+
+/* -------------------------
+   ACCOUNT
+------------------------- */
+
+function loadAccount(){
+
+  document.getElementById(
+    'accountName'
+  ).textContent =
+    currentProfile.display_name ||
+    currentModerator.display_name ||
+    'Moderator';
+
+  document.getElementById(
+    'accountEmail'
+  ).textContent =
+    currentUser.email || '—';
+
+  document.getElementById(
+    'accountRole'
+  ).textContent =
+    'Moderator';
+
+  document.getElementById(
+    'accountCreated'
+  ).textContent =
+    formatDate(currentProfile.created_at);
+
+}
+
+
+/* -------------------------
    APPROVED AUTHORS
-========================================= */
+------------------------- */
 
 async function loadApprovedAuthors(){
 
@@ -1795,7 +1719,6 @@ async function loadApprovedAuthors(){
     document.getElementById(
       'authorList'
     );
-
 
   container.innerHTML =
     '<div class="empty">Loading approved authors...</div>';
@@ -1805,22 +1728,18 @@ async function loadApprovedAuthors(){
     data,
     error
   } =
-    await db
+    await supabaseClient
       .from('authors')
       .select(`
         id,
         profile_id,
         author_name,
         bio,
-        website_url,
         status,
         reviewed_at,
         created_at
       `)
-      .eq(
-        'status',
-        'approved'
-      )
+      .eq('status','approved')
       .order(
         'author_name',
         {
@@ -1837,9 +1756,7 @@ async function loadApprovedAuthors(){
     );
 
     container.innerHTML =
-      `<div class="empty">
-        Could not load approved authors.
-      </div>`;
+      '<div class="empty">Unable to load approved authors.</div>';
 
     return;
   }
@@ -1855,33 +1772,10 @@ async function loadApprovedAuthors(){
     approvedAuthors.length;
 
 
-  renderAuthorList();
-
-  renderMessageAuthorList();
-
-}
-
-
-/* =========================================
-   AUTHOR LIST
-========================================= */
-
-function renderAuthorList(){
-
-  const container =
-    document.getElementById(
-      'authorList'
-    );
-
-
   if(!approvedAuthors.length){
 
-    container.innerHTML = `
-      <div class="empty">
-        <strong>No approved authors yet.</strong>
-        Approved authors will appear here after Admin approval.
-      </div>
-    `;
+    container.innerHTML =
+      '<div class="empty">No approved authors are available.</div>';
 
     return;
   }
@@ -1906,7 +1800,7 @@ function renderAuthorList(){
                 </div>
 
                 <div class="itemMeta">
-                  Approved
+                  Approved:
                   ${escapeHtml(
                     formatDate(
                       author.reviewed_at ||
@@ -1926,7 +1820,7 @@ function renderAuthorList(){
             <div class="itemMeta">
               ${escapeHtml(
                 author.bio ||
-                'No biography available.'
+                'No author biography available.'
               )}
             </div>
 
@@ -1940,8 +1834,8 @@ function renderAuthorList(){
 
               <button
                 class="btn small primary"
-                onclick="openAuthorConversation('${author.id}')">
-                Message Author
+                onclick="startAuthorConversation('${author.id || ''}')">
+                Message
               </button>
 
             </div>
@@ -1955,613 +1849,9 @@ function renderAuthorList(){
 }
 
 
-/* =========================================
-   MESSAGE AUTHOR LIST
-========================================= */
-
-function renderMessageAuthorList(){
-
-  const container =
-    document.getElementById(
-      'messageAuthorList'
-    );
-
-
-  if(!approvedAuthors.length){
-
-    container.innerHTML = `
-      <div class="empty">
-        No approved authors.
-      </div>
-    `;
-
-    return;
-  }
-
-
-  container.innerHTML =
-    approvedAuthors
-      .map(author => {
-
-        const active =
-          selectedAuthor &&
-          selectedAuthor.id ===
-            author.id;
-
-
-        return `
-          <button
-            class="authorChoice ${active ? 'active' : ''}"
-            onclick="openAuthorConversation('${author.id}')">
-
-            <div class="authorChoiceName">
-              ${escapeHtml(
-                author.author_name ||
-                'Unnamed Author'
-              )}
-            </div>
-
-            <div class="authorChoiceText">
-              Click to start or open conversation
-            </div>
-
-          </button>
-        `;
-
-      })
-      .join('');
-
-}
-
-
-/* =========================================
-   OPEN / CREATE CONVERSATION
-========================================= */
-
-async function openAuthorConversation(
-  authorId
-){
-
-  const author =
-    approvedAuthors.find(
-      item =>
-        item.id === authorId
-    );
-
-
-  if(!author){
-
-    toast(
-      'Author could not be found.'
-    );
-
-    return;
-  }
-
-
-  selectedAuthor =
-    author;
-
-
-  showSection('messages');
-
-  renderMessageAuthorList();
-
-
-  /*
-    FIRST:
-    Look for an existing conversation
-    for this moderator + author.
-
-    We intentionally do NOT require
-    book_id to be null here.
-
-    That means if a conversation already
-    exists for this author, we can open it.
-  */
-
-  const {
-    data:existingConversations,
-    error:findError
-  } =
-    await db
-      .from('conversations')
-      .select(`
-        id,
-        author_id,
-        moderator_id,
-        book_id,
-        created_at,
-        updated_at
-      `)
-      .eq(
-        'author_id',
-        author.id
-      )
-      .eq(
-        'moderator_id',
-        currentModerator.id
-      )
-      .order(
-        'updated_at',
-        {
-          ascending:false
-        }
-      )
-      .limit(1);
-
-
-  if(findError){
-
-    console.error(
-      'Find conversation error:',
-      findError
-    );
-
-    toast(
-      'Could not check conversations: ' +
-      findError.message
-    );
-
-    return;
-  }
-
-
-  let conversation =
-    existingConversations &&
-    existingConversations.length
-      ? existingConversations[0]
-      : null;
-
-
-  /*
-    IF THERE IS NO CONVERSATION:
-    CREATE ONE.
-  */
-
-  if(!conversation){
-
-    const {
-      data:newConversation,
-      error:createError
-    } =
-      await db
-        .from('conversations')
-        .insert({
-          author_id:author.id,
-          moderator_id:currentModerator.id,
-          book_id:null
-        })
-        .select(`
-          id,
-          author_id,
-          moderator_id,
-          book_id,
-          created_at,
-          updated_at
-        `)
-        .single();
-
-
-    if(createError){
-
-      console.error(
-        'CREATE CONVERSATION ERROR:',
-        createError
-      );
-
-      toast(
-        'Could not start conversation: ' +
-        createError.message
-      );
-
-      return;
-    }
-
-
-    conversation =
-      newConversation;
-
-
-    toast(
-      'Conversation started with ' +
-      author.author_name
-    );
-
-  }else{
-
-    toast(
-      'Conversation opened with ' +
-      author.author_name
-    );
-
-  }
-
-
-  selectedConversation =
-    conversation;
-
-
-  await loadConversationsForModerator();
-
-  await openConversation(
-    conversation
-  );
-
-}
-
-
-/* =========================================
-   LOAD CONVERSATIONS
-========================================= */
-
-async function loadConversationsForModerator(){
-
-  const {
-    data,
-    error
-  } =
-    await db
-      .from('conversations')
-      .select(`
-        id,
-        author_id,
-        moderator_id,
-        book_id,
-        created_at,
-        updated_at
-      `)
-      .eq(
-        'moderator_id',
-        currentModerator.id
-      )
-      .order(
-        'updated_at',
-        {
-          ascending:false
-        }
-      );
-
-
-  if(error){
-
-    console.error(
-      'Load conversations error:',
-      error
-    );
-
-    return;
-  }
-
-
-  conversations =
-    data || [];
-
-}
-
-
-/* =========================================
-   OPEN CONVERSATION
-========================================= */
-
-async function openConversation(
-  conversation
-){
-
-  selectedConversation =
-    conversation;
-
-
-  const author =
-    approvedAuthors.find(
-      item =>
-        item.id ===
-          conversation.author_id
-    );
-
-
-  selectedAuthor =
-    author || selectedAuthor;
-
-
-  document.getElementById(
-    'messageHeader'
-  ).innerHTML = `
-
-    <strong>
-      ${escapeHtml(
-        author?.author_name ||
-        'Author'
-      )}
-    </strong>
-
-    <div class="muted">
-      Reader Reach moderator conversation
-    </div>
-
-  `;
-
-
-  document.getElementById(
-    'messageInput'
-  ).disabled =
-    false;
-
-
-  document.getElementById(
-    'sendMessageButton'
-  ).disabled =
-    false;
-
-
-  renderMessageAuthorList();
-
-
-  await loadConversationMessages(
-    conversation.id
-  );
-
-}
-
-
-/* =========================================
-   LOAD CONVERSATION MESSAGES
-========================================= */
-
-async function loadConversationMessages(
-  conversationId
-){
-
-  const container =
-    document.getElementById(
-      'messagesList'
-    );
-
-
-  container.innerHTML =
-    '<div class="empty">Loading messages...</div>';
-
-
-  const {
-    data,
-    error
-  } =
-    await db
-      .from('messages')
-      .select(`
-        id,
-        conversation_id,
-        sender_profile_id,
-        message,
-        created_at,
-        read_at
-      `)
-      .eq(
-        'conversation_id',
-        conversationId
-      )
-      .order(
-        'created_at',
-        {
-          ascending:true
-        }
-      );
-
-
-  if(error){
-
-    console.error(
-      'Messages load error:',
-      error
-    );
-
-    container.innerHTML = `
-      <div class="empty">
-        Could not load messages.
-      </div>
-    `;
-
-    return;
-  }
-
-
-  if(!data || !data.length){
-
-    container.innerHTML = `
-      <div class="empty">
-        <strong>No messages yet.</strong>
-        Send the first message to this author.
-      </div>
-    `;
-
-    return;
-  }
-
-
-  container.innerHTML =
-    data
-      .map(message => {
-
-        const fromModerator =
-          message.sender_profile_id ===
-          currentUser.id;
-
-
-        return `
-          <div class="message ${
-            fromModerator
-              ? 'moderator'
-              : 'author'
-          }">
-
-            ${escapeHtml(
-              message.message ||
-              ''
-            )}
-
-            <div class="messageTime">
-              ${escapeHtml(
-                formatDateTime(
-                  message.created_at
-                )
-              )}
-            </div>
-
-          </div>
-        `;
-
-      })
-      .join('');
-
-
-  container.scrollTop =
-    container.scrollHeight;
-
-}
-
-
-/* =========================================
-   SEND MESSAGE
-========================================= */
-
-async function sendMessage(){
-
-  if(!selectedConversation){
-
-    toast(
-      'Select an author first.'
-    );
-
-    return;
-  }
-
-
-  const input =
-    document.getElementById(
-      'messageInput'
-    );
-
-
-  const message =
-    input.value.trim();
-
-
-  if(!message){
-
-    toast(
-      'Write a message first.'
-    );
-
-    return;
-  }
-
-
-  const button =
-    document.getElementById(
-      'sendMessageButton'
-    );
-
-
-  button.disabled =
-    true;
-
-  button.textContent =
-    'Sending...';
-
-
-  const {
-    error
-  } =
-    await db
-      .from('messages')
-      .insert({
-        conversation_id:
-          selectedConversation.id,
-
-        sender_profile_id:
-          currentUser.id,
-
-        message:
-          message
-      });
-
-
-  if(error){
-
-    console.error(
-      'SEND MESSAGE ERROR:',
-      error
-    );
-
-    toast(
-      'Could not send message: ' +
-      error.message
-    );
-
-    button.disabled =
-      false;
-
-    button.textContent =
-      'Send';
-
-    return;
-  }
-
-
-  input.value =
-    '';
-
-
-  await loadConversationMessages(
-    selectedConversation.id
-  );
-
-
-  await loadConversationsForModerator();
-
-
-  button.disabled =
-    false;
-
-  button.textContent =
-    'Send';
-
-}
-
-
-/* =========================================
-   MESSAGE WORKSPACE
-========================================= */
-
-async function loadMessagesWorkspace(){
-
-  if(!approvedAuthors.length){
-
-    await loadApprovedAuthors();
-
-  }
-
-
-  await loadConversationsForModerator();
-
-
-  renderMessageAuthorList();
-
-
-  if(selectedConversation){
-
-    await loadConversationMessages(
-      selectedConversation.id
-    );
-
-  }
-
-}
-
-
-/* =========================================
+/* -------------------------
    APPROVED BOOKS
-========================================= */
+------------------------- */
 
 async function loadApprovedBooks(){
 
@@ -2569,7 +1859,6 @@ async function loadApprovedBooks(){
     document.getElementById(
       'approvedBookList'
     );
-
 
   container.innerHTML =
     '<div class="empty">Loading approved books...</div>';
@@ -2579,24 +1868,18 @@ async function loadApprovedBooks(){
     data,
     error
   } =
-    await db
+    await supabaseClient
       .from('books')
       .select(`
         id,
         author_id,
         title,
-        description,
         genre_topic,
-        availability,
-        book_link,
-        cover_url,
+        description,
         status,
         created_at
       `)
-      .eq(
-        'status',
-        'approved'
-      )
+      .eq('status','approved')
       .order(
         'created_at',
         {
@@ -2613,7 +1896,7 @@ async function loadApprovedBooks(){
     );
 
     container.innerHTML =
-      '<div class="empty">Could not load approved books.</div>';
+      '<div class="empty">Unable to load approved books.</div>';
 
     return;
   }
@@ -2634,15 +1917,56 @@ async function loadApprovedBooks(){
 
   if(!approvedBooks.length){
 
-    container.innerHTML = `
-      <div class="empty">
-        <strong>No approved books yet.</strong>
-        Books will appear here after Admin approval.
-      </div>
-    `;
+    container.innerHTML =
+      '<div class="empty">No approved books are available.</div>';
 
     return;
   }
+
+
+  const authorIds =
+    [
+      ...new Set(
+        approvedBooks
+          .map(book => book.author_id)
+          .filter(Boolean)
+      )
+    ];
+
+
+  let authors = [];
+
+
+  if(authorIds.length){
+
+    const {
+      data:authorData
+    } =
+      await supabaseClient
+        .from('authors')
+        .select(`
+          id,
+          author_name
+        `)
+        .in(
+          'id',
+          authorIds
+        );
+
+    authors =
+      authorData || [];
+  }
+
+
+  const authorMap =
+    new Map(
+      authors.map(
+        author => [
+          author.id,
+          author.author_name
+        ]
+      )
+    );
 
 
   container.innerHTML =
@@ -2664,9 +1988,18 @@ async function loadApprovedBooks(){
                 </div>
 
                 <div class="itemMeta">
+                  Author:
+                  ${escapeHtml(
+                    authorMap.get(
+                      book.author_id
+                    ) ||
+                    'Unknown author'
+                  )}
+                  <br>
+                  Genre:
                   ${escapeHtml(
                     book.genre_topic ||
-                    'Genre not specified'
+                    '—'
                   )}
                 </div>
 
@@ -2678,25 +2011,18 @@ async function loadApprovedBooks(){
 
             </div>
 
-            <div class="itemMeta">
-              ${escapeHtml(
-                book.description ||
-                'No description available.'
-              )}
-            </div>
-
             <div class="itemActions">
 
               <a
                 class="btn small"
-                href="author-profile.html?id=${encodeURIComponent(book.author_id)}">
-                View Author
+                href="book.html?id=${encodeURIComponent(book.id)}">
+                View Book
               </a>
 
               <button
-                class="btn small primary"
+                class="btn small"
                 onclick="prepareSchedule('${book.id}')">
-                Schedule Feature
+                Schedule
               </button>
 
             </div>
@@ -2710,9 +2036,9 @@ async function loadApprovedBooks(){
 }
 
 
-/* =========================================
-   SCHEDULE
-========================================= */
+/* -------------------------
+   BOOK SELECT
+------------------------- */
 
 function populateBookSelect(){
 
@@ -2721,9 +2047,12 @@ function populateBookSelect(){
       'scheduleBook'
     );
 
+  if(!select){
+    return;
+  }
 
   select.innerHTML =
-    '<option value="">Select a book</option>';
+    '<option value="">Select an approved book</option>';
 
 
   approvedBooks.forEach(book => {
@@ -2740,9 +2069,7 @@ function populateBookSelect(){
       book.title ||
       'Untitled Book';
 
-    select.appendChild(
-      option
-    );
+    select.appendChild(option);
 
   });
 
@@ -2751,133 +2078,22 @@ function populateBookSelect(){
 
 function prepareSchedule(bookId){
 
-  showSection('calendar');
-
-  document.getElementById(
-    'scheduleBook'
-  ).value =
-    bookId;
-
-}
-
-
-async function createSchedule(){
-
-  const bookId =
+  const select =
     document.getElementById(
       'scheduleBook'
-    ).value;
-
-
-  const date =
-    document.getElementById(
-      'scheduleDate'
-    ).value;
-
-
-  const time =
-    document.getElementById(
-      'scheduleTime'
-    ).value;
-
-
-  const notes =
-    document.getElementById(
-      'scheduleNotes'
-    ).value.trim();
-
-
-  if(!bookId){
-
-    toast(
-      'Select an approved book.'
     );
 
-    return;
-  }
+  select.value =
+    bookId;
 
-
-  if(!date){
-
-    toast(
-      'Select a date.'
-    );
-
-    return;
-  }
-
-
-  if(!time){
-
-    toast(
-      'Select a time.'
-    );
-
-    return;
-  }
-
-
-  const {
-    error
-  } =
-    await db
-      .from('feature_schedules')
-      .insert({
-        book_id:bookId,
-        moderator_id:
-          currentModerator.id,
-        scheduled_date:date,
-        scheduled_time:time,
-        status:'scheduled',
-        notes:notes || null
-      });
-
-
-  if(error){
-
-    console.error(
-      'Schedule error:',
-      error
-    );
-
-    toast(
-      'Could not schedule feature: ' +
-      error.message
-    );
-
-    return;
-  }
-
-
-  toast(
-    'Feature scheduled successfully.'
-  );
-
-
-  document.getElementById(
-    'scheduleDate'
-  ).value =
-    '';
-
-  document.getElementById(
-    'scheduleTime'
-  ).value =
-    '';
-
-  document.getElementById(
-    'scheduleNotes'
-  ).value =
-    '';
-
-
-  await loadSchedules();
+  showSection('calendar');
 
 }
 
 
-/* =========================================
-   LOAD SCHEDULES
-========================================= */
+/* -------------------------
+   SCHEDULES
+------------------------- */
 
 async function loadSchedules(){
 
@@ -2886,35 +2102,33 @@ async function loadSchedules(){
       'scheduleList'
     );
 
+  container.innerHTML =
+    '<div class="empty">Loading schedules...</div>';
+
 
   const {
     data,
     error
   } =
-    await db
+    await supabaseClient
       .from('feature_schedules')
       .select(`
         id,
         book_id,
         moderator_id,
-        scheduled_date,
-        scheduled_time,
+        feature_date,
+        feature_time,
         status,
-        notes,
-        created_at
+        notes
       `)
-      .eq(
-        'moderator_id',
-        currentModerator.id
-      )
       .order(
-        'scheduled_date',
+        'feature_date',
         {
           ascending:true
         }
       )
       .order(
-        'scheduled_time',
+        'feature_time',
         {
           ascending:true
         }
@@ -2924,35 +2138,40 @@ async function loadSchedules(){
   if(error){
 
     console.error(
-      'Schedule load error:',
+      'Schedules error:',
       error
     );
 
     container.innerHTML =
-      '<div class="empty">Could not load schedules.</div>';
+      '<div class="empty">Unable to load schedules.</div>';
 
     return;
   }
 
 
-  const schedules =
+  schedules =
     data || [];
 
 
+  const scheduled =
+    schedules.filter(
+      item =>
+        item.status === 'scheduled'
+    );
+
+
   document.getElementById(
-    'scheduledCount'
+    'scheduledFeaturesCount'
   ).textContent =
-    schedules.length;
+    scheduled.length;
 
 
   if(!schedules.length){
 
-    container.innerHTML = `
-      <div class="empty">
-        <strong>No scheduled features yet.</strong>
-        Select an approved book to create a feature.
-      </div>
-    `;
+    container.innerHTML =
+      '<div class="empty">No feature schedules yet.</div>';
+
+    renderUpcomingSchedules([]);
 
     return;
   }
@@ -2968,90 +2187,248 @@ async function loadSchedules(){
     ];
 
 
-  let bookMap = {};
+  let books = [];
 
 
   if(bookIds.length){
 
     const {
-      data:books
+      data:bookData
     } =
-      await db
+      await supabaseClient
         .from('books')
         .select(`
           id,
-          title
+          title,
+          author_id
         `)
         .in(
           'id',
           bookIds
         );
 
-
-    (books || []).forEach(book => {
-
-      bookMap[book.id] =
-        book;
-
-    });
-
+    books =
+      bookData || [];
   }
+
+
+  const authorIds =
+    [
+      ...new Set(
+        books
+          .map(book => book.author_id)
+          .filter(Boolean)
+      )
+    ];
+
+
+  let authors = [];
+
+
+  if(authorIds.length){
+
+    const {
+      data:authorData
+    } =
+      await supabaseClient
+        .from('authors')
+        .select(`
+          id,
+          author_name
+        `)
+        .in(
+          'id',
+          authorIds
+        );
+
+    authors =
+      authorData || [];
+  }
+
+
+  const bookMap =
+    new Map(
+      books.map(
+        book => [
+          book.id,
+          book
+        ]
+      )
+    );
+
+
+  const authorMap =
+    new Map(
+      authors.map(
+        author => [
+          author.id,
+          author.author_name
+        ]
+      )
+    );
 
 
   container.innerHTML =
     schedules
       .map(schedule => {
 
+        const book =
+          bookMap.get(
+            schedule.book_id
+          ) || {};
+
         return `
-          <div class="item">
+          <div class="scheduleItem">
 
-            <div class="itemTop">
+            <div class="scheduleDate">
+              ${escapeHtml(
+                formatDate(
+                  schedule.feature_date
+                )
+              )}
+              ${schedule.feature_time
+                ? ' • ' +
+                  escapeHtml(
+                    schedule.feature_time
+                  )
+                : ''}
+            </div>
 
-              <div>
+            <div class="scheduleBook">
+              ${escapeHtml(
+                book.title ||
+                'Book'
+              )}
+            </div>
 
-                <div class="itemTitle">
-                  ${escapeHtml(
-                    bookMap[
-                      schedule.book_id
-                    ]?.title ||
-                    'Book'
-                  )}
-                </div>
+            <div class="scheduleAuthor">
+              ${escapeHtml(
+                authorMap.get(
+                  book.author_id
+                ) ||
+                'Unknown author'
+              )}
+            </div>
 
-                <div class="itemMeta">
-                  ${escapeHtml(
-                    schedule.scheduled_date ||
-                    ''
-                  )}
-                  •
-                  ${escapeHtml(
-                    schedule.scheduled_time ||
-                    ''
-                  )}
-                </div>
-
-              </div>
-
-              <span class="badge green">
+            <div style="margin-top:8px;">
+              <span class="badge ${
+                schedule.status === 'scheduled'
+                  ? 'green'
+                  : ''
+              }">
                 ${escapeHtml(
                   schedule.status ||
                   'scheduled'
                 )}
               </span>
-
             </div>
 
             ${
               schedule.notes
-                ? `
-                  <div class="itemMeta">
-                    ${escapeHtml(
-                      schedule.notes
-                    )}
-                  </div>
-                `
-                : ''
+              ? `
+                <div class="itemMeta">
+                  ${escapeHtml(
+                    schedule.notes
+                  )}
+                </div>
+              `
+              : ''
             }
+
+          </div>
+        `;
+
+      })
+      .join('');
+
+
+  renderUpcomingSchedules(
+    scheduled
+  );
+
+}
+
+
+function renderUpcomingSchedules(list){
+
+  const container =
+    document.getElementById(
+      'upcomingList'
+    );
+
+  if(!container){
+    return;
+  }
+
+
+  const today =
+    new Date();
+
+  today.setHours(
+    0,
+    0,
+    0,
+    0
+  );
+
+
+  const upcoming =
+    list
+      .filter(item => {
+
+        if(!item.feature_date){
+          return false;
+        }
+
+        const date =
+          new Date(
+            `${item.feature_date}T00:00:00`
+          );
+
+        return date >= today;
+
+      })
+      .sort(
+        (a,b) =>
+          String(a.feature_date)
+            .localeCompare(
+              String(b.feature_date)
+            )
+      )
+      .slice(0,5);
+
+
+  if(!upcoming.length){
+
+    container.innerHTML =
+      '<div class="empty">No upcoming scheduled features.</div>';
+
+    return;
+  }
+
+
+  container.innerHTML =
+    upcoming
+      .map(item => {
+
+        return `
+          <div class="item">
+
+            <div class="itemTitle">
+              ${escapeHtml(
+                item.feature_date
+              )}
+            </div>
+
+            <div class="itemMeta">
+              ${
+                item.feature_time
+                  ? escapeHtml(
+                      item.feature_time
+                    )
+                  : 'Time not specified'
+              }
+            </div>
 
           </div>
         `;
@@ -3062,9 +2439,125 @@ async function loadSchedules(){
 }
 
 
-/* =========================================
+async function createSchedule(){
+
+  const bookId =
+    document.getElementById(
+      'scheduleBook'
+    ).value;
+
+  const date =
+    document.getElementById(
+      'scheduleDate'
+    ).value;
+
+  const time =
+    document.getElementById(
+      'scheduleTime'
+    ).value;
+
+  const notes =
+    document.getElementById(
+      'scheduleNotes'
+    ).value.trim();
+
+
+  if(!bookId){
+
+    showToast(
+      'Select an approved book.'
+    );
+
+    return;
+  }
+
+
+  if(!date){
+
+    showToast(
+      'Select a feature date.'
+    );
+
+    return;
+  }
+
+
+  const book =
+    approvedBooks.find(
+      item => item.id === bookId
+    );
+
+
+  if(!book || book.status !== 'approved'){
+
+    showToast(
+      'Only approved books can be scheduled.'
+    );
+
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from('feature_schedules')
+      .insert({
+        book_id:bookId,
+        moderator_id:
+          currentModerator.id,
+        feature_date:date,
+        feature_time:
+          time || null,
+        status:'scheduled',
+        notes:
+          notes || null
+      });
+
+
+  if(error){
+
+    console.error(
+      'Schedule creation error:',
+      error
+    );
+
+    showToast(
+      'Could not create the schedule: ' +
+      error.message
+    );
+
+    return;
+  }
+
+
+  showToast(
+    'Feature scheduled.'
+  );
+
+
+  document.getElementById(
+    'scheduleDate'
+  ).value = '';
+
+  document.getElementById(
+    'scheduleTime'
+  ).value = '';
+
+  document.getElementById(
+    'scheduleNotes'
+  ).value = '';
+
+
+  await loadSchedules();
+
+}
+
+
+/* -------------------------
    NOTIFICATIONS
-========================================= */
+------------------------- */
 
 async function loadNotifications(){
 
@@ -3073,16 +2566,18 @@ async function loadNotifications(){
       'notificationList'
     );
 
+  container.innerHTML =
+    '<div class="empty">Loading notifications...</div>';
+
 
   const {
     data,
     error
   } =
-    await db
+    await supabaseClient
       .from('notifications')
       .select(`
         id,
-        profile_id,
         type,
         title,
         message,
@@ -3107,38 +2602,38 @@ async function loadNotifications(){
   if(error){
 
     console.error(
-      'Notification error:',
+      'Notifications error:',
       error
     );
 
     container.innerHTML =
-      '<div class="empty">Could not load notifications.</div>';
+      '<div class="empty">Unable to load notifications.</div>';
 
     return;
   }
 
 
-  const notifications =
+  notifications =
     data || [];
 
 
-  document.getElementById(
-    'unreadCount'
-  ).textContent =
+  const unread =
     notifications.filter(
       item =>
         item.is_read !== true
     ).length;
 
 
+  document.getElementById(
+    'unreadNotificationsCount'
+  ).textContent =
+    unread;
+
+
   if(!notifications.length){
 
-    container.innerHTML = `
-      <div class="empty">
-        <strong>No notifications.</strong>
-        New moderator updates will appear here.
-      </div>
-    `;
+    container.innerHTML =
+      '<div class="empty">No notifications yet.</div>';
 
     return;
   }
@@ -3146,10 +2641,16 @@ async function loadNotifications(){
 
   container.innerHTML =
     notifications
-      .map(item => {
+      .map(notification => {
 
         return `
-          <div class="item">
+          <div
+            class="item"
+            style="${
+              notification.is_read
+                ? ''
+                : 'border-left:4px solid var(--butter);'
+            }">
 
             <div class="itemTop">
 
@@ -3157,7 +2658,7 @@ async function loadNotifications(){
 
                 <div class="itemTitle">
                   ${escapeHtml(
-                    item.title ||
+                    notification.title ||
                     'Notification'
                   )}
                 </div>
@@ -3165,7 +2666,7 @@ async function loadNotifications(){
                 <div class="itemMeta">
                   ${escapeHtml(
                     formatDateTime(
-                      item.created_at
+                      notification.created_at
                     )
                   )}
                 </div>
@@ -3173,22 +2674,34 @@ async function loadNotifications(){
               </div>
 
               ${
-                item.is_read !== true
-                  ? `
-                    <span class="badge gold">
-                      New
-                    </span>
-                  `
-                  : ''
+                notification.is_read
+                ? '<span class="badge">Read</span>'
+                : '<span class="badge gold">New</span>'
               }
 
             </div>
 
             <div class="itemMeta">
               ${escapeHtml(
-                item.message ||
+                notification.message ||
                 ''
               )}
+            </div>
+
+            <div class="itemActions">
+
+              ${
+                notification.is_read
+                ? ''
+                : `
+                  <button
+                    class="btn small"
+                    onclick="markNotificationRead('${notification.id}')">
+                    Mark Read
+                  </button>
+                `
+              }
+
             </div>
 
           </div>
@@ -3200,59 +2713,355 @@ async function loadNotifications(){
 }
 
 
-/* =========================================
-   SIGN OUT
-========================================= */
+async function markNotificationRead(id){
 
-async function signOut(){
-
-  await db.auth.signOut();
-
-  window.location.href =
-    'auth.html?mode=signin';
-
-}
-
-
-/* =========================================
-   INITIAL LOAD
-========================================= */
-
-async function initialize(){
-
-  const allowed =
-    await initializeModerator();
+  const {
+    error
+  } =
+    await supabaseClient
+      .from('notifications')
+      .update({
+        is_read:true
+      })
+      .eq(
+        'id',
+        id
+      )
+      .eq(
+        'profile_id',
+        currentUser.id
+      );
 
 
-  if(!allowed){
+  if(error){
+
+    console.error(
+      'Notification update error:',
+      error
+    );
+
+    showToast(
+      'Could not update notification.'
+    );
+
     return;
   }
 
-
-  await loadApprovedAuthors();
-
-  await loadApprovedBooks();
-
-  await loadConversationsForModerator();
-
-  await loadSchedules();
 
   await loadNotifications();
 
 }
 
 
-initialize();
+/* -------------------------
+   CONVERSATIONS + CHAT
+------------------------- */
+const CHAT_BUCKET = 'conversation-files';
+const MAX_CHAT_FILE_SIZE = 50 * 1024 * 1024;
+let messageRealtimeChannel = null;
+
+function chatFileSize(bytes){
+  const n=Number(bytes||0);
+  if(!n) return '';
+  if(n<1024*1024) return Math.max(1,Math.round(n/1024))+' KB';
+  return (n/(1024*1024)).toFixed(1)+' MB';
+}
+
+function validChatFile(file){
+  if(!file) return false;
+  if(file.size>MAX_CHAT_FILE_SIZE){ showToast('File is larger than 50 MB: '+file.name); return false; }
+  const type=String(file.type||'').toLowerCase();
+  const name=String(file.name||'').toLowerCase();
+  const ok=type.startsWith('image/')||type.startsWith('video/')||['.pdf','.doc','.docx','.txt'].some(x=>name.endsWith(x));
+  if(!ok){ showToast('Unsupported file type: '+file.name); return false; }
+  return true;
+}
+
+function renderChatAttachment(a){
+  const name=escapeHtml(a.file_name||'Attachment');
+  const size=a.file_size?' · '+escapeHtml(chatFileSize(a.file_size)):'';
+  const url=a.url?escapeHtml(a.url):'#';
+  const mime=String(a.mime_type||'').toLowerCase();
+  if(mime.startsWith('image/')&&a.url) return `<div class="attachmentPreview"><a href="${url}" target="_blank" rel="noopener"><img src="${url}" alt="${name}"></a><div class="muted" style="font-size:11px;margin-top:5px">${name}${size}</div></div>`;
+  if(mime.startsWith('video/')&&a.url) return `<div class="attachmentPreview"><video controls preload="metadata" src="${url}"></video><div style="font-size:11px;margin-top:5px">${name}${size}</div></div>`;
+  return `<div class="attachmentPreview"><a class="attachmentLink" href="${url}" target="_blank" rel="noopener" download>📎 ${name}${size}</a></div>`;
+}
+
+async function loadConversations(){
+  const container=document.getElementById('conversationList');
+  container.innerHTML='<div class="empty">Loading conversations...</div>';
+  const {data,error}=await supabaseClient.from('conversations')
+    .select('id,author_id,moderator_id,book_id,created_at,updated_at')
+    .eq('moderator_id',currentModerator.id)
+    .order('updated_at',{ascending:false});
+  if(error){ console.error('Conversation lookup error:',error); container.innerHTML='<div class="empty">Unable to load conversations: '+escapeHtml(error.message)+'</div>'; return; }
+  conversations=data||[];
+  if(!conversations.length){ container.innerHTML='<div class="empty">No book conversations yet.</div>'; return; }
+
+  const authorIds=[...new Set(conversations.map(c=>c.author_id).filter(Boolean))];
+  const bookIds=[...new Set(conversations.map(c=>c.book_id).filter(Boolean))];
+  const {data:authors}=authorIds.length?await supabaseClient.from('authors').select('id,author_name,profile_id').in('id',authorIds):{data:[]};
+  const {data:books}=bookIds.length?await supabaseClient.from('books').select('id,title').in('id',bookIds):{data:[]};
+  const authorMap=new Map((authors||[]).map(a=>[a.id,a]));
+  const bookMap=new Map((books||[]).map(b=>[b.id,b]));
+  conversations=conversations.map(c=>({...c,author_name:authorMap.get(c.author_id)?.author_name||'Author',book_title:bookMap.get(c.book_id)?.title||'Book conversation'}));
+
+  container.innerHTML=conversations.map(c=>`<button class="conversation ${selectedConversation?.id===c.id?'active':''}" onclick="openConversation('${c.id}')">
+    <div class="conversationTitle">${escapeHtml(c.book_title)}</div>
+    <div class="conversationMeta">Author: ${escapeHtml(c.author_name)}<br>Updated: ${escapeHtml(formatDateTime(c.updated_at||c.created_at))}</div>
+  </button>`).join('');
+}
+
+async function openConversation(id){
+  selectedConversation=conversations.find(c=>c.id===id)||null;
+  if(!selectedConversation) return;
+  document.getElementById('conversationTitle').textContent=selectedConversation.book_title||'Book conversation';
+  document.getElementById('conversationMeta').textContent=`Author: ${selectedConversation.author_name||'Author'} · Book-specific Moderator conversation`;
+  document.getElementById('replyInput').disabled=false;
+  document.getElementById('replyFiles').disabled=false;
+  document.getElementById('sendReplyBtn').disabled=false;
+  await loadConversationMessages(id);
+  await loadConversations();
+}
+
+async function loadConversationMessages(conversationId){
+  const container=document.getElementById('chatMessages');
+  container.innerHTML='<div class="empty">Loading messages...</div>';
+  const {data,error}=await supabaseClient.from('messages')
+    .select('id,conversation_id,sender_profile_id,message,created_at,read_at')
+    .eq('conversation_id',conversationId).order('created_at',{ascending:true});
+  if(error){ console.error('Conversation messages error:',error); container.innerHTML='<div class="empty">Unable to load messages: '+escapeHtml(error.message)+'</div>'; return; }
+  const rows=data||[];
+  let attachments=[];
+  if(rows.length){
+    const ids=rows.map(x=>x.id);
+    const ar=await supabaseClient.from('message_attachments').select('id,message_id,file_path,file_name,mime_type,file_size,created_at').in('message_id',ids).order('created_at',{ascending:true});
+    if(!ar.error){
+      attachments=await Promise.all((ar.data||[]).map(async a=>{const signed=await supabaseClient.storage.from(CHAT_BUCKET).createSignedUrl(a.file_path,3600);return {...a,url:signed.data?.signedUrl||null};}));
+    }
+  }
+  if(!rows.length){ container.innerHTML='<div class="empty">No messages in this conversation yet.</div>'; return; }
+  container.innerHTML=rows.map(item=>{
+    const mine=item.sender_profile_id===currentUser.id;
+    const files=attachments.filter(a=>a.message_id===item.id);
+    return `<div class="chatBubble ${mine?'moderator':'author'}">
+      ${item.message?`<div>${escapeHtml(item.message)}</div>`:''}
+      ${files.map(renderChatAttachment).join('')}
+      <small>${mine?'You':escapeHtml(selectedConversation?.author_name||'Author')} · ${escapeHtml(formatDateTime(item.created_at))}</small>
+      <div class="messageActions">
+        <button type="button" onclick="editConversationMessage('${item.id}',${JSON.stringify(item.message||'').replace(/</g,'\\u003c')})">Edit</button>
+        <button type="button" onclick="deleteConversationMessage('${item.id}')">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+  container.scrollTop=container.scrollHeight;
+  const unread=rows.filter(m=>m.sender_profile_id!==currentUser.id&&!m.read_at).map(m=>m.id);
+  if(unread.length) await supabaseClient.from('messages').update({read_at:new Date().toISOString()}).in('id',unread);
+}
+
+async function sendReply(){
+  if(!selectedConversation){showToast('Select a conversation first.');return;}
+  const input=document.getElementById('replyInput');
+  const fileInput=document.getElementById('replyFiles');
+  const message=input.value.trim();
+  const files=[...(fileInput.files||[])];
+  if(!message&&!files.length){showToast('Write a message or attach a file first.');return;}
+  if(files.length>5){showToast('Choose up to 5 files per message.');return;}
+  if(files.some(f=>!validChatFile(f)))return;
+  const button=document.getElementById('sendReplyBtn'); button.disabled=true; button.textContent='Sending…';
+  try{
+    const {data:created,error}=await supabaseClient.from('messages').insert({conversation_id:selectedConversation.id,sender_profile_id:currentUser.id,message:message||'Attachment'}).select('id').single();
+    if(error) throw error;
+    const failed=[];
+    for(const file of files){
+      const path=`${currentUser.id}/${selectedConversation.id}/${Date.now()}-${Math.random().toString(36).slice(2,8)}-${String(file.name).replace(/[^a-zA-Z0-9._-]/g,'_')}`;
+      const {data:up,error:ue}=await supabaseClient.storage.from(CHAT_BUCKET).upload(path,file,{upsert:false,contentType:file.type||'application/octet-stream'});
+      if(ue){failed.push(file.name);continue;}
+      const {error:ae}=await supabaseClient.from('message_attachments').insert({message_id:created.id,file_path:up.path,file_name:file.name,mime_type:file.type||null,file_size:file.size});
+      if(ae){await supabaseClient.storage.from(CHAT_BUCKET).remove([up.path]);failed.push(file.name);}
+    }
+    await supabaseClient.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',selectedConversation.id);
+    input.value=''; fileInput.value=''; document.getElementById('replyFileNames').textContent='Up to 5 files · 50 MB each';
+    await loadConversationMessages(selectedConversation.id); await loadConversations();
+    if(failed.length) showToast('Message sent, but some files failed: '+failed.join(', '));
+  }catch(e){console.error('Reply error:',e);showToast('Could not send reply: '+e.message);}
+  finally{button.disabled=false;button.textContent='Send Message';}
+}
+
+async function editConversationMessage(messageId,currentText){
+  const next=window.prompt('Edit this message:',currentText||'');
+  if(next===null) return;
+  const {error}=await supabaseClient.from('messages').update({message:next.trim()}).eq('id',messageId);
+  if(error){showToast('Could not edit message: '+error.message);return;}
+  await loadConversationMessages(selectedConversation.id); await loadConversations();
+}
+
+async function deleteConversationMessage(messageId){
+  if(!selectedConversation||!window.confirm('Delete this message and its attachments?')) return;
+  const {data:files}=await supabaseClient.from('message_attachments').select('id,file_path').eq('message_id',messageId);
+  const paths=(files||[]).map(f=>f.file_path).filter(Boolean);
+  if(paths.length) await supabaseClient.storage.from(CHAT_BUCKET).remove(paths);
+  const {error}=await supabaseClient.from('messages').delete().eq('id',messageId);
+  if(error){showToast('Could not delete message: '+error.message);return;}
+  await supabaseClient.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',selectedConversation.id);
+  await loadConversationMessages(selectedConversation.id); await loadConversations();
+}
+
+async function populateModeratorBooks(authorId){
+  const select=document.getElementById('modConversationBook');
+  const books=(approvedBooks||[]).filter(b=>b.author_id===authorId);
+  select.innerHTML='<option value="">Select book</option>'+books.map(b=>`<option value="${b.id}">${escapeHtml(b.title||'Untitled book')}</option>`).join('');
+}
+
+async function openModeratorNewConversation(authorId=''){
+  const panel=document.getElementById('moderatorNewConversation');
+  const authorSelect=document.getElementById('modConversationAuthor');
+  authorSelect.innerHTML='<option value="">Select author</option>'+(approvedAuthors||[]).map(a=>`<option value="${a.id}">${escapeHtml(a.author_name||'Unnamed Author')}</option>`).join('');
+  authorSelect.value=authorId||'';
+  await populateModeratorBooks(authorSelect.value);
+  panel.hidden=false;
+  showSection('messages');
+}
+
+document.getElementById('modConversationAuthor').addEventListener('change',e=>populateModeratorBooks(e.target.value));
+
+document.getElementById('replyFiles').addEventListener('change',()=>{
+  const files=[...(document.getElementById('replyFiles').files||[])];
+  if(files.length>5){document.getElementById('replyFiles').value='';document.getElementById('replyFileNames').textContent='Up to 5 files · 50 MB each';showToast('Choose up to 5 files per message.');return;}
+  if(files.some(f=>!validChatFile(f))){document.getElementById('replyFiles').value='';document.getElementById('replyFileNames').textContent='Up to 5 files · 50 MB each';return;}
+  document.getElementById('replyFileNames').textContent=files.length?`Selected ${files.length} file${files.length===1?'':'s'}: ${files.map(f=>f.name).join(', ')}`:'Up to 5 files · 50 MB each';
+});
+
+async function createModeratorConversation(){
+  const authorId=document.getElementById('modConversationAuthor').value;
+  const bookId=document.getElementById('modConversationBook').value;
+  if(!authorId||!bookId){showToast('Choose an author and book first.');return;}
+  const existing=await supabaseClient.from('conversations').select('id').eq('author_id',authorId).eq('moderator_id',currentModerator.id).eq('book_id',bookId).limit(1);
+  if(existing.error){showToast('Could not check conversations: '+existing.error.message);return;}
+  if(existing.data?.[0]) selectedConversation={id:existing.data[0].id};
+  else{
+    const created=await supabaseClient.from('conversations').insert({author_id:authorId,moderator_id:currentModerator.id,book_id:bookId}).select('id').single();
+    if(created.error){showToast('Could not create conversation: '+created.error.message);return;}
+    selectedConversation={id:created.data.id};
+  }
+  document.getElementById('moderatorNewConversation').hidden=true;
+  await loadConversations();
+  if(selectedConversation?.id) await openConversation(selectedConversation.id);
+}
+
+async function startAuthorConversation(authorId){
+  if(!authorId){showToast('This author does not have a valid author record.');return;}
+  await openModeratorNewConversation(authorId);
+}
+
+/* -------------------------
+   REALTIME NOTIFICATIONS
+------------------------- */
+
+function subscribeToNotifications(){
+
+  if(!currentUser){
+    return;
+  }
 
 
-/* =========================================
-   AUTH STATE
-========================================= */
+  realtimeChannel =
+    supabaseClient
+      .channel(
+        'moderator-notifications-' +
+        currentUser.id
+      )
+      .on(
+        'postgres_changes',
+        {
+          event:'*',
+          schema:'public',
+          table:'notifications',
+          filter:
+            'profile_id=eq.' +
+            currentUser.id
+        },
+        async () => {
 
-db.auth.onAuthStateChange(
-  event => {
+          await loadNotifications();
 
-    if(event === 'SIGNED_OUT'){
+        }
+      )
+      .subscribe();
+
+}
+
+
+function subscribeToMessages(){
+  if(messageRealtimeChannel) supabaseClient.removeChannel(messageRealtimeChannel);
+  messageRealtimeChannel=supabaseClient.channel('moderator-message-realtime-'+currentUser.id)
+    .on('postgres_changes',{event:'*',schema:'public',table:'messages'},async payload=>{
+      if(selectedConversation&&payload.new?.conversation_id===selectedConversation.id) await loadConversationMessages(selectedConversation.id);
+      await loadConversations();
+    })
+    .on('postgres_changes',{event:'*',schema:'public',table:'message_attachments'},async payload=>{
+      if(selectedConversation) await loadConversationMessages(selectedConversation.id);
+    })
+    .subscribe();
+}
+
+
+/* -------------------------
+   INITIAL LOAD
+------------------------- */
+
+async function initialise(){
+
+  const allowed =
+    await requireModerator();
+
+  if(!allowed){
+    return;
+  }
+
+
+  await Promise.all([
+    loadApprovedAuthors(),
+    loadApprovedBooks(),
+    loadSchedules(),
+    loadNotifications(),
+    loadConversations()
+  ]);
+
+
+  subscribeToNotifications();
+
+  subscribeToMessages();
+
+}
+
+
+document
+  .getElementById(
+    'scheduleBtn'
+  )
+  .addEventListener(
+    'click',
+    createSchedule
+  );
+
+
+document
+  .getElementById(
+    'signOutBtn'
+  )
+  .addEventListener(
+    'click',
+    signOut
+  );
+
+
+supabaseClient.auth.onAuthStateChange(
+  (event,session) => {
+
+    if(
+      event === 'SIGNED_OUT'
+    ){
 
       window.location.href =
         'auth.html?mode=signin';
@@ -3263,31 +3072,7 @@ db.auth.onAuthStateChange(
 );
 
 
-/* =========================================
-   ENTER TO SEND
-========================================= */
-
-document
-  .getElementById(
-    'messageInput'
-  )
-  .addEventListener(
-    'keydown',
-    event => {
-
-      if(
-        event.key === 'Enter' &&
-        !event.shiftKey
-      ){
-
-        event.preventDefault();
-
-        sendMessage();
-
-      }
-
-    }
-  );
+initialise();
 
 </script>
 

@@ -135,6 +135,10 @@ th{color:var(--muted);font-weight:bold}
 .message-list{display:flex;flex-direction:column;gap:10px;height:390px;overflow:auto;padding:18px;margin:0;background:#fffdf9}
 .message{max-width:78%;padding:11px 13px;border-radius:13px;overflow-wrap:anywhere;white-space:pre-wrap;background:var(--soft);border:1px solid #eee1d4;align-self:flex-start}
 .message.mine{align-self:flex-end;background:var(--brown);color:white;border-color:var(--brown)}
+ .message-actions{display:flex;gap:6px;justify-content:flex-end;margin-top:8px}
+.message-actions button{border:1px solid currentColor;border-radius:7px;padding:5px 8px;font-size:10px;background:transparent;color:inherit;font-weight:700}
+.edit-message-form{display:flex;gap:6px;margin-top:8px}
+.edit-message-form textarea{flex:1;min-height:55px;padding:8px;border:1px solid var(--line);border-radius:8px}
 .message-meta{display:flex;justify-content:space-between;gap:12px;margin-top:8px;font-size:10px;opacity:.68}
 .message-actions{display:flex;gap:6px;justify-content:flex-end;margin-top:8px}
 .message-actions button{border:0;background:rgba(255,255,255,.14);color:inherit;border-radius:6px;padding:4px 7px;font-size:10px}
@@ -1259,16 +1263,52 @@ async function loadMessages() {
     $("messageList").innerHTML = rows.map(m => {
       const mine = m.sender_profile_id === currentUser.id;
       const files = attachments.filter(a => a.message_id === m.id);
-      return `<div class="message ${mine ? "mine" : ""}">
-        ${m.message ? `<div>${escapeHTML(m.message)}</div>` : ""}
+      return `<div class="message ${mine ? "mine" : ""}" data-message-id="${escapeHTML(m.id)}">
+        <div class="messageBody">${m.message ? escapeHTML(m.message) : ""}</div>
         ${files.map(renderAttachment).join("")}
         <div class="message-meta"><span>${mine ? "You" : "Moderator"}</span><span>${escapeHTML(formatDate(m.created_at))}</span></div>
+        ${mine ? `<div class="message-actions"><button type="button" class="btn secondary" data-edit-message="${escapeHTML(m.id)}">Edit</button></div>` : ""}
       </div>`;
     }).join("");
   }
+  document.querySelectorAll('[data-edit-message]').forEach(button=>{
+    button.addEventListener('click',()=>startEditAuthorMessage(button.dataset.editMessage));
+  });
+
   $("messageList").scrollTop = $("messageList").scrollHeight;
   const unread = rows.filter(m => m.sender_profile_id !== currentUser.id && !m.read_at).map(m => m.id);
   if (unread.length) await supabaseClient.from("messages").update({read_at:new Date().toISOString()}).in("id", unread);
+}
+
+async function startEditAuthorMessage(messageId){
+  const bubble=document.querySelector(`.message[data-message-id="${CSS.escape(messageId)}"]`);
+  if(!bubble || bubble.querySelector('.edit-message-form')) return;
+  const body=bubble.querySelector('.messageBody');
+  const currentText=body?.textContent || '';
+  const actions=bubble.querySelector('.message-actions');
+  if(actions) actions.style.display='none';
+  const form=document.createElement('form');
+  form.className='edit-message-form';
+  form.innerHTML=`<textarea aria-label="Edit message">${escapeHTML(currentText)}</textarea><button type="submit" class="btn">Save</button><button type="button" class="btn secondary">Cancel</button>`;
+  bubble.appendChild(form);
+  const textarea=form.querySelector('textarea'); textarea.focus(); textarea.setSelectionRange(textarea.value.length,textarea.value.length);
+  form.querySelectorAll('button')[1].addEventListener('click',()=>{form.remove();if(actions)actions.style.display='flex';});
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();
+    const value=textarea.value.trim();
+    if(!value){setNotice('Message cannot be empty.','info');return;}
+    const save=form.querySelector('button[type="submit"]'); save.disabled=true; save.textContent='Saving…';
+    try{
+      const {error}=await supabaseClient.from('messages').update({message:value}).eq('id',messageId).eq('sender_profile_id',currentUser.id);
+      if(error) throw error;
+      await loadMessages();
+      setNotice('Message updated.','success');
+    }catch(e){
+      console.error('Edit author message:',e);
+      setNotice('Message could not be edited: '+friendlyError(e),'error');
+      save.disabled=false; save.textContent='Save';
+    }
+  });
 }
 
 async function openNewConversationPanel() {
@@ -1344,13 +1384,21 @@ function subscribeToAuthorMessages() {
   if (messageRealtimeChannel) supabaseClient.removeChannel(messageRealtimeChannel);
   messageRealtimeChannel = supabaseClient.channel("author-message-realtime-" + currentUser.id)
     .on("postgres_changes", {event:"*", schema:"public", table:"messages"}, async payload => {
-      if (activeConversationId && payload.new?.conversation_id === activeConversationId) await loadMessages();
+      const conversationId = payload.new?.conversation_id || payload.old?.conversation_id;
+      if (activeConversationId && conversationId === activeConversationId) await loadMessages();
       await loadConversations();
     })
     .on("postgres_changes", {event:"*", schema:"public", table:"message_attachments"}, async () => {
       if (activeConversationId) await loadMessages();
     })
     .subscribe();
+
+  if (refreshMessagesTimer) clearInterval(refreshMessagesTimer);
+  refreshMessagesTimer = setInterval(async () => {
+    if (document.visibilityState === 'visible' && activeConversationId) {
+      await loadMessages();
+    }
+  }, 5000);
 }
 
 /* -------------------------------------------------------

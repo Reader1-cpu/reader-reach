@@ -538,7 +538,10 @@ nav{
 .chatBubble.moderator{background:var(--brown);color:#fff;margin-left:auto}
 .chatBubble small{display:block;margin-top:6px;opacity:.68;font-size:10px}
 .messageActions{display:flex;justify-content:flex-end;gap:6px;margin-top:8px}
-.messageActions button{border:0;border-radius:7px;padding:5px 8px;font-size:10px;background:rgba(255,255,255,.14);color:inherit}
+.messageActions button{border:1px solid currentColor;border-radius:7px;padding:5px 8px;font-size:10px;background:transparent;color:inherit;cursor:pointer;font-weight:700;opacity:.9}
+.messageActions button:hover{opacity:1;transform:translateY(-1px)}
+.chatBubble.author .messageActions{display:none}
+.chatBubble.moderator .deleteMessageButton{color:#fff;border-color:rgba(255,255,255,.55)}
 .attachmentPreview{margin-top:8px;padding:8px;border-radius:9px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15)}
 .chatBubble.author .attachmentPreview{background:#fff;border-color:var(--line)}
 .attachmentPreview img{max-width:240px;max-height:180px;border-radius:7px;display:block}
@@ -2844,21 +2847,28 @@ async function loadConversationMessages(conversationId){
   container.innerHTML=rows.map(item=>{
     const mine=item.sender_profile_id===currentUser.id;
     const files=attachments.filter(a=>a.message_id===item.id);
-    return `<div class="chatBubble ${mine?'moderator':'author'}">
-      ${item.message?`<div>${escapeHtml(item.message)}</div>`:''}
+    return `<div class="chatBubble ${mine?'moderator':'author'}" data-message-id="${escapeHtml(item.id)}">
+      <div class="messageBody">${item.message?escapeHtml(item.message):''}</div>
       ${files.map(renderChatAttachment).join('')}
       <small>${mine?'You':escapeHtml(selectedConversation?.author_name||'Author')} · ${escapeHtml(formatDateTime(item.created_at))}</small>
-      <div class="messageActions">
-        <button type="button" onclick="editConversationMessage('${item.id}',${JSON.stringify(item.message||'').replace(/</g,'\\u003c')})">Edit</button>
-        <button type="button" onclick="deleteConversationMessage('${item.id}')">Delete</button>
-      </div>
+      ${mine ? `<div class="messageActions" aria-label="Moderator message actions">
+        <button type="button" class="deleteMessageButton" data-message-id="${escapeHtml(item.id)}">Delete</button>
+      </div>` : ''}
     </div>`;
   }).join('');
+
+  container.querySelectorAll('.deleteMessageButton').forEach(button=>{
+    button.addEventListener('click',(event)=>{
+      event.preventDefault();
+      event.stopPropagation();
+      deleteConversationMessage(button.dataset.messageId);
+    });
+  });
+
   container.scrollTop=container.scrollHeight;
   const unread=rows.filter(m=>m.sender_profile_id!==currentUser.id&&!m.read_at).map(m=>m.id);
   if(unread.length) await supabaseClient.from('messages').update({read_at:new Date().toISOString()}).in('id',unread);
 }
-
 async function sendReply(){
   if(!selectedConversation){showToast('Select a conversation first.');return;}
   const input=document.getElementById('replyInput');
@@ -2888,25 +2898,38 @@ async function sendReply(){
   finally{button.disabled=false;button.textContent='Send Message';}
 }
 
-async function editConversationMessage(messageId,currentText){
-  const next=window.prompt('Edit this message:',currentText||'');
-  if(next===null) return;
-  const {error}=await supabaseClient.from('messages').update({message:next.trim()}).eq('id',messageId);
-  if(error){showToast('Could not edit message: '+error.message);return;}
-  await loadConversationMessages(selectedConversation.id); await loadConversations();
-}
-
 async function deleteConversationMessage(messageId){
-  if(!selectedConversation||!window.confirm('Delete this message and its attachments?')) return;
-  const {data:files}=await supabaseClient.from('message_attachments').select('id,file_path').eq('message_id',messageId);
-  const paths=(files||[]).map(f=>f.file_path).filter(Boolean);
-  if(paths.length) await supabaseClient.storage.from(CHAT_BUCKET).remove(paths);
-  const {error}=await supabaseClient.from('messages').delete().eq('id',messageId);
-  if(error){showToast('Could not delete message: '+error.message);return;}
-  await supabaseClient.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',selectedConversation.id);
-  await loadConversationMessages(selectedConversation.id); await loadConversations();
+  if(!selectedConversation || !messageId) return;
+  const bubble=document.querySelector(`.chatBubble[data-message-id="${CSS.escape(messageId)}"]`);
+  const button=bubble?.querySelector('.deleteMessageButton');
+  if(button){ button.disabled=true; button.textContent='Deleting…'; }
+  if(!window.confirm('Delete this moderator message and its attachments?')){
+    if(button){ button.disabled=false; button.textContent='Delete'; }
+    return;
+  }
+  try{
+    const {data:files,error:fileError}=await supabaseClient
+      .from('message_attachments')
+      .select('id,file_path')
+      .eq('message_id',messageId);
+    if(fileError) throw fileError;
+    const paths=(files||[]).map(f=>f.file_path).filter(Boolean);
+    if(paths.length){
+      const {error:storageError}=await supabaseClient.storage.from(CHAT_BUCKET).remove(paths);
+      if(storageError) throw storageError;
+    }
+    const {error}=await supabaseClient.from('messages').delete().eq('id',messageId);
+    if(error) throw error;
+    await supabaseClient.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',selectedConversation.id);
+    await loadConversationMessages(selectedConversation.id);
+    await loadConversations();
+    showToast('Moderator message deleted.');
+  }catch(e){
+    console.error('Delete message error:',e);
+    showToast('Could not delete message: '+(e?.message||'Unknown error'));
+    if(button){ button.disabled=false; button.textContent='Delete'; }
+  }
 }
-
 async function populateModeratorBooks(authorId){
   const select=document.getElementById('modConversationBook');
   const books=(approvedBooks||[]).filter(b=>b.author_id===authorId);

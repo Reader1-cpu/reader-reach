@@ -337,7 +337,6 @@ button.login:disabled{
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-
 const SUPABASE_URL =
   "https://bublmnfhyyrefcdkloak.supabase.co";
 
@@ -347,7 +346,14 @@ const SUPABASE_KEY =
 const supabaseClient =
   window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_KEY
+    SUPABASE_KEY,
+    {
+      auth:{
+        persistSession:true,
+        autoRefreshToken:true,
+        detectSessionInUrl:true
+      }
+    }
   );
 
 const form = document.getElementById("loginForm");
@@ -358,15 +364,11 @@ const messageBox = document.getElementById("message");
 const togglePassword = document.getElementById("togglePassword");
 
 function showMessage(message,type){
-
   messageBox.textContent = message;
-
-  messageBox.className =
-    "message show " + type;
+  messageBox.className = "message show " + type;
 }
 
 togglePassword.addEventListener("click",()=>{
-
   if(passwordInput.type === "password"){
     passwordInput.type = "text";
     togglePassword.textContent = "Hide";
@@ -374,8 +376,73 @@ togglePassword.addEventListener("click",()=>{
     passwordInput.type = "password";
     togglePassword.textContent = "Show";
   }
-
 });
+
+async function verifyModerator(userId){
+
+  const {data:profile,error:profileError} =
+    await supabaseClient
+      .from("profiles")
+      .select("id,display_name,role")
+      .eq("id",userId)
+      .single();
+
+  if(profileError){
+    throw new Error(
+      "Could not verify your Reader Reach profile: " +
+      (profileError.message || "Unknown error.")
+    );
+  }
+
+  if(!profile){
+    throw new Error(
+      "Your account does not have a Reader Reach profile."
+    );
+  }
+
+  if(profile.role !== "moderator"){
+    throw new Error(
+      "This account is not registered as a Moderator."
+    );
+  }
+
+  const {data:moderator,error:moderatorError} =
+    await supabaseClient
+      .from("moderators")
+      .select("id,profile_id,active")
+      .eq("profile_id",userId)
+      .single();
+
+  if(moderatorError){
+
+    console.error(
+      "Moderator lookup error:",
+      moderatorError
+    );
+
+    throw new Error(
+      "Unable to verify your Moderator record: " +
+      (moderatorError.message || "Unknown database error.")
+    );
+  }
+
+  if(!moderator){
+    throw new Error(
+      "No Moderator record exists for this account."
+    );
+  }
+
+  if(moderator.active !== true){
+    throw new Error(
+      "This Moderator account is currently inactive."
+    );
+  }
+
+  return {
+    profile,
+    moderator
+  };
+}
 
 form.addEventListener("submit",async(event)=>{
 
@@ -415,98 +482,71 @@ form.addEventListener("submit",async(event)=>{
       throw error;
     }
 
-    if(!data.session || !data.user){
-
+    if(!data?.session || !data?.user){
       throw new Error(
         "Sign-in did not create a valid session."
       );
+    }
 
+    /*
+      Give Supabase a moment to persist the authenticated
+      session before querying protected tables.
+    */
+    await new Promise(resolve => setTimeout(resolve,250));
+
+    const {
+      data:sessionData,
+      error:sessionError
+    } = await supabaseClient.auth.getSession();
+
+    if(sessionError){
+      throw sessionError;
+    }
+
+    if(!sessionData?.session?.user){
+      throw new Error(
+        "The Moderator session could not be confirmed."
+      );
     }
 
     const userId =
-      data.user.id;
+      sessionData.session.user.id;
 
-    const {data:profile,error:profileError} =
-      await supabaseClient
-        .from("profiles")
-        .select("id,display_name,role")
-        .eq("id",userId)
-        .maybeSingle();
+    console.log(
+      "Authenticated Moderator user:",
+      userId
+    );
 
-    if(profileError){
-      throw profileError;
-    }
+    const verified =
+      await verifyModerator(userId);
 
-    if(!profile){
-
-      await supabaseClient.auth.signOut();
-
-      throw new Error(
-        "Your account does not have a Reader Reach profile."
-      );
-
-    }
-
-    if(profile.role !== "moderator"){
-
-      await supabaseClient.auth.signOut();
-
-      showMessage(
-        "This account is not registered as a Moderator.",
-        "error"
-      );
-
-      loginButton.disabled = false;
-      loginButton.textContent = "Sign In as Moderator";
-
-      return;
-    }
-
-    const {data:moderator,error:moderatorError} =
-      await supabaseClient
-        .from("moderators")
-        .select("id,profile_id,active")
-        .eq("profile_id",userId)
-        .maybeSingle();
-
-    if(moderatorError){
-      throw moderatorError;
-    }
-
-    if(!moderator){
-
-      await supabaseClient.auth.signOut();
-
-      throw new Error(
-        "No Moderator record exists for this account."
-      );
-
-    }
-
-    if(moderator.active === false){
-
-      await supabaseClient.auth.signOut();
-
-      throw new Error(
-        "This Moderator account is currently inactive."
-      );
-
-    }
+    console.log(
+      "Verified Moderator:",
+      verified.moderator.id
+    );
 
     showMessage(
       "Moderator sign-in successful. Opening dashboard...",
       "success"
     );
 
-    window.location.href =
-      "moderator-dashboard.html";
+    /*
+      Do not sign out here.
+      The dashboard will use the same persisted session.
+    */
+    window.location.replace(
+      "moderator-dashboard.html"
+    );
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "Moderator login error:",
+      error
+    );
 
     showMessage(
-      error.message ||
+      error?.message ||
       "Unable to sign in. Please check your credentials.",
       "error"
     );
@@ -514,7 +554,6 @@ form.addEventListener("submit",async(event)=>{
     loginButton.disabled = false;
     loginButton.textContent =
       "Sign In as Moderator";
-
   }
 
 });

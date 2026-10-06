@@ -524,35 +524,100 @@ nav{
   font-size:12px;
 }
 
-.messageLayout{display:grid;grid-template-columns:320px minmax(0,1fr);min-height:600px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.conversationList{border-right:1px solid var(--line);background:#fcf8f1;overflow:auto;max-height:680px}
-.conversation{width:100%;padding:15px;border:0;border-bottom:1px solid var(--line);background:transparent;text-align:left}
-.conversation:hover,.conversation.active{background:#fff}
-.conversationTitle{color:var(--brown);font-size:13px;font-weight:800}
-.conversationMeta{margin-top:5px;color:var(--muted);font-size:11px;line-height:1.45}
-.chatPanel{display:flex;flex-direction:column;min-width:0}
-.chatHeader{padding:17px;border-bottom:1px solid var(--line)}
-.chatMessages{flex:1;min-height:360px;max-height:500px;overflow:auto;padding:18px;background:#fffdf9}
-.chatBubble{max-width:78%;padding:11px 13px;margin-bottom:12px;border-radius:13px;font-size:13px;line-height:1.55;overflow-wrap:anywhere;white-space:pre-wrap}
-.chatBubble.author{background:var(--soft);margin-right:auto;border:1px solid #eee1d4}
-.chatBubble.moderator{background:var(--brown);color:#fff;margin-left:auto}
-.chatBubble small{display:block;margin-top:6px;opacity:.68;font-size:10px}
-.messageActions{display:flex;justify-content:flex-end;gap:6px;margin-top:8px}
-.messageActions button{border:1px solid currentColor;border-radius:7px;padding:5px 8px;font-size:10px;background:transparent;color:inherit;cursor:pointer;font-weight:700;opacity:.9}
-.messageActions button:hover{opacity:1;transform:translateY(-1px)}
-.chatBubble.author .messageActions{display:none}
-.editMessageForm{display:flex;gap:6px;margin-top:8px}
-.editMessageForm textarea{flex:1;min-height:55px;padding:8px;border:1px solid var(--line);border-radius:8px;color:var(--text)}
-.chatBubble.moderator .deleteMessageButton{color:#fff;border-color:rgba(255,255,255,.55)}
-.attachmentPreview{margin-top:8px;padding:8px;border-radius:9px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15)}
-.chatBubble.author .attachmentPreview{background:#fff;border-color:var(--line)}
-.attachmentPreview img{max-width:240px;max-height:180px;border-radius:7px;display:block}
-.attachmentPreview video{width:360px;max-width:100%;max-height:260px;border-radius:7px;display:block}
-.attachmentLink{display:inline-flex;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.14);color:inherit;font-weight:700;overflow-wrap:anywhere}
-.chatBubble.author .attachmentLink{background:var(--soft);color:var(--brown)}
-.replyBox{padding:13px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px;background:#fff}
-.replyBox textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:9px;padding:12px;background:#fffdf9;color:var(--text);resize:vertical}
-.chatAttachmentRow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+.messageLayout{
+  display:grid;
+  grid-template-columns:320px 1fr;
+  min-height:530px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+}
+
+.conversationList{
+  border-right:1px solid var(--line);
+  background:#fcf8f1;
+  overflow:auto;
+}
+
+.conversation{
+  width:100%;
+  padding:15px;
+  border:0;
+  border-bottom:1px solid var(--line);
+  background:transparent;
+  text-align:left;
+}
+
+.conversation:hover,
+.conversation.active{
+  background:#fff;
+}
+
+.conversationTitle{
+  color:var(--brown);
+  font-size:13px;
+  font-weight:800;
+}
+
+.conversationMeta{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.chatPanel{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+.chatHeader{
+  padding:17px;
+  border-bottom:1px solid var(--line);
+}
+
+.chatMessages{
+  flex:1;
+  min-height:340px;
+  max-height:470px;
+  overflow:auto;
+  padding:18px;
+  background:#fffdf9;
+}
+
+.chatBubble{
+  max-width:78%;
+  padding:11px 13px;
+  margin-bottom:10px;
+  border-radius:13px;
+  font-size:13px;
+  line-height:1.55;
+}
+
+.chatBubble.author{
+  background:var(--soft);
+  margin-right:auto;
+}
+
+.chatBubble.moderator{
+  background:var(--brown);
+  color:#fff;
+  margin-left:auto;
+}
+
+.chatBubble small{
+  display:block;
+  margin-top:5px;
+  opacity:.65;
+  font-size:10px;
+}
+
+.replyBox{
+  padding:13px;
+  border-top:1px solid var(--line);
+  display:flex;
+  gap:8px;
+}
 
 .replyBox textarea{
   flex:1;
@@ -1064,46 +1129,81 @@ footer a{
       <!-- MESSAGES -->
 
       <section id="messages" class="pageSection hidden">
+
         <section class="section">
+
           <div class="card">
+
             <div class="sectionHead">
+
               <div>
                 <h2 class="sectionTitle">Author Messages</h2>
-                <p class="muted">Every conversation belongs to one author, one Moderator and one book.</p>
+
+                <p class="muted">
+                  Communicate with approved authors about features,
+                  schedules and Reader Reach coordination.
+                </p>
               </div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap">
-                <button class="btn small" onclick="openModeratorNewConversation()">New Conversation</button>
-                <button class="btn small" onclick="loadConversations()">Refresh</button>
-              </div>
+
+              <button class="btn small" onclick="loadConversations()">
+                Refresh
+              </button>
+
             </div>
-            <div id="moderatorNewConversation" class="card" style="margin-bottom:14px;background:#fffdf9" hidden>
-              <div class="sectionHead"><div><h3 class="sectionTitle">Start a book conversation</h3><p class="muted">Choose the approved author and the exact book you are discussing.</p></div></div>
-              <div class="formGrid">
-                <div class="field"><label for="modConversationAuthor">Author</label><select id="modConversationAuthor"><option value="">Select author</option></select></div>
-                <div class="field"><label for="modConversationBook">Book</label><select id="modConversationBook"><option value="">Select book</option></select></div>
-              </div>
-              <div class="itemActions" style="margin-top:12px"><button class="btn primary small" onclick="createModeratorConversation()">Start Conversation</button><button class="btn small" onclick="document.getElementById('moderatorNewConversation').hidden=true">Cancel</button></div>
-            </div>
+
             <div class="messageLayout">
-              <div id="conversationList" class="conversationList"><div class="empty">Loading conversations...</div></div>
-              <div class="chatPanel">
-                <div class="chatHeader">
-                  <div class="itemTitle" id="conversationTitle">Select a conversation</div>
-                  <div class="itemMeta" id="conversationMeta">Book, author and Moderator details will appear here.</div>
-                </div>
-                <div id="chatMessages" class="chatMessages"><div class="empty">Select a conversation to view messages.</div></div>
-                <div class="replyBox">
-                  <textarea id="replyInput" placeholder="Write a reply to the author..." disabled></textarea>
-                  <div class="chatAttachmentRow">
-                    <input id="replyFiles" type="file" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp,.mp4,.webm,.mov,.avi,.mkv,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,video/*,image/*,text/plain" disabled>
-                    <span id="replyFileNames">Up to 5 files · 50 MB each</span>
-                  </div>
-                  <button id="sendReplyBtn" class="btn primary" disabled onclick="sendReply()">Send Message</button>
-                </div>
+
+              <div id="conversationList" class="conversationList">
+                <div class="empty">Loading conversations...</div>
               </div>
+
+              <div class="chatPanel">
+
+                <div class="chatHeader">
+
+                  <div class="itemTitle" id="conversationTitle">
+                    Select a conversation
+                  </div>
+
+                  <div class="itemMeta" id="conversationMeta">
+                    Author conversations will appear here.
+                  </div>
+
+                </div>
+
+                <div id="chatMessages" class="chatMessages">
+
+                  <div class="empty">
+                    Select an author conversation to view messages.
+                  </div>
+
+                </div>
+
+                <div class="replyBox">
+
+                  <textarea
+                    id="replyInput"
+                    placeholder="Write a reply to the author..."
+                    disabled></textarea>
+
+                  <button
+                    id="sendReplyBtn"
+                    class="btn primary"
+                    disabled
+                    onclick="sendReply()">
+                    Send
+                  </button>
+
+                </div>
+
+              </div>
+
             </div>
+
           </div>
+
         </section>
+
       </section>
 
 
@@ -1396,7 +1496,14 @@ const SUPABASE_KEY =
 const supabaseClient =
   window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_KEY
+    SUPABASE_KEY,
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    }
   );
 
 
@@ -1542,18 +1649,17 @@ function showSection(section){
 
 async function requireModerator(){
 
-  const {data:sessionData,error:sessionError}=await supabaseClient.auth.getSession();
-  if(sessionError){
-    console.error('Session restore error:',sessionError);
-    showToast('Could not restore your sign-in session.');
-    return false;
-  }
-  const user=sessionData?.session?.user || null;
+  const {
+    data:{
+      user
+    }
+  } =
+    await supabaseClient.auth.getUser();
 
   if(!user){
 
     window.location.href =
-      'auth.html?mode=signin';
+      'moderator-login.html';
 
     return false;
   }
@@ -1600,7 +1706,7 @@ async function requireModerator(){
     setTimeout(
       () => {
         window.location.href =
-          'index.html';
+          'moderator-login.html';
       },
       1500
     );
@@ -1618,6 +1724,7 @@ async function requireModerator(){
       .select(`
         id,
         profile_id,
+        display_name,
         active
       `)
       .eq('profile_id',user.id)
@@ -1669,17 +1776,32 @@ async function requireModerator(){
 }
 
 
+let signingOut = false;
+
 async function signOut(){
 
-  if(messageRealtimeChannel){
-    await supabaseClient.removeChannel(messageRealtimeChannel);
-    messageRealtimeChannel=null;
+  if(signingOut){
+    return;
   }
 
-  await supabaseClient.auth.signOut();
+  signingOut = true;
 
-  window.location.href =
-    'auth.html?mode=signin';
+  try{
+    const {error} = await supabaseClient.auth.signOut();
+
+    if(error){
+      console.error('Moderator sign-out error:', error);
+      showToast('Could not sign out. Please try again.');
+      signingOut = false;
+      return;
+    }
+
+    window.location.replace('moderator-login.html');
+  }catch(error){
+    console.error('Moderator sign-out error:', error);
+    showToast('Could not sign out. Please try again.');
+    signingOut = false;
+  }
 
 }
 
@@ -1840,7 +1962,7 @@ async function loadApprovedAuthors(){
 
               <button
                 class="btn small primary"
-                onclick="startAuthorConversation('${author.id || ''}')">
+                onclick="startAuthorConversation('${author.profile_id || ''}')">
                 Message
               </button>
 
@@ -2760,272 +2882,375 @@ async function markNotificationRead(id){
 
 
 /* -------------------------
-   CONVERSATIONS + CHAT
+   CONVERSATIONS
 ------------------------- */
-const CHAT_BUCKET = 'conversation-files';
-const MAX_CHAT_FILE_SIZE = 50 * 1024 * 1024;
-let messageRealtimeChannel = null;
-
-function chatFileSize(bytes){
-  const n=Number(bytes||0);
-  if(!n) return '';
-  if(n<1024*1024) return Math.max(1,Math.round(n/1024))+' KB';
-  return (n/(1024*1024)).toFixed(1)+' MB';
-}
-
-function validChatFile(file){
-  if(!file) return false;
-  if(file.size>MAX_CHAT_FILE_SIZE){ showToast('File is larger than 50 MB: '+file.name); return false; }
-  const type=String(file.type||'').toLowerCase();
-  const name=String(file.name||'').toLowerCase();
-  const ok=type.startsWith('image/')||type.startsWith('video/')||['.pdf','.doc','.docx','.txt'].some(x=>name.endsWith(x));
-  if(!ok){ showToast('Unsupported file type: '+file.name); return false; }
-  return true;
-}
-
-function renderChatAttachment(a){
-  const name=escapeHtml(a.file_name||'Attachment');
-  const size=a.file_size?' · '+escapeHtml(chatFileSize(a.file_size)):'';
-  const url=a.url?escapeHtml(a.url):'#';
-  const mime=String(a.mime_type||'').toLowerCase();
-  if(mime.startsWith('image/')&&a.url) return `<div class="attachmentPreview"><a href="${url}" target="_blank" rel="noopener"><img src="${url}" alt="${name}"></a><div class="muted" style="font-size:11px;margin-top:5px">${name}${size}</div></div>`;
-  if(mime.startsWith('video/')&&a.url) return `<div class="attachmentPreview"><video controls preload="metadata" src="${url}"></video><div style="font-size:11px;margin-top:5px">${name}${size}</div></div>`;
-  return `<div class="attachmentPreview"><a class="attachmentLink" href="${url}" target="_blank" rel="noopener" download>📎 ${name}${size}</a></div>`;
-}
 
 async function loadConversations(){
-  const container=document.getElementById('conversationList');
-  container.innerHTML='<div class="empty">Loading conversations...</div>';
-  const {data,error}=await supabaseClient.from('conversations')
-    .select('id,author_id,moderator_id,book_id,created_at,updated_at')
-    .eq('moderator_id',currentModerator.id)
-    .order('updated_at',{ascending:false});
-  if(error){ console.error('Conversation lookup error:',error); container.innerHTML='<div class="empty">Unable to load conversations: '+escapeHtml(error.message)+'</div>'; return; }
-  conversations=data||[];
-  if(!conversations.length){ container.innerHTML='<div class="empty">No book conversations yet.</div>'; return; }
 
-  const authorIds=[...new Set(conversations.map(c=>c.author_id).filter(Boolean))];
-  const bookIds=[...new Set(conversations.map(c=>c.book_id).filter(Boolean))];
-  const {data:authors}=authorIds.length?await supabaseClient.from('authors').select('id,author_name,profile_id').in('id',authorIds):{data:[]};
-  const {data:books}=bookIds.length?await supabaseClient.from('books').select('id,title').in('id',bookIds):{data:[]};
-  const authorMap=new Map((authors||[]).map(a=>[a.id,a]));
-  const bookMap=new Map((books||[]).map(b=>[b.id,b]));
-  conversations=conversations.map(c=>({...c,author_name:authorMap.get(c.author_id)?.author_name||'Author',book_title:bookMap.get(c.book_id)?.title||'Book conversation'}));
+  const container =
+    document.getElementById(
+      'conversationList'
+    );
 
-  container.innerHTML=conversations.map(c=>`<button class="conversation ${selectedConversation?.id===c.id?'active':''}" onclick="openConversation('${c.id}')">
-    <div class="conversationTitle">${escapeHtml(c.book_title)}</div>
-    <div class="conversationMeta">Author: ${escapeHtml(c.author_name)}<br>Updated: ${escapeHtml(formatDateTime(c.updated_at||c.created_at))}</div>
-  </button>`).join('');
-}
+  container.innerHTML =
+    '<div class="empty">Loading conversations...</div>';
 
-async function openConversation(id){
-  selectedConversation=conversations.find(c=>c.id===id)||null;
-  if(!selectedConversation) return;
-  document.getElementById('conversationTitle').textContent=selectedConversation.book_title||'Book conversation';
-  document.getElementById('conversationMeta').textContent=`Author: ${selectedConversation.author_name||'Author'} · Book-specific Moderator conversation`;
-  document.getElementById('replyInput').disabled=false;
-  document.getElementById('replyFiles').disabled=false;
-  document.getElementById('sendReplyBtn').disabled=false;
-  await loadConversationMessages(id);
-  await loadConversations();
-}
 
-async function loadConversationMessages(conversationId){
-  const container=document.getElementById('chatMessages');
-  container.innerHTML='<div class="empty">Loading messages...</div>';
-  const {data,error}=await supabaseClient.from('messages')
-    .select('id,conversation_id,sender_profile_id,message,created_at,read_at')
-    .eq('conversation_id',conversationId).order('created_at',{ascending:true});
-  if(error){ console.error('Conversation messages error:',error); container.innerHTML='<div class="empty">Unable to load messages: '+escapeHtml(error.message)+'</div>'; return; }
-  const rows=data||[];
-  let attachments=[];
-  if(rows.length){
-    const ids=rows.map(x=>x.id);
-    const ar=await supabaseClient.from('message_attachments').select('id,message_id,file_path,file_name,mime_type,file_size,created_at').in('message_id',ids).order('created_at',{ascending:true});
-    if(!ar.error){
-      attachments=await Promise.all((ar.data||[]).map(async a=>{const signed=await supabaseClient.storage.from(CHAT_BUCKET).createSignedUrl(a.file_path,3600);return {...a,url:signed.data?.signedUrl||null};}));
-    }
-  }
-  if(!rows.length){ container.innerHTML='<div class="empty">No messages in this conversation yet.</div>'; return; }
-  container.innerHTML=rows.map(item=>{
-    const mine=item.sender_profile_id===currentUser.id;
-    const files=attachments.filter(a=>a.message_id===item.id);
-    return `<div class="chatBubble ${mine?'moderator':'author'}" data-message-id="${escapeHtml(item.id)}">
-      <div class="messageBody">${item.message?escapeHtml(item.message):''}</div>
-      ${files.map(renderChatAttachment).join('')}
-      <small>${mine?'You':escapeHtml(selectedConversation?.author_name||'Author')} · ${escapeHtml(formatDateTime(item.created_at))}</small>
-      ${mine ? `<div class="messageActions" aria-label="Your message actions">
-        <button type="button" class="editMessageButton" data-message-id="${escapeHtml(item.id)}">Edit</button>
-        <button type="button" class="deleteMessageButton" data-message-id="${escapeHtml(item.id)}">Delete</button>
-      </div>` : ''}
-    </div>`;
-  }).join('');
+  /*
+    Moderator communication uses the existing
+    conversations/messages system.
 
-  container.querySelectorAll('.editMessageButton').forEach(button=>{
-    button.addEventListener('click',(event)=>{
-      event.preventDefault();
-      event.stopPropagation();
-      startEditConversationMessage(button.dataset.messageId);
-    });
-  });
+    We intentionally do not expose unrelated
+    private reader information here.
+  */
 
-  container.querySelectorAll('.deleteMessageButton').forEach(button=>{
-    button.addEventListener('click',(event)=>{
-      event.preventDefault();
-      event.stopPropagation();
-      deleteConversationMessage(button.dataset.messageId);
-    });
-  });
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from('conversations')
+      .select(`
+        id,
+        subject,
+        status,
+        created_at,
+        updated_at
+      `)
+      .order(
+        'updated_at',
+        {
+          ascending:false
+        }
+      );
 
-  container.scrollTop=container.scrollHeight;
-  const unread=rows.filter(m=>m.sender_profile_id!==currentUser.id&&!m.read_at).map(m=>m.id);
-  if(unread.length) await supabaseClient.from('messages').update({read_at:new Date().toISOString()}).in('id',unread);
-}
-async function sendReply(){
-  if(!selectedConversation){showToast('Select a conversation first.');return;}
-  const input=document.getElementById('replyInput');
-  const fileInput=document.getElementById('replyFiles');
-  const message=input.value.trim();
-  const files=[...(fileInput.files||[])];
-  if(!message&&!files.length){showToast('Write a message or attach a file first.');return;}
-  if(files.length>5){showToast('Choose up to 5 files per message.');return;}
-  if(files.some(f=>!validChatFile(f)))return;
-  const button=document.getElementById('sendReplyBtn'); button.disabled=true; button.textContent='Sending…';
-  try{
-    const {data:created,error}=await supabaseClient.from('messages').insert({conversation_id:selectedConversation.id,sender_profile_id:currentUser.id,message:message||'Attachment'}).select('id').single();
-    if(error) throw error;
-    const failed=[];
-    for(const file of files){
-      const path=`${currentUser.id}/${selectedConversation.id}/${Date.now()}-${Math.random().toString(36).slice(2,8)}-${String(file.name).replace(/[^a-zA-Z0-9._-]/g,'_')}`;
-      const {data:up,error:ue}=await supabaseClient.storage.from(CHAT_BUCKET).upload(path,file,{upsert:false,contentType:file.type||'application/octet-stream'});
-      if(ue){failed.push(file.name);continue;}
-      const {error:ae}=await supabaseClient.from('message_attachments').insert({message_id:created.id,file_path:up.path,file_name:file.name,mime_type:file.type||null,file_size:file.size});
-      if(ae){await supabaseClient.storage.from(CHAT_BUCKET).remove([up.path]);failed.push(file.name);}
-    }
-    await supabaseClient.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',selectedConversation.id);
-    input.value=''; fileInput.value=''; document.getElementById('replyFileNames').textContent='Up to 5 files · 50 MB each';
-    await loadConversationMessages(selectedConversation.id); await loadConversations();
-    if(failed.length) showToast('Message sent, but some files failed: '+failed.join(', '));
-  }catch(e){console.error('Reply error:',e);showToast('Could not send reply: '+e.message);}
-  finally{button.disabled=false;button.textContent='Send Message';}
-}
 
-async function startEditConversationMessage(messageId){
-  const bubble=document.querySelector(`.chatBubble[data-message-id="${CSS.escape(messageId)}"]`);
-  if(!bubble) return;
-  if(bubble.querySelector('.editMessageForm')) return;
-  const body=bubble.querySelector('.messageBody');
-  const currentText=body?.textContent || '';
-  const actions=bubble.querySelector('.messageActions');
-  if(actions) actions.style.display='none';
+  if(error){
 
-  const form=document.createElement('form');
-  form.className='editMessageForm';
-  form.innerHTML=`<textarea aria-label="Edit message">${escapeHtml(currentText)}</textarea><button type="submit" class="btn small">Save</button><button type="button" class="btn small">Cancel</button>`;
-  bubble.appendChild(form);
-  const textarea=form.querySelector('textarea');
-  textarea.focus();
-  textarea.setSelectionRange(textarea.value.length,textarea.value.length);
+    console.error(
+      'Conversation lookup error:',
+      error
+    );
 
-  form.querySelectorAll('button')[1].addEventListener('click',()=>{ form.remove(); if(actions) actions.style.display='flex'; });
-  form.addEventListener('submit',async event=>{
-    event.preventDefault();
-    const value=textarea.value.trim();
-    if(!value){ showToast('Message cannot be empty.'); return; }
-    const save=form.querySelector('button[type="submit"]');
-    save.disabled=true; save.textContent='Saving…';
-    try{
-      const {error}=await supabaseClient.from('messages').update({message:value}).eq('id',messageId).eq('sender_profile_id',currentUser.id);
-      if(error) throw error;
-      await loadConversationMessages(selectedConversation.id);
-      await loadConversations();
-      showToast('Message updated.');
-    }catch(e){
-      console.error('Edit message error:',e);
-      showToast('Could not edit message: '+(e?.message||'Unknown error'));
-      save.disabled=false; save.textContent='Save';
-    }
-  });
-}
+    container.innerHTML =
+      '<div class="empty">Unable to load conversations.</div>';
 
-async function deleteConversationMessage(messageId){
-  if(!selectedConversation || !messageId) return;
-  const bubble=document.querySelector(`.chatBubble[data-message-id="${CSS.escape(messageId)}"]`);
-  const button=bubble?.querySelector('.deleteMessageButton');
-  if(button){ button.disabled=true; button.textContent='Deleting…'; }
-  if(!window.confirm('Delete this moderator message and its attachments?')){
-    if(button){ button.disabled=false; button.textContent='Delete'; }
     return;
   }
-  try{
-    const {data:files,error:fileError}=await supabaseClient
-      .from('message_attachments')
-      .select('id,file_path')
-      .eq('message_id',messageId);
-    if(fileError) throw fileError;
-    const paths=(files||[]).map(f=>f.file_path).filter(Boolean);
-    if(paths.length){
-      const {error:storageError}=await supabaseClient.storage.from(CHAT_BUCKET).remove(paths);
-      if(storageError) throw storageError;
-    }
-    const {error}=await supabaseClient.from('messages').delete().eq('id',messageId);
-    if(error) throw error;
-    await supabaseClient.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',selectedConversation.id);
-    await loadConversationMessages(selectedConversation.id);
-    await loadConversations();
-    showToast('Moderator message deleted.');
-  }catch(e){
-    console.error('Delete message error:',e);
-    showToast('Could not delete message: '+(e?.message||'Unknown error'));
-    if(button){ button.disabled=false; button.textContent='Delete'; }
+
+
+  conversations =
+    data || [];
+
+
+  if(!conversations.length){
+
+    container.innerHTML =
+      '<div class="empty">No conversations yet.</div>';
+
+    return;
   }
+
+
+  container.innerHTML =
+    conversations
+      .map(conversation => {
+
+        return `
+          <button
+            class="conversation ${
+              selectedConversation &&
+              selectedConversation.id === conversation.id
+                ? 'active'
+                : ''
+            }"
+            onclick="openConversation('${conversation.id}')">
+
+            <div class="conversationTitle">
+              ${escapeHtml(
+                conversation.subject ||
+                'Reader Reach Conversation'
+              )}
+            </div>
+
+            <div class="conversationMeta">
+              ${escapeHtml(
+                conversation.status ||
+                'open'
+              )}
+              •
+              ${escapeHtml(
+                formatDateTime(
+                  conversation.updated_at ||
+                  conversation.created_at
+                )
+              )}
+            </div>
+
+          </button>
+        `;
+
+      })
+      .join('');
+
 }
-async function populateModeratorBooks(authorId){
-  const select=document.getElementById('modConversationBook');
-  const books=(approvedBooks||[]).filter(b=>b.author_id===authorId);
-  select.innerHTML='<option value="">Select book</option>'+books.map(b=>`<option value="${b.id}">${escapeHtml(b.title||'Untitled book')}</option>`).join('');
-}
 
-async function openModeratorNewConversation(authorId=''){
-  const panel=document.getElementById('moderatorNewConversation');
-  const authorSelect=document.getElementById('modConversationAuthor');
-  authorSelect.innerHTML='<option value="">Select author</option>'+(approvedAuthors||[]).map(a=>`<option value="${a.id}">${escapeHtml(a.author_name||'Unnamed Author')}</option>`).join('');
-  authorSelect.value=authorId||'';
-  await populateModeratorBooks(authorSelect.value);
-  panel.hidden=false;
-  showSection('messages');
-}
 
-document.getElementById('modConversationAuthor').addEventListener('change',e=>populateModeratorBooks(e.target.value));
+async function openConversation(id){
 
-document.getElementById('replyFiles').addEventListener('change',()=>{
-  const files=[...(document.getElementById('replyFiles').files||[])];
-  if(files.length>5){document.getElementById('replyFiles').value='';document.getElementById('replyFileNames').textContent='Up to 5 files · 50 MB each';showToast('Choose up to 5 files per message.');return;}
-  if(files.some(f=>!validChatFile(f))){document.getElementById('replyFiles').value='';document.getElementById('replyFileNames').textContent='Up to 5 files · 50 MB each';return;}
-  document.getElementById('replyFileNames').textContent=files.length?`Selected ${files.length} file${files.length===1?'':'s'}: ${files.map(f=>f.name).join(', ')}`:'Up to 5 files · 50 MB each';
-});
+  selectedConversation =
+    conversations.find(
+      item =>
+        item.id === id
+    );
 
-async function createModeratorConversation(){
-  const authorId=document.getElementById('modConversationAuthor').value;
-  const bookId=document.getElementById('modConversationBook').value;
-  if(!authorId||!bookId){showToast('Choose an author and book first.');return;}
-  const existing=await supabaseClient.from('conversations').select('id').eq('author_id',authorId).eq('moderator_id',currentModerator.id).eq('book_id',bookId).limit(1);
-  if(existing.error){showToast('Could not check conversations: '+existing.error.message);return;}
-  if(existing.data?.[0]) selectedConversation={id:existing.data[0].id};
-  else{
-    const created=await supabaseClient.from('conversations').insert({author_id:authorId,moderator_id:currentModerator.id,book_id:bookId}).select('id').single();
-    if(created.error){showToast('Could not create conversation: '+created.error.message);return;}
-    selectedConversation={id:created.data.id};
+
+  if(!selectedConversation){
+    return;
   }
-  document.getElementById('moderatorNewConversation').hidden=true;
+
+
+  document.getElementById(
+    'conversationTitle'
+  ).textContent =
+    selectedConversation.subject ||
+    'Reader Reach Conversation';
+
+
+  document.getElementById(
+    'conversationMeta'
+  ).textContent =
+    'Conversation status: ' +
+    (
+      selectedConversation.status ||
+      'open'
+    );
+
+
+  document.getElementById(
+    'replyInput'
+  ).disabled = false;
+
+  document.getElementById(
+    'sendReplyBtn'
+  ).disabled = false;
+
+
+  await loadConversationMessages(id);
+
   await loadConversations();
-  if(selectedConversation?.id) await openConversation(selectedConversation.id);
+
 }
 
-async function startAuthorConversation(authorId){
-  if(!authorId){showToast('This author does not have a valid author record.');return;}
-  await openModeratorNewConversation(authorId);
+
+async function loadConversationMessages(
+  conversationId
+){
+
+  const container =
+    document.getElementById(
+      'chatMessages'
+    );
+
+  container.innerHTML =
+    '<div class="empty">Loading messages...</div>';
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from('messages')
+      .select(`
+        id,
+        conversation_id,
+        sender_type,
+        message,
+        created_at
+      `)
+      .eq(
+        'conversation_id',
+        conversationId
+      )
+      .order(
+        'created_at',
+        {
+          ascending:true
+        }
+      );
+
+
+  if(error){
+
+    console.error(
+      'Conversation messages error:',
+      error
+    );
+
+    container.innerHTML =
+      '<div class="empty">Unable to load messages.</div>';
+
+    return;
+  }
+
+
+  if(!data || !data.length){
+
+    container.innerHTML =
+      '<div class="empty">No messages in this conversation yet.</div>';
+
+    return;
+  }
+
+
+  container.innerHTML =
+    data
+      .map(item => {
+
+        const isModerator =
+          item.sender_type ===
+          'moderator';
+
+
+        return `
+          <div class="chatBubble ${
+            isModerator
+              ? 'moderator'
+              : 'author'
+          }">
+
+            ${escapeHtml(
+              item.message ||
+              ''
+            )}
+
+            <small>
+              ${escapeHtml(
+                formatDateTime(
+                  item.created_at
+                )
+              )}
+            </small>
+
+          </div>
+        `;
+
+      })
+      .join('');
+
+
+  container.scrollTop =
+    container.scrollHeight;
+
 }
+
+
+async function sendReply(){
+
+  if(!selectedConversation){
+
+    showToast(
+      'Select a conversation first.'
+    );
+
+    return;
+  }
+
+
+  const input =
+    document.getElementById(
+      'replyInput'
+    );
+
+
+  const message =
+    input.value.trim();
+
+
+  if(!message){
+
+    showToast(
+      'Write a message first.'
+    );
+
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from('messages')
+      .insert({
+        conversation_id:
+          selectedConversation.id,
+        sender_type:
+          'moderator',
+        message:message
+      });
+
+
+  if(error){
+
+    console.error(
+      'Reply error:',
+      error
+    );
+
+    showToast(
+      'Could not send reply: ' +
+      error.message
+    );
+
+    return;
+  }
+
+
+  input.value = '';
+
+  await loadConversationMessages(
+    selectedConversation.id
+  );
+
+  await loadConversations();
+
+}
+
+
+async function startAuthorConversation(
+  profileId
+){
+
+  if(!profileId){
+
+    showToast(
+      'This author does not have a linked profile.'
+    );
+
+    return;
+  }
+
+
+  showSection('messages');
+
+
+  /*
+    The existing conversation structure does not
+    guarantee a universal author-recipient column
+    across all deployments, so the moderator can
+    use an existing conversation from the inbox.
+
+    We avoid inventing a new conversation schema here.
+  */
+
+  showToast(
+    'Open the author conversation from Messages.'
+  );
+
+}
+
 
 /* -------------------------
    REALTIME NOTIFICATIONS
@@ -3066,17 +3291,41 @@ function subscribeToNotifications(){
 
 
 function subscribeToMessages(){
-  if(messageRealtimeChannel) supabaseClient.removeChannel(messageRealtimeChannel);
-  messageRealtimeChannel=supabaseClient.channel('moderator-message-realtime-'+currentUser.id)
-    .on('postgres_changes',{event:'*',schema:'public',table:'messages'},async payload=>{
-      const conversationId=payload.new?.conversation_id || payload.old?.conversation_id;
-      if(selectedConversation&&conversationId===selectedConversation.id) await loadConversationMessages(selectedConversation.id);
-      await loadConversations();
-    })
-    .on('postgres_changes',{event:'*',schema:'public',table:'message_attachments'},async payload=>{
-      if(selectedConversation) await loadConversationMessages(selectedConversation.id);
-    })
-    .subscribe();
+
+  realtimeChannel =
+    supabaseClient
+      .channel(
+        'moderator-messages-' +
+        currentUser.id
+      )
+      .on(
+        'postgres_changes',
+        {
+          event:'*',
+          schema:'public',
+          table:'messages'
+        },
+        async payload => {
+
+          if(
+            selectedConversation &&
+            payload.new &&
+            payload.new.conversation_id ===
+              selectedConversation.id
+          ){
+
+            await loadConversationMessages(
+              selectedConversation.id
+            );
+
+          }
+
+          await loadConversations();
+
+        }
+      )
+      .subscribe();
+
 }
 
 
@@ -3133,15 +3382,35 @@ document
 supabaseClient.auth.onAuthStateChange(
   (event,session) => {
 
-    if(
-      event === 'SIGNED_OUT'
-    ){
-
-      window.location.href =
-        'auth.html?mode=signin';
-
+    if(event === 'TOKEN_REFRESHED' && session?.user){
+      currentUser = session.user;
+      return;
     }
 
+    if(event === 'SIGNED_IN' && session?.user){
+      currentUser = session.user;
+      return;
+    }
+
+    if(event === 'SIGNED_OUT'){
+      currentUser = null;
+      currentProfile = null;
+      currentModerator = null;
+
+      if(realtimeChannel){
+        try{
+          supabaseClient.removeChannel(realtimeChannel);
+        }catch(error){
+          console.warn('Could not remove realtime channel:', error);
+        }
+        realtimeChannel = null;
+      }
+
+      // This redirect happens only after an actual Supabase sign-out.
+      if(signingOut){
+        window.location.replace('moderator-login.html');
+      }
+    }
   }
 );
 

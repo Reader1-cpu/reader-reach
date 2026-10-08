@@ -377,10 +377,7 @@ footer a{display:block;margin-bottom:5px}
   transform:translateY(-2px);
   box-shadow:0 15px 35px rgba(61,36,24,.34)
 }
-.chat-launcher span{
-  display:block;
-  line-height:1
-}
+.chat-launcher span{display:block;line-height:1}
 
 .support-chat{
   position:fixed;
@@ -454,9 +451,7 @@ footer a{display:block;margin-bottom:5px}
   line-height:1.55
 }
 
-.support-email{
-  padding:12px 16px 0
-}
+.support-email{padding:12px 16px 0}
 .support-email label{
   display:block;
   font-size:10px;
@@ -920,6 +915,9 @@ footer a{display:block;margin-bottom:5px}
 const SUPABASE_URL="https://bublmnfhyyrefcdkloak.supabase.co";
 const SUPABASE_KEY="sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY";
 
+const VISITOR_SUPPORT_URL =
+  SUPABASE_URL + "/functions/v1/visitor-support";
+
 const supabaseClient=window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY,
@@ -968,8 +966,10 @@ function time(v){
   if(!v)return "";
   let p=String(v).split(":");
   if(p.length<2)return v;
+
   let d=new Date();
   d.setHours(+p[0],+p[1],0,0);
+
   return d.toLocaleTimeString(undefined,{
     hour:"numeric",
     minute:"2-digit"
@@ -985,7 +985,9 @@ async function books(ids=[]){
   if(ids.length)q=q.in("id",ids);
 
   let r=await q;
+
   if(r.error)throw r.error;
+
   return r.data||[];
 }
 
@@ -998,7 +1000,9 @@ async function authors(ids=[]){
   if(ids.length)q=q.in("id",ids);
 
   let r=await q;
+
   if(r.error)throw r.error;
+
   return r.data||[];
 }
 
@@ -1052,6 +1056,7 @@ async function loadTrailers(){
           it will appear here. Hiding a trailer does not delete it.
         </div>
       `;
+
       more.innerHTML="";
       return;
     }
@@ -1081,6 +1086,7 @@ async function loadTrailers(){
         <div>
           <div class="label">Featured Trailer</div>
           <h3>${esc(t.title||b.title)}</h3>
+
           <p>
             ${esc(
               t.description||
@@ -1088,6 +1094,7 @@ async function loadTrailers(){
               "Watch the official book trailer and discover the story behind the book."
             )}
           </p>
+
           <a
             class="btn primary"
             href="book.html?id=${encodeURIComponent(b.id)}">
@@ -1478,6 +1485,7 @@ let visitorChatState={
   open:false,
   email:"",
   conversationId:null,
+  token:null,
   messages:[]
 };
 
@@ -1487,7 +1495,8 @@ function saveVisitorChatState(){
       CHAT_STORAGE_KEY,
       JSON.stringify({
         email:visitorChatState.email,
-        conversationId:visitorChatState.conversationId
+        conversationId:visitorChatState.conversationId,
+        token:visitorChatState.token
       })
     );
   }catch(e){
@@ -1505,6 +1514,7 @@ function loadVisitorChatState(){
 
     visitorChatState.email=data.email||"";
     visitorChatState.conversationId=data.conversationId||null;
+    visitorChatState.token=data.token||null;
 
     if(visitorChatState.email){
       $("visitorEmail").value=visitorChatState.email;
@@ -1522,6 +1532,10 @@ function openSupportChat(){
   $("supportChat").setAttribute("aria-hidden","false");
 
   $("supportMessage").focus();
+
+  if(visitorChatState.token){
+    loadVisitorMessages(false);
+  }
 }
 
 function closeSupportChat(){
@@ -1529,6 +1543,53 @@ function closeSupportChat(){
 
   $("supportChat").classList.remove("open");
   $("supportChat").setAttribute("aria-hidden","true");
+}
+
+function formatSupportTime(value){
+  if(!value)return "";
+
+  const d=new Date(value);
+
+  if(isNaN(d))return "";
+
+  return d.toLocaleTimeString(undefined,{
+    hour:"numeric",
+    minute:"2-digit"
+  });
+}
+
+function renderSupportMessages(messages){
+  const box=$("supportMessages");
+
+  box.innerHTML="";
+
+  if(!messages||!messages.length){
+    box.innerHTML=`
+      <div class="support-empty">
+        Start a conversation with Reader Reach Support.
+      </div>
+    `;
+    return;
+  }
+
+  messages.forEach(item=>{
+    const message=document.createElement("div");
+
+    const type=item.sender_type==="admin"
+      ?"admin"
+      :"visitor";
+
+    message.className="support-message "+type;
+
+    message.innerHTML=`
+      ${esc(item.message)}
+      <small>${esc(formatSupportTime(item.created_at))}</small>
+    `;
+
+    box.appendChild(message);
+  });
+
+  box.scrollTop=box.scrollHeight;
 }
 
 function showSupportMessage(text,type="visitor"){
@@ -1556,6 +1617,37 @@ function setSupportStatus(text){
   $("supportStatus").textContent=text;
 }
 
+async function visitorSupportRequest(payload){
+  const response=await fetch(
+    VISITOR_SUPPORT_URL,
+    {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "apikey":SUPABASE_KEY
+      },
+      body:JSON.stringify(payload)
+    }
+  );
+
+  let data=null;
+
+  try{
+    data=await response.json();
+  }catch(e){
+    data=null;
+  }
+
+  if(!response.ok){
+    throw new Error(
+      data?.error||
+      "Reader Reach Support could not be reached."
+    );
+  }
+
+  return data;
+}
+
 async function getCurrentUserEmail(){
   try{
     const {data}=await supabaseClient.auth.getUser();
@@ -1570,6 +1662,43 @@ async function getCurrentUserEmail(){
   return "";
 }
 
+async function loadVisitorMessages(showStatus=true){
+  if(!visitorChatState.token)return;
+
+  try{
+    const data=await visitorSupportRequest({
+      action:"messages",
+      token:visitorChatState.token
+    });
+
+    if(data?.conversation_id){
+      visitorChatState.conversationId=data.conversation_id;
+      saveVisitorChatState();
+    }
+
+    visitorChatState.messages=data?.messages||[];
+
+    renderSupportMessages(visitorChatState.messages);
+
+    if(showStatus){
+      setSupportStatus(
+        visitorChatState.messages.length
+        ? "Support chat connected."
+        : "Support chat ready."
+      );
+    }
+
+  }catch(error){
+    console.error("Could not load visitor messages.",error);
+
+    if(showStatus){
+      setSupportStatus(
+        "We could not load the conversation right now."
+      );
+    }
+  }
+}
+
 async function prepareSupportChat(){
   loadVisitorChatState();
 
@@ -1578,8 +1707,14 @@ async function prepareSupportChat(){
   if(signedInEmail){
     $("visitorEmail").value=signedInEmail;
     $("visitorEmail").readOnly=true;
+
     visitorChatState.email=signedInEmail;
+
     saveVisitorChatState();
+  }
+
+  if(visitorChatState.token){
+    await loadVisitorMessages(true);
   }
 }
 
@@ -1609,38 +1744,122 @@ async function handleSupportSend(){
     return;
   }
 
-  /*
-   * IMPORTANT:
-   * The secure server-side Visitor Support connection is the next step.
-   * We do not send visitor messages directly to Supabase from this
-   * public page because anonymous visitors must not be able to read
-   * or impersonate another visitor's conversation.
-   */
-
-  visitorChatState.email=email;
-  saveVisitorChatState();
-
-  showSupportMessage(message,"visitor");
-
-  messageInput.value="";
   sendButton.disabled=true;
+  setSupportStatus("Sending your message…");
 
-  setSupportStatus(
-    "Your message is ready. Connecting you to Reader Reach Support…"
-  );
+  try{
 
-  /*
-   * Temporary UI state only.
-   * The actual secure send/read endpoint will be connected next.
-   */
+    /*
+     * First message:
+     * create the conversation and receive the private token.
+     */
+    if(!visitorChatState.token){
 
-  setTimeout(()=>{
-    sendButton.disabled=false;
+      const data=await visitorSupportRequest({
+        action:"start",
+        email,
+        message
+      });
+
+      if(!data?.success||!data?.token||!data?.conversation_id){
+        throw new Error(
+          "The support conversation could not be started."
+        );
+      }
+
+      visitorChatState.email=email;
+      visitorChatState.token=data.token;
+      visitorChatState.conversationId=data.conversation_id;
+
+      saveVisitorChatState();
+
+      visitorChatState.messages=data.messages||[];
+
+      renderSupportMessages(visitorChatState.messages);
+
+      messageInput.value="";
+
+      setSupportStatus(
+        "Message sent. Reader Reach Support has been notified."
+      );
+
+      startVisitorPolling();
+
+      return;
+    }
+
+    /*
+     * Existing conversation:
+     * send the message using the private visitor token.
+     */
+    const data=await visitorSupportRequest({
+      action:"send",
+      token:visitorChatState.token,
+      message
+    });
+
+    if(!data?.success){
+      throw new Error(
+        data?.error||
+        "Your message could not be sent."
+      );
+    }
+
+    visitorChatState.email=email;
+
+    saveVisitorChatState();
+
+    messageInput.value="";
+
+    await loadVisitorMessages(false);
 
     setSupportStatus(
-      "Support connection is being prepared. Please keep this chat open."
+      "Message sent. Reader Reach Support has been notified."
     );
-  },700);
+
+    startVisitorPolling();
+
+  }catch(error){
+    console.error("Visitor support send error:",error);
+
+    setSupportStatus(
+      error?.message||
+      "Your message could not be sent. Please try again."
+    );
+
+  }finally{
+    sendButton.disabled=false;
+    messageInput.focus();
+  }
+}
+
+
+/* =========================
+   VISITOR MESSAGE POLLING
+   ========================= */
+
+let visitorPollingTimer=null;
+
+function startVisitorPolling(){
+  if(visitorPollingTimer)return;
+
+  visitorPollingTimer=setInterval(async()=>{
+    if(!visitorChatState.token){
+      stopVisitorPolling();
+      return;
+    }
+
+    if(document.hidden)return;
+
+    await loadVisitorMessages(false);
+  },5000);
+}
+
+function stopVisitorPolling(){
+  if(visitorPollingTimer){
+    clearInterval(visitorPollingTimer);
+    visitorPollingTimer=null;
+  }
 }
 
 
@@ -1658,7 +1877,10 @@ $("chatLauncher").addEventListener("click",()=>{
 
 $("chatClose").addEventListener("click",closeSupportChat);
 
-$("supportSend").addEventListener("click",handleSupportSend);
+$("supportSend").addEventListener(
+  "click",
+  handleSupportSend
+);
 
 $("supportMessage").addEventListener("keydown",event=>{
   if(event.key==="Enter" && !event.shiftKey){
@@ -1670,6 +1892,13 @@ $("supportMessage").addEventListener("keydown",event=>{
 $("visitorEmail").addEventListener("input",()=>{
   visitorChatState.email=$("visitorEmail").value.trim();
   saveVisitorChatState();
+});
+
+document.addEventListener("visibilitychange",()=>{
+  if(!document.hidden && visitorChatState.token){
+    loadVisitorMessages(false);
+    startVisitorPolling();
+  }
 });
 
 

@@ -4,57 +4,1690 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Reader Reach — Every Book Has Its Readers</title>
+
 <style>
-:root{--cream:#f8f3ea;--paper:#fffdf9;--brown:#3d2418;--gold:#b8893f;--ink:#241812;--muted:#76695f;--line:#e8ddd0;--soft:#f1e8dc;--shadow:0 12px 35px rgba(61,36,24,.09)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,Helvetica,sans-serif}a{text-decoration:none;color:inherit}.wrap{width:min(1180px,calc(100% - 40px));margin:auto}
-.top{background:var(--brown);color:#eadfd5;font-size:12px}.top .wrap{min-height:32px;display:flex;justify-content:space-between;align-items:center}
-nav{background:rgba(255,253,249,.97);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;backdrop-filter:blur(8px)}nav .wrap{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}.logo{font:700 24px Georgia,serif;color:var(--brown)}.logo small{display:block;font:10px Arial,sans-serif;color:var(--muted);margin-top:2px}.links{display:flex;gap:24px;font-size:13px}.links a:hover{color:var(--gold)}.navActions{display:flex;gap:8px}
-.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid #cdbda9;background:transparent;color:var(--brown);padding:10px 16px;border-radius:999px;cursor:pointer;font-size:13px;font-weight:600}.btn.primary{background:var(--gold);border-color:var(--gold);color:#fff}.btn.dark{background:var(--brown);border-color:var(--brown);color:#fff}.btn.small{padding:8px 12px;font-size:11px}
-.hero{min-height:440px;display:flex;align-items:center;background:linear-gradient(90deg,rgba(36,20,12,.9),rgba(60,35,22,.5),rgba(60,35,22,.12)),url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1800&q=85') center/cover;color:#fff}.hero .wrap{padding:70px 0}.eyebrow,.label{text-transform:uppercase;letter-spacing:1.6px;font-size:10px;font-weight:700;color:#d8b56b;margin-bottom:10px}.hero h1{font:700 clamp(44px,6vw,72px)/.98 Georgia,serif;margin:0 0 18px}.hero p{max-width:560px;line-height:1.7;margin:0 0 25px}.actions{display:flex;gap:10px;flex-wrap:wrap}.hero .btn{border-color:#fff;color:#fff}.hero .btn.primary{border-color:var(--gold)}
-section{padding:68px 0}.alt{background:#f2e9dd}.head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:25px}.title{font:700 34px Georgia,serif;color:var(--brown);margin:0}.intro{font-size:13px;line-height:1.65;color:var(--muted);max-width:650px;margin:8px 0 0}
-.trailerFeature{display:grid;grid-template-columns:1fr 1.7fr 1fr;gap:22px;align-items:center}.trailerFeature h3,.trailerCard h3{font:700 24px Georgia,serif;color:var(--brown);margin:0 0 10px}.trailerFeature p,.trailerCard p{font-size:13px;line-height:1.65;color:var(--muted)}.video{background:#1d130e;border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}.video video{display:block;width:100%;min-height:260px;max-height:380px;object-fit:cover}.notice{padding:18px;border:1px solid var(--line);border-radius:14px;background:#fffaf3;color:var(--muted);font-size:13px;line-height:1.6}.error{color:#8a3e2d}
-.trailers{display:grid;gap:16px;margin-top:30px}.trailerCard{display:grid;grid-template-columns:270px 1fr;gap:20px;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px}.trailerCard video{width:100%;height:155px;object-fit:cover;border-radius:11px;background:#20140f}
-.books{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.book{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 5px 18px rgba(61,36,24,.05)}.cover{height:230px;border-radius:10px;overflow:hidden;background:var(--soft);display:grid;place-items:center;margin-bottom:14px}.cover img{width:100%;height:100%;object-fit:cover}.fallback{font:700 18px Georgia,serif;text-align:center;color:var(--brown);padding:18px}.book h3,.author h3{font:700 18px Georgia,serif;color:var(--brown);margin:0 0 5px}.meta{font-size:12px;color:var(--muted);margin-bottom:10px}.pill{display:inline-block;background:#f2eadf;color:#75675d;border-radius:999px;padding:6px 9px;font-size:10px;margin-bottom:13px}
-.authors{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.author{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;text-align:center}.avatar{width:68px;height:68px;border-radius:50%;margin:0 auto 13px;background:#e5d6c5;display:grid;place-items:center;color:var(--brown);font:700 25px Georgia,serif}.author p{font-size:12px;line-height:1.6;color:var(--muted);min-height:38px}.count{font-size:11px;color:var(--gold);font-weight:700;margin:8px 0 13px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px}.schedule{display:flex;gap:14px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.schedule:last-child{border:0}.date{width:54px;min-width:54px;text-align:center;background:#f2e8db;border-radius:11px;padding:8px 4px;color:var(--brown)}.date strong{display:block;font:700 20px Georgia,serif}.date span{font-size:9px;text-transform:uppercase}.schedule strong{font:700 15px Georgia,serif;color:var(--brown)}.schedule small{display:block;color:var(--muted);margin-top:4px}.badge{margin-left:auto;font-size:10px;padding:6px 9px;border-radius:999px;background:#f1e8dc;color:#876b47;font-weight:700}.discussion{display:flex;gap:13px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.discussion:last-child{border:0}.discIcon{width:48px;height:62px;border-radius:7px;background:#eadbc9;display:grid;place-items:center;color:var(--brown)}.discussion h3{font:700 16px Georgia,serif;color:var(--brown);margin:0 0 4px}.discussion p{font-size:11px;line-height:1.5;color:var(--muted);margin:0}
-.about{display:grid;grid-template-columns:1.1fr .9fr;gap:24px}.aboutImg{min-height:300px;border-radius:18px;background:linear-gradient(90deg,rgba(45,25,16,.72),rgba(45,25,16,.18)),url('https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80') center/cover;color:#fff;padding:35px;display:flex;align-items:end}.aboutImg h2{font:700 34px Georgia,serif;margin:0}.aboutCard{border-radius:18px;background:var(--brown);color:#fff;padding:35px}.aboutCard h2{font:700 28px Georgia,serif;margin:0 0 12px}.aboutCard p{color:#dfd0c5;font-size:13px;line-height:1.7}.cta{background:#ead8ad;padding:28px 0}.cta .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px}.cta h2{font:700 28px Georgia,serif;color:var(--brown);margin:0 0 5px}.cta p{font-size:12px;color:#665344;margin:0}
-footer{background:#2d1a12;color:#fff;padding:55px 0 25px}.footerGrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:30px}footer h3,footer h4{font-family:Georgia,serif;margin:0 0 12px}footer p,footer a{color:#d9c9bd;font-size:12px;line-height:1.7}footer a{display:block;margin-bottom:5px}.copy{margin-top:35px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);font-size:11px;color:#bca99d}.loading{padding:22px 0;color:var(--muted);font-size:13px}.toast{position:fixed;right:20px;bottom:20px;background:var(--brown);color:#fff;padding:13px 16px;border-radius:12px;opacity:0;transform:translateY(10px);transition:.2s;z-index:99}.toast.show{opacity:1;transform:none}
-@media(max-width:1000px){.links{display:none}.trailerFeature{grid-template-columns:1fr}.books,.authors{grid-template-columns:repeat(2,1fr)}.two,.about{grid-template-columns:1fr}}@media(max-width:650px){.wrap{width:calc(100% - 28px)}.top .wrap span:last-child{display:none}.navActions .btn:first-child{display:none}.hero{min-height:500px}.hero h1{font-size:46px}.books,.authors{grid-template-columns:1fr}.trailerCard{grid-template-columns:1fr}.cta .wrap{flex-direction:column;align-items:flex-start}.footerGrid{grid-template-columns:1fr 1fr}.head{align-items:flex-start;flex-direction:column}}
+:root{
+  --cream:#f8f3ea;
+  --paper:#fffdf9;
+  --brown:#3d2418;
+  --gold:#b8893f;
+  --ink:#241812;
+  --muted:#76695f;
+  --line:#e8ddd0;
+  --soft:#f1e8dc;
+  --shadow:0 12px 35px rgba(61,36,24,.09)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+a{text-decoration:none;color:inherit}
+.wrap{width:min(1180px,calc(100% - 40px));margin:auto}
+
+.top{background:var(--brown);color:#eadfd5;font-size:12px}
+.top .wrap{min-height:32px;display:flex;justify-content:space-between;align-items:center}
+
+nav{
+  background:rgba(255,253,249,.97);
+  border-bottom:1px solid var(--line);
+  position:sticky;
+  top:0;
+  z-index:20;
+  backdrop-filter:blur(8px)
+}
+nav .wrap{
+  min-height:76px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px
+}
+.logo{font:700 24px Georgia,serif;color:var(--brown)}
+.logo small{display:block;font:10px Arial,sans-serif;color:var(--muted);margin-top:2px}
+.links{display:flex;gap:24px;font-size:13px}
+.links a:hover{color:var(--gold)}
+.navActions{display:flex;gap:8px}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #cdbda9;
+  background:transparent;
+  color:var(--brown);
+  padding:10px 16px;
+  border-radius:999px;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:600
+}
+.btn.primary{background:var(--gold);border-color:var(--gold);color:#fff}
+.btn.dark{background:var(--brown);border-color:var(--brown);color:#fff}
+.btn.small{padding:8px 12px;font-size:11px}
+
+.hero{
+  min-height:440px;
+  display:flex;
+  align-items:center;
+  background:
+    linear-gradient(90deg,rgba(36,20,12,.9),rgba(60,35,22,.5),rgba(60,35,22,.12)),
+    url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1800&q=85') center/cover;
+  color:#fff
+}
+.hero .wrap{padding:70px 0}
+.eyebrow,.label{
+  text-transform:uppercase;
+  letter-spacing:1.6px;
+  font-size:10px;
+  font-weight:700;
+  color:#d8b56b;
+  margin-bottom:10px
+}
+.hero h1{font:700 clamp(44px,6vw,72px)/.98 Georgia,serif;margin:0 0 18px}
+.hero p{max-width:560px;line-height:1.7;margin:0 0 25px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.hero .btn{border-color:#fff;color:#fff}
+.hero .btn.primary{border-color:var(--gold)}
+
+section{padding:68px 0}
+.alt{background:#f2e9dd}
+.head{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:20px;
+  margin-bottom:25px
+}
+.title{font:700 34px Georgia,serif;color:var(--brown);margin:0}
+.intro{font-size:13px;line-height:1.65;color:var(--muted);max-width:650px;margin:8px 0 0}
+
+.trailerFeature{
+  display:grid;
+  grid-template-columns:1fr 1.7fr 1fr;
+  gap:22px;
+  align-items:center
+}
+.trailerFeature h3,.trailerCard h3{
+  font:700 24px Georgia,serif;
+  color:var(--brown);
+  margin:0 0 10px
+}
+.trailerFeature p,.trailerCard p{
+  font-size:13px;
+  line-height:1.65;
+  color:var(--muted)
+}
+.video{
+  background:#1d130e;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:var(--shadow)
+}
+.video video{
+  display:block;
+  width:100%;
+  min-height:260px;
+  max-height:380px;
+  object-fit:cover
+}
+.notice{
+  padding:18px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:#fffaf3;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6
+}
+.error{color:#8a3e2d}
+
+.trailers{display:grid;gap:16px;margin-top:30px}
+.trailerCard{
+  display:grid;
+  grid-template-columns:270px 1fr;
+  gap:20px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px
+}
+.trailerCard video{
+  width:100%;
+  height:155px;
+  object-fit:cover;
+  border-radius:11px;
+  background:#20140f
+}
+
+.books{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.book{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px;
+  box-shadow:0 5px 18px rgba(61,36,24,.05)
+}
+.cover{
+  height:230px;
+  border-radius:10px;
+  overflow:hidden;
+  background:var(--soft);
+  display:grid;
+  place-items:center;
+  margin-bottom:14px
+}
+.cover img{width:100%;height:100%;object-fit:cover}
+.fallback{
+  font:700 18px Georgia,serif;
+  text-align:center;
+  color:var(--brown);
+  padding:18px
+}
+.book h3,.author h3{
+  font:700 18px Georgia,serif;
+  color:var(--brown);
+  margin:0 0 5px
+}
+.meta{font-size:12px;color:var(--muted);margin-bottom:10px}
+.pill{
+  display:inline-block;
+  background:#f2eadf;
+  color:#75675d;
+  border-radius:999px;
+  padding:6px 9px;
+  font-size:10px;
+  margin-bottom:13px
+}
+
+.authors{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.author{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:20px;
+  text-align:center
+}
+.avatar{
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  margin:0 auto 13px;
+  background:#e5d6c5;
+  display:grid;
+  place-items:center;
+  color:var(--brown);
+  font:700 25px Georgia,serif
+}
+.author p{
+  font-size:12px;
+  line-height:1.6;
+  color:var(--muted);
+  min-height:38px
+}
+.count{font-size:11px;color:var(--gold);font-weight:700;margin:8px 0 13px}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.panel{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:20px
+}
+.schedule{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  padding:13px 0;
+  border-bottom:1px solid var(--line)
+}
+.schedule:last-child{border:0}
+.date{
+  width:54px;
+  min-width:54px;
+  text-align:center;
+  background:#f2e8db;
+  border-radius:11px;
+  padding:8px 4px;
+  color:var(--brown)
+}
+.date strong{display:block;font:700 20px Georgia,serif}
+.date span{font-size:9px;text-transform:uppercase}
+.schedule strong{font:700 15px Georgia,serif;color:var(--brown)}
+.schedule small{display:block;color:var(--muted);margin-top:4px}
+.badge{
+  margin-left:auto;
+  font-size:10px;
+  padding:6px 9px;
+  border-radius:999px;
+  background:#f1e8dc;
+  color:#876b47;
+  font-weight:700
+}
+.discussion{
+  display:flex;
+  gap:13px;
+  align-items:center;
+  padding:13px 0;
+  border-bottom:1px solid var(--line)
+}
+.discussion:last-child{border:0}
+.discIcon{
+  width:48px;
+  height:62px;
+  border-radius:7px;
+  background:#eadbc9;
+  display:grid;
+  place-items:center;
+  color:var(--brown)
+}
+.discussion h3{
+  font:700 16px Georgia,serif;
+  color:var(--brown);
+  margin:0 0 4px
+}
+.discussion p{
+  font-size:11px;
+  line-height:1.5;
+  color:var(--muted);
+  margin:0
+}
+
+.about{display:grid;grid-template-columns:1.1fr .9fr;gap:24px}
+.aboutImg{
+  min-height:300px;
+  border-radius:18px;
+  background:
+    linear-gradient(90deg,rgba(45,25,16,.72),rgba(45,25,16,.18)),
+    url('https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80') center/cover;
+  color:#fff;
+  padding:35px;
+  display:flex;
+  align-items:end
+}
+.aboutImg h2{font:700 34px Georgia,serif;margin:0}
+.aboutCard{border-radius:18px;background:var(--brown);color:#fff;padding:35px}
+.aboutCard h2{font:700 28px Georgia,serif;margin:0 0 12px}
+.aboutCard p{color:#dfd0c5;font-size:13px;line-height:1.7}
+
+.cta{background:#ead8ad;padding:28px 0}
+.cta .wrap{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px
+}
+.cta h2{font:700 28px Georgia,serif;color:var(--brown);margin:0 0 5px}
+.cta p{font-size:12px;color:#665344;margin:0}
+
+footer{background:#2d1a12;color:#fff;padding:55px 0 25px}
+.footerGrid{
+  display:grid;
+  grid-template-columns:1.5fr 1fr 1fr 1fr;
+  gap:30px
+}
+footer h3,footer h4{font-family:Georgia,serif;margin:0 0 12px}
+footer p,footer a{color:#d9c9bd;font-size:12px;line-height:1.7}
+footer a{display:block;margin-bottom:5px}
+.copy{
+  margin-top:35px;
+  padding-top:18px;
+  border-top:1px solid rgba(255,255,255,.12);
+  font-size:11px;
+  color:#bca99d
+}
+.loading{padding:22px 0;color:var(--muted);font-size:13px}
+.toast{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  background:var(--brown);
+  color:#fff;
+  padding:13px 16px;
+  border-radius:12px;
+  opacity:0;
+  transform:translateY(10px);
+  transition:.2s;
+  z-index:99
+}
+.toast.show{opacity:1;transform:none}
+
+/* =========================
+   VISITOR SUPPORT CHAT
+   ========================= */
+
+.chat-launcher{
+  position:fixed;
+  right:24px;
+  bottom:24px;
+  width:62px;
+  height:62px;
+  border:0;
+  border-radius:50%;
+  background:var(--brown);
+  color:#fff;
+  box-shadow:0 12px 30px rgba(61,36,24,.28);
+  cursor:pointer;
+  z-index:200;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:26px;
+  transition:.2s
+}
+.chat-launcher:hover{
+  transform:translateY(-2px);
+  box-shadow:0 15px 35px rgba(61,36,24,.34)
+}
+.chat-launcher span{
+  display:block;
+  line-height:1
+}
+
+.support-chat{
+  position:fixed;
+  right:24px;
+  bottom:98px;
+  width:min(380px,calc(100vw - 28px));
+  height:min(590px,calc(100vh - 125px));
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:20px;
+  box-shadow:0 20px 55px rgba(61,36,24,.22);
+  overflow:hidden;
+  z-index:199;
+  display:none;
+  flex-direction:column
+}
+.support-chat.open{display:flex}
+
+.support-header{
+  background:var(--brown);
+  color:#fff;
+  padding:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px
+}
+.support-header-left{
+  display:flex;
+  align-items:center;
+  gap:11px
+}
+.support-avatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#b8893f;
+  display:grid;
+  place-items:center;
+  font-size:18px
+}
+.support-header h3{
+  font:700 17px Georgia,serif;
+  margin:0 0 3px
+}
+.support-header p{
+  margin:0;
+  font-size:10px;
+  color:#ddcfc4
+}
+.support-close{
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.1);
+  color:#fff;
+  cursor:pointer;
+  font-size:19px
+}
+
+.support-intro{
+  padding:14px 16px;
+  border-bottom:1px solid var(--line);
+  background:#fffaf3
+}
+.support-intro p{
+  margin:0;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.55
+}
+
+.support-email{
+  padding:12px 16px 0
+}
+.support-email label{
+  display:block;
+  font-size:10px;
+  font-weight:700;
+  color:var(--brown);
+  margin-bottom:5px
+}
+.support-email input{
+  width:100%;
+  border:1px solid #d9cabb;
+  border-radius:10px;
+  padding:10px 11px;
+  outline:none;
+  background:#fff;
+  color:var(--ink);
+  font-size:12px
+}
+.support-email input:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(184,137,63,.1)
+}
+
+.support-messages{
+  flex:1;
+  overflow-y:auto;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  background:#fbf7f1
+}
+.support-empty{
+  margin:auto;
+  max-width:250px;
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.6
+}
+.support-message{
+  max-width:82%;
+  padding:10px 12px;
+  border-radius:14px;
+  font-size:12px;
+  line-height:1.5;
+  word-break:break-word
+}
+.support-message.visitor{
+  align-self:flex-end;
+  background:var(--gold);
+  color:#fff;
+  border-bottom-right-radius:5px
+}
+.support-message.admin{
+  align-self:flex-start;
+  background:#fff;
+  border:1px solid var(--line);
+  color:var(--ink);
+  border-bottom-left-radius:5px
+}
+.support-message small{
+  display:block;
+  margin-top:4px;
+  font-size:8px;
+  opacity:.65
+}
+
+.support-composer{
+  padding:12px;
+  border-top:1px solid var(--line);
+  background:var(--paper);
+  display:flex;
+  gap:8px
+}
+.support-composer textarea{
+  flex:1;
+  min-width:0;
+  resize:none;
+  height:42px;
+  border:1px solid #d9cabb;
+  border-radius:11px;
+  padding:11px;
+  outline:none;
+  font:12px Arial,sans-serif;
+  color:var(--ink)
+}
+.support-composer textarea:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(184,137,63,.1)
+}
+.support-send{
+  width:44px;
+  min-width:44px;
+  border:0;
+  border-radius:11px;
+  background:var(--gold);
+  color:#fff;
+  cursor:pointer;
+  font-size:17px
+}
+.support-send:disabled{
+  opacity:.5;
+  cursor:not-allowed
+}
+
+.support-status{
+  padding:0 14px 8px;
+  font-size:9px;
+  color:var(--muted);
+  background:var(--paper)
+}
+
+@media(max-width:1000px){
+  .links{display:none}
+  .trailerFeature{grid-template-columns:1fr}
+  .books,.authors{grid-template-columns:repeat(2,1fr)}
+  .two,.about{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+  .wrap{width:calc(100% - 28px)}
+  .top .wrap span:last-child{display:none}
+  .navActions .btn:first-child{display:none}
+  .hero{min-height:500px}
+  .hero h1{font-size:46px}
+  .books,.authors{grid-template-columns:1fr}
+  .trailerCard{grid-template-columns:1fr}
+  .cta .wrap{flex-direction:column;align-items:flex-start}
+  .footerGrid{grid-template-columns:1fr 1fr}
+  .head{align-items:flex-start;flex-direction:column}
+
+  .chat-launcher{
+    right:16px;
+    bottom:16px;
+    width:56px;
+    height:56px
+  }
+
+  .support-chat{
+    right:14px;
+    bottom:82px;
+    width:calc(100vw - 28px);
+    height:min(600px,calc(100vh - 100px));
+    border-radius:17px
+  }
+}
 </style>
 </head>
+
 <body>
-<div class="top"><div class="wrap"><span>Reader Reach • Every Book Has Its Readers</span><span>Discover Books • Explore Authors • Find Your Next Read</span></div></div>
-<nav><div class="wrap"><a class="logo" href="index.html">Reader Reach<small>Every Book Has Its Readers</small></a><div class="links"><a href="#home">Home</a><a href="authors.html">Authors</a><a href="#featured">Featured</a><a href="#about">About Us</a><a href="contact.html">Contact Us</a></div><div class="navActions"><a class="btn" href="auth.html?mode=reader">Sign In</a><a class="btn primary" href="auth.html?mode=reader">Sign Up</a></div></div></nav>
+
+<div class="top">
+  <div class="wrap">
+    <span>Reader Reach • Every Book Has Its Readers</span>
+    <span>Discover Books • Explore Authors • Find Your Next Read</span>
+  </div>
+</div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="index.html">
+      Reader Reach
+      <small>Every Book Has Its Readers</small>
+    </a>
+
+    <div class="links">
+      <a href="#home">Home</a>
+      <a href="authors.html">Authors</a>
+      <a href="#featured">Featured</a>
+      <a href="#about">About Us</a>
+      <a href="contact.html">Contact Us</a>
+    </div>
+
+    <div class="navActions">
+      <a class="btn" href="auth.html?mode=reader">Sign In</a>
+      <a class="btn primary" href="auth.html?mode=reader">Sign Up</a>
+    </div>
+  </div>
+</nav>
+
 <main id="home">
-<section class="hero"><div class="wrap"><div class="eyebrow">Reader Reach</div><h1>Every Book Has<br>Its Readers.</h1><p>Discover meaningful books, meet the people behind them, and find stories worth carrying with you.</p><div class="actions"><a class="btn primary" href="#featured">Explore Featured Books →</a><a class="btn" href="authors.html">Meet Our Authors</a></div></div></section>
-<section id="trailers"><div class="wrap"><div class="head"><div><div class="label">Watch</div><h2 class="title">Featured Book Trailer</h2><p class="intro">When Admin selects <strong>Show</strong>, the author's uploaded trailer appears here. When Admin selects <strong>Hide</strong>, it disappears from the homepage without deleting the trailer.</p></div><a class="btn" href="#allTrailers">View More Trailers →</a></div><div id="featuredTrailer"><div class="loading">Loading featured trailer…</div></div><div id="allTrailers"></div></div></section>
-<section class="alt" id="featured"><div class="wrap"><div class="head"><div><div class="label">Featured</div><h2 class="title">Featured Books</h2><p class="intro">Handpicked books currently selected for the Reader Reach homepage.</p></div></div><div id="featuredBookGrid" class="books"><div class="loading">Loading featured books…</div></div></div></section>
-<section id="authors"><div class="wrap"><div class="head"><div><div class="label">Authors</div><h2 class="title">Explore Authors</h2><p class="intro">Discover approved authors and explore the books they have shared with the Reader Reach community.</p></div><a class="btn" href="authors.html">View All Authors →</a></div><div id="authorGrid" class="authors"><div class="loading">Loading authors…</div></div></div></section>
-<section class="alt"><div class="wrap two"><div><div class="label">Calendar</div><h2 class="title">Upcoming Features</h2><p class="intro">Keep track of scheduled Reader Reach features and book events.</p><div class="panel" style="margin-top:20px"><div id="eventList"><div class="loading">Loading scheduled features…</div></div></div></div><div><div class="label">Community</div><h2 class="title">Book Discussions</h2><p class="intro">Follow discussion activity around approved books.</p><div class="panel" style="margin-top:20px"><div id="discussionList"><div class="loading">Loading discussions…</div></div></div></div></div></section>
-<section id="about"><div class="wrap about"><div class="aboutImg"><h2>A platform built around books and the people who bring them to readers.</h2></div><div class="aboutCard"><h2>Books deserve to be discovered.</h2><p>Reader Reach connects readers, authors, moderators and administrators through a structured platform for discovering books, supporting authors, coordinating features and building meaningful reader communities.</p><a class="btn" href="authors.html">Explore Authors →</a></div></div></section>
-<section class="cta"><div class="wrap"><div><h2>Join Reader Reach</h2><p>Create an account to follow authors, save books, receive notifications and participate in the Reader Reach community.</p></div><div class="actions"><a class="btn dark" href="auth.html?mode=reader">Create an Account</a><a class="btn" href="auth.html?mode=reader">Sign In</a></div></div></section>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Reader Reach</div>
+    <h1>Every Book Has<br>Its Readers.</h1>
+    <p>
+      Discover meaningful books, meet the people behind them,
+      and find stories worth carrying with you.
+    </p>
+    <div class="actions">
+      <a class="btn primary" href="#featured">Explore Featured Books →</a>
+      <a class="btn" href="authors.html">Meet Our Authors</a>
+    </div>
+  </div>
+</section>
+
+<section id="trailers">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <div class="label">Watch</div>
+        <h2 class="title">Featured Book Trailer</h2>
+        <p class="intro">
+          When Admin selects <strong>Show</strong>, the author's uploaded
+          trailer appears here. When Admin selects <strong>Hide</strong>,
+          it disappears from the homepage without deleting the trailer.
+        </p>
+      </div>
+      <a class="btn" href="#allTrailers">View More Trailers →</a>
+    </div>
+
+    <div id="featuredTrailer">
+      <div class="loading">Loading featured trailer…</div>
+    </div>
+
+    <div id="allTrailers"></div>
+  </div>
+</section>
+
+<section class="alt" id="featured">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <div class="label">Featured</div>
+        <h2 class="title">Featured Books</h2>
+        <p class="intro">
+          Handpicked books currently selected for the Reader Reach homepage.
+        </p>
+      </div>
+    </div>
+
+    <div id="featuredBookGrid" class="books">
+      <div class="loading">Loading featured books…</div>
+    </div>
+  </div>
+</section>
+
+<section id="authors">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <div class="label">Authors</div>
+        <h2 class="title">Explore Authors</h2>
+        <p class="intro">
+          Discover approved authors and explore the books they have shared
+          with the Reader Reach community.
+        </p>
+      </div>
+      <a class="btn" href="authors.html">View All Authors →</a>
+    </div>
+
+    <div id="authorGrid" class="authors">
+      <div class="loading">Loading authors…</div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap two">
+
+    <div>
+      <div class="label">Calendar</div>
+      <h2 class="title">Upcoming Features</h2>
+      <p class="intro">
+        Keep track of scheduled Reader Reach features and book events.
+      </p>
+
+      <div class="panel" style="margin-top:20px">
+        <div id="eventList">
+          <div class="loading">Loading scheduled features…</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="label">Community</div>
+      <h2 class="title">Book Discussions</h2>
+      <p class="intro">
+        Follow discussion activity around approved books.
+      </p>
+
+      <div class="panel" style="margin-top:20px">
+        <div id="discussionList">
+          <div class="loading">Loading discussions…</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap about">
+
+    <div class="aboutImg">
+      <h2>
+        A platform built around books and the people who bring them to readers.
+      </h2>
+    </div>
+
+    <div class="aboutCard">
+      <h2>Books deserve to be discovered.</h2>
+      <p>
+        Reader Reach connects readers, authors, moderators and administrators
+        through a structured platform for discovering books, supporting authors,
+        coordinating features and building meaningful reader communities.
+      </p>
+      <a class="btn" href="authors.html">Explore Authors →</a>
+    </div>
+
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <div>
+      <h2>Join Reader Reach</h2>
+      <p>
+        Create an account to follow authors, save books, receive notifications
+        and participate in the Reader Reach community.
+      </p>
+    </div>
+
+    <div class="actions">
+      <a class="btn dark" href="auth.html?mode=reader">Create an Account</a>
+      <a class="btn" href="auth.html?mode=reader">Sign In</a>
+    </div>
+  </div>
+</section>
+
 </main>
-<footer><div class="wrap"><div class="footerGrid"><div><h3>Reader Reach</h3><p>Every Book Has Its Readers.</p><p>A place for meaningful book discovery and community.</p></div><div><h4>Explore</h4><a href="authors.html">Authors</a><a href="#featured">Featured Books</a><a href="#trailers">Book Trailers</a><a href="#home">Home</a></div><div><h4>Reader Reach</h4><a href="#about">About Us</a><a href="contact.html">Contact Us</a><a href="auth.html?mode=reader">Sign In</a><a href="auth.html?mode=reader">Sign Up</a></div><div><h4>Community</h4><a href="#authors">Authors</a><a href="#featured">Books</a><a href="#trailers">Trailers</a><a href="#about">About</a></div></div><div class="copy">© 2026 Reader Reach. All rights reserved.</div></div></footer>
+
+<footer>
+  <div class="wrap">
+
+    <div class="footerGrid">
+
+      <div>
+        <h3>Reader Reach</h3>
+        <p>Every Book Has Its Readers.</p>
+        <p>A place for meaningful book discovery and community.</p>
+      </div>
+
+      <div>
+        <h4>Explore</h4>
+        <a href="authors.html">Authors</a>
+        <a href="#featured">Featured Books</a>
+        <a href="#trailers">Book Trailers</a>
+        <a href="#home">Home</a>
+      </div>
+
+      <div>
+        <h4>Reader Reach</h4>
+        <a href="#about">About Us</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="auth.html?mode=reader">Sign In</a>
+        <a href="auth.html?mode=reader">Sign Up</a>
+      </div>
+
+      <div>
+        <h4>Community</h4>
+        <a href="#authors">Authors</a>
+        <a href="#featured">Books</a>
+        <a href="#trailers">Trailers</a>
+        <a href="#about">About</a>
+      </div>
+
+    </div>
+
+    <div class="copy">
+      © 2026 Reader Reach. All rights reserved.
+    </div>
+
+  </div>
+</footer>
+
+<!-- =========================
+     VISITOR SUPPORT CHAT
+     ========================= -->
+
+<button
+  id="chatLauncher"
+  class="chat-launcher"
+  type="button"
+  aria-label="Open Reader Reach Support"
+  title="Reader Reach Support">
+  <span>💬</span>
+</button>
+
+<div id="supportChat" class="support-chat" aria-hidden="true">
+
+  <div class="support-header">
+    <div class="support-header-left">
+      <div class="support-avatar">R</div>
+      <div>
+        <h3>Reader Reach Support</h3>
+        <p>We're here to help</p>
+      </div>
+    </div>
+
+    <button
+      id="chatClose"
+      class="support-close"
+      type="button"
+      aria-label="Close support chat">
+      ×
+    </button>
+  </div>
+
+  <div class="support-intro">
+    <p>
+      Have a question about Reader Reach? Send us a message and our support
+      team will get back to you.
+    </p>
+  </div>
+
+  <div class="support-email">
+    <label for="visitorEmail">Your email</label>
+    <input
+      id="visitorEmail"
+      type="email"
+      autocomplete="email"
+      placeholder="you@example.com">
+  </div>
+
+  <div id="supportMessages" class="support-messages">
+    <div class="support-empty">
+      Start a conversation with Reader Reach Support.
+    </div>
+  </div>
+
+  <div id="supportStatus" class="support-status">
+    Support chat ready.
+  </div>
+
+  <div class="support-composer">
+    <textarea
+      id="supportMessage"
+      maxlength="2000"
+      placeholder="Type your message..."
+      aria-label="Support message"></textarea>
+
+    <button
+      id="supportSend"
+      class="support-send"
+      type="button"
+      aria-label="Send message">
+      ➤
+    </button>
+  </div>
+
+</div>
+
 <div id="toast" class="toast"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 "use strict";
-const SUPABASE_URL="https://bublmnfhyyrefcdkloak.supabase.co",SUPABASE_KEY="sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+
+const SUPABASE_URL="https://bublmnfhyyrefcdkloak.supabase.co";
+const SUPABASE_KEY="sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY";
+
+const supabaseClient=window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY,
+  {
+    auth:{
+      persistSession:true,
+      autoRefreshToken:true,
+      detectSessionInUrl:true
+    }
+  }
+);
+
 const $=id=>document.getElementById(id);
-function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function url(v){try{let u=new URL(String(v||""),location.href);return ["http:","https:"].includes(u.protocol)?u.href:""}catch(e){return ""}}
-function date(v){let d=new Date(v);return v&&!isNaN(d)?d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}):"—"}
-function time(v){if(!v)return "";let p=String(v).split(":");if(p.length<2)return v;let d=new Date();d.setHours(+p[0],+p[1],0,0);return d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})}
-async function books(ids=[]){let q=supabaseClient.from("books").select("id,author_id,title,description,genre_topic,who_its_for,availability,book_link,cover_url,status,created_at").eq("status","approved");if(ids.length)q=q.in("id",ids);let r=await q;if(r.error)throw r.error;return r.data||[]}
-async function authors(ids=[]){let q=supabaseClient.from("authors").select("id,profile_id,author_name,bio,website_url,status,reviewed_at,created_at").eq("status","approved");if(ids.length)q=q.in("id",ids);let r=await q;if(r.error)throw r.error;return r.data||[]}
-function card(b,a){let c=url(b.cover_url);return `<article class="book"><div class="cover">${c?`<img src="${esc(c)}" alt="${esc(b.title||"Book cover")}" loading="lazy">`:`<div class="fallback">${esc(b.title||"Untitled Book")}</div>`}</div><h3>${esc(b.title||"Untitled Book")}</h3><div class="meta">By ${esc(a||"Reader Reach Author")}</div><span class="pill">${esc(b.genre_topic||"Book")}</span><br><a class="btn small primary" href="book.html?id=${encodeURIComponent(b.id)}">View Details →</a></article>`}
-async function loadTrailers(){let box=$("featuredTrailer"),more=$("allTrailers");try{let r=await supabaseClient.from("book_trailers").select("id,book_id,trailer_url,title,description,created_at,show_on_homepage").eq("show_on_homepage",true).order("created_at",{ascending:false});if(r.error)throw r.error;let ts=r.data||[];if(!ts.length){box.innerHTML=`<div class="notice"><strong>No featured trailer is currently live.</strong><br>When Admin selects <strong>Show</strong> for an uploaded trailer, it will appear here. Hiding a trailer does not delete it.</div>`;more.innerHTML="";return}let bs=await books([...new Set(ts.map(t=>t.book_id).filter(Boolean))]),bm=new Map(bs.map(b=>[b.id,b]));let as=await authors([...new Set(bs.map(b=>b.author_id).filter(Boolean))]),am=new Map(as.map(a=>[a.id,a]));ts=ts.filter(t=>bm.has(t.book_id));let t=ts[0],b=bm.get(t.book_id),a=am.get(b.author_id),v=url(t.trailer_url);box.innerHTML=`<div class="trailerFeature"><div><div class="label">Featured Trailer</div><h3>${esc(t.title||b.title)}</h3><p>${esc(t.description||b.description||"Watch the official book trailer and discover the story behind the book.")}</p><a class="btn primary" href="book.html?id=${encodeURIComponent(b.id)}">View Book →</a></div><div class="video">${v?`<video controls preload="metadata" playsinline poster="${esc(url(b.cover_url))}"><source src="${esc(v)}"></video>`:`<div class="notice">The trailer record exists, but its video URL is unavailable.</div>`}</div><div><div class="label">Book</div><h3>${esc(b.title)}</h3><p>By ${esc(a?.author_name||"Reader Reach Author")}</p><p>${esc(b.genre_topic||"Book")}</p></div></div>`;more.innerHTML=ts.length>1?`<div class="trailers">${ts.slice(1).map(t=>{let b=bm.get(t.book_id),a=am.get(b.author_id),v=url(t.trailer_url);return `<article class="trailerCard">${v?`<video controls preload="metadata" playsinline poster="${esc(url(b.cover_url))}"><source src="${esc(v)}"></video>`:`<div class="notice">Video unavailable.</div>`}<div><div class="label">Featured Trailer</div><h3>${esc(t.title||b.title)}</h3><p>By ${esc(a?.author_name||"Reader Reach Author")}</p><p>${esc(t.description||b.description||"")}</p><a class="btn small" href="book.html?id=${encodeURIComponent(b.id)}">View Book →</a></div></article>`}).join("")}</div>`:""}catch(e){console.error(e);box.innerHTML=`<div class="notice error">Featured trailers could not be loaded right now.</div>`;more.innerHTML=""}}
-async function loadFeatured(){let box=$("featuredBookGrid");try{let r=await supabaseClient.from("homepage_featured_books").select("id,book_id,selected_at,created_at").order("selected_at",{ascending:false});if(r.error)throw r.error;let ids=(r.data||[]).map(x=>x.book_id).filter(Boolean);if(!ids.length){box.innerHTML=`<div class="notice" style="grid-column:1/-1">No books have been selected for Featured Books yet.</div>`;return}let bs=await books(ids),as=await authors([...new Set(bs.map(b=>b.author_id).filter(Boolean))]),am=new Map(as.map(a=>[a.id,a.author_name]));box.innerHTML=ids.map(id=>bs.find(b=>b.id===id)).filter(Boolean).map(b=>card(b,am.get(b.author_id))).join("")||`<div class="notice" style="grid-column:1/-1">No approved featured books are currently available.</div>`}catch(e){console.error(e);box.innerHTML=`<div class="notice error" style="grid-column:1/-1">Featured books could not be loaded right now.</div>`}}
-async function loadAuthors(){let box=$("authorGrid");try{let as=await authors();if(!as.length){box.innerHTML=`<div class="notice" style="grid-column:1/-1">No approved authors are currently available.</div>`;return}let ids=as.map(a=>a.id),r=await supabaseClient.from("books").select("id,author_id").eq("status","approved").in("author_id",ids);if(r.error)throw r.error;let count={};(r.data||[]).forEach(b=>count[b.author_id]=(count[b.author_id]||0)+1);box.innerHTML=as.map(a=>`<article class="author"><div class="avatar">${esc((a.author_name||"A").trim()[0]||"A")}</div><h3>${esc(a.author_name||"Unnamed Author")}</h3><p>${esc(a.bio||"Discover this author's approved books on Reader Reach.")}</p><div class="count">${count[a.id]||0} approved book${count[a.id]===1?"":"s"}</div><a class="btn small" href="author-profile.html?id=${encodeURIComponent(a.id)}">View Profile →</a></article>`).join("")}catch(e){console.error(e);box.innerHTML=`<div class="notice error" style="grid-column:1/-1">Authors could not be loaded right now.</div>`}}
-async function loadCalendar(){let box=$("eventList");try{let r=await supabaseClient.from("feature_schedules").select("id,book_id,scheduled_date,scheduled_time,status,notes,created_at").eq("status","scheduled").order("scheduled_date",{ascending:true}).order("scheduled_time",{ascending:true});if(r.error)throw r.error;let rows=r.data||[];if(!rows.length){box.innerHTML=`<div class="notice">There are no scheduled features at the moment.</div>`;return}let bs=await books([...new Set(rows.map(x=>x.book_id).filter(Boolean))]),bm=new Map(bs.map(b=>[b.id,b]));box.innerHTML=rows.map(s=>{let b=bm.get(s.book_id);if(!b)return "";let d=new Date(s.scheduled_date+"T00:00:00");return `<div class="schedule"><div class="date"><strong>${d.getDate()}</strong><span>${d.toLocaleDateString(undefined,{month:"short"})}</span></div><div><strong>${esc(b.title)}</strong><small>${esc(time(s.scheduled_time))}${s.notes?" • "+esc(s.notes):""}</small></div><span class="badge">Scheduled</span></div>`}).join("")||`<div class="notice">No approved books are attached to the current schedule.</div>`}catch(e){console.error(e);box.innerHTML=`<div class="notice error">Feature calendar could not be loaded right now.</div>`}}
-async function loadDiscussions(){let box=$("discussionList");try{let r=await supabaseClient.from("discussions").select("id,book_id,created_at").order("created_at",{ascending:false});if(r.error)throw r.error;let rows=r.data||[];if(!rows.length){box.innerHTML=`<div class="notice">No public book discussions are currently listed.</div>`;return}let bs=await books([...new Set(rows.map(x=>x.book_id).filter(Boolean))]),bm=new Map(bs.map(b=>[b.id,b]));box.innerHTML=rows.map(d=>{let b=bm.get(d.book_id);if(!b)return "";return `<div class="discussion"><div class="discIcon">▮</div><div style="flex:1"><h3>${esc(b.title)}</h3><p>Discussion activity is available for this book. Created ${esc(date(d.created_at))}.</p></div><a class="btn small" href="book.html?id=${encodeURIComponent(b.id)}">View Book →</a></div>`}).join("")||`<div class="notice">No discussions are attached to approved books yet.</div>`}catch(e){console.error(e);box.innerHTML=`<div class="notice error">Discussions could not be loaded right now.</div>`}}
-Promise.allSettled([loadTrailers(),loadFeatured(),loadAuthors(),loadCalendar(),loadDiscussions()]);
+
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[c]));
+}
+
+function url(v){
+  try{
+    let u=new URL(String(v||""),location.href);
+    return ["http:","https:"].includes(u.protocol)?u.href:"";
+  }catch(e){
+    return "";
+  }
+}
+
+function date(v){
+  let d=new Date(v);
+  return v&&!isNaN(d)
+    ?d.toLocaleDateString(undefined,{
+      year:"numeric",
+      month:"short",
+      day:"numeric"
+    })
+    :"—";
+}
+
+function time(v){
+  if(!v)return "";
+  let p=String(v).split(":");
+  if(p.length<2)return v;
+  let d=new Date();
+  d.setHours(+p[0],+p[1],0,0);
+  return d.toLocaleTimeString(undefined,{
+    hour:"numeric",
+    minute:"2-digit"
+  });
+}
+
+async function books(ids=[]){
+  let q=supabaseClient
+    .from("books")
+    .select("id,author_id,title,description,genre_topic,who_its_for,availability,book_link,cover_url,status,created_at")
+    .eq("status","approved");
+
+  if(ids.length)q=q.in("id",ids);
+
+  let r=await q;
+  if(r.error)throw r.error;
+  return r.data||[];
+}
+
+async function authors(ids=[]){
+  let q=supabaseClient
+    .from("authors")
+    .select("id,profile_id,author_name,bio,website_url,status,reviewed_at,created_at")
+    .eq("status","approved");
+
+  if(ids.length)q=q.in("id",ids);
+
+  let r=await q;
+  if(r.error)throw r.error;
+  return r.data||[];
+}
+
+function card(b,a){
+  let c=url(b.cover_url);
+
+  return `
+    <article class="book">
+      <div class="cover">
+        ${
+          c
+          ? `<img src="${esc(c)}" alt="${esc(b.title||"Book cover")}" loading="lazy">`
+          : `<div class="fallback">${esc(b.title||"Untitled Book")}</div>`
+        }
+      </div>
+
+      <h3>${esc(b.title||"Untitled Book")}</h3>
+      <div class="meta">By ${esc(a||"Reader Reach Author")}</div>
+      <span class="pill">${esc(b.genre_topic||"Book")}</span>
+      <br>
+
+      <a
+        class="btn small primary"
+        href="book.html?id=${encodeURIComponent(b.id)}">
+        View Details →
+      </a>
+    </article>
+  `;
+}
+
+async function loadTrailers(){
+  let box=$("featuredTrailer");
+  let more=$("allTrailers");
+
+  try{
+    let r=await supabaseClient
+      .from("book_trailers")
+      .select("id,book_id,trailer_url,title,description,created_at,show_on_homepage")
+      .eq("show_on_homepage",true)
+      .order("created_at",{ascending:false});
+
+    if(r.error)throw r.error;
+
+    let ts=r.data||[];
+
+    if(!ts.length){
+      box.innerHTML=`
+        <div class="notice">
+          <strong>No featured trailer is currently live.</strong><br>
+          When Admin selects <strong>Show</strong> for an uploaded trailer,
+          it will appear here. Hiding a trailer does not delete it.
+        </div>
+      `;
+      more.innerHTML="";
+      return;
+    }
+
+    let bs=await books([
+      ...new Set(ts.map(t=>t.book_id).filter(Boolean))
+    ]);
+
+    let bm=new Map(bs.map(b=>[b.id,b]));
+
+    let as=await authors([
+      ...new Set(bs.map(b=>b.author_id).filter(Boolean))
+    ]);
+
+    let am=new Map(as.map(a=>[a.id,a]));
+
+    ts=ts.filter(t=>bm.has(t.book_id));
+
+    let t=ts[0];
+    let b=bm.get(t.book_id);
+    let a=am.get(b.author_id);
+    let v=url(t.trailer_url);
+
+    box.innerHTML=`
+      <div class="trailerFeature">
+
+        <div>
+          <div class="label">Featured Trailer</div>
+          <h3>${esc(t.title||b.title)}</h3>
+          <p>
+            ${esc(
+              t.description||
+              b.description||
+              "Watch the official book trailer and discover the story behind the book."
+            )}
+          </p>
+          <a
+            class="btn primary"
+            href="book.html?id=${encodeURIComponent(b.id)}">
+            View Book →
+          </a>
+        </div>
+
+        <div class="video">
+          ${
+            v
+            ? `
+              <video
+                controls
+                preload="metadata"
+                playsinline
+                poster="${esc(url(b.cover_url))}">
+                <source src="${esc(v)}">
+              </video>
+            `
+            : `
+              <div class="notice">
+                The trailer record exists, but its video URL is unavailable.
+              </div>
+            `
+          }
+        </div>
+
+        <div>
+          <div class="label">Book</div>
+          <h3>${esc(b.title)}</h3>
+          <p>By ${esc(a?.author_name||"Reader Reach Author")}</p>
+          <p>${esc(b.genre_topic||"Book")}</p>
+        </div>
+
+      </div>
+    `;
+
+    more.innerHTML=ts.length>1
+      ? `
+        <div class="trailers">
+          ${
+            ts.slice(1).map(t=>{
+              let b=bm.get(t.book_id);
+              let a=am.get(b.author_id);
+              let v=url(t.trailer_url);
+
+              return `
+                <article class="trailerCard">
+
+                  ${
+                    v
+                    ? `
+                      <video
+                        controls
+                        preload="metadata"
+                        playsinline
+                        poster="${esc(url(b.cover_url))}">
+                        <source src="${esc(v)}">
+                      </video>
+                    `
+                    : `
+                      <div class="notice">
+                        Video unavailable.
+                      </div>
+                    `
+                  }
+
+                  <div>
+                    <div class="label">Featured Trailer</div>
+                    <h3>${esc(t.title||b.title)}</h3>
+                    <p>By ${esc(a?.author_name||"Reader Reach Author")}</p>
+                    <p>${esc(t.description||b.description||"")}</p>
+
+                    <a
+                      class="btn small"
+                      href="book.html?id=${encodeURIComponent(b.id)}">
+                      View Book →
+                    </a>
+                  </div>
+
+                </article>
+              `;
+            }).join("")
+          }
+        </div>
+      `
+      :"";
+
+  }catch(e){
+    console.error(e);
+
+    box.innerHTML=`
+      <div class="notice error">
+        Featured trailers could not be loaded right now.
+      </div>
+    `;
+
+    more.innerHTML="";
+  }
+}
+
+async function loadFeatured(){
+  let box=$("featuredBookGrid");
+
+  try{
+    let r=await supabaseClient
+      .from("homepage_featured_books")
+      .select("id,book_id,selected_at,created_at")
+      .order("selected_at",{ascending:false});
+
+    if(r.error)throw r.error;
+
+    let ids=(r.data||[])
+      .map(x=>x.book_id)
+      .filter(Boolean);
+
+    if(!ids.length){
+      box.innerHTML=`
+        <div class="notice" style="grid-column:1/-1">
+          No books have been selected for Featured Books yet.
+        </div>
+      `;
+      return;
+    }
+
+    let bs=await books(ids);
+
+    let as=await authors([
+      ...new Set(bs.map(b=>b.author_id).filter(Boolean))
+    ]);
+
+    let am=new Map(as.map(a=>[a.id,a.author_name]));
+
+    box.innerHTML=ids
+      .map(id=>bs.find(b=>b.id===id))
+      .filter(Boolean)
+      .map(b=>card(b,am.get(b.author_id)))
+      .join("")
+      ||
+      `
+        <div class="notice" style="grid-column:1/-1">
+          No approved featured books are currently available.
+        </div>
+      `;
+
+  }catch(e){
+    console.error(e);
+
+    box.innerHTML=`
+      <div class="notice error" style="grid-column:1/-1">
+        Featured books could not be loaded right now.
+      </div>
+    `;
+  }
+}
+
+async function loadAuthors(){
+  let box=$("authorGrid");
+
+  try{
+    let as=await authors();
+
+    if(!as.length){
+      box.innerHTML=`
+        <div class="notice" style="grid-column:1/-1">
+          No approved authors are currently available.
+        </div>
+      `;
+      return;
+    }
+
+    let ids=as.map(a=>a.id);
+
+    let r=await supabaseClient
+      .from("books")
+      .select("id,author_id")
+      .eq("status","approved")
+      .in("author_id",ids);
+
+    if(r.error)throw r.error;
+
+    let count={};
+
+    (r.data||[]).forEach(b=>{
+      count[b.author_id]=(count[b.author_id]||0)+1;
+    });
+
+    box.innerHTML=as.map(a=>`
+      <article class="author">
+
+        <div class="avatar">
+          ${esc((a.author_name||"A").trim()[0]||"A")}
+        </div>
+
+        <h3>${esc(a.author_name||"Unnamed Author")}</h3>
+
+        <p>
+          ${esc(
+            a.bio||
+            "Discover this author's approved books on Reader Reach."
+          )}
+        </p>
+
+        <div class="count">
+          ${count[a.id]||0}
+          approved book${count[a.id]===1?"":"s"}
+        </div>
+
+        <a
+          class="btn small"
+          href="author-profile.html?id=${encodeURIComponent(a.id)}">
+          View Profile →
+        </a>
+
+      </article>
+    `).join("");
+
+  }catch(e){
+    console.error(e);
+
+    box.innerHTML=`
+      <div class="notice error" style="grid-column:1/-1">
+        Authors could not be loaded right now.
+      </div>
+    `;
+  }
+}
+
+async function loadCalendar(){
+  let box=$("eventList");
+
+  try{
+    let r=await supabaseClient
+      .from("feature_schedules")
+      .select("id,book_id,scheduled_date,scheduled_time,status,notes,created_at")
+      .eq("status","scheduled")
+      .order("scheduled_date",{ascending:true})
+      .order("scheduled_time",{ascending:true});
+
+    if(r.error)throw r.error;
+
+    let rows=r.data||[];
+
+    if(!rows.length){
+      box.innerHTML=`
+        <div class="notice">
+          There are no scheduled features at the moment.
+        </div>
+      `;
+      return;
+    }
+
+    let bs=await books([
+      ...new Set(rows.map(x=>x.book_id).filter(Boolean))
+    ]);
+
+    let bm=new Map(bs.map(b=>[b.id,b]));
+
+    box.innerHTML=rows.map(s=>{
+      let b=bm.get(s.book_id);
+
+      if(!b)return "";
+
+      let d=new Date(s.scheduled_date+"T00:00:00");
+
+      return `
+        <div class="schedule">
+
+          <div class="date">
+            <strong>${d.getDate()}</strong>
+            <span>
+              ${d.toLocaleDateString(undefined,{month:"short"})}
+            </span>
+          </div>
+
+          <div>
+            <strong>${esc(b.title)}</strong>
+            <small>
+              ${esc(time(s.scheduled_time))}
+              ${s.notes?" • "+esc(s.notes):""}
+            </small>
+          </div>
+
+          <span class="badge">Scheduled</span>
+
+        </div>
+      `;
+    }).join("")
+    ||
+    `
+      <div class="notice">
+        No approved books are attached to the current schedule.
+      </div>
+    `;
+
+  }catch(e){
+    console.error(e);
+
+    box.innerHTML=`
+      <div class="notice error">
+        Feature calendar could not be loaded right now.
+      </div>
+    `;
+  }
+}
+
+async function loadDiscussions(){
+  let box=$("discussionList");
+
+  try{
+    let r=await supabaseClient
+      .from("discussions")
+      .select("id,book_id,created_at")
+      .order("created_at",{ascending:false});
+
+    if(r.error)throw r.error;
+
+    let rows=r.data||[];
+
+    if(!rows.length){
+      box.innerHTML=`
+        <div class="notice">
+          No public book discussions are currently listed.
+        </div>
+      `;
+      return;
+    }
+
+    let bs=await books([
+      ...new Set(rows.map(x=>x.book_id).filter(Boolean))
+    ]);
+
+    let bm=new Map(bs.map(b=>[b.id,b]));
+
+    box.innerHTML=rows.map(d=>{
+      let b=bm.get(d.book_id);
+
+      if(!b)return "";
+
+      return `
+        <div class="discussion">
+
+          <div class="discIcon">▮</div>
+
+          <div style="flex:1">
+            <h3>${esc(b.title)}</h3>
+            <p>
+              Discussion activity is available for this book.
+              Created ${esc(date(d.created_at))}.
+            </p>
+          </div>
+
+          <a
+            class="btn small"
+            href="book.html?id=${encodeURIComponent(b.id)}">
+            View Book →
+          </a>
+
+        </div>
+      `;
+    }).join("")
+    ||
+    `
+      <div class="notice">
+        No discussions are attached to approved books yet.
+      </div>
+    `;
+
+  }catch(e){
+    console.error(e);
+
+    box.innerHTML=`
+      <div class="notice error">
+        Discussions could not be loaded right now.
+      </div>
+    `;
+  }
+}
+
+
+/* =========================================================
+   VISITOR SUPPORT CHAT
+   ========================================================= */
+
+const CHAT_STORAGE_KEY="readerReachVisitorChat";
+
+let visitorChatState={
+  open:false,
+  email:"",
+  conversationId:null,
+  messages:[]
+};
+
+function saveVisitorChatState(){
+  try{
+    localStorage.setItem(
+      CHAT_STORAGE_KEY,
+      JSON.stringify({
+        email:visitorChatState.email,
+        conversationId:visitorChatState.conversationId
+      })
+    );
+  }catch(e){
+    console.warn("Could not save visitor chat state.",e);
+  }
+}
+
+function loadVisitorChatState(){
+  try{
+    const raw=localStorage.getItem(CHAT_STORAGE_KEY);
+
+    if(!raw)return;
+
+    const data=JSON.parse(raw);
+
+    visitorChatState.email=data.email||"";
+    visitorChatState.conversationId=data.conversationId||null;
+
+    if(visitorChatState.email){
+      $("visitorEmail").value=visitorChatState.email;
+    }
+
+  }catch(e){
+    console.warn("Could not restore visitor chat state.",e);
+  }
+}
+
+function openSupportChat(){
+  visitorChatState.open=true;
+
+  $("supportChat").classList.add("open");
+  $("supportChat").setAttribute("aria-hidden","false");
+
+  $("supportMessage").focus();
+}
+
+function closeSupportChat(){
+  visitorChatState.open=false;
+
+  $("supportChat").classList.remove("open");
+  $("supportChat").setAttribute("aria-hidden","true");
+}
+
+function showSupportMessage(text,type="visitor"){
+  const box=$("supportMessages");
+
+  const empty=box.querySelector(".support-empty");
+
+  if(empty)empty.remove();
+
+  const item=document.createElement("div");
+
+  item.className="support-message "+type;
+
+  item.innerHTML=`
+    ${esc(text)}
+    <small>Just now</small>
+  `;
+
+  box.appendChild(item);
+
+  box.scrollTop=box.scrollHeight;
+}
+
+function setSupportStatus(text){
+  $("supportStatus").textContent=text;
+}
+
+async function getCurrentUserEmail(){
+  try{
+    const {data}=await supabaseClient.auth.getUser();
+
+    if(data?.user?.email){
+      return data.user.email;
+    }
+  }catch(e){
+    console.warn("Could not get signed-in user.",e);
+  }
+
+  return "";
+}
+
+async function prepareSupportChat(){
+  loadVisitorChatState();
+
+  const signedInEmail=await getCurrentUserEmail();
+
+  if(signedInEmail){
+    $("visitorEmail").value=signedInEmail;
+    $("visitorEmail").readOnly=true;
+    visitorChatState.email=signedInEmail;
+    saveVisitorChatState();
+  }
+}
+
+async function handleSupportSend(){
+  const emailInput=$("visitorEmail");
+  const messageInput=$("supportMessage");
+  const sendButton=$("supportSend");
+
+  const email=emailInput.value.trim();
+  const message=messageInput.value.trim();
+
+  if(!email){
+    setSupportStatus("Please enter your email address.");
+    emailInput.focus();
+    return;
+  }
+
+  if(!emailInput.validity.valid){
+    setSupportStatus("Please enter a valid email address.");
+    emailInput.focus();
+    return;
+  }
+
+  if(!message){
+    setSupportStatus("Please type a message.");
+    messageInput.focus();
+    return;
+  }
+
+  /*
+   * IMPORTANT:
+   * The secure server-side Visitor Support connection is the next step.
+   * We do not send visitor messages directly to Supabase from this
+   * public page because anonymous visitors must not be able to read
+   * or impersonate another visitor's conversation.
+   */
+
+  visitorChatState.email=email;
+  saveVisitorChatState();
+
+  showSupportMessage(message,"visitor");
+
+  messageInput.value="";
+  sendButton.disabled=true;
+
+  setSupportStatus(
+    "Your message is ready. Connecting you to Reader Reach Support…"
+  );
+
+  /*
+   * Temporary UI state only.
+   * The actual secure send/read endpoint will be connected next.
+   */
+
+  setTimeout(()=>{
+    sendButton.disabled=false;
+
+    setSupportStatus(
+      "Support connection is being prepared. Please keep this chat open."
+    );
+  },700);
+}
+
+
+/* =========================
+   CHAT EVENTS
+   ========================= */
+
+$("chatLauncher").addEventListener("click",()=>{
+  if(visitorChatState.open){
+    closeSupportChat();
+  }else{
+    openSupportChat();
+  }
+});
+
+$("chatClose").addEventListener("click",closeSupportChat);
+
+$("supportSend").addEventListener("click",handleSupportSend);
+
+$("supportMessage").addEventListener("keydown",event=>{
+  if(event.key==="Enter" && !event.shiftKey){
+    event.preventDefault();
+    handleSupportSend();
+  }
+});
+
+$("visitorEmail").addEventListener("input",()=>{
+  visitorChatState.email=$("visitorEmail").value.trim();
+  saveVisitorChatState();
+});
+
+
+/* =========================
+   START PAGE
+   ========================= */
+
+Promise.allSettled([
+  loadTrailers(),
+  loadFeatured(),
+  loadAuthors(),
+  loadCalendar(),
+  loadDiscussions()
+]);
+
+prepareSupportChat();
+
 </script>
+
 </body>
 </html>

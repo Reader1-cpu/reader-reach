@@ -1,5 +1,5 @@
-
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -135,13 +135,11 @@ th{color:var(--muted);font-weight:bold}
 .message-list{display:flex;flex-direction:column;gap:10px;height:390px;overflow:auto;padding:18px;margin:0;background:#fffdf9}
 .message{max-width:78%;padding:11px 13px;border-radius:13px;overflow-wrap:anywhere;white-space:pre-wrap;background:var(--soft);border:1px solid #eee1d4;align-self:flex-start}
 .message.mine{align-self:flex-end;background:var(--brown);color:white;border-color:var(--brown)}
- .message-actions{display:flex;gap:6px;justify-content:flex-end;margin-top:8px}
-.message-actions button{border:1px solid currentColor;border-radius:7px;padding:5px 8px;font-size:10px;background:transparent;color:inherit;font-weight:700}
+.message-actions{display:flex;gap:6px;justify-content:flex-end;margin-top:8px}
+.message-actions button{border:0;background:rgba(255,255,255,.14);color:inherit;border-radius:6px;padding:4px 7px;font-size:10px}
 .edit-message-form{display:flex;gap:6px;margin-top:8px}
 .edit-message-form textarea{flex:1;min-height:55px;padding:8px;border:1px solid var(--line);border-radius:8px}
 .message-meta{display:flex;justify-content:space-between;gap:12px;margin-top:8px;font-size:10px;opacity:.68}
-.message-actions{display:flex;gap:6px;justify-content:flex-end;margin-top:8px}
-.message-actions button{border:0;background:rgba(255,255,255,.14);color:inherit;border-radius:6px;padding:4px 7px;font-size:10px}
 .conversation-button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;padding:14px}
 .conversation-button:hover,.conversation-button.active{background:#fff}
 .conversation-button strong{display:block;color:var(--brown);overflow-wrap:anywhere}
@@ -177,6 +175,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
   .top-actions .btn{padding:9px;font-size:12px}
 }
 </style>
+
 </head>
 
 <body>
@@ -219,338 +218,339 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
   <main class="main">
     <div id="pageNotice"></div>
 
-    <section class="page active" id="page-overview">
-      <div class="page-heading">
-        <div class="eyebrow">Your author space</div>
-        <h1>Welcome, <span id="welcomeName">Author</span>.</h1>
-        <p class="muted">Manage your profile, books, messages and feature schedule.</p>
-      </div>
+```
+<section class="page active" id="page-overview">
+  <div class="page-heading">
+    <div class="eyebrow">Your author space</div>
+    <h1>Welcome, <span id="welcomeName">Author</span>.</h1>
+    <p class="muted">Manage your profile, books, messages and feature schedule.</p>
+  </div>
 
-      <div class="grid">
-        <div class="stat">
-          <div class="muted small">My Books</div>
-          <div class="number" id="statBooks">0</div>
-          <div class="small muted">All your submissions</div>
-        </div>
-        <div class="stat">
-          <div class="muted small">Approved Books</div>
-          <div class="number" id="statApproved">0</div>
-          <div class="small muted">Approved by the Admin</div>
-        </div>
-        <div class="stat">
-          <div class="muted small">Pending Books</div>
-          <div class="number" id="statPending">0</div>
-          <div class="small muted">Awaiting review</div>
-        </div>
-      </div>
+  <div class="grid">
+    <div class="stat">
+      <div class="muted small">My Books</div>
+      <div class="number" id="statBooks">0</div>
+      <div class="small muted">All your submissions</div>
+    </div>
+    <div class="stat">
+      <div class="muted small">Approved Books</div>
+      <div class="number" id="statApproved">0</div>
+      <div class="small muted">Approved by the Admin</div>
+    </div>
+    <div class="stat">
+      <div class="muted small">Pending Books</div>
+      <div class="number" id="statPending">0</div>
+      <div class="small muted">Awaiting review</div>
+    </div>
+  </div>
 
-      <div class="panel" style="margin-top:20px">
-        <div class="panel-head">
-          <h2>Author Profile</h2>
-          <button class="btn secondary" data-go="profile">Edit Profile</button>
-        </div>
-        <div class="profile-row">
-          <div class="avatar" id="overviewAvatar">A</div>
-          <div>
-            <h3 id="overviewAuthorName">Your author name</h3>
-            <p class="muted" id="overviewBio">Add a short biography to introduce yourself.</p>
-            <span class="badge pending" id="authorStatus">Checking status</span>
-          </div>
-        </div>
-        <hr>
-        <p class="small muted">
-          Followers, following and ratings will display when their corresponding
-          database tables and policies are connected. No counts are fabricated.
-        </p>
-        <div class="actions">
-          <button class="btn" data-go="submit">Submit a Book</button>
-          <button class="btn secondary" data-go="messages">Message a Moderator</button>
-        </div>
+  <div class="panel" style="margin-top:20px">
+    <div class="panel-head">
+      <h2>Author Profile</h2>
+      <button class="btn secondary" data-go="profile">Edit Profile</button>
+    </div>
+    <div class="profile-row">
+      <div class="avatar" id="overviewAvatar">A</div>
+      <div>
+        <h3 id="overviewAuthorName">Your author name</h3>
+        <p class="muted" id="overviewBio">Add a short biography to introduce yourself.</p>
+        <span class="badge pending" id="authorStatus">Checking status</span>
       </div>
+    </div>
+    <hr>
+    <p class="small muted">
+      Followers, following and ratings will display when their corresponding
+      database tables and policies are connected. No counts are fabricated.
+    </p>
+    <div class="actions">
+      <button class="btn" data-go="submit">Submit a Book</button>
+      <button class="btn secondary" data-go="messages">Message a Moderator</button>
+    </div>
+  </div>
 
-      <div class="panel">
-        <div class="panel-head">
-          <h2>Recent Books</h2>
-          <button class="btn secondary" data-go="books">View All</button>
-        </div>
-        <div id="recentBooks" class="book-grid">
-          <div class="empty">Your books will appear here.</div>
-        </div>
-      </div>
-    </section>
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Recent Books</h2>
+      <button class="btn secondary" data-go="books">View All</button>
+    </div>
+    <div id="recentBooks" class="book-grid">
+      <div class="empty">Your books will appear here.</div>
+    </div>
+  </div>
+</section>
 
-    <section class="page" id="page-profile">
-      <div class="page-heading">
-        <div class="eyebrow">Your public introduction</div>
-        <h1>My Profile</h1>
-        <p class="muted">Your author name and biography are used for your author profile.</p>
-      </div>
+<section class="page" id="page-profile">
+  <div class="page-heading">
+    <div class="eyebrow">Your public introduction</div>
+    <h1>My Profile</h1>
+    <p class="muted">Your author name and biography are used for your author profile.</p>
+  </div>
 
-      <div class="panel">
-        <div class="profile-row" style="margin-bottom:22px">
-          <div class="avatar" id="profileAvatar">A</div>
-          <div style="flex:1">
-            <h3>Profile picture</h3>
-            <input type="file" id="photoFile" accept="image/*">
-            <div class="file-note">
-              Preview only: the supplied database schema has no author photo field
-              or confirmed photo-storage bucket, so this image is not saved permanently.
-            </div>
-          </div>
-        </div>
-
-        <form id="profileForm">
-          <div class="form-grid">
-            <div class="field">
-              <label for="profileAuthorName">Author Name</label>
-              <input id="profileAuthorName" readonly>
-            </div>
-            <div class="field">
-              <label for="profileEmail">Email Address</label>
-              <input id="profileEmail" type="email" readonly>
-            </div>
-            <div class="field full">
-              <label for="profileBio">About the Author</label>
-              <textarea id="profileBio" required maxlength="5000"
-                placeholder="Tell readers about yourself and your work."></textarea>
-            </div>
-            <div class="field full">
-              <label for="profileWebsite">Website (optional)</label>
-              <input id="profileWebsite" type="url" placeholder="https://example.com">
-            </div>
-          </div>
-          <div class="actions">
-            <button class="btn" type="submit">Save Profile</button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <section class="page" id="page-submit">
-      <div class="page-heading">
-        <div class="eyebrow">Share your work</div>
-        <h1>Submit a Book</h1>
-        <p class="muted">Submissions are sent to the Admin for review, including incomplete submissions.</p>
-      </div>
-
-      <div class="panel">
-        <form id="bookForm">
-          <div class="form-grid">
-            <div class="field">
-              <label for="bookAuthorName">Author Name *</label>
-              <input id="bookAuthorName" readonly>
-            </div>
-            <div class="field">
-              <label for="bookAuthorEmail">Email Address *</label>
-              <input id="bookAuthorEmail" type="email" readonly>
-            </div>
-            <div class="field full">
-              <label for="bookBio">About the Author *</label>
-              <textarea id="bookBio" placeholder="Your author biography"></textarea>
-            </div>
-            <div class="field full">
-              <label for="bookTitle">Book Title *</label>
-              <input id="bookTitle" placeholder="Enter the book title">
-            </div>
-            <div class="field">
-              <label for="bookGenre">Genre / Topic *</label>
-              <input id="bookGenre" placeholder="Genre or topic">
-            </div>
-            <div class="field">
-              <label for="bookAudience">Who Is the Book For? *</label>
-              <input id="bookAudience" placeholder="Intended audience">
-            </div>
-            <div class="field full">
-              <label for="bookDescription">Book Description *</label>
-              <textarea id="bookDescription" placeholder="Describe your book"></textarea>
-            </div>
-            <div class="field full">
-              <label for="bookAvailability">Where Is the Book Currently Available? *</label>
-              <textarea id="bookAvailability" placeholder="Describe where readers can find it"></textarea>
-            </div>
-            <div class="field full">
-              <label for="bookCover">Book Cover Image</label>
-              <input id="bookCover" type="file" accept="image/*">
-              <div class="file-note">
-                Upload requires a configured Supabase Storage bucket and its policies.
-                If upload is unavailable, the book can still be submitted as incomplete.
-              </div>
-            </div>
-            <div class="field full">
-              <label for="bookTrailer">Book Trailer Video</label>
-              <input id="bookTrailer" type="file" accept="video/*">
-              <div class="file-note">
-                Video upload requires a configured storage bucket and a connected
-                book_trailers table. The book submission itself does not depend on
-                that optional table.
-              </div>
-            </div>
-            <div class="field full">
-              <label for="bookFlipper">Flipper Guide Link *</label>
-              <input id="bookFlipper" type="url" placeholder="https://...">
-            </div>
-          </div>
-          <div class="actions">
-            <button class="btn" id="submitBookButton" type="submit">Submit Book for Review</button>
-            <button class="btn secondary" type="reset">Clear Form</button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <section class="page" id="page-books">
-      <div class="page-heading">
-        <div class="eyebrow">Your submissions</div>
-        <h1>My Books</h1>
-        <p class="muted">Track each book independently through the review process.</p>
-      </div>
-      <div class="panel">
-        <div class="panel-head">
-          <h2>All Books</h2>
-          <button class="btn" data-go="submit">Submit Another Book</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Title</th><th>Genre</th><th>Status</th><th>Submitted</th></tr></thead>
-            <tbody id="booksTable">
-              <tr><td colspan="4">Loading books…</td></tr>
-            </tbody>
-          </table>
+  <div class="panel">
+    <div class="profile-row" style="margin-bottom:22px">
+      <div class="avatar" id="profileAvatar">A</div>
+      <div style="flex:1">
+        <h3>Profile picture</h3>
+        <input type="file" id="photoFile" accept="image/*">
+        <div class="file-note">
+          Preview only: the supplied database schema has no author photo field
+          or confirmed photo-storage bucket, so this image is not saved permanently.
         </div>
       </div>
-    </section>
+    </div>
 
-    <section class="page" id="page-messages">
-      <div class="page-heading">
-        <div class="eyebrow">Author support</div>
-        <h1>Messages</h1>
-        <p class="muted">Communicate with your assigned Moderator.</p>
-      </div>
-      <div class="panel">
-        <div class="panel-head">
-          <h2>Your Conversations</h2>
-          <button class="btn" id="newConversationButton">New Message</button>
-        </div>
-        <div id="newConversationPanel" class="new-conversation-box" hidden>
-          <div class="form-grid">
-            <div class="field">
-              <label for="newConversationBook">Book *</label>
-              <select id="newConversationBook"><option value="">Select a book</option></select>
-            </div>
-            <div class="field">
-              <label for="newConversationModerator">Moderator *</label>
-              <select id="newConversationModerator"><option value="">Select a Moderator</option></select>
-            </div>
-          </div>
-          <div class="actions">
-            <button class="btn" type="button" id="createConversationButton">Start Conversation</button>
-            <button class="btn secondary" type="button" id="cancelConversationButton">Cancel</button>
-          </div>
-        </div>
-        <div id="conversationStatus" class="notice info">Your conversations will load here.</div>
-        <div class="message-layout">
-          <div id="conversationList" class="conversation-list"></div>
-          <div class="message-list-wrap">
-            <div class="chat-compose" style="border-top:0;border-bottom:1px solid var(--line)">
-              <div class="panel-head" style="margin:0">
-                <div><h2 id="messageHeading" style="margin:0 0 4px">Conversation</h2><span id="messageModerator" class="muted small"></span></div>
-              </div>
-            </div>
-            <div id="messageList" class="message-list"><div class="empty">Select a conversation to view messages.</div></div>
-            <form id="messageForm" class="chat-compose">
-              <div class="field">
-                <label for="messageText">Your message</label>
-                <textarea id="messageText" maxlength="10000" placeholder="Write your message…"></textarea>
-                <div class="attachment-row">
-                  <input id="messageFile" type="file" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp,.mp4,.webm,.mov,.avi,.mkv,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,video/*,image/*,text/plain">
-                  <span class="file-note">Files: PDF, Word, text, image or video · max 50 MB each · up to 5 files</span>
-                </div>
-                <div id="messageFileName" class="file-note"></div>
-              </div>
-              <div class="actions"><button class="btn" type="submit" id="sendMessageButton">Send Message</button></div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="page-schedule">
-      <div class="page-heading">
-        <div class="eyebrow">Your upcoming features</div>
-        <h1>Feature Schedule</h1>
-        <p class="muted">View feature dates assigned to your books.</p>
-      </div>
-      <div class="panel">
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Book</th><th>Date</th><th>Time</th><th>Status</th><th>Notes</th></tr></thead>
-            <tbody id="scheduleTable">
-              <tr><td colspan="5">Loading schedule…</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="page-notifications">
-      <div class="page-heading">
-        <div class="eyebrow">Updates</div>
-        <h1>Notifications</h1>
-        <p class="muted">Review important updates about your books and account.</p>
-      </div>
-      <div class="panel">
-        <div class="panel-head">
-          <h2>Your Notifications</h2>
-          <button class="btn secondary" id="markAllReadButton">Mark All Read</button>
-        </div>
-        <div id="notificationList"><div class="empty">Loading notifications…</div></div>
-      </div>
-    </section>
-
-    <section class="page" id="page-account">
-      <div class="page-heading">
-        <div class="eyebrow">Security and access</div>
-        <h1>My Account</h1>
-      </div>
-      <div class="panel">
-        <h2>Signed-in Account</h2>
+    <form id="profileForm">
+      <div class="form-grid">
         <div class="field">
-          <label>Email</label>
-          <input id="accountEmail" readonly>
+          <label for="profileAuthorName">Author Name</label>
+          <input id="profileAuthorName" readonly>
         </div>
-        <div class="field" style="margin-top:15px">
-          <label>Account ID</label>
-          <input id="accountId" readonly>
+        <div class="field">
+          <label for="profileEmail">Email Address</label>
+          <input id="profileEmail" type="email" readonly>
         </div>
-        <div class="actions">
-          <button class="btn danger" data-go="signout">Sign Out</button>
-          <a class="btn secondary" href="index.html">Return to Homepage</a>
+        <div class="field full">
+          <label for="profileBio">About the Author</label>
+          <textarea id="profileBio" required maxlength="5000"
+            placeholder="Tell readers about yourself and your work."></textarea>
+        </div>
+        <div class="field full">
+          <label for="profileWebsite">Website (optional)</label>
+          <input id="profileWebsite" type="url" placeholder="https://example.com">
         </div>
       </div>
-    </section>
+      <div class="actions">
+        <button class="btn" type="submit">Save Profile</button>
+      </div>
+    </form>
+  </div>
+</section>
 
-    <section class="page" id="page-signout">
-      <div class="page-heading">
-        <div class="eyebrow">Reader Reach</div>
-        <h1>Sign Out</h1>
+<section class="page" id="page-submit">
+  <div class="page-heading">
+    <div class="eyebrow">Share your work</div>
+    <h1>Submit a Book</h1>
+    <p class="muted">Submissions are sent to the Admin for review, including incomplete submissions.</p>
+  </div>
+
+  <div class="panel">
+    <form id="bookForm">
+      <div class="form-grid">
+        <div class="field">
+          <label for="bookAuthorName">Author Name *</label>
+          <input id="bookAuthorName" readonly>
+        </div>
+        <div class="field">
+          <label for="bookAuthorEmail">Email Address *</label>
+          <input id="bookAuthorEmail" type="email" readonly>
+        </div>
+        <div class="field full">
+          <label for="bookBio">About the Author *</label>
+          <textarea id="bookBio" placeholder="Your author biography"></textarea>
+        </div>
+        <div class="field full">
+          <label for="bookTitle">Book Title *</label>
+          <input id="bookTitle" placeholder="Enter the book title">
+        </div>
+        <div class="field">
+          <label for="bookGenre">Genre / Topic *</label>
+          <input id="bookGenre" placeholder="Genre or topic">
+        </div>
+        <div class="field">
+          <label for="bookAudience">Who Is the Book For? *</label>
+          <input id="bookAudience" placeholder="Intended audience">
+        </div>
+        <div class="field full">
+          <label for="bookDescription">Book Description *</label>
+          <textarea id="bookDescription" placeholder="Describe your book"></textarea>
+        </div>
+        <div class="field full">
+          <label for="bookAvailability">Where Is the Book Currently Available? *</label>
+          <textarea id="bookAvailability" placeholder="Describe where readers can find it"></textarea>
+        </div>
+        <div class="field full">
+          <label for="bookCover">Book Cover Image</label>
+          <input id="bookCover" type="file" accept="image/*">
+          <div class="file-note">
+            Upload requires a configured Supabase Storage bucket and its policies.
+            If upload is unavailable, the book can still be submitted as incomplete.
+          </div>
+        </div>
+        <div class="field full">
+          <label for="bookTrailer">Book Trailer Video</label>
+          <input id="bookTrailer" type="file" accept="video/*">
+          <div class="file-note">
+            Video upload requires a configured storage bucket and a connected
+            book_trailers table. The book submission itself does not depend on
+            that optional table.
+          </div>
+        </div>
+        <div class="field full">
+          <label for="bookFlipper">Flipper Guide Link *</label>
+          <input id="bookFlipper" type="url" placeholder="https://...">
+        </div>
       </div>
-      <div class="panel">
-        <p>Sign out of your author account on this device.</p>
-        <button class="btn danger" id="signOutMain">Confirm Sign Out</button>
+      <div class="actions">
+        <button class="btn" id="submitBookButton" type="submit">Submit Book for Review</button>
+        <button class="btn secondary" type="reset">Clear Form</button>
       </div>
-    </section>
+    </form>
+  </div>
+</section>
+
+<section class="page" id="page-books">
+  <div class="page-heading">
+    <div class="eyebrow">Your submissions</div>
+    <h1>My Books</h1>
+    <p class="muted">Track each book independently through the review process.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-head">
+      <h2>All Books</h2>
+      <button class="btn" data-go="submit">Submit Another Book</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Title</th><th>Genre</th><th>Status</th><th>Submitted</th></tr></thead>
+        <tbody id="booksTable">
+          <tr><td colspan="4">Loading books…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="page-messages">
+  <div class="page-heading">
+    <div class="eyebrow">Author support</div>
+    <h1>Messages</h1>
+    <p class="muted">Communicate with your assigned Moderator.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Your Conversations</h2>
+      <button class="btn" id="newConversationButton">New Message</button>
+    </div>
+    <div id="newConversationPanel" class="new-conversation-box" hidden>
+      <div class="form-grid">
+        <div class="field">
+          <label for="newConversationBook">Book *</label>
+          <select id="newConversationBook"><option value="">Select a book</option></select>
+        </div>
+        <div class="field">
+          <label for="newConversationModerator">Moderator *</label>
+          <select id="newConversationModerator"><option value="">Select a Moderator</option></select>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" type="button" id="createConversationButton">Start Conversation</button>
+        <button class="btn secondary" type="button" id="cancelConversationButton">Cancel</button>
+      </div>
+    </div>
+    <div id="conversationStatus" class="notice info">Your conversations will load here.</div>
+    <div class="message-layout">
+      <div id="conversationList" class="conversation-list"></div>
+      <div class="message-list-wrap">
+        <div class="chat-compose" style="border-top:0;border-bottom:1px solid var(--line)">
+          <div class="panel-head" style="margin:0">
+            <div><h2 id="messageHeading" style="margin:0 0 4px">Conversation</h2><span id="messageModerator" class="muted small"></span></div>
+          </div>
+        </div>
+        <div id="messageList" class="message-list"><div class="empty">Select a conversation to view messages.</div></div>
+        <form id="messageForm" class="chat-compose">
+          <div class="field">
+            <label for="messageText">Your message</label>
+            <textarea id="messageText" maxlength="10000" placeholder="Write your message…"></textarea>
+            <div class="attachment-row">
+              <input id="messageFile" type="file" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp,.mp4,.webm,.mov,.avi,.mkv,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,video/*,image/*,text/plain">
+              <span class="file-note">Files: PDF, Word, text, image or video · max 50 MB each · up to 5 files</span>
+            </div>
+            <div id="messageFileName" class="file-note"></div>
+          </div>
+          <div class="actions"><button class="btn" type="submit" id="sendMessageButton">Send Message</button></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="page-schedule">
+  <div class="page-heading">
+    <div class="eyebrow">Your upcoming features</div>
+    <h1>Feature Schedule</h1>
+    <p class="muted">View feature dates assigned to your books.</p>
+  </div>
+  <div class="panel">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Book</th><th>Date</th><th>Time</th><th>Status</th><th>Notes</th></tr></thead>
+        <tbody id="scheduleTable">
+          <tr><td colspan="5">Loading schedule…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="page-notifications">
+  <div class="page-heading">
+    <div class="eyebrow">Updates</div>
+    <h1>Notifications</h1>
+    <p class="muted">Review important updates about your books and account.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Your Notifications</h2>
+      <button class="btn secondary" id="markAllReadButton">Mark All Read</button>
+    </div>
+    <div id="notificationList"><div class="empty">Loading notifications…</div></div>
+  </div>
+</section>
+
+<section class="page" id="page-account">
+  <div class="page-heading">
+    <div class="eyebrow">Security and access</div>
+    <h1>My Account</h1>
+  </div>
+  <div class="panel">
+    <h2>Signed-in Account</h2>
+    <div class="field">
+      <label>Email</label>
+      <input id="accountEmail" readonly>
+    </div>
+    <div class="field" style="margin-top:15px">
+      <label>Account ID</label>
+      <input id="accountId" readonly>
+    </div>
+    <div class="actions">
+      <button class="btn danger" data-go="signout">Sign Out</button>
+      <a class="btn secondary" href="index.html">Return to Homepage</a>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="page-signout">
+  <div class="page-heading">
+    <div class="eyebrow">Reader Reach</div>
+    <h1>Sign Out</h1>
+  </div>
+  <div class="panel">
+    <p>Sign out of your author account on this device.</p>
+    <button class="btn danger" id="signOutMain">Confirm Sign Out</button>
+  </div>
+</section>
+```
+
   </main>
 </div>
 
 <footer>© 2026 Reader Reach. Every Book Has Its Readers.</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 "use strict";
 
-/* -------------------------------------------------------
-   SUPABASE CONFIGURATION
-------------------------------------------------------- */
 const SUPABASE_URL = "https://bublmnfhyyrefcdkloak.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY";
@@ -575,6 +575,7 @@ let myConversations = [];
 let activeConversationId = null;
 let refreshMessagesTimer = null;
 let authCheckStarted = false;
+let messageRealtimeChannel = null;
 
 const $ = id => document.getElementById(id);
 
@@ -625,6 +626,7 @@ function showPage(name) {
   document.querySelectorAll(".page").forEach(page => {
     page.classList.toggle("active", page.id === "page-" + name);
   });
+
   document.querySelectorAll(".navbtn").forEach(button => {
     button.classList.toggle("active", button.dataset.page === name);
   });
@@ -632,6 +634,7 @@ function showPage(name) {
   if (name === "messages") loadConversations();
   if (name === "schedule") loadSchedule();
   if (name === "notifications") loadNotifications();
+
   window.scrollTo({top:0, behavior:"smooth"});
 }
 
@@ -649,6 +652,12 @@ async function safeSignOut() {
       await supabaseClient.removeChannel(messageRealtimeChannel);
       messageRealtimeChannel = null;
     }
+
+    if (refreshMessagesTimer) {
+      clearInterval(refreshMessagesTimer);
+      refreshMessagesTimer = null;
+    }
+
     await supabaseClient.auth.signOut();
   } finally {
     window.location.replace("auth.html?mode=author");
@@ -667,13 +676,6 @@ function showLoginPrompt() {
   );
 }
 
-/* -------------------------------------------------------
-   AUTH FIX:
-   - Wait for Supabase to restore the session.
-   - Do not redirect merely because a profile query fails.
-   - Do not redirect merely because the role text differs
-     in capitalization or an author row is still pending.
-------------------------------------------------------- */
 async function initializeDashboard() {
   if (authCheckStarted) return;
   authCheckStarted = true;
@@ -709,6 +711,7 @@ async function initializeDashboard() {
     await loadSignedInAccount();
   } catch (error) {
     console.error("Dashboard initialization:", error);
+
     showBoot(
       "Dashboard could not finish loading",
       friendlyError(error),
@@ -734,8 +737,6 @@ async function loadSignedInAccount() {
   $("profileEmail").value = currentUser.email || "";
   $("bookAuthorEmail").value = currentUser.email || "";
 
-  let profileError = null;
-
   const profileResult = await supabaseClient
     .from("profiles")
     .select("id,role,display_name")
@@ -743,10 +744,12 @@ async function loadSignedInAccount() {
     .maybeSingle();
 
   currentProfile = profileResult.data || null;
-  profileError = profileResult.error || null;
 
-  if (profileError) {
-    console.warn("Profile lookup failed; checking author record:", profileError);
+  if (profileResult.error) {
+    console.warn(
+      "Profile lookup failed; checking author record:",
+      profileResult.error
+    );
   }
 
   const authorResult = await supabaseClient
@@ -765,6 +768,7 @@ async function loadSignedInAccount() {
       '<button class="btn" onclick="retryDashboard()">Retry</button> ' +
       '<a class="btn secondary" href="auth.html?mode=author">Return to Author Sign In</a>'
     );
+
     return;
   }
 
@@ -773,11 +777,6 @@ async function loadSignedInAccount() {
   const profileRole = String(currentProfile?.role || "").toLowerCase();
   const authorRecordExists = !!currentAuthor;
 
-  /*
-    A missing author row is not treated as a logout.
-    The author can still see a useful message if their
-    application record has not been created yet.
-  */
   if (!authorRecordExists && profileRole !== "author") {
     showBoot(
       "Your session is active, but this account is not linked to an author profile",
@@ -787,6 +786,7 @@ async function loadSignedInAccount() {
       '<a class="btn" href="auth.html?mode=author">Review Author Account</a> ' +
       '<a class="btn secondary" href="index.html">Homepage</a>'
     );
+
     return;
   }
 
@@ -799,8 +799,11 @@ async function loadSignedInAccount() {
       "Your author profile needs to be created or linked before you can submit books.",
       "info"
     );
+
     $("authorStatus").textContent = "Profile not linked";
-    $("overviewBio").textContent = "Your author profile record has not been created yet.";
+    $("overviewBio").textContent =
+      "Your author profile record has not been created yet.";
+
     return;
   }
 
@@ -810,10 +813,13 @@ async function loadSignedInAccount() {
   ]);
 
   $("bookBio").value = currentAuthor.bio || "";
+
+  subscribeToAuthorMessages();
 }
 
 function populateIdentity() {
-  const name = currentAuthor?.author_name ||
+  const name =
+    currentAuthor?.author_name ||
     currentProfile?.display_name ||
     currentUser?.email?.split("@")[0] ||
     "Author";
@@ -825,14 +831,18 @@ function populateIdentity() {
   $("bookAuthorName").value = currentAuthor?.author_name || name;
   $("profileBio").value = currentAuthor?.bio || "";
   $("profileWebsite").value = currentAuthor?.website_url || "";
-  $("overviewBio").textContent = currentAuthor?.bio ||
+
+  $("overviewBio").textContent =
+    currentAuthor?.bio ||
     "Add a short biography to introduce yourself.";
 
   const status = currentAuthor?.status || "pending";
+
   $("authorStatus").outerHTML =
     `<span id="authorStatus">${statusBadge(status)}</span>`;
 
   const initial = (name.trim()[0] || "A").toUpperCase();
+
   $("overviewAvatar").textContent = initial;
   $("profileAvatar").textContent = initial;
 }
@@ -840,6 +850,7 @@ function populateIdentity() {
 /* -------------------------------------------------------
    PROFILE
 ------------------------------------------------------- */
+
 $("photoFile").addEventListener("change", event => {
   const file = event.target.files?.[0];
   if (!file) return;
@@ -850,15 +861,27 @@ $("photoFile").addEventListener("change", event => {
   }
 
   const previewURL = URL.createObjectURL(file);
-  $("profileAvatar").innerHTML = `<img src="${previewURL}" alt="Profile preview">`;
-  $("overviewAvatar").innerHTML = `<img src="${previewURL}" alt="Profile preview">`;
-  setNotice("Image preview updated. It will not persist after refresh until profile photo storage is configured.", "info");
+
+  $("profileAvatar").innerHTML =
+    `<img src="${previewURL}" alt="Profile preview">`;
+
+  $("overviewAvatar").innerHTML =
+    `<img src="${previewURL}" alt="Profile preview">`;
+
+  setNotice(
+    "Image preview updated. It will not persist after refresh until profile photo storage is configured.",
+    "info"
+  );
 });
 
 $("profileForm").addEventListener("submit", async event => {
   event.preventDefault();
+
   if (!currentAuthor?.id) {
-    setNotice("Your author record is not linked, so the profile cannot be saved yet.", "error");
+    setNotice(
+      "Your author record is not linked, so the profile cannot be saved yet.",
+      "error"
+    );
     return;
   }
 
@@ -867,61 +890,89 @@ $("profileForm").addEventListener("submit", async event => {
 
   const { data, error } = await supabaseClient
     .from("authors")
-    .update({bio, website_url:website, updated_at:new Date().toISOString()})
+    .update({
+      bio,
+      website_url: website,
+      updated_at: new Date().toISOString()
+    })
     .eq("id", currentAuthor.id)
     .select("id,profile_id,author_name,bio,website_url,status,created_at")
     .maybeSingle();
 
   if (error) {
-    setNotice("Could not save your profile: " + friendlyError(error), "error");
+    setNotice(
+      "Could not save your profile: " + friendlyError(error),
+      "error"
+    );
     return;
   }
 
   if (data) currentAuthor = data;
+
   populateIdentity();
+
   setNotice("Your author profile has been saved.", "success");
 });
 
 /* -------------------------------------------------------
    BOOKS
 ------------------------------------------------------- */
+
 async function loadBooks() {
   if (!currentAuthor?.id) return;
 
   const {data, error} = await supabaseClient
     .from("books")
-    .select("id,author_id,title,description,genre_topic,who_its_for,availability,cover_url,status,submitted_at,created_at,submission_complete,missing_fields")
+    .select(
+      "id,author_id,title,description,genre_topic,who_its_for,availability,cover_url,status,submitted_at,created_at,submission_complete,missing_fields"
+    )
     .eq("author_id", currentAuthor.id)
     .order("created_at", {ascending:false});
 
   if (error) {
     console.error("Book query:", error);
+
     $("booksTable").innerHTML =
       `<tr><td colspan="4">Could not load books: ${escapeHTML(friendlyError(error))}</td></tr>`;
+
     $("recentBooks").innerHTML =
       `<div class="empty">Could not load your books. Check the books table permissions.</div>`;
+
     return;
   }
 
   myBooks = data || [];
 
-  const approved = myBooks.filter(book => displayStatus(book.status) === "approved").length;
-  const pending = myBooks.filter(book => displayStatus(book.status) === "pending").length;
+  const approved =
+    myBooks.filter(book => displayStatus(book.status) === "approved").length;
+
+  const pending =
+    myBooks.filter(book => displayStatus(book.status) === "pending").length;
 
   $("statBooks").textContent = myBooks.length;
   $("statApproved").textContent = approved;
   $("statPending").textContent = pending;
 
   if (!myBooks.length) {
-    $("booksTable").innerHTML = '<tr><td colspan="4">You have not submitted any books yet.</td></tr>';
-    $("recentBooks").innerHTML = '<div class="empty">Your submitted books will appear here.</div>';
+    $("booksTable").innerHTML =
+      '<tr><td colspan="4">You have not submitted any books yet.</td></tr>';
+
+    $("recentBooks").innerHTML =
+      '<div class="empty">Your submitted books will appear here.</div>';
+
     return;
   }
 
   $("booksTable").innerHTML = myBooks.map(book => `
     <tr>
-      <td><strong>${escapeHTML(book.title || "Untitled book")}</strong>
-      ${book.submission_complete === false ? '<div class="small muted">Incomplete submission</div>' : ""}</td>
+      <td>
+        <strong>${escapeHTML(book.title || "Untitled book")}</strong>
+        ${
+          book.submission_complete === false
+            ? '<div class="small muted">Incomplete submission</div>'
+            : ""
+        }
+      </td>
       <td>${escapeHTML(book.genre_topic || "—")}</td>
       <td>${statusBadge(book.status)}</td>
       <td>${escapeHTML(formatDate(book.submitted_at || book.created_at))}</td>
@@ -931,51 +982,72 @@ async function loadBooks() {
   $("recentBooks").innerHTML = myBooks.slice(0,4).map(book => `
     <article class="book-card">
       <h3>${escapeHTML(book.title || "Untitled book")}</h3>
-      <p class="small muted">${escapeHTML(book.genre_topic || "Genre not provided")}</p>
+      <p class="small muted">
+        ${escapeHTML(book.genre_topic || "Genre not provided")}
+      </p>
       ${statusBadge(book.status)}
-      ${book.submission_complete === false
-        ? '<p class="small">Some submission details are missing.</p>' : ""}
+      ${
+        book.submission_complete === false
+          ? '<p class="small">Some submission details are missing.</p>'
+          : ""
+      }
     </article>
   `).join("");
 }
 
 function formatDate(value) {
   if (!value) return "—";
+
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? "—" : date.toLocaleDateString();
+
+  return Number.isNaN(date.getTime())
+    ? "—"
+    : date.toLocaleDateString();
 }
 
 function normalizeStoragePath(name) {
-  return String(name || "upload").replace(/[^a-zA-Z0-9._-]/g, "_");
+  return String(name || "upload")
+    .replace(/[^a-zA-Z0-9._-]/g, "_");
 }
 
 async function uploadOptionalFile(bucket, file) {
   if (!file) return {url:null, error:null};
 
-  const path = `${currentUser.id}/${Date.now()}-${normalizeStoragePath(file.name)}`;
+  const path =
+    `${currentUser.id}/${Date.now()}-${normalizeStoragePath(file.name)}`;
 
   const {data, error} = await supabaseClient.storage
     .from(bucket)
-    .upload(path, file, {upsert:false, contentType:file.type || undefined});
+    .upload(path, file, {
+      upsert:false,
+      contentType:file.type || undefined
+    });
 
   if (error) return {url:null, error};
 
-  const {data:publicData} = supabaseClient.storage
-    .from(bucket)
-    .getPublicUrl(data.path);
+  const {data:publicData} =
+    supabaseClient.storage.from(bucket).getPublicUrl(data.path);
 
-  return {url:publicData?.publicUrl || null, error:null, path:data.path};
+  return {
+    url:publicData?.publicUrl || null,
+    error:null,
+    path:data.path
+  };
 }
 
 $("bookForm").addEventListener("submit", async event => {
   event.preventDefault();
 
   if (!currentAuthor?.id) {
-    setNotice("Your author profile is not linked yet. Contact Reader Reach support before submitting a book.", "error");
+    setNotice(
+      "Your author profile is not linked yet. Contact Reader Reach support before submitting a book.",
+      "error"
+    );
     return;
   }
 
   const button = $("submitBookButton");
+
   button.disabled = true;
   button.textContent = "Submitting…";
 
@@ -987,30 +1059,62 @@ $("bookForm").addEventListener("submit", async event => {
     const availability = $("bookAvailability").value.trim();
     const bio = $("bookBio").value.trim();
     const flipper = $("bookFlipper").value.trim();
-    const coverFile = $("bookCover").files?.[0] || null;
-    const trailerFile = $("bookTrailer").files?.[0] || null;
+
+    const coverFile =
+      $("bookCover").files?.[0] || null;
+
+    const trailerFile =
+      $("bookTrailer").files?.[0] || null;
 
     const missing = [];
-    if (!currentAuthor.author_name?.trim()) missing.push("Author Name");
-    if (!currentUser.email) missing.push("Email Address");
-    if (!bio) missing.push("About the Author");
-    if (!title) missing.push("Book Title");
-    if (!genre) missing.push("Genre / Topic");
-    if (!description) missing.push("Book Description");
-    if (!audience) missing.push("Who Is the Book For?");
-    if (!availability) missing.push("Where Is the Book Currently Available?");
-    if (!coverFile) missing.push("Book Cover Image");
-    if (!trailerFile) missing.push("Book Trailer Video");
-    if (!flipper) missing.push("Flipper Guide Link");
+
+    if (!currentAuthor.author_name?.trim())
+      missing.push("Author Name");
+
+    if (!currentUser.email)
+      missing.push("Email Address");
+
+    if (!bio)
+      missing.push("About the Author");
+
+    if (!title)
+      missing.push("Book Title");
+
+    if (!genre)
+      missing.push("Genre / Topic");
+
+    if (!description)
+      missing.push("Book Description");
+
+    if (!audience)
+      missing.push("Who Is the Book For?");
+
+    if (!availability)
+      missing.push("Where Is the Book Currently Available?");
+
+    if (!coverFile)
+      missing.push("Book Cover Image");
+
+    if (!trailerFile)
+      missing.push("Book Trailer Video");
+
+    if (!flipper)
+      missing.push("Flipper Guide Link");
 
     if (bio && bio !== (currentAuthor.bio || "")) {
       const {error:bioError} = await supabaseClient
         .from("authors")
-        .update({bio, updated_at:new Date().toISOString()})
+        .update({
+          bio,
+          updated_at:new Date().toISOString()
+        })
         .eq("id", currentAuthor.id);
 
       if (bioError) {
-        console.warn("Could not update author bio:", bioError);
+        console.warn(
+          "Could not update author bio:",
+          bioError
+        );
       } else {
         currentAuthor.bio = bio;
         $("profileBio").value = bio;
@@ -1019,23 +1123,42 @@ $("bookForm").addEventListener("submit", async event => {
 
     let coverURL = null;
     let trailerURL = null;
+
     const uploadWarnings = [];
 
     if (coverFile) {
-      const uploaded = await uploadOptionalFile("book-covers", coverFile);
+      const uploaded =
+        await uploadOptionalFile("book-covers", coverFile);
+
       coverURL = uploaded.url;
+
       if (uploaded.error) {
-        uploadWarnings.push("Cover upload failed: " + friendlyError(uploaded.error));
-        if (!missing.includes("Book Cover Image")) missing.push("Book Cover Image (upload failed)");
+        uploadWarnings.push(
+          "Cover upload failed: " +
+          friendlyError(uploaded.error)
+        );
+
+        if (!missing.includes("Book Cover Image")) {
+          missing.push("Book Cover Image (upload failed)");
+        }
       }
     }
 
     if (trailerFile) {
-      const uploaded = await uploadOptionalFile("book-trailers", trailerFile);
+      const uploaded =
+        await uploadOptionalFile("book-trailers", trailerFile);
+
       trailerURL = uploaded.url;
+
       if (uploaded.error) {
-        uploadWarnings.push("Trailer upload failed: " + friendlyError(uploaded.error));
-        if (!missing.includes("Book Trailer Video")) missing.push("Book Trailer Video (upload failed)");
+        uploadWarnings.push(
+          "Trailer upload failed: " +
+          friendlyError(uploaded.error)
+        );
+
+        if (!missing.includes("Book Trailer Video")) {
+          missing.push("Book Trailer Video (upload failed)");
+        }
       }
     }
 
@@ -1053,69 +1176,83 @@ $("bookForm").addEventListener("submit", async event => {
       submitted_at:new Date().toISOString()
     };
 
-    /*
-      Keep the book submission separate from optional trailer and
-      Flipper Guide writes. If optional storage/tables are not set up,
-      the book can still reach the Admin review queue.
-    */
-    const {data:createdBook, error:bookError} = await supabaseClient
+    const {
+      data:createdBook,
+      error:bookError
+    } = await supabaseClient
       .from("books")
       .insert(payload)
       .select("id,title,status,submission_complete,missing_fields")
       .single();
 
     if (bookError) {
-      throw new Error("Book submission failed: " + friendlyError(bookError));
+      throw new Error(
+        "Book submission failed: " +
+        friendlyError(bookError)
+      );
     }
 
     if (flipper) {
-      const guideResult = await supabaseClient
-        .from("flipper_guides")
-        .insert({
-          book_id:createdBook.id,
-          content_url:flipper
-        });
+      const guideResult =
+        await supabaseClient
+          .from("flipper_guides")
+          .insert({
+            book_id:createdBook.id,
+            content_url:flipper
+          });
 
       if (guideResult.error) {
-        uploadWarnings.push("The book was submitted, but the Flipper Guide link could not be saved: " + friendlyError(guideResult.error));
+        uploadWarnings.push(
+          "The book was submitted, but the Flipper Guide link could not be saved: " +
+          friendlyError(guideResult.error)
+        );
       }
     }
 
     if (trailerURL) {
-      /*
-        Optional table: this write is intentionally isolated.
-        If book_trailers is not configured, the core submission remains.
-      */
-      const trailerResult = await supabaseClient
-        .from("book_trailers")
-        .insert({
-          book_id:createdBook.id,
-          trailer_url:trailerURL,
-          show_on_homepage:false
-        });
+      const trailerResult =
+        await supabaseClient
+          .from("book_trailers")
+          .insert({
+            book_id:createdBook.id,
+            trailer_url:trailerURL,
+            show_on_homepage:false
+          });
 
       if (trailerResult.error) {
-        uploadWarnings.push("The book was submitted, but the trailer record could not be saved: " + friendlyError(trailerResult.error));
+        uploadWarnings.push(
+          "The book was submitted, but the trailer record could not be saved: " +
+          friendlyError(trailerResult.error)
+        );
       }
     }
 
     const notificationText = missing.length
-      ? "Book submitted for review. Missing items: " + missing.join(", ")
+      ? "Book submitted for review. Missing items: " +
+        missing.join(", ")
       : "Book submitted for Admin review.";
 
-    const {error:notificationError} = await supabaseClient
-      .from("notifications")
-      .insert({
-        profile_id:currentUser.id,
-        type:missing.length ? "book_submission_incomplete" : "book_submitted",
-        title:missing.length ? "Incomplete book submission" : "Book submitted",
-        message:notificationText,
-        related_book_id:createdBook.id,
-        is_read:false
-      });
+    const {error:notificationError} =
+      await supabaseClient
+        .from("notifications")
+        .insert({
+          profile_id:currentUser.id,
+          type:missing.length
+            ? "book_submission_incomplete"
+            : "book_submitted",
+          title:missing.length
+            ? "Incomplete book submission"
+            : "Book submitted",
+          message:notificationText,
+          related_book_id:createdBook.id,
+          is_read:false
+        });
 
     if (notificationError) {
-      console.warn("Notification insert failed:", notificationError);
+      console.warn(
+        "Notification insert failed:",
+        notificationError
+      );
     }
 
     $("bookForm").reset();
@@ -1123,17 +1260,25 @@ $("bookForm").addEventListener("submit", async event => {
 
     await loadBooks();
     await loadNotifications();
+
     showPage("books");
 
     let resultMessage = missing.length
-      ? "Your book has been submitted as incomplete and is pending Admin review. Missing: " + missing.join(", ")
+      ? "Your book has been submitted as incomplete and is pending Admin review. Missing: " +
+        missing.join(", ")
       : "Your book has been submitted and is pending Admin review.";
 
     if (uploadWarnings.length) {
-      resultMessage += " Note: " + uploadWarnings.join(" ");
+      resultMessage +=
+        " Note: " + uploadWarnings.join(" ");
     }
 
-    setNotice(resultMessage, missing.length || uploadWarnings.length ? "info" : "success");
+    setNotice(
+      resultMessage,
+      missing.length || uploadWarnings.length
+        ? "info"
+        : "success"
+    );
 
   } catch (error) {
     console.error("Submit book:", error);
@@ -1147,400 +1292,1386 @@ $("bookForm").addEventListener("submit", async event => {
 /* -------------------------------------------------------
    CONVERSATIONS AND MESSAGES
 ------------------------------------------------------- */
+
 const CHAT_BUCKET = "conversation-files";
 const MAX_CHAT_FILE_SIZE = 50 * 1024 * 1024;
-let messageRealtimeChannel = null;
 
 function formatFileSize(bytes) {
   const size = Number(bytes || 0);
+
   if (!size) return "";
-  if (size < 1024 * 1024) return Math.max(1, Math.round(size / 1024)) + " KB";
+
+  if (size < 1024 * 1024) {
+    return Math.max(1, Math.round(size / 1024)) + " KB";
+  }
+
   return (size / (1024 * 1024)).toFixed(1) + " MB";
 }
 
 function isAllowedChatFile(file) {
   if (!file) return false;
+
   if (file.size > MAX_CHAT_FILE_SIZE) {
-    setNotice(`“${file.name}” is larger than 50 MB.`, "error");
+    setNotice(
+      `“${file.name}” is larger than 50 MB.`,
+      "error"
+    );
     return false;
   }
-  const type = String(file.type || "").toLowerCase();
-  const name = String(file.name || "").toLowerCase();
-  const allowed = type.startsWith("image/") || type.startsWith("video/") ||
-    [".pdf",".doc",".docx",".txt"].some(ext => name.endsWith(ext));
+
+  const type =
+    String(file.type || "").toLowerCase();
+
+  const name =
+    String(file.name || "").toLowerCase();
+
+  const allowed =
+    type.startsWith("image/") ||
+    type.startsWith("video/") ||
+    [".pdf",".doc",".docx",".txt"]
+      .some(ext => name.endsWith(ext));
+
   if (!allowed) {
-    setNotice(`“${file.name}” is not a supported file type.`, "error");
+    setNotice(
+      `“${file.name}” is not a supported file type.`,
+      "error"
+    );
     return false;
   }
+
   return true;
 }
 
+/*
+ * IMPORTANT:
+ * message_attachments uses file_type in the database.
+ */
 function renderAttachment(attachment) {
-  const name = escapeHTML(attachment.file_name || "Attachment");
-  const size = attachment.file_size ? ` · ${escapeHTML(formatFileSize(attachment.file_size))}` : "";
-  const url = attachment.url ? escapeHTML(attachment.url) : "#";
-  const mime = String(attachment.mime_type || "").toLowerCase();
-  if (mime.startsWith("image/") && attachment.url) return `<div class="attachment-preview"><a href="${url}" target="_blank" rel="noopener"><img src="${url}" alt="${name}"></a><div class="small muted">${name}${size}</div></div>`;
-  if (mime.startsWith("video/") && attachment.url) return `<div class="attachment-preview"><video controls preload="metadata" src="${url}"></video><div class="small muted">${name}${size}</div></div>`;
-  return `<div class="attachment-preview"><a class="attachment-link" href="${url}" target="_blank" rel="noopener" download>📎 ${name}${size}</a></div>`;
+  const name =
+    escapeHTML(
+      attachment.file_name || "Attachment"
+    );
+
+  const size =
+    attachment.file_size
+      ? ` · ${escapeHTML(formatFileSize(attachment.file_size))}`
+      : "";
+
+  const url =
+    attachment.url
+      ? escapeHTML(attachment.url)
+      : "#";
+
+  const fileType =
+    String(attachment.file_type || "").toLowerCase();
+
+  if (fileType.startsWith("image/") && attachment.url) {
+    return `
+      <div class="attachment-preview">
+        <a href="${url}" target="_blank" rel="noopener">
+          <img src="${url}" alt="${name}">
+        </a>
+        <div class="small muted">
+          ${name}${size}
+        </div>
+      </div>
+    `;
+  }
+
+  if (fileType.startsWith("video/") && attachment.url) {
+    return `
+      <div class="attachment-preview">
+        <video controls preload="metadata" src="${url}"></video>
+        <div class="small muted">
+          ${name}${size}
+        </div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="attachment-preview">
+      <a
+        class="attachment-link"
+        href="${url}"
+        target="_blank"
+        rel="noopener"
+        download
+      >
+        📎 ${name}${size}
+      </a>
+    </div>
+  `;
 }
 
 async function loadConversations() {
   if (!currentAuthor?.id) return;
-  $("conversationStatus").textContent = "Loading conversations…";
-  const {data, error} = await supabaseClient.from("conversations")
-    .select("id,author_id,moderator_id,book_id,created_at,updated_at")
-    .eq("author_id", currentAuthor.id).order("updated_at", {ascending:false});
+
+  $("conversationStatus").textContent =
+    "Loading conversations…";
+
+  const {data, error} =
+    await supabaseClient
+      .from("conversations")
+      .select(
+        "id,author_id,moderator_id,book_id,created_at,updated_at"
+      )
+      .eq("author_id", currentAuthor.id)
+      .order("updated_at", {ascending:false});
+
   if (error) {
-    $("conversationStatus").textContent = "Could not load conversations: " + friendlyError(error);
+    $("conversationStatus").textContent =
+      "Could not load conversations: " +
+      friendlyError(error);
+
     return;
   }
+
   myConversations = data || [];
+
   if (!myConversations.length) {
-    $("conversationStatus").textContent = "No conversations yet. Click New Message to choose a book and Moderator.";
-    $("conversationList").innerHTML = '<div class="empty">No conversations yet.</div>';
-    $("messageList").innerHTML = '<div class="empty">No conversation selected.</div>';
+    $("conversationStatus").textContent =
+      "No conversations yet. Click New Message to choose a book and Moderator.";
+
+    $("conversationList").innerHTML =
+      '<div class="empty">No conversations yet.</div>';
+
+    $("messageList").innerHTML =
+      '<div class="empty">No conversation selected.</div>';
+
     return;
   }
-  $("conversationStatus").textContent = "Each conversation is tied to one book. Select a conversation to reply.";
-  const moderatorIds = [...new Set(myConversations.map(c => c.moderator_id).filter(Boolean))];
-  const bookIds = [...new Set(myConversations.map(c => c.book_id).filter(Boolean))];
-  let moderators = [], profiles = [], books = [];
+
+  $("conversationStatus").textContent =
+    "Each conversation is tied to one book. Select a conversation to reply.";
+
+  const moderatorIds =
+    [...new Set(
+      myConversations
+        .map(c => c.moderator_id)
+        .filter(Boolean)
+    )];
+
+  const bookIds =
+    [...new Set(
+      myConversations
+        .map(c => c.book_id)
+        .filter(Boolean)
+    )];
+
+  let moderators = [];
+  let profiles = [];
+  let books = [];
+
   if (moderatorIds.length) {
-    const r = await supabaseClient.from("moderators").select("id,profile_id,active").in("id", moderatorIds);
+    const r =
+      await supabaseClient
+        .from("moderators")
+        .select("id,profile_id,active")
+        .in("id", moderatorIds);
+
     moderators = r.data || [];
-    const profileIds = moderators.map(m => m.profile_id).filter(Boolean);
-    if (profileIds.length) profiles = (await supabaseClient.from("profiles").select("id,display_name").in("id", profileIds)).data || [];
+
+    const profileIds =
+      moderators
+        .map(m => m.profile_id)
+        .filter(Boolean);
+
+    if (profileIds.length) {
+      profiles =
+        (
+          await supabaseClient
+            .from("profiles")
+            .select("id,display_name")
+            .in("id", profileIds)
+        ).data || [];
+    }
   }
-  if (bookIds.length) books = (await supabaseClient.from("books").select("id,title").in("id", bookIds)).data || [];
-  $("conversationList").innerHTML = myConversations.map(c => {
-    const book = books.find(b => b.id === c.book_id);
-    const mod = moderators.find(m => m.id === c.moderator_id);
-    const profile = profiles.find(p => p.id === mod?.profile_id);
-    return `<button type="button" class="conversation-button ${c.id === activeConversationId ? "active" : ""}" data-conversation="${escapeHTML(c.id)}">
-      <strong>${escapeHTML(book?.title || "Book conversation")}</strong>
-      <div class="small muted">Moderator: ${escapeHTML(profile?.display_name || "Reader Reach Moderator")}</div>
-    </button>`;
-  }).join("");
-  document.querySelectorAll("[data-conversation]").forEach(button => button.addEventListener("click", async () => {
-    activeConversationId = button.dataset.conversation;
-    await loadConversations();
-  }));
-  if (!activeConversationId || !myConversations.some(c => c.id === activeConversationId)) activeConversationId = myConversations[0].id;
-  const active = myConversations.find(c => c.id === activeConversationId);
-  const book = books.find(b => b.id === active?.book_id);
-  const mod = moderators.find(m => m.id === active?.moderator_id);
-  const profile = profiles.find(p => p.id === mod?.profile_id);
-  $("messageHeading").textContent = book?.title || "Book conversation";
-  $("messageModerator").textContent = `Moderator: ${profile?.display_name || "Reader Reach Moderator"}`;
+
+  if (bookIds.length) {
+    books =
+      (
+        await supabaseClient
+          .from("books")
+          .select("id,title")
+          .in("id", bookIds)
+      ).data || [];
+  }
+
+  $("conversationList").innerHTML =
+    myConversations.map(c => {
+      const book =
+        books.find(b => b.id === c.book_id);
+
+      const mod =
+        moderators.find(m => m.id === c.moderator_id);
+
+      const profile =
+        profiles.find(p => p.id === mod?.profile_id);
+
+      return `
+        <button
+          type="button"
+          class="conversation-button ${c.id === activeConversationId ? "active" : ""}"
+          data-conversation="${escapeHTML(c.id)}"
+        >
+          <strong>
+            ${escapeHTML(book?.title || "Book conversation")}
+          </strong>
+
+          <div class="small muted">
+            Moderator:
+            ${escapeHTML(
+              profile?.display_name ||
+              "Reader Reach Moderator"
+            )}
+          </div>
+        </button>
+      `;
+    }).join("");
+
+  document
+    .querySelectorAll("[data-conversation]")
+    .forEach(button => {
+      button.addEventListener(
+        "click",
+        async () => {
+          activeConversationId =
+            button.dataset.conversation;
+
+          await loadConversations();
+        }
+      );
+    });
+
+  if (
+    !activeConversationId ||
+    !myConversations.some(
+      c => c.id === activeConversationId
+    )
+  ) {
+    activeConversationId =
+      myConversations[0].id;
+  }
+
+  const active =
+    myConversations.find(
+      c => c.id === activeConversationId
+    );
+
+  const book =
+    books.find(b => b.id === active?.book_id);
+
+  const mod =
+    moderators.find(
+      m => m.id === active?.moderator_id
+    );
+
+  const profile =
+    profiles.find(
+      p => p.id === mod?.profile_id
+    );
+
+  $("messageHeading").textContent =
+    book?.title || "Book conversation";
+
+  $("messageModerator").textContent =
+    `Moderator: ${
+      profile?.display_name ||
+      "Reader Reach Moderator"
+    }`;
+
   await loadMessages();
 }
 
 async function loadMessages() {
   if (!activeConversationId) return;
-  const {data:messages, error} = await supabaseClient.from("messages")
-    .select("id,conversation_id,sender_profile_id,message,created_at,read_at")
-    .eq("conversation_id", activeConversationId).order("created_at", {ascending:true});
+
+  const {
+    data:messages,
+    error
+  } = await supabaseClient
+    .from("messages")
+    .select(
+      "id,conversation_id,sender_profile_id,message,created_at,read_at"
+    )
+    .eq("conversation_id", activeConversationId)
+    .order("created_at", {ascending:true});
+
   if (error) {
-    $("messageList").innerHTML = `<div class="empty">Could not load messages: ${escapeHTML(friendlyError(error))}</div>`;
+    $("messageList").innerHTML =
+      `<div class="empty">Could not load messages: ${escapeHTML(friendlyError(error))}</div>`;
+
     return;
   }
+
   const rows = messages || [];
   let attachments = [];
-  if (rows.length) {
-    const ids = rows.map(m => m.id);
-    const ar = await supabaseClient.from("message_attachments")
-      .select("id,message_id,file_path,file_name,mime_type,file_size,created_at")
-      .in("message_id", ids).order("created_at", {ascending:true});
-    if (!ar.error) attachments = await Promise.all((ar.data || []).map(async item => {
-      const signed = await supabaseClient.storage.from(CHAT_BUCKET).createSignedUrl(item.file_path, 3600);
-      return {...item, url:signed.data?.signedUrl || null};
-    }));
-  }
-  if (!rows.length) {
-    $("messageList").innerHTML = '<div class="empty">No messages yet. Start the conversation below.</div>';
-  } else {
-    $("messageList").innerHTML = rows.map(m => {
-      const mine = m.sender_profile_id === currentUser.id;
-      const files = attachments.filter(a => a.message_id === m.id);
-      return `<div class="message ${mine ? "mine" : ""}" data-message-id="${escapeHTML(m.id)}">
-        <div class="messageBody">${m.message ? escapeHTML(m.message) : ""}</div>
-        ${files.map(renderAttachment).join("")}
-        <div class="message-meta"><span>${mine ? "You" : "Moderator"}</span><span>${escapeHTML(formatDate(m.created_at))}</span></div>
-        ${mine ? `<div class="message-actions"><button type="button" class="btn secondary" data-edit-message="${escapeHTML(m.id)}">Edit</button></div>` : ""}
-      </div>`;
-    }).join("");
-  }
-  document.querySelectorAll('[data-edit-message]').forEach(button=>{
-    button.addEventListener('click',()=>startEditAuthorMessage(button.dataset.editMessage));
-  });
 
-  $("messageList").scrollTop = $("messageList").scrollHeight;
-  const unread = rows.filter(m => m.sender_profile_id !== currentUser.id && !m.read_at).map(m => m.id);
-  if (unread.length) await supabaseClient.from("messages").update({read_at:new Date().toISOString()}).in("id", unread);
+  if (rows.length) {
+    const ids =
+      rows.map(m => m.id);
+
+    /*
+     * IMPORTANT:
+     * The database column is file_type, not mime_type.
+     */
+    const ar =
+      await supabaseClient
+        .from("message_attachments")
+        .select(
+          "id,message_id,file_path,file_name,file_type,file_size,created_at"
+        )
+        .in("message_id", ids)
+        .order("created_at", {ascending:true});
+
+    if (!ar.error) {
+      attachments =
+        await Promise.all(
+          (ar.data || []).map(
+            async item => {
+              const signed =
+                await supabaseClient
+                  .storage
+                  .from(CHAT_BUCKET)
+                  .createSignedUrl(
+                    item.file_path,
+                    3600
+                  );
+
+              return {
+                ...item,
+                url:
+                  signed.data?.signedUrl ||
+                  null
+              };
+            }
+          )
+        );
+    }
+  }
+
+  if (!rows.length) {
+    $("messageList").innerHTML =
+      '<div class="empty">No messages yet. Start the conversation below.</div>';
+  } else {
+    $("messageList").innerHTML =
+      rows.map(m => {
+        const mine =
+          m.sender_profile_id === currentUser.id;
+
+        const files =
+          attachments.filter(
+            a => a.message_id === m.id
+          );
+
+        return `
+          <div
+            class="message ${mine ? "mine" : ""}"
+            data-message-id="${escapeHTML(m.id)}"
+          >
+            <div class="messageBody">
+              ${m.message ? escapeHTML(m.message) : ""}
+            </div>
+
+            ${files.map(renderAttachment).join("")}
+
+            <div class="message-meta">
+              <span>
+                ${mine ? "You" : "Moderator"}
+              </span>
+
+              <span>
+                ${escapeHTML(
+                  formatDate(m.created_at)
+                )}
+              </span>
+            </div>
+
+            ${
+              mine
+                ? `
+                  <div class="message-actions">
+                    <button
+                      type="button"
+                      class="btn secondary"
+                      data-edit-message="${escapeHTML(m.id)}"
+                    >
+                      Edit
+                    </button>
+                  </div>
+                `
+                : ""
+            }
+          </div>
+        `;
+      }).join("");
+  }
+
+  document
+    .querySelectorAll("[data-edit-message]")
+    .forEach(button => {
+      button.addEventListener(
+        "click",
+        () =>
+          startEditAuthorMessage(
+            button.dataset.editMessage
+          )
+      );
+    });
+
+  $("messageList").scrollTop =
+    $("messageList").scrollHeight;
+
+  const unread =
+    rows
+      .filter(
+        m =>
+          m.sender_profile_id !== currentUser.id &&
+          !m.read_at
+      )
+      .map(m => m.id);
+
+  if (unread.length) {
+    await supabaseClient
+      .from("messages")
+      .update({
+        read_at:new Date().toISOString()
+      })
+      .in("id", unread);
+  }
 }
 
-async function startEditAuthorMessage(messageId){
-  const bubble=document.querySelector(`.message[data-message-id="${CSS.escape(messageId)}"]`);
-  if(!bubble || bubble.querySelector('.edit-message-form')) return;
-  const body=bubble.querySelector('.messageBody');
-  const currentText=body?.textContent || '';
-  const actions=bubble.querySelector('.message-actions');
-  if(actions) actions.style.display='none';
-  const form=document.createElement('form');
-  form.className='edit-message-form';
-  form.innerHTML=`<textarea aria-label="Edit message">${escapeHTML(currentText)}</textarea><button type="submit" class="btn">Save</button><button type="button" class="btn secondary">Cancel</button>`;
-  bubble.appendChild(form);
-  const textarea=form.querySelector('textarea'); textarea.focus(); textarea.setSelectionRange(textarea.value.length,textarea.value.length);
-  form.querySelectorAll('button')[1].addEventListener('click',()=>{form.remove();if(actions)actions.style.display='flex';});
-  form.addEventListener('submit',async event=>{
-    event.preventDefault();
-    const value=textarea.value.trim();
-    if(!value){setNotice('Message cannot be empty.','info');return;}
-    const save=form.querySelector('button[type="submit"]'); save.disabled=true; save.textContent='Saving…';
-    try{
-      const {error}=await supabaseClient.from('messages').update({message:value}).eq('id',messageId).eq('sender_profile_id',currentUser.id);
-      if(error) throw error;
-      await loadMessages();
-      setNotice('Message updated.','success');
-    }catch(e){
-      console.error('Edit author message:',e);
-      setNotice('Message could not be edited: '+friendlyError(e),'error');
-      save.disabled=false; save.textContent='Save';
+async function startEditAuthorMessage(messageId) {
+  const bubble =
+    document.querySelector(
+      `.message[data-message-id="${CSS.escape(messageId)}"]`
+    );
+
+  if (
+    !bubble ||
+    bubble.querySelector(".edit-message-form")
+  ) {
+    return;
+  }
+
+  const body =
+    bubble.querySelector(".messageBody");
+
+  const currentText =
+    body?.textContent || "";
+
+  const actions =
+    bubble.querySelector(".message-actions");
+
+  if (actions) {
+    actions.style.display = "none";
+  }
+
+  const form =
+    document.createElement("form");
+
+  form.className =
+    "edit-message-form";
+
+  form.innerHTML = `
+    <textarea aria-label="Edit message">
+      ${escapeHTML(currentText)}
+    </textarea>
+
+```
+<button
+  type="submit"
+  class="btn"
+>
+  Save
+</button>
+
+<button
+  type="button"
+  class="btn secondary"
+>
+  Cancel
+</button>
+```
+
+`;
+
+bubble.appendChild(form);
+
+const textarea =
+form.querySelector("textarea");
+
+textarea.focus();
+
+textarea.setSelectionRange(
+textarea.value.length,
+textarea.value.length
+);
+
+form
+.querySelectorAll("button")[1]
+.addEventListener(
+"click",
+() => {
+form.remove();
+
+```
+    if (actions) {
+      actions.style.display = "flex";
     }
-  });
+  }
+);
+```
+
+form.addEventListener(
+"submit",
+async event => {
+event.preventDefault();
+
+```
+  const value =
+    textarea.value.trim();
+
+  if (!value) {
+    setNotice(
+      "Message cannot be empty.",
+      "info"
+    );
+    return;
+  }
+
+  const save =
+    form.querySelector(
+      'button[type="submit"]'
+    );
+
+  save.disabled = true;
+  save.textContent = "Saving…";
+
+  try {
+    const {error} =
+      await supabaseClient
+        .from("messages")
+        .update({
+          message:value
+        })
+        .eq("id", messageId)
+        .eq(
+          "sender_profile_id",
+          currentUser.id
+        );
+
+    if (error) throw error;
+
+    await loadMessages();
+
+    setNotice(
+      "Message updated.",
+      "success"
+    );
+
+  } catch (e) {
+    console.error(
+      "Edit author message:",
+      e
+    );
+
+    setNotice(
+      "Message could not be edited: " +
+      friendlyError(e),
+      "error"
+    );
+
+    save.disabled = false;
+    save.textContent = "Save";
+  }
+}
+```
+
+);
 }
 
 async function openNewConversationPanel() {
-  if (!currentAuthor?.id || !currentUser?.id) return;
-  if (!myBooks.length) await loadBooks();
-  const {data:mods, error} = await supabaseClient.from("moderators").select("id,profile_id,active").eq("active", true);
-  if (error) { setNotice("Could not find available Moderators: " + friendlyError(error), "error"); return; }
-  const profileIds = (mods || []).map(m => m.profile_id).filter(Boolean);
-  const profiles = profileIds.length ? ((await supabaseClient.from("profiles").select("id,display_name").in("id", profileIds)).data || []) : [];
-  $("newConversationBook").innerHTML = '<option value="">Select a book</option>' + myBooks.map(b => `<option value="${escapeHTML(b.id)}">${escapeHTML(b.title || "Untitled book")}</option>`).join("");
-  $("newConversationModerator").innerHTML = '<option value="">Select a Moderator</option>' + (mods || []).map(m => `<option value="${escapeHTML(m.id)}">${escapeHTML(profiles.find(p => p.id === m.profile_id)?.display_name || "Reader Reach Moderator")}</option>`).join("");
-  $("newConversationPanel").hidden = false;
+if (!currentAuthor?.id || !currentUser?.id)
+return;
+
+if (!myBooks.length)
+await loadBooks();
+
+const {
+data:mods,
+error
+} = await supabaseClient
+.from("moderators")
+.select("id,profile_id,active")
+.eq("active", true);
+
+if (error) {
+setNotice(
+"Could not find available Moderators: " +
+friendlyError(error),
+"error"
+);
+return;
 }
 
-$("newConversationButton").addEventListener("click", openNewConversationPanel);
-$("cancelConversationButton").addEventListener("click", () => $("newConversationPanel").hidden = true);
-$("createConversationButton").addEventListener("click", async () => {
-  const bookId = $("newConversationBook").value, moderatorId = $("newConversationModerator").value;
-  if (!bookId || !moderatorId) { setNotice("Choose both the book and Moderator before starting the conversation.", "info"); return; }
-  const button = $("createConversationButton"); button.disabled = true;
-  try {
-    const {data:existing,error:ee} = await supabaseClient.from("conversations").select("id").eq("author_id",currentAuthor.id).eq("moderator_id",moderatorId).eq("book_id",bookId).limit(1);
-    if (ee) throw ee;
-    activeConversationId = existing?.[0]?.id || null;
-    if (!activeConversationId) {
-      const {data:created,error:ce} = await supabaseClient.from("conversations").insert({author_id:currentAuthor.id,moderator_id:moderatorId,book_id:bookId}).select("id").single();
-      if (ce) throw ce;
-      activeConversationId = created.id;
-    }
-    $("newConversationPanel").hidden = true;
-    showPage("messages");
-    await loadConversations();
-    setNotice("Your book-specific conversation is ready.", "success");
-  } catch (e) { setNotice("Conversation could not be created: " + friendlyError(e), "error"); }
-  finally { button.disabled = false; }
-});
+const profileIds =
+(mods || [])
+.map(m => m.profile_id)
+.filter(Boolean);
 
-$("messageFile").addEventListener("change", () => {
-  const files = [...($("messageFile").files || [])];
-  if (files.length > 5) { $("messageFile").value = ""; $("messageFileName").textContent = ""; setNotice("Choose up to 5 files per message.", "error"); return; }
-  if (files.some(f => !isAllowedChatFile(f))) { $("messageFile").value = ""; $("messageFileName").textContent = ""; return; }
-  $("messageFileName").textContent = files.length ? `Selected ${files.length} file${files.length === 1 ? "" : "s"}: ${files.map(f => f.name).join(", ")}` : "";
-});
+const profiles =
+profileIds.length
+? (
+await supabaseClient
+.from("profiles")
+.select("id,display_name")
+.in("id", profileIds)
+).data || []
+: [];
 
-$("messageForm").addEventListener("submit", async event => {
-  event.preventDefault();
-  const text = $("messageText").value.trim();
-  const files = [...($("messageFile").files || [])];
-  if (!text && !files.length) { setNotice("Write a message or attach a file before sending.", "info"); return; }
-  if (!activeConversationId) { setNotice("Select a book conversation before sending.", "info"); return; }
-  if (files.length > 5 || files.some(f => !isAllowedChatFile(f))) return;
-  const button = $("sendMessageButton"); button.disabled = true; button.textContent = "Sending…";
-  try {
-    const {data:created,error:me} = await supabaseClient.from("messages").insert({conversation_id:activeConversationId,sender_profile_id:currentUser.id,message:text || "Attachment"}).select("id").single();
-    if (me) throw me;
-    const failed = [];
-    for (const file of files) {
-      const path = `${currentUser.id}/${activeConversationId}/${Date.now()}-${Math.random().toString(36).slice(2,8)}-${normalizeStoragePath(file.name)}`;
-      const {data:up,error:ue} = await supabaseClient.storage.from(CHAT_BUCKET).upload(path,file,{upsert:false,contentType:file.type || "application/octet-stream"});
-      if (ue) { failed.push(file.name); continue; }
-      const {error:ae} = await supabaseClient.from("message_attachments").insert({message_id:created.id,file_path:up.path,file_name:file.name,mime_type:file.type || null,file_size:file.size});
-      if (ae) { await supabaseClient.storage.from(CHAT_BUCKET).remove([up.path]); failed.push(file.name); }
+$("newConversationBook").innerHTML =
+'<option value="">Select a book</option>' +
+myBooks
+.map(
+b =>
+`<option value="${escapeHTML(b.id)}">${escapeHTML(b.title || "Untitled book")}</option>`
+)
+.join("");
+
+$("newConversationModerator").innerHTML =
+'<option value="">Select a Moderator</option>' +
+(mods || [])
+.map(
+m =>
+`<option value="${escapeHTML(m.id)}">${escapeHTML(
+            profiles.find(
+              p => p.id === m.profile_id
+            )?.display_name ||
+            "Reader Reach Moderator"
+          )}</option>`
+)
+.join("");
+
+$("newConversationPanel").hidden =
+false;
+}
+
+$("newConversationButton").addEventListener(
+"click",
+openNewConversationPanel
+);
+
+$("cancelConversationButton").addEventListener(
+"click",
+() =>
+$("newConversationPanel").hidden = true
+);
+
+$("createConversationButton").addEventListener(
+"click",
+async () => {
+const bookId =
+$("newConversationBook").value;
+
+```
+const moderatorId =
+  $("newConversationModerator").value;
+
+if (!bookId || !moderatorId) {
+  setNotice(
+    "Choose both the book and Moderator before starting the conversation.",
+    "info"
+  );
+  return;
+}
+
+const button =
+  $("createConversationButton");
+
+button.disabled = true;
+
+try {
+  const {
+    data:existing,
+    error:ee
+  } = await supabaseClient
+    .from("conversations")
+    .select("id")
+    .eq(
+      "author_id",
+      currentAuthor.id
+    )
+    .eq(
+      "moderator_id",
+      moderatorId
+    )
+    .eq(
+      "book_id",
+      bookId
+    )
+    .limit(1);
+
+  if (ee) throw ee;
+
+  activeConversationId =
+    existing?.[0]?.id || null;
+
+  if (!activeConversationId) {
+    const {
+      data:created,
+      error:ce
+    } = await supabaseClient
+      .from("conversations")
+      .insert({
+        author_id:currentAuthor.id,
+        moderator_id:moderatorId,
+        book_id:bookId
+      })
+      .select("id")
+      .single();
+
+    if (ce) throw ce;
+
+    activeConversationId =
+      created.id;
+  }
+
+  $("newConversationPanel").hidden =
+    true;
+
+  showPage("messages");
+
+  await loadConversations();
+
+  setNotice(
+    "Your book-specific conversation is ready.",
+    "success"
+  );
+
+} catch (e) {
+  setNotice(
+    "Conversation could not be created: " +
+    friendlyError(e),
+    "error"
+  );
+} finally {
+  button.disabled = false;
+}
+```
+
+}
+);
+
+$("messageFile").addEventListener(
+"change",
+() => {
+const files =
+[...($("messageFile").files || [])];
+
+```
+if (files.length > 5) {
+  $("messageFile").value = "";
+  $("messageFileName").textContent = "";
+
+  setNotice(
+    "Choose up to 5 files per message.",
+    "error"
+  );
+
+  return;
+}
+
+if (
+  files.some(
+    f => !isAllowedChatFile(f)
+  )
+) {
+  $("messageFile").value = "";
+  $("messageFileName").textContent = "";
+  return;
+}
+
+$("messageFileName").textContent =
+  files.length
+    ? `Selected ${files.length} file${files.length === 1 ? "" : "s"}: ${files.map(f => f.name).join(", ")}`
+    : "";
+```
+
+}
+);
+
+$("messageForm").addEventListener(
+"submit",
+async event => {
+event.preventDefault();
+
+```
+const text =
+  $("messageText").value.trim();
+
+const files =
+  [...($("messageFile").files || [])];
+
+if (!text && !files.length) {
+  setNotice(
+    "Write a message or attach a file before sending.",
+    "info"
+  );
+  return;
+}
+
+if (!activeConversationId) {
+  setNotice(
+    "Select a book conversation before sending.",
+    "info"
+  );
+  return;
+}
+
+if (
+  files.length > 5 ||
+  files.some(
+    f => !isAllowedChatFile(f)
+  )
+) {
+  return;
+}
+
+const button =
+  $("sendMessageButton");
+
+button.disabled = true;
+button.textContent = "Sending…";
+
+try {
+  const {
+    data:created,
+    error:me
+  } = await supabaseClient
+    .from("messages")
+    .insert({
+      conversation_id:
+        activeConversationId,
+      sender_profile_id:
+        currentUser.id,
+      message:
+        text || "Attachment"
+    })
+    .select("id")
+    .single();
+
+  if (me) throw me;
+
+  const failed = [];
+
+  for (const file of files) {
+    const path =
+      `${currentUser.id}/${activeConversationId}/${Date.now()}-${Math.random().toString(36).slice(2,8)}-${normalizeStoragePath(file.name)}`;
+
+    const {
+      data:up,
+      error:ue
+    } = await supabaseClient.storage
+      .from(CHAT_BUCKET)
+      .upload(
+        path,
+        file,
+        {
+          upsert:false,
+          contentType:
+            file.type ||
+            "application/octet-stream"
+        }
+      );
+
+    if (ue) {
+      failed.push(file.name);
+      continue;
     }
-    await supabaseClient.from("conversations").update({updated_at:new Date().toISOString()}).eq("id",activeConversationId);
-    $("messageText").value = ""; $("messageFile").value = ""; $("messageFileName").textContent = "";
-    await loadMessages(); await loadConversations();
-    if (failed.length) setNotice("Message sent, but these files failed: " + failed.join(", "), "error");
-  } catch (e) { setNotice("Message could not be sent: " + friendlyError(e), "error"); }
-  finally { button.disabled = false; button.textContent = "Send Message"; }
-});
+
+    /*
+     * IMPORTANT:
+     * message_attachments uses file_type.
+     */
+    const {error:ae} =
+      await supabaseClient
+        .from("message_attachments")
+        .insert({
+          message_id:created.id,
+          file_path:up.path,
+          file_name:file.name,
+          file_type:file.type || null,
+          file_size:file.size
+        });
+
+    if (ae) {
+      await supabaseClient
+        .storage
+        .from(CHAT_BUCKET)
+        .remove([up.path]);
+
+      failed.push(file.name);
+    }
+  }
+
+  await supabaseClient
+    .from("conversations")
+    .update({
+      updated_at:
+        new Date().toISOString()
+    })
+    .eq(
+      "id",
+      activeConversationId
+    );
+
+  $("messageText").value = "";
+  $("messageFile").value = "";
+  $("messageFileName").textContent = "";
+
+  await loadMessages();
+  await loadConversations();
+
+  if (failed.length) {
+    setNotice(
+      "Message sent, but these files failed: " +
+      failed.join(", "),
+      "error"
+    );
+  }
+
+} catch (e) {
+  setNotice(
+    "Message could not be sent: " +
+    friendlyError(e),
+    "error"
+  );
+} finally {
+  button.disabled = false;
+  button.textContent = "Send Message";
+}
+```
+
+}
+);
 
 function subscribeToAuthorMessages() {
-  if (messageRealtimeChannel) supabaseClient.removeChannel(messageRealtimeChannel);
-  messageRealtimeChannel = supabaseClient.channel("author-message-realtime-" + currentUser.id)
-    .on("postgres_changes", {event:"*", schema:"public", table:"messages"}, async payload => {
-      const conversationId = payload.new?.conversation_id || payload.old?.conversation_id;
-      if (activeConversationId && conversationId === activeConversationId) await loadMessages();
+if (messageRealtimeChannel) {
+supabaseClient.removeChannel(
+messageRealtimeChannel
+);
+}
+
+messageRealtimeChannel =
+supabaseClient
+.channel(
+"author-message-realtime-" +
+currentUser.id
+)
+.on(
+"postgres_changes",
+{
+event:"*",
+schema:"public",
+table:"messages"
+},
+async payload => {
+const conversationId =
+payload.new?.conversation_id ||
+payload.old?.conversation_id;
+
+```
+      if (
+        activeConversationId &&
+        conversationId ===
+          activeConversationId
+      ) {
+        await loadMessages();
+      }
+
       await loadConversations();
-    })
-    .on("postgres_changes", {event:"*", schema:"public", table:"message_attachments"}, async () => {
-      if (activeConversationId) await loadMessages();
-    })
-    .subscribe();
-
-  if (refreshMessagesTimer) clearInterval(refreshMessagesTimer);
-  refreshMessagesTimer = setInterval(async () => {
-    if (document.visibilityState === 'visible' && activeConversationId) {
-      await loadMessages();
     }
-  }, 5000);
+  )
+  .on(
+    "postgres_changes",
+    {
+      event:"*",
+      schema:"public",
+      table:"message_attachments"
+    },
+    async () => {
+      if (activeConversationId) {
+        await loadMessages();
+      }
+    }
+  )
+  .subscribe();
+```
+
+if (refreshMessagesTimer) {
+clearInterval(refreshMessagesTimer);
+}
+
+refreshMessagesTimer =
+setInterval(
+async () => {
+if (
+document.visibilityState === "visible" &&
+activeConversationId
+) {
+await loadMessages();
+}
+},
+5000
+);
 }
 
 /* -------------------------------------------------------
-   FEATURE SCHEDULE
+FEATURE SCHEDULE
 ------------------------------------------------------- */
+
 async function loadSchedule() {
-  if (!currentAuthor?.id) return;
+if (!currentAuthor?.id) return;
 
-  if (!myBooks.length) await loadBooks();
+if (!myBooks.length)
+await loadBooks();
 
-  const ids = myBooks.map(book => book.id).filter(Boolean);
+const ids =
+myBooks
+.map(book => book.id)
+.filter(Boolean);
 
-  if (!ids.length) {
-    $("scheduleTable").innerHTML =
-      '<tr><td colspan="5">Schedules will appear here after you submit a book.</td></tr>';
-    return;
-  }
+if (!ids.length) {
+$("scheduleTable").innerHTML =
+'<tr><td colspan="5">Schedules will appear here after you submit a book.</td></tr>';
 
-  const {data, error} = await supabaseClient
-    .from("feature_schedules")
-    .select("id,book_id,scheduled_date,scheduled_time,status,notes")
-    .in("book_id", ids)
-    .order("scheduled_date", {ascending:true});
+```
+return;
+```
 
-  if (error) {
-    $("scheduleTable").innerHTML =
-      `<tr><td colspan="5">Could not load schedules: ${escapeHTML(friendlyError(error))}</td></tr>`;
-    return;
-  }
+}
 
-  if (!data?.length) {
-    $("scheduleTable").innerHTML =
-      '<tr><td colspan="5">No feature schedules have been assigned yet.</td></tr>';
-    return;
-  }
+const {
+data,
+error
+} = await supabaseClient
+.from("feature_schedules")
+.select(
+"id,book_id,scheduled_date,scheduled_time,status,notes"
+)
+.in("book_id", ids)
+.order(
+"scheduled_date",
+{ascending:true}
+);
 
-  $("scheduleTable").innerHTML = data.map(item => {
-    const book = myBooks.find(b => b.id === item.book_id);
-    return `<tr>
-      <td>${escapeHTML(book?.title || "Book")}</td>
-      <td>${escapeHTML(item.scheduled_date || "—")}</td>
-      <td>${escapeHTML(item.scheduled_time || "—")}</td>
-      <td>${statusBadge(item.status)}</td>
-      <td>${escapeHTML(item.notes || "—")}</td>
-    </tr>`;
-  }).join("");
+if (error) {
+$("scheduleTable").innerHTML =
+`<tr><td colspan="5">Could not load schedules: ${escapeHTML(friendlyError(error))}</td></tr>`;
+
+```
+return;
+```
+
+}
+
+if (!data?.length) {
+$("scheduleTable").innerHTML =
+'<tr><td colspan="5">No feature schedules have been assigned yet.</td></tr>';
+
+```
+return;
+```
+
+}
+
+$("scheduleTable").innerHTML =
+data.map(item => {
+const book =
+myBooks.find(
+b => b.id === item.book_id
+);
+
+```
+  return `
+    <tr>
+      <td>
+        ${escapeHTML(
+          book?.title || "Book"
+        )}
+      </td>
+
+      <td>
+        ${escapeHTML(
+          item.scheduled_date || "—"
+        )}
+      </td>
+
+      <td>
+        ${escapeHTML(
+          item.scheduled_time || "—"
+        )}
+      </td>
+
+      <td>
+        ${statusBadge(item.status)}
+      </td>
+
+      <td>
+        ${escapeHTML(
+          item.notes || "—"
+        )}
+      </td>
+    </tr>
+  `;
+}).join("");
+```
+
 }
 
 /* -------------------------------------------------------
-   NOTIFICATIONS
+NOTIFICATIONS
 ------------------------------------------------------- */
+
 async function loadNotifications() {
-  if (!currentUser?.id) return;
+if (!currentUser?.id) return;
 
-  const {data, error} = await supabaseClient
-    .from("notifications")
-    .select("id,profile_id,type,title,message,related_book_id,related_schedule_id,is_read,created_at")
-    .eq("profile_id", currentUser.id)
-    .order("created_at", {ascending:false})
-    .limit(100);
+const {
+data,
+error
+} = await supabaseClient
+.from("notifications")
+.select(
+"id,profile_id,type,title,message,related_book_id,related_schedule_id,is_read,created_at"
+)
+.eq(
+"profile_id",
+currentUser.id
+)
+.order(
+"created_at",
+{ascending:false}
+)
+.limit(100);
 
-  if (error) {
-    $("notificationList").innerHTML =
-      `<div class="empty">Could not load notifications: ${escapeHTML(friendlyError(error))}</div>`;
-    return;
-  }
+if (error) {
+$("notificationList").innerHTML =
+`<div class="empty">Could not load notifications: ${escapeHTML(friendlyError(error))}</div>`;
 
-  if (!data?.length) {
-    $("notificationList").innerHTML = '<div class="empty">You have no notifications yet.</div>';
-    return;
-  }
+```
+return;
+```
 
-  $("notificationList").innerHTML = data.map(notification => `
-    <article class="book-card" style="margin-bottom:10px;${notification.is_read ? "" : "border-left:4px solid #b18b45"}">
-      <div class="panel-head">
-        <h3>${escapeHTML(notification.title || "Reader Reach update")}</h3>
-        <span class="badge">${notification.is_read ? "Read" : "Unread"}</span>
-      </div>
-      <p>${escapeHTML(notification.message || "")}</p>
-      <div class="small muted">${escapeHTML(formatDate(notification.created_at))}</div>
-      ${notification.is_read ? "" : `<div class="actions"><button class="btn secondary" data-read="${escapeHTML(notification.id)}">Mark Read</button></div>`}
-    </article>
-  `).join("");
+}
 
-  document.querySelectorAll("[data-read]").forEach(button => {
-    button.addEventListener("click", async () => {
-      const {error:readError} = await supabaseClient
-        .from("notifications")
-        .update({is_read:true})
-        .eq("id", button.dataset.read)
-        .eq("profile_id", currentUser.id);
+if (!data?.length) {
+$("notificationList").innerHTML =
+'<div class="empty">You have no notifications yet.</div>';
 
+```
+return;
+```
+
+}
+
+$("notificationList").innerHTML =
+data.map(notification => `
+<article
+class="book-card"
+style="margin-bottom:10px;${
+notification.is_read
+? ""
+: "border-left:4px solid #b18b45"
+}"
+> <div class="panel-head"> <h3>
+${escapeHTML(
+notification.title ||
+"Reader Reach update"
+)} </h3>
+
+```
+      <span class="badge">
+        ${
+          notification.is_read
+            ? "Read"
+            : "Unread"
+        }
+      </span>
+    </div>
+
+    <p>
+      ${escapeHTML(
+        notification.message || ""
+      )}
+    </p>
+
+    <div class="small muted">
+      ${escapeHTML(
+        formatDate(
+          notification.created_at
+        )
+      )}
+    </div>
+
+    ${
+      notification.is_read
+        ? ""
+        : `
+          <div class="actions">
+            <button
+              class="btn secondary"
+              data-read="${escapeHTML(
+                notification.id
+              )}"
+            >
+              Mark Read
+            </button>
+          </div>
+        `
+    }
+  </article>
+`).join("");
+```
+
+document
+.querySelectorAll("[data-read]")
+.forEach(button => {
+button.addEventListener(
+"click",
+async () => {
+const {
+error:readError
+} = await supabaseClient
+.from("notifications")
+.update({
+is_read:true
+})
+.eq(
+"id",
+button.dataset.read
+)
+.eq(
+"profile_id",
+currentUser.id
+);
+
+```
       if (readError) {
-        setNotice("Could not update notification: " + friendlyError(readError), "error");
+        setNotice(
+          "Could not update notification: " +
+          friendlyError(readError),
+          "error"
+        );
       } else {
         await loadNotifications();
       }
-    });
-  });
+    }
+  );
+});
+```
+
 }
 
-$("markAllReadButton").addEventListener("click", async () => {
-  const {error} = await supabaseClient
-    .from("notifications")
-    .update({is_read:true})
-    .eq("profile_id", currentUser.id)
-    .eq("is_read", false);
+$("markAllReadButton").addEventListener(
+"click",
+async () => {
+const {error} =
+await supabaseClient
+.from("notifications")
+.update({
+is_read:true
+})
+.eq(
+"profile_id",
+currentUser.id
+)
+.eq(
+"is_read",
+false
+);
 
-  if (error) {
-    setNotice("Could not mark notifications read: " + friendlyError(error), "error");
-  } else {
-    await loadNotifications();
-    setNotice("Notifications marked as read.", "success");
-  }
-});
+```
+if (error) {
+  setNotice(
+    "Could not mark notifications read: " +
+    friendlyError(error),
+    "error"
+  );
+} else {
+  await loadNotifications();
+
+  setNotice(
+    "Notifications marked as read.",
+    "success"
+  );
+}
+```
+
+}
+);
 
 /* -------------------------------------------------------
-   AUTH SESSION CHANGES
+AUTH SESSION CHANGES
 ------------------------------------------------------- */
-supabaseClient.auth.onAuthStateChange((event, session) => {
-  if (event === "SIGNED_OUT") {
-    currentUser = null;
-    if (refreshMessagesTimer) clearInterval(refreshMessagesTimer);
-    showLoginPrompt();
-    return;
+
+supabaseClient.auth.onAuthStateChange(
+(event, session) => {
+if (event === "SIGNED_OUT") {
+currentUser = null;
+
+```
+  if (refreshMessagesTimer) {
+    clearInterval(
+      refreshMessagesTimer
+    );
+
+    refreshMessagesTimer = null;
   }
 
-  if (event === "SIGNED_IN" && session?.user && !currentUser) {
-    currentUser = session.user;
-    authCheckStarted = false;
-    setTimeout(() => initializeDashboard(), 0);
+  if (messageRealtimeChannel) {
+    supabaseClient.removeChannel(
+      messageRealtimeChannel
+    );
+
+    messageRealtimeChannel = null;
   }
 
-  if (event === "TOKEN_REFRESHED" && session?.user) {
-    currentUser = session.user;
-  }
-});
+  showLoginPrompt();
+  return;
+}
+
+if (
+  event === "SIGNED_IN" &&
+  session?.user &&
+  !currentUser
+) {
+  currentUser = session.user;
+  authCheckStarted = false;
+
+  setTimeout(
+    () => initializeDashboard(),
+    0
+  );
+}
+
+if (
+  event === "TOKEN_REFRESHED" &&
+  session?.user
+) {
+  currentUser = session.user;
+}
+```
+
+}
+);
 
 /* -------------------------------------------------------
-   STARTUP
+STARTUP
 ------------------------------------------------------- */
-initializeDashboard();
-</script>
+
+initializeDashboard(); </script>
+
 </body>
 </html>

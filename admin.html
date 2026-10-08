@@ -860,6 +860,7 @@
         <button data-target="schedules">Feature Schedule</button>
         <button data-target="readers">Readers</button>
         <button data-target="discussions">Conversations</button>
+        <button data-target="visitorSupport">Visitor Support</button>
         <button data-target="notifications">Notifications</button>
         <button data-target="moderators">Moderators</button>
         <button data-target="settings">Settings</button>
@@ -1319,6 +1320,23 @@
         </section>
 
 
+        <!-- VISITOR SUPPORT -->
+        <section id="visitorSupport" class="section">
+          <div class="section-heading"><div><h2>Visitor Support</h2><p>Manage support conversations started by visitors from the public Reader Reach website.</p></div><button class="btn btn-light" onclick="loadVisitorSupport()">Refresh</button></div>
+          <div class="card"><div class="conversation-layout">
+            <div id="visitorConversationList" class="conversation-list"><div class="empty">Loading visitor conversations…</div></div>
+            <div class="chat-panel">
+              <div id="visitorChatHeader" class="chat-header"><h3>Select a visitor conversation</h3><p>Choose a visitor conversation from the left.</p></div>
+              <div id="visitorMessages" class="messages"><div class="empty">No visitor conversation selected.</div></div>
+              <div class="chat-composer"><div class="chat-compose-row">
+                <input id="visitorMessageInput" class="input" type="text" placeholder="Reply to the visitor…" disabled />
+                <button id="sendVisitorMessageBtn" class="btn btn-primary" onclick="sendVisitorMessage()" disabled>Send</button>
+              </div></div>
+            </div>
+          </div></div>
+        </section>
+
+
         <!-- NOTIFICATIONS -->
         <section id="notifications" class="section">
 
@@ -1465,6 +1483,10 @@
 
     let activeConversationId = null;
     let messageChannel = null;
+
+    let visitorConversationsCache = [];
+    let activeVisitorConversationId = null;
+    let visitorMessageChannel = null;
 
     const $ = id => document.getElementById(id);
 
@@ -1703,6 +1725,13 @@
         if(event.key === "Enter"){
           event.preventDefault();
           sendMessage();
+        }
+      });
+
+      $("visitorMessageInput").addEventListener("keydown",(event)=>{
+        if(event.key === "Enter"){
+          event.preventDefault();
+          sendVisitorMessage();
         }
       });
     }
@@ -3577,6 +3606,63 @@
         .subscribe();
     }
 
+    /* VISITOR SUPPORT */
+
+    async function loadVisitorSupport(){
+      const {data,error}=await supabaseClient.from("visitor_conversations").select("id,visitor_email,status,created_at,updated_at").order("updated_at",{ascending:false});
+      if(error){ console.error(error); renderError("visitorConversationList",error.message); return; }
+      visitorConversationsCache=data||[];
+      renderVisitorConversations();
+      if(activeVisitorConversationId){
+        if(visitorConversationsCache.some(c=>c.id===activeVisitorConversationId)) await loadVisitorMessages(activeVisitorConversationId);
+        else { activeVisitorConversationId=null; $("visitorChatHeader").innerHTML='<h3>Select a visitor conversation</h3><p>Choose a visitor conversation from the left.</p>'; $("visitorMessages").innerHTML='<div class="empty">No visitor conversation selected.</div>'; $("visitorMessageInput").disabled=true; $("sendVisitorMessageBtn").disabled=true; }
+      }
+    }
+
+    function renderVisitorConversations(){
+      if(!visitorConversationsCache.length){ renderEmpty("visitorConversationList","No visitor support conversations yet."); return; }
+      $("visitorConversationList").innerHTML=visitorConversationsCache.map(c=>`<div class="conversation-item ${activeVisitorConversationId===c.id?"active":""}" onclick="openVisitorConversation('${c.id}')"><div class="conversation-item-title">${escapeHTML(c.visitor_email)}</div><div class="conversation-item-meta">${statusBadge(c.status||"open")}<br>Started: ${escapeHTML(formatDate(c.created_at))}<br>Updated: ${escapeHTML(formatDate(c.updated_at))}</div></div>`).join("");
+    }
+
+    async function openVisitorConversation(id){
+      activeVisitorConversationId=id;
+      const c=visitorConversationsCache.find(x=>x.id===id); if(!c)return;
+      $("visitorChatHeader").innerHTML=`<h3>Visitor Support</h3><p>${escapeHTML(c.visitor_email)}</p>`;
+      $("visitorMessageInput").disabled=false; $("sendVisitorMessageBtn").disabled=false;
+      renderVisitorConversations(); await loadVisitorMessages(id);
+    }
+
+    async function loadVisitorMessages(id){
+      const {data,error}=await supabaseClient.from("visitor_messages").select("id,conversation_id,sender_type,message,created_at").eq("conversation_id",id).order("created_at",{ascending:true});
+      if(error){ console.error(error); renderError("visitorMessages",error.message); return; }
+      renderVisitorMessages(data||[]);
+    }
+
+    function renderVisitorMessages(messages){
+      if(!messages.length){ $("visitorMessages").innerHTML='<div class="empty">No messages in this visitor conversation yet.</div>'; return; }
+      $("visitorMessages").innerHTML=messages.map(m=>`<div class="message-row ${m.sender_type==="admin"?"mine":""}"><div class="message-bubble"><div class="message-sender">${m.sender_type==="admin"?"You":"Visitor"}</div><div class="message-text">${escapeHTML(m.message)}</div><div class="message-meta">${escapeHTML(formatDate(m.created_at))}</div></div></div>`).join("");
+      $("visitorMessages").scrollTop=$("visitorMessages").scrollHeight;
+    }
+
+    async function sendVisitorMessage(){
+      if(!activeVisitorConversationId){ showToast("Select a visitor conversation first.",true); return; }
+      const input=$("visitorMessageInput"), message=input.value.trim(); if(!message)return;
+      const {error}=await supabaseClient.from("visitor_messages").insert({conversation_id:activeVisitorConversationId,sender_type:"admin",message});
+      if(error){ showToast(error.message,true); return; }
+      input.value="";
+      const {error:updateError}=await supabaseClient.from("visitor_conversations").update({updated_at:new Date().toISOString()}).eq("id",activeVisitorConversationId);
+      if(updateError) console.error(updateError);
+      await loadVisitorMessages(activeVisitorConversationId); await loadVisitorSupport();
+    }
+
+    function subscribeToVisitorMessages(){
+      if(visitorMessageChannel) supabaseClient.removeChannel(visitorMessageChannel);
+      visitorMessageChannel=supabaseClient.channel("admin-visitor-support-realtime")
+        .on("postgres_changes",{event:"*",schema:"public",table:"visitor_messages"},async payload=>{ const id=payload.new?.conversation_id||payload.old?.conversation_id; if(activeVisitorConversationId&&id===activeVisitorConversationId) await loadVisitorMessages(activeVisitorConversationId); await loadVisitorSupport(); })
+        .on("postgres_changes",{event:"*",schema:"public",table:"visitor_conversations"},async()=>{ await loadVisitorSupport(); })
+        .subscribe();
+    }
+
     /* PUBLIC DISCUSSIONS */
 
     async function loadPublicDiscussions(){
@@ -4007,6 +4093,7 @@
         loadSchedules(),
         loadReaders(),
         loadConversations(),
+        loadVisitorSupport(),
         loadPublicDiscussions(),
         loadNotifications(),
         loadModerators(),
@@ -4039,6 +4126,7 @@
         loadSchedules(),
         loadReaders(),
         loadConversations(),
+        loadVisitorSupport(),
         loadPublicDiscussions(),
         loadNotifications(),
         loadModerators(),
@@ -4049,6 +4137,7 @@
       await loadScheduleOptions();
 
       subscribeToMessages();
+      subscribeToVisitorMessages();
     }
 
     start();

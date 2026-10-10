@@ -218,7 +218,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
   <main class="main">
     <div id="pageNotice"></div>
 
-```
+ 
 <section class="page active" id="page-overview">
   <div class="page-heading">
     <div class="eyebrow">Your author space</div>
@@ -539,7 +539,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
     <button class="btn danger" id="signOutMain">Confirm Sign Out</button>
   </div>
 </section>
-```
+ 
 
   </main>
 </div>
@@ -1779,7 +1779,7 @@ async function startEditAuthorMessage(messageId) {
       ${escapeHTML(currentText)}
     </textarea>
 
-```
+ 
 <button
   type="submit"
   class="btn"
@@ -1793,7 +1793,7 @@ async function startEditAuthorMessage(messageId) {
 >
   Cancel
 </button>
-```
+ 
 
 `;
 
@@ -1816,20 +1816,20 @@ form
 () => {
 form.remove();
 
-```
+ 
     if (actions) {
       actions.style.display = "flex";
     }
   }
 );
-```
+ 
 
 form.addEventListener(
 "submit",
 async event => {
 event.preventDefault();
 
-```
+ 
   const value =
     textarea.value.trim();
 
@@ -1887,7 +1887,7 @@ event.preventDefault();
     save.textContent = "Save";
   }
 }
-```
+ 
 
 );
 }
@@ -1975,7 +1975,7 @@ async () => {
 const bookId =
 $("newConversationBook").value;
 
-```
+ 
 const moderatorId =
   $("newConversationModerator").value;
 
@@ -2059,7 +2059,7 @@ try {
 } finally {
   button.disabled = false;
 }
-```
+ 
 
 }
 );
@@ -2070,7 +2070,7 @@ $("messageFile").addEventListener(
 const files =
 [...($("messageFile").files || [])];
 
-```
+ 
 if (files.length > 5) {
   $("messageFile").value = "";
   $("messageFileName").textContent = "";
@@ -2097,7 +2097,7 @@ $("messageFileName").textContent =
   files.length
     ? `Selected ${files.length} file${files.length === 1 ? "" : "s"}: ${files.map(f => f.name).join(", ")}`
     : "";
-```
+ 
 
 }
 );
@@ -2107,7 +2107,7 @@ $("messageForm").addEventListener(
 async event => {
 event.preventDefault();
 
-```
+ 
 const text =
   $("messageText").value.trim();
 
@@ -2252,7 +2252,7 @@ try {
   button.disabled = false;
   button.textContent = "Send Message";
 }
-```
+ 
 
 }
 );
@@ -2282,7 +2282,7 @@ const conversationId =
 payload.new?.conversation_id ||
 payload.old?.conversation_id;
 
-```
+ 
       if (
         activeConversationId &&
         conversationId ===
@@ -2308,7 +2308,7 @@ payload.old?.conversation_id;
     }
   )
   .subscribe();
-```
+ 
 
 if (refreshMessagesTimer) {
 clearInterval(refreshMessagesTimer);
@@ -2347,9 +2347,9 @@ if (!ids.length) {
 $("scheduleTable").innerHTML =
 '<tr><td colspan="5">Schedules will appear here after you submit a book.</td></tr>';
 
-```
+ 
 return;
-```
+ 
 
 }
 
@@ -2371,9 +2371,9 @@ if (error) {
 $("scheduleTable").innerHTML =
 `<tr><td colspan="5">Could not load schedules: ${escapeHTML(friendlyError(error))}</td></tr>`;
 
-```
+ 
 return;
-```
+ 
 
 }
 
@@ -2381,9 +2381,9 @@ if (!data?.length) {
 $("scheduleTable").innerHTML =
 '<tr><td colspan="5">No feature schedules have been assigned yet.</td></tr>';
 
-```
+ 
 return;
-```
+ 
 
 }
 
@@ -2394,7 +2394,7 @@ myBooks.find(
 b => b.id === item.book_id
 );
 
-```
+ 
   return `
     <tr>
       <td>
@@ -2427,7 +2427,7 @@ b => b.id === item.book_id
     </tr>
   `;
 }).join("");
-```
+ 
 
 }
 
@@ -2460,9 +2460,9 @@ if (error) {
 $("notificationList").innerHTML =
 `<div class="empty">Could not load notifications: ${escapeHTML(friendlyError(error))}</div>`;
 
-```
+ 
 return;
-```
+ 
 
 }
 
@@ -2470,9 +2470,9 @@ if (!data?.length) {
 $("notificationList").innerHTML =
 '<div class="empty">You have no notifications yet.</div>';
 
-```
+ 
 return;
-```
+ 
 
 }
 
@@ -2491,7 +2491,7 @@ notification.title ||
 "Reader Reach update"
 )} </h3>
 
-```
+ 
       <span class="badge">
         ${
           notification.is_read
@@ -2533,7 +2533,7 @@ notification.title ||
     }
   </article>
 `).join("");
-```
+ 
 
 document
 .querySelectorAll("[data-read]")
@@ -2557,7 +2557,7 @@ button.dataset.read
 currentUser.id
 );
 
-```
+ 
       if (readError) {
         setNotice(
           "Could not update notification: " +
@@ -2570,7 +2570,7 @@ currentUser.id
     }
   );
 });
-```
+ 
 
 }
 
@@ -2592,7 +2592,7 @@ currentUser.id
 false
 );
 
-```
+ 
 if (error) {
   setNotice(
     "Could not mark notifications read: " +
@@ -2607,7 +2607,7 @@ if (error) {
     "success"
   );
 }
-```
+ 
 
 }
 );
@@ -2621,7 +2621,7 @@ supabaseClient.auth.onAuthStateChange(
 if (event === "SIGNED_OUT") {
 currentUser = null;
 
-```
+ 
   if (refreshMessagesTimer) {
     clearInterval(
       refreshMessagesTimer
@@ -2662,7 +2662,7 @@ if (
 ) {
   currentUser = session.user;
 }
-```
+ 
 
 }
 );

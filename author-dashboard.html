@@ -1797,4 +1797,783 @@
                 const photo = localStorage.getItem(
                     "readerReachAuthorPhoto:" + currentUser.id
                 );
-                
+
+                if (photo) {
+                    applyProfilePhoto(photo);
+                }
+            } catch (error) {
+                console.warn("Could not restore profile photo:", error);
+            }
+        }
+
+        // Save changes to the author's existing database record.
+        async function saveProfile(event) {
+            event.preventDefault();
+
+            if (!currentUser?.id || !currentAuthor?.id) {
+                setNotice(
+                    "Your author profile is not linked to your account. Please contact the site administrator.",
+                    "error"
+                );
+                return;
+            }
+
+            const bio = $("profileBio").value.trim();
+            const website = $("profileWebsite").value.trim();
+
+            if (website) {
+                try {
+                    const url = new URL(website);
+
+                    if (!["http:", "https:"].includes(url.protocol)) {
+                        throw new Error("Use a website address beginning with https://");
+                    }
+                } catch (error) {
+                    setNotice(
+                        error.message || "Enter a valid website address.",
+                        "error"
+                    );
+                    return;
+                }
+            }
+
+            const button = $("profileForm").querySelector(
+                'button[type="submit"]'
+            );
+
+            button.disabled = true;
+            button.textContent = "Saving…";
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from("authors")
+                    .update({
+                        bio,
+                        website_url: website || null
+                    })
+                    .eq("id", currentAuthor.id)
+                    .eq("profile_id", currentUser.id)
+                    .select(
+                        "id,profile_id,author_name,bio,website_url,status,created_at"
+                    )
+                    .maybeSingle();
+
+                if (error) throw error;
+
+                if (!data) {
+                    throw new Error(
+                        "No author record was updated. Check your database permissions."
+                    );
+                }
+
+                currentAuthor = data;
+                populateIdentity();
+
+                setNotice("Your author profile has been saved.", "success");
+            } catch (error) {
+                console.error("Save profile:", error);
+                setNotice(
+                    "Could not save your profile: " + friendlyError(error),
+                    "error"
+                );
+            } finally {
+                button.disabled = false;
+                button.textContent = "Save Profile";
+            }
+        }
+
+        // Load books belonging to the signed-in author.
+        async function loadBooks() {
+            if (!currentAuthor?.id) return;
+
+            const table = $("booksTable");
+            const recent = $("recentBooks");
+
+            table.innerHTML =
+                '<tr><td colspan="4">Loading books…</td></tr>';
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from("books")
+                    .select("*")
+                    .eq("author_id", currentAuthor.id)
+                    .order("created_at", { ascending: false });
+
+                if (error) throw error;
+
+                myBooks = data || [];
+
+                const approved = myBooks.filter(
+                    book => displayStatus(book.status) === "approved"
+                ).length;
+
+                const pending = myBooks.filter(
+                    book => displayStatus(book.status) === "pending"
+                ).length;
+
+                $("statBooks").textContent = myBooks.length;
+                $("statApproved").textContent = approved;
+                $("statPending").textContent = pending;
+
+                if (!myBooks.length) {
+                    table.innerHTML =
+                        '<tr><td colspan="4">You have not submitted any books yet.</td></tr>';
+
+                    recent.innerHTML =
+                        '<div class="empty">Your books will appear here after you submit one.</div>';
+                } else {
+                    table.innerHTML = myBooks.map(book => `
+                        <tr>
+                            <td>${escapeHTML(book.title || "Untitled")}</td>
+                            <td>${escapeHTML(book.genre || "—")}</td>
+                            <td>${statusBadge(book.status)}</td>
+                            <td>${escapeHTML(formatDate(book.created_at))}</td>
+                        </tr>
+                    `).join("");
+
+                    recent.innerHTML = myBooks.slice(0, 4).map(book => `
+                        <article class="book-card">
+                            <h3>${escapeHTML(book.title || "Untitled")}</h3>
+                            <p class="muted small">
+                                ${escapeHTML(book.genre || "Genre not provided")}
+                            </p>
+                            ${statusBadge(book.status)}
+                            <p class="small muted">
+                                Submitted ${escapeHTML(formatDate(book.created_at))}
+                            </p>
+                        </article>
+                    `).join("");
+                }
+
+                const options = [
+                    '<option value="">Select a book</option>',
+                    ...myBooks.map(book => `
+                        <option value="${escapeHTML(book.id)}">
+                            ${escapeHTML(book.title || "Untitled")}
+                        </option>
+                    `)
+                ];
+
+                $("newConversationBook").innerHTML = options.join("");
+            } catch (error) {
+                console.error("Load books:", error);
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="4">
+                            Could not load books: ${escapeHTML(friendlyError(error))}
+                        </td>
+                    </tr>
+                `;
+
+                recent.innerHTML = `
+                    <div class="empty">
+                        Books could not be loaded. Check the books table and its access policies.
+                    </div>
+                `;
+
+                setNotice(
+                    "Your dashboard opened, but your books could not be loaded. Check the database configuration.",
+                    "error"
+                );
+            }
+        }
+
+        // Submit a book to the database for review.
+        async function submitBook(event) {
+            event.preventDefault();
+
+            if (!currentUser?.id || !currentAuthor?.id) {
+                setNotice("Your author profile is not linked. Contact the site administrator.", "error");
+                return;
+            }
+
+            const values = {
+                title: $("bookTitle").value.trim(),
+                genre: $("bookGenre").value.trim(),
+                audience: $("bookAudience").value.trim(),
+                description: $("bookDescription").value.trim(),
+                availability: $("bookAvailability").value.trim(),
+                flipper: $("bookFlipper").value.trim()
+            };
+
+            if (Object.values(values).some(value => !value)) {
+                setNotice("Please complete all required book submission fields.", "error");
+                return;
+            }
+
+            try {
+                const flipperUrl = new URL(values.flipper);
+
+                if (!["http:", "https:"].includes(flipperUrl.protocol)) {
+                    throw new Error("The Flipper Guide Link must be an HTTP or HTTPS URL.");
+                }
+            } catch (error) {
+                setNotice(error.message || "Enter a valid Flipper Guide Link.", "error");
+                return;
+            }
+
+            const button = $("submitBookButton");
+            button.disabled = true;
+            button.textContent = "Submitting…";
+
+            try {
+                const payload = {
+                    author_id: currentAuthor.id,
+                    title: values.title,
+                    genre: values.genre,
+                    audience: values.audience,
+                    description: values.description,
+                    availability: values.availability,
+                    flipper_guide_url: values.flipper,
+                    status: "pending"
+                };
+
+                const { error } = await supabaseClient
+                    .from("books")
+                    .insert(payload);
+
+                if (error) throw error;
+
+                $("bookForm").reset();
+                $("bookBio").value = currentAuthor.bio || "";
+
+                setNotice(
+                    "Your book was submitted successfully for review.",
+                    "success"
+                );
+
+                await loadBooks();
+                showPage("books");
+            } catch (error) {
+                console.error("Submit book:", error);
+
+                setNotice(
+                    "Could not submit your book. Your database may use different column names, or its access policies may block the insert. Details: " +
+                        friendlyError(error),
+                    "error"
+                );
+            } finally {
+                button.disabled = false;
+                button.textContent = "Submit Book for Review";
+            }
+        }
+
+        // Notifications.
+        async function loadNotifications() {
+            const container = $("notificationList");
+
+            if (!currentUser?.id) return;
+
+            container.innerHTML =
+                '<div class="empty">Loading notifications…</div>';
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from("notifications")
+                    .select("*")
+                    .eq("user_id", currentUser.id)
+                    .order("created_at", { ascending: false });
+
+                if (error) throw error;
+
+                if (!data?.length) {
+                    container.innerHTML =
+                        '<div class="empty">You have no notifications yet.</div>';
+                    return;
+                }
+
+                container.innerHTML = data.map(item => `
+                    <article class="book-card" style="margin-bottom:12px">
+                        <div class="panel-head">
+                            <h3>${escapeHTML(item.title || "Notification")}</h3>
+                            <span class="badge ${item.read_at ? "" : "pending"}">
+                                ${item.read_at ? "Read" : "Unread"}
+                            </span>
+                        </div>
+                        <p>${escapeHTML(item.message || item.body || "")}</p>
+                        <p class="muted small">
+                            ${escapeHTML(formatDateTime(item.created_at))}
+                        </p>
+                    </article>
+                `).join("");
+            } catch (error) {
+                console.error("Load notifications:", error);
+
+                container.innerHTML = `
+                    <div class="empty">
+                        Notifications could not be loaded.
+                        ${escapeHTML(friendlyError(error))}
+                    </div>
+                `;
+            }
+        }
+
+        async function markAllNotificationsRead() {
+            if (!currentUser?.id) return;
+
+            try {
+                const { error } = await supabaseClient
+                    .from("notifications")
+                    .update({ read_at: new Date().toISOString() })
+                    .eq("user_id", currentUser.id)
+                    .is("read_at", null);
+
+                if (error) throw error;
+
+                setNotice("Notifications marked as read.", "success");
+                await loadNotifications();
+            } catch (error) {
+                console.error("Mark notifications read:", error);
+
+                setNotice(
+                    "Could not mark notifications as read: " + friendlyError(error),
+                    "error"
+                );
+            }
+        }
+
+        // Feature schedule.
+        async function loadSchedule() {
+            const table = $("scheduleTable");
+
+            if (!currentAuthor?.id) {
+                table.innerHTML =
+                    '<tr><td colspan="5">Your author profile is not linked.</td></tr>';
+                return;
+            }
+
+            table.innerHTML =
+                '<tr><td colspan="5">Loading schedule…</td></tr>';
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from("feature_schedule")
+                    .select("*")
+                    .eq("author_id", currentAuthor.id)
+                    .order("scheduled_date", { ascending: true });
+
+                if (error) throw error;
+
+                if (!data?.length) {
+                    table.innerHTML =
+                        '<tr><td colspan="5">No feature dates have been assigned yet.</td></tr>';
+                    return;
+                }
+
+                table.innerHTML = data.map(item => {
+                    const book = myBooks.find(
+                        entry => String(entry.id) === String(item.book_id)
+                    );
+
+                    return `
+                        <tr>
+                            <td>${escapeHTML(book?.title || item.book_title || "Book")}</td>
+                            <td>${escapeHTML(formatDate(item.scheduled_date || item.feature_date))}</td>
+                            <td>${escapeHTML(item.scheduled_time || item.feature_time || "—")}</td>
+                            <td>${statusBadge(item.status)}</td>
+                            <td>${escapeHTML(item.notes || "—")}</td>
+                        </tr>
+                    `;
+                }).join("");
+            } catch (error) {
+                console.error("Load feature schedule:", error);
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            Schedule could not be loaded. Check the feature_schedule table and its column names.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Conversations and messages.
+        async function loadConversationOptions() {
+            if (!currentAuthor?.id) return;
+
+            const select = $("newConversationModerator");
+            select.innerHTML = '<option value="">Loading moderators…</option>';
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from("profiles")
+                    .select("id,display_name,email,role")
+                    .ilike("role", "moderator");
+
+                if (error) throw error;
+
+                if (!data?.length) {
+                    select.innerHTML =
+                        '<option value="">No moderators available</option>';
+                    return;
+                }
+
+                select.innerHTML = [
+                    '<option value="">Select a Moderator</option>',
+                    ...data.map(person => `
+                        <option value="${escapeHTML(person.id)}">
+                            ${escapeHTML(person.display_name || person.email || "Moderator")}
+                        </option>
+                    `)
+                ].join("");
+            } catch (error) {
+                console.error("Load moderators:", error);
+                select.innerHTML =
+                    '<option value="">Could not load moderators</option>';
+
+                $("conversationStatus").textContent =
+                    "Moderator list could not be loaded. Check your profiles table and access policies.";
+            }
+        }
+
+        async function loadConversations() {
+            const list = $("conversationList");
+
+            if (!currentAuthor?.id) {
+                list.innerHTML =
+                    '<div class="empty">Your author profile is not linked.</div>';
+                return;
+            }
+
+            list.innerHTML =
+                '<div class="empty">Loading conversations…</div>';
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from("conversations")
+                    .select("*")
+                    .eq("author_id", currentAuthor.id)
+                    .order("created_at", { ascending: false });
+
+                if (error) throw error;
+
+                myConversations = data || [];
+
+                if (!myConversations.length) {
+                    list.innerHTML =
+                        '<div class="empty">No conversations yet. Use New Message to start one.</div>';
+
+                    $("messageList").innerHTML =
+                        '<div class="empty">Select or create a conversation to begin.</div>';
+
+                    $("conversationStatus").textContent =
+                        "You have no conversations yet.";
+
+                    activeConversationId = null;
+                    return;
+                }
+
+                list.innerHTML = myConversations.map(conversation => `
+                    <button
+                        class="conversation-button ${String(conversation.id) === String(activeConversationId) ? "active" : ""}"
+                        type="button"
+                        data-conversation-id="${escapeHTML(conversation.id)}"
+                    >
+                        <strong>${escapeHTML(conversation.subject || conversation.book_title || "Book discussion")}</strong>
+                        <span class="muted small">
+                            ${escapeHTML(formatDateTime(conversation.created_at))}
+                        </span>
+                    </button>
+                `).join("");
+
+                list.querySelectorAll("[data-conversation-id]").forEach(button => {
+                    button.addEventListener("click", () => {
+                        openConversation(button.dataset.conversationId);
+                    });
+                });
+
+                $("conversationStatus").textContent =
+                    "Select a conversation to view its messages.";
+
+                if (
+                    !activeConversationId ||
+                    !myConversations.some(
+                        item => String(item.id) === String(activeConversationId)
+                    )
+                ) {
+                    await openConversation(myConversations[0].id);
+                }
+            } catch (error) {
+                console.error("Load conversations:", error);
+
+                list.innerHTML = `
+                    <div class="empty">
+                        Conversations could not be loaded.
+                        ${escapeHTML(friendlyError(error))}
+                    </div>
+                `;
+
+                $("conversationStatus").textContent =
+                    "Check the conversations table and its access policies.";
+            }
+        }
+
+        async function createConversation() {
+            const bookId = $("newConversationBook").value;
+            const moderatorId = $("newConversationModerator").value;
+
+            if (!bookId || !moderatorId) {
+                $("conversationStatus").textContent =
+                    "Choose both a book and a moderator.";
+                return;
+            }
+
+            const book = myBooks.find(
+                item => String(item.id) === String(bookId)
+            );
+
+            if (!book) {
+                $("conversationStatus").textContent =
+                    "That book could not be found. Reload your books and try again.";
+                return;
+            }
+
+            const button = $("createConversationButton");
+            button.disabled = true;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from("conversations")
+                    .insert({
+                        author_id: currentAuthor.id,
+                        moderator_id: moderatorId,
+                        book_id: book.id,
+                        book_title: book.title,
+                        subject: book.title || "Book discussion"
+                    })
+                    .select("*")
+                    .single();
+
+                if (error) throw error;
+
+                $("newConversationPanel").hidden = true;
+                $("conversationStatus").textContent =
+                    "Conversation created.";
+
+                activeConversationId = data.id;
+                await loadConversations();
+            } catch (error) {
+                console.error("Create conversation:", error);
+
+                $("conversationStatus").textContent =
+                    "Could not start the conversation. Check your conversations table and access policies. " +
+                    friendlyError(error);
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        async function openConversation(id) {
+            activeConversationId = id;
+
+            const conversation = myConversations.find(
+                item => String(item.id) === String(id)
+            );
+
+            if (!conversation) return;
+
+            $("messageHeading").textContent =
+                conversation.subject || conversation.book_title || "Conversation";
+
+            $("messageModerator").textContent =
+                "Conversation with your moderator";
+
+            document.querySelectorAll("[data-conversation-id]").forEach(button => {
+                button.classList.toggle(
+                    "active",
+                    String(button.dataset.conversationId) === String(id)
+                );
+            });
+
+            await loadMessages();
+        }
+
+        async function loadMessages() {
+            const container = $("messageList");
+
+            if (!activeConversationId) {
+                container.innerHTML =
+                    '<div class="empty">Select a conversation to view messages.</div>';
+                return;
+            }
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from("messages")
+                    .select("*")
+                    .eq("conversation_id", activeConversationId)
+                    .order("created_at", { ascending: true });
+
+                if (error) throw error;
+
+                if (!data?.length) {
+                    container.innerHTML =
+                        '<div class="empty">No messages yet. You can send the first message below.</div>';
+                    return;
+                }
+
+                container.innerHTML = data.map(message => {
+                    const mine = String(message.sender_id) === String(currentUser.id);
+
+                    return `
+                        <div class="message ${mine ? "mine" : ""}">
+                            <div>${escapeHTML(message.body || message.message || "")}</div>
+                            <div class="message-meta">
+                                <span>${mine ? "You" : "Moderator"}</span>
+                                <span>${escapeHTML(formatDateTime(message.created_at))}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join("");
+
+                container.scrollTop = container.scrollHeight;
+            } catch (error) {
+                console.error("Load messages:", error);
+
+                container.innerHTML = `
+                    <div class="empty">
+                        Messages could not be loaded.
+                        ${escapeHTML(friendlyError(error))}
+                    </div>
+                `;
+            }
+        }
+
+        async function sendMessage(event) {
+            event.preventDefault();
+
+            if (!currentUser?.id || !activeConversationId) {
+                $("conversationStatus").textContent =
+                    "Select a conversation before sending a message.";
+                return;
+            }
+
+            const body = $("messageText").value.trim();
+            const files = [...$("messageFile").files];
+
+            if (!body && !files.length) {
+                $("conversationStatus").textContent =
+                    "Write a message or choose a file to send.";
+                return;
+            }
+
+            if (files.length > 5) {
+                $("conversationStatus").textContent =
+                    "You can attach up to five files at a time.";
+                return;
+            }
+
+            const maxSize = 50 * 1024 * 1024;
+
+            if (files.some(file => file.size > maxSize)) {
+                $("conversationStatus").textContent =
+                    "Each attachment must be 50 MB or smaller.";
+                return;
+            }
+
+            const button = $("sendMessageButton");
+            button.disabled = true;
+
+            try {
+                const attachments = [];
+
+                for (const file of files) {
+                    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+                    const path =
+                        `${currentUser.id}/${activeConversationId}/${Date.now()}_${safeName}`;
+
+                    const { error: uploadError } = await supabaseClient
+                        .storage
+                        .from("message-attachments")
+                        .upload(path, file, { upsert: false });
+
+                    if (uploadError) throw uploadError;
+
+                    const { data: urlData } = supabaseClient
+                        .storage
+                        .from("message-attachments")
+                        .getPublicUrl(path);
+
+                    attachments.push({
+                        name: file.name,
+                        path,
+                        url: urlData?.publicUrl || ""
+                    });
+                }
+
+                const { error } = await supabaseClient
+                    .from("messages")
+                    .insert({
+                        conversation_id: activeConversationId,
+                        sender_id: currentUser.id,
+                        body: body || "",
+                        attachments
+                    });
+
+                if (error) throw error;
+
+                $("messageText").value = "";
+                cancelAttachment();
+
+                $("conversationStatus").textContent = "Message sent.";
+                await loadMessages();
+            } catch (error) {
+                console.error("Send message:", error);
+
+                $("conversationStatus").textContent =
+                    "Could not send the message. Check the messages table, attachment bucket, and their access policies. " +
+                    friendlyError(error);
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        function subscribeToAuthorMessages() {
+            if (!supabaseClient || !currentUser?.id) return;
+
+            if (messageRealtimeChannel) {
+                supabaseClient.removeChannel(messageRealtimeChannel);
+            }
+
+            messageRealtimeChannel = supabaseClient
+                .channel("author-dashboard-messages-" + currentUser.id)
+                .on(
+                    "postgres_changes",
+                    {
+                        event: "*",
+                        schema: "public",
+                        table: "messages"
+                    },
+                    () => {
+                        if (activeConversationId) loadMessages();
+                    }
+                )
+                .subscribe();
+
+            if (refreshMessagesTimer) {
+                clearInterval(refreshMessagesTimer);
+            }
+
+            refreshMessagesTimer = setInterval(() => {
+                if (
+                    activeConversationId &&
+                    document.visibilityState === "visible"
+                ) {
+                    loadMessages();
+                }
+            }, 30000);
+        }
+
+        // Start the dashboard after the page and Supabase library are ready.
+        document.addEventListener("DOMContentLoaded", async () => {
+            wireStaticControls();
+
+            if (!initializeSupabase()) return;
+
+            await initializeDashboard();
+        });
+    </script>
+</body>
+</html>

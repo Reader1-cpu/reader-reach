@@ -1790,29 +1790,10 @@
             `;
         }
 
-function restoreProfilePhoto() {
-    if (!currentUser?.id) return;
+        function restoreProfilePhoto() {
+            if (!currentUser?.id) return;
 
-    try {
-        const photo = localStorage.getItem(
-            "readerReachAuthorPhoto:" + currentUser.id
-        );
-
-        if (photo) {
-            const profilePhoto = document.getElementById("profilePhoto");
-            const photoPreview = document.getElementById("photoPreview");
-
-            if (profilePhoto) {
-                profilePhoto.src = photo;
-                profilePhoto.hidden = false;
-            }
-
-            if (photoPreview) {
-                photoPreview.src = photo;
-                photoPreview.hidden = false;
-            }
-        }
-    } catch (error) {
-        console.error("Could not restore profile photo:", error);
-    }
-}
+            try {
+                const photo = localStorage.getItem(
+                    "readerReachAuthorPhoto:" + currentUser.id
+                );

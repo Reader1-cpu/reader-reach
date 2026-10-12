@@ -198,7 +198,6 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
     <div id="bootActions" class="actions"></div>
   </div>
 </div>
-
 <div id="app" class="container" hidden>
   <aside class="sidebar">
     <h3>Author Workspace</h3>
@@ -218,7 +217,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
   <main class="main">
     <div id="pageNotice"></div>
 
- 
+
 <section class="page active" id="page-overview">
   <div class="page-heading">
     <div class="eyebrow">Your author space</div>
@@ -539,7 +538,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
     <button class="btn danger" id="signOutMain">Confirm Sign Out</button>
   </div>
 </section>
- 
+
 
   </main>
 </div>
@@ -582,7 +581,7 @@ const $ = id => document.getElementById(id);
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  })[char]);
+  })[char] || char);
 }
 
 function showBoot(title, message, actionsHTML = "") {
@@ -798,6 +797,7 @@ async function loadSignedInAccount() {
       "You are signed in, but no authors row is linked to this account yet. " +
       "Your author profile needs to be created or linked before you can submit books.",
       "info"
+
     );
 
     $("authorStatus").textContent = "Profile not linked";
@@ -1198,6 +1198,7 @@ $("bookForm").addEventListener("submit", async event => {
           .from("flipper_guides")
           .insert({
             book_id:createdBook.id,
+
             content_url:flipper
           });
 
@@ -1398,6 +1399,7 @@ function renderAttachment(attachment) {
         rel="noopener"
         download
       >
+
         📎 ${name}${size}
       </a>
     </div>
@@ -1614,7 +1616,7 @@ async function loadMessages() {
 
     /*
      * IMPORTANT:
-     * The database column is file_type, not mime_type.
+     * The database column is file_type.
      */
     const ar =
       await supabaseClient
@@ -1743,153 +1745,82 @@ async function loadMessages() {
 }
 
 async function startEditAuthorMessage(messageId) {
-  const bubble =
-    document.querySelector(
-      `.message[data-message-id="${CSS.escape(messageId)}"]`
-    );
+  const bubble = document.querySelector(
+    `.message[data-message-id="${CSS.escape(messageId)}"]`
+  );
 
-  if (
-    !bubble ||
-    bubble.querySelector(".edit-message-form")
-  ) {
+  if (!bubble || bubble.querySelector(".edit-message-form")) {
     return;
   }
 
-  const body =
-    bubble.querySelector(".messageBody");
+  const body = bubble.querySelector(".messageBody");
+  const currentText = body?.textContent || "";
+  const actions = bubble.querySelector(".message-actions");
 
-  const currentText =
-    body?.textContent || "";
+  if (actions) actions.style.display = "none";
 
-  const actions =
-    bubble.querySelector(".message-actions");
+  const form = document.createElement("form");
+  form.className = "edit-message-form";
 
-  if (actions) {
-    actions.style.display = "none";
-  }
+  const textarea = document.createElement("textarea");
+  textarea.setAttribute("aria-label", "Edit message");
+  textarea.value = currentText;
+  textarea.required = true;
 
-  const form =
-    document.createElement("form");
+  const saveButton = document.createElement("button");
+  saveButton.type = "submit";
+  saveButton.className = "btn";
+  saveButton.textContent = "Save";
 
-  form.className =
-    "edit-message-form";
+  const cancelButton = document.createElement("button");
+  cancelButton.type = "button";
+  cancelButton.className = "btn secondary";
+  cancelButton.textContent = "Cancel";
 
-  form.innerHTML = `
-    <textarea aria-label="Edit message">
-      ${escapeHTML(currentText)}
-    </textarea>
+  form.append(textarea, saveButton, cancelButton);
+  bubble.appendChild(form);
 
- 
-<button
-  type="submit"
-  class="btn"
->
-  Save
-</button>
+  textarea.focus();
+  textarea.setSelectionRange(textarea.value.length, textarea.value.length);
 
-<button
-  type="button"
-  class="btn secondary"
->
-  Cancel
-</button>
- 
+  cancelButton.addEventListener("click", () => {
+    form.remove();
+    if (actions) actions.style.display = "flex";
+  });
 
-`;
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    const value = textarea.value.trim();
 
-bubble.appendChild(form);
-
-const textarea =
-form.querySelector("textarea");
-
-textarea.focus();
-
-textarea.setSelectionRange(
-textarea.value.length,
-textarea.value.length
-);
-
-form
-.querySelectorAll("button")[1]
-.addEventListener(
-"click",
-() => {
-form.remove();
-
- 
-    if (actions) {
-      actions.style.display = "flex";
+    if (!value) {
+      setNotice("Message cannot be empty.", "info");
+      return;
     }
-  }
-);
- 
 
-form.addEventListener(
-"submit",
-async event => {
-event.preventDefault();
+    saveButton.disabled = true;
+    saveButton.textContent = "Saving…";
 
- 
-  const value =
-    textarea.value.trim();
-
-  if (!value) {
-    setNotice(
-      "Message cannot be empty.",
-      "info"
-    );
-    return;
-  }
-
-  const save =
-    form.querySelector(
-      'button[type="submit"]'
-    );
-
-  save.disabled = true;
-  save.textContent = "Saving…";
-
-  try {
-    const {error} =
-      await supabaseClient
+    try {
+      const { error } = await supabaseClient
         .from("messages")
-        .update({
-          message:value
-        })
+        .update({ message: value })
         .eq("id", messageId)
-        .eq(
-          "sender_profile_id",
-          currentUser.id
-        );
+        .eq("sender_profile_id", currentUser.id);
 
-    if (error) throw error;
+      if (error) throw error;
 
-    await loadMessages();
-
-    setNotice(
-      "Message updated.",
-      "success"
-    );
-
-  } catch (e) {
-    console.error(
-      "Edit author message:",
-      e
-    );
-
-    setNotice(
-      "Message could not be edited: " +
-      friendlyError(e),
-      "error"
-    );
-
-    save.disabled = false;
-    save.textContent = "Save";
-  }
-}
- 
-
-);
+      await loadMessages();
+      setNotice("Message updated.", "success");
+    } catch (error) {
+      console.error("Edit author message:", error);
+      setNotice(
+        "Message could not be edited: " + friendlyError(error),
+        "error"
+      );
+      saveButton.disabled = false;
+      saveButton.textContent = "Save";
+    }
+  });
 }
 
 async function openNewConversationPanel() {
@@ -1975,7 +1906,7 @@ async () => {
 const bookId =
 $("newConversationBook").value;
 
- 
+
 const moderatorId =
   $("newConversationModerator").value;
 
@@ -2059,7 +1990,7 @@ try {
 } finally {
   button.disabled = false;
 }
- 
+
 
 }
 );
@@ -2070,7 +2001,7 @@ $("messageFile").addEventListener(
 const files =
 [...($("messageFile").files || [])];
 
- 
+
 if (files.length > 5) {
   $("messageFile").value = "";
   $("messageFileName").textContent = "";
@@ -2097,7 +2028,7 @@ $("messageFileName").textContent =
   files.length
     ? `Selected ${files.length} file${files.length === 1 ? "" : "s"}: ${files.map(f => f.name).join(", ")}`
     : "";
- 
+
 
 }
 );
@@ -2107,7 +2038,7 @@ $("messageForm").addEventListener(
 async event => {
 event.preventDefault();
 
- 
+
 const text =
   $("messageText").value.trim();
 
@@ -2252,7 +2183,7 @@ try {
   button.disabled = false;
   button.textContent = "Send Message";
 }
- 
+
 
 }
 );
@@ -2269,6 +2200,7 @@ supabaseClient
 .channel(
 "author-message-realtime-" +
 currentUser.id
+
 )
 .on(
 "postgres_changes",
@@ -2282,7 +2214,7 @@ const conversationId =
 payload.new?.conversation_id ||
 payload.old?.conversation_id;
 
- 
+
       if (
         activeConversationId &&
         conversationId ===
@@ -2308,7 +2240,7 @@ payload.old?.conversation_id;
     }
   )
   .subscribe();
- 
+
 
 if (refreshMessagesTimer) {
 clearInterval(refreshMessagesTimer);
@@ -2347,9 +2279,9 @@ if (!ids.length) {
 $("scheduleTable").innerHTML =
 '<tr><td colspan="5">Schedules will appear here after you submit a book.</td></tr>';
 
- 
+
 return;
- 
+
 
 }
 
@@ -2371,9 +2303,9 @@ if (error) {
 $("scheduleTable").innerHTML =
 `<tr><td colspan="5">Could not load schedules: ${escapeHTML(friendlyError(error))}</td></tr>`;
 
- 
+
 return;
- 
+
 
 }
 
@@ -2381,9 +2313,9 @@ if (!data?.length) {
 $("scheduleTable").innerHTML =
 '<tr><td colspan="5">No feature schedules have been assigned yet.</td></tr>';
 
- 
+
 return;
- 
+
 
 }
 
@@ -2394,7 +2326,7 @@ myBooks.find(
 b => b.id === item.book_id
 );
 
- 
+
   return `
     <tr>
       <td>
@@ -2427,7 +2359,7 @@ b => b.id === item.book_id
     </tr>
   `;
 }).join("");
- 
+
 
 }
 
@@ -2460,9 +2392,9 @@ if (error) {
 $("notificationList").innerHTML =
 `<div class="empty">Could not load notifications: ${escapeHTML(friendlyError(error))}</div>`;
 
- 
+
 return;
- 
+
 
 }
 
@@ -2470,9 +2402,9 @@ if (!data?.length) {
 $("notificationList").innerHTML =
 '<div class="empty">You have no notifications yet.</div>';
 
- 
+
 return;
- 
+
 
 }
 
@@ -2491,7 +2423,7 @@ notification.title ||
 "Reader Reach update"
 )} </h3>
 
- 
+
       <span class="badge">
         ${
           notification.is_read
@@ -2533,7 +2465,7 @@ notification.title ||
     }
   </article>
 `).join("");
- 
+
 
 document
 .querySelectorAll("[data-read]")
@@ -2557,7 +2489,7 @@ button.dataset.read
 currentUser.id
 );
 
- 
+
       if (readError) {
         setNotice(
           "Could not update notification: " +
@@ -2570,7 +2502,7 @@ currentUser.id
     }
   );
 });
- 
+
 
 }
 
@@ -2592,7 +2524,7 @@ currentUser.id
 false
 );
 
- 
+
 if (error) {
   setNotice(
     "Could not mark notifications read: " +
@@ -2607,7 +2539,7 @@ if (error) {
     "success"
   );
 }
- 
+
 
 }
 );
@@ -2621,7 +2553,7 @@ supabaseClient.auth.onAuthStateChange(
 if (event === "SIGNED_OUT") {
 currentUser = null;
 
- 
+
   if (refreshMessagesTimer) {
     clearInterval(
       refreshMessagesTimer
@@ -2662,7 +2594,7 @@ if (
 ) {
   currentUser = session.user;
 }
- 
+
 
 }
 );

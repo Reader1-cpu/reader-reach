@@ -290,11 +290,15 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
       <div class="avatar" id="profileAvatar">A</div>
       <div style="flex:1">
         <h3>Profile picture</h3>
-        <input type="file" id="photoFile" accept="image/*">
-        <div class="file-note">
-          Preview only: the supplied database schema has no author photo field
-          or confirmed photo-storage bucket, so this image is not saved permanently.
-        </div>
+<input
+  type="file"
+  id="photoFile"
+  accept="image/jpeg,image/png,image/webp,image/gif"
+>
+<div class="file-note">
+  Upload a JPG, PNG, WebP or GIF image up to 5 MB.
+  Your photo will be saved to your author profile.
+</div>
       </div>
     </div>
 
@@ -751,11 +755,11 @@ async function loadSignedInAccount() {
     );
   }
 
-  const authorResult = await supabaseClient
-    .from("authors")
-    .select("id,profile_id,author_name,bio,website_url,status,created_at")
-    .eq("profile_id", currentUser.id)
-    .maybeSingle();
+const authorResult = await supabaseClient
+  .from("authors")
+  .select("id,profile_id,author_name,bio,website_url,profile_photo_url,status,created_at")
+  .eq("profile_id", currentUser.id)
+  .maybeSingle();
 
   if (authorResult.error) {
     console.error("Author lookup failed:", authorResult.error);
@@ -841,37 +845,136 @@ function populateIdentity() {
   $("authorStatus").outerHTML =
     `<span id="authorStatus">${statusBadge(status)}</span>`;
 
-  const initial = (name.trim()[0] || "A").toUpperCase();
+const initial = (name.trim()[0] || "A").toUpperCase();
+const photoURL = currentAuthor?.profile_photo_url || null;
 
-  $("overviewAvatar").textContent = initial;
-  $("profileAvatar").textContent = initial;
+renderAuthorAvatar($("overviewAvatar"), photoURL, initial);
+renderAuthorAvatar($("profileAvatar"), photoURL, initial);
 }
 
 /* -------------------------------------------------------
    PROFILE
 ------------------------------------------------------- */
 
-$("photoFile").addEventListener("change", event => {
-  const file = event.target.files?.[0];
+```javascript
+const PROFILE_PHOTO_BUCKET = "author-profile-photos";
+const MAX_PROFILE_PHOTO_BYTES = 5 * 1024 * 1024;
+
+const ALLOWED_PROFILE_PHOTO_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif"
+]);
+
+$("photoFile").addEventListener("change", async event => {
+  const input = event.target;
+  const file = input.files?.[0];
+
   if (!file) return;
 
-  if (!file.type.startsWith("image/")) {
-    setNotice("Please select an image file.", "error");
+  if (!currentUser?.id || !currentAuthor?.id) {
+    setNotice(
+      "Your author account is not ready. Please reload and try again.",
+      "error"
+    );
+    input.value = "";
     return;
   }
 
-  const previewURL = URL.createObjectURL(file);
+  if (!ALLOWED_PROFILE_PHOTO_TYPES.has(file.type)) {
+    setNotice(
+      "Please choose a JPG, PNG, WebP or GIF image.",
+      "error"
+    );
+    input.value = "";
+    return;
+  }
 
-  $("profileAvatar").innerHTML =
-    `<img src="${previewURL}" alt="Profile preview">`;
+  if (file.size > MAX_PROFILE_PHOTO_BYTES) {
+    setNotice(
+      "Your profile photo must be 5 MB or smaller.",
+      "error"
+    );
+    input.value = "";
+    return;
+  }
 
-  $("overviewAvatar").innerHTML =
-    `<img src="${previewURL}" alt="Profile preview">`;
+  const extensionByType = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp",
+    "image/gif": "gif"
+  };
 
-  setNotice(
-    "Image preview updated. It will not persist after refresh until profile photo storage is configured.",
-    "info"
-  );
+  const extension = extensionByType[file.type];
+  const storagePath =
+    `${currentUser.id}/profile-photo.${extension}`;
+
+  input.disabled = true;
+
+  setNotice("Uploading and saving your profile photo…", "info");
+
+  try {
+    const { error: uploadError } = await supabaseClient.storage
+      .from(PROFILE_PHOTO_BUCKET)
+      .upload(storagePath, file, {
+        upsert: true,
+        contentType: file.type,
+        cacheControl: "3600"
+      });
+
+    if (uploadError) throw uploadError;
+
+    const { data: publicURLData } = supabaseClient.storage
+      .from(PROFILE_PHOTO_BUCKET)
+      .getPublicUrl(storagePath);
+
+    const photoURL = publicURLData?.publicUrl;
+
+    if (!photoURL) {
+      throw new Error("Could not obtain the uploaded photo URL.");
+    }
+
+    const { data, error: saveError } = await supabaseClient
+      .from("authors")
+      .update({
+        profile_photo_url: photoURL,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", currentAuthor.id)
+      .select(
+        "id,profile_id,author_name,bio,website_url,profile_photo_url,status,created_at"
+      )
+      .maybeSingle();
+
+    if (saveError) throw saveError;
+
+    if (!data) {
+      throw new Error(
+        "The image uploaded, but the photo URL was not saved to your author record."
+      );
+    }
+
+    currentAuthor = data;
+    populateIdentity();
+
+    setNotice(
+      "Your profile photo has been uploaded and saved successfully.",
+      "success"
+    );
+
+  } catch (error) {
+    console.error("Profile photo upload error:", error);
+
+    setNotice(
+      "Could not save your profile photo: " + friendlyError(error),
+      "error"
+    );
+
+  } finally {
+    input.disabled = false;
+  }
 });
 
 $("profileForm").addEventListener("submit", async event => {
@@ -888,16 +991,18 @@ $("profileForm").addEventListener("submit", async event => {
   const bio = $("profileBio").value.trim();
   const website = $("profileWebsite").value.trim() || null;
 
-  const { data, error } = await supabaseClient
-    .from("authors")
-    .update({
-      bio,
-      website_url: website,
-      updated_at: new Date().toISOString()
-    })
-    .eq("id", currentAuthor.id)
-    .select("id,profile_id,author_name,bio,website_url,status,created_at")
-    .maybeSingle();
+const { data, error } = await supabaseClient
+  .from("authors")
+  .update({
+    bio,
+    website_url: website,
+    updated_at: new Date().toISOString()
+  })
+  .eq("id", currentAuthor.id)
+  .select(
+    "id,profile_id,author_name,bio,website_url,profile_photo_url,status,created_at"
+  )
+  .maybeSingle();
 
   if (error) {
     setNotice(

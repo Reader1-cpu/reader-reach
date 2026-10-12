@@ -1775,7 +1775,18 @@
             <p class="book-description">${escapeHtml(description)}</p>
 
             <div class="book-actions">
-              <a class="btn primary" href="book.html?id=${encodeURIComponent(bookId)}">
+              ${book.book_link ? `
+  <a class="btn primary"
+     href="${escapeHtml(book.book_link)}"
+     target="_blank"
+     rel="noopener noreferrer">
+    Open Book
+  </a>
+` : `
+  <span class="btn" style="opacity:0.7;cursor:default;">
+    Book link unavailable
+  </span>
+`}
                 View Book
               </a>
               ${book.author_id ? `
@@ -2016,9 +2027,7 @@
 
       let query = supabaseClient
         .from('books')
-        .select('id,author_id,title,description,genre_topic,availability,cover_url,status,created_at')
-        .eq('status','approved')
-        .order('created_at',{ascending:false})
+.select('id,author_id,title,description,genre_topic,availability,cover_url,book_link,status,created_at')        .order('created_at',{ascending:false})
         .limit(8);
 
       if(ids.length>0){
@@ -2076,8 +2085,7 @@
       const bookIds=[...new Set(readerBooks.map(row=>row.book_id).filter(Boolean))];
       const {data:books,error:bookError}=await supabaseClient
         .from('books')
-        .select('id,author_id,title,description,genre_topic,availability,cover_url,status,created_at')
-        .in('id',bookIds)
+.select('id,author_id,title,description,genre_topic,availability,cover_url,book_link,status,created_at')        .in('id',bookIds)
         .eq('status','approved');
 
       if(bookError){

@@ -1606,7 +1606,8 @@ function renderBookItem(b,authorMap){
 async function loadApprovedBooks(){
   const container=$('approvedBookList');if(!container)return;
   container.innerHTML='<div class="empty">Loading approved books...</div>';
-  const {data,error}=await supabaseClient.from('books').select('id,author_id,title,genre_topic,status,created_at').eq('status','approved').order('created_at',{ascending:false});
+  const {data,error}=await supabaseClient.from('books')
+.select('id,author_id,title,genre_topic,book_link,status,created_at').eq('status','approved').order('created_at',{ascending:false});
   if(error){console.error(error);container.innerHTML='<div class="empty">Unable to load approved books: '+escapeHtml(friendlyError(error))+'</div>';return;}
   approvedBooks=data||[];$('approvedBooksCount').textContent=approvedBooks.length;populateBookSelect();
   const authorIds=[...new Set(approvedBooks.map(b=>b.author_id).filter(Boolean))];

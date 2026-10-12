@@ -1284,19 +1284,21 @@ $("bookForm").addEventListener("submit", async event => {
       }
     }
 
-    const payload = {
-      author_id:currentAuthor.id,
-      title:title || "Untitled submission",
-      genre_topic:genre || null,
-      description:description || null,
-      who_its_for:audience || null,
-      availability:availability || null,
-      cover_url:coverURL,
-      status:"pending",
-      submission_complete:missing.length === 0,
-      missing_fields:missing,
-      submitted_at:new Date().toISOString()
-    };
+    
+const payload = {
+  author_id:currentAuthor.id,
+  title:title || "Untitled submission",
+  genre_topic:genre || null,
+  description:description || null,
+  who_its_for:audience || null,
+  availability:availability || null,
+  book_link:flipper || null,
+  cover_url:coverURL,
+  status:"pending",
+  submission_complete:missing.length === 0,
+  missing_fields:missing,
+  submitted_at:new Date().toISOString()
+};
 
     const {
       data:createdBook,

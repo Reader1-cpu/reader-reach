@@ -851,7 +851,25 @@ const photoURL = currentAuthor?.profile_photo_url || null;
 renderAuthorAvatar($("overviewAvatar"), photoURL, initial);
 renderAuthorAvatar($("profileAvatar"), photoURL, initial);
 }
+  
+function renderAuthorAvatar(element, photoURL, initial) {
+  if (!element) return;
 
+  if (!photoURL) {
+    element.textContent = initial;
+    return;
+  }
+
+  element.innerHTML =
+    `<img src="${escapeHTML(photoURL)}" alt="Author profile photo">`;
+
+  const image = element.querySelector("img");
+
+  image.addEventListener("error", () => {
+    element.textContent = initial;
+  }, { once: true });
+}
+  
 /* -------------------------------------------------------
    PROFILE
 ------------------------------------------------------- */

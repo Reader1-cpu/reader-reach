@@ -1577,8 +1577,30 @@ async function loadApprovedAuthors(){
   container.innerHTML=approvedAuthors.length?approvedAuthors.map(renderAuthorItem).join(''):'<div class="empty">No approved authors are available.</div>';
 }
 
+
 function renderBookItem(b,authorMap){
-  return `<div class="item"><div class="itemTop"><div><div class="itemTitle">${escapeHtml(b.title||'Untitled Book')}</div><div class="itemMeta">Author: ${escapeHtml(authorMap.get(b.author_id)||'Unknown author')}<br>Genre: ${escapeHtml(b.genre_topic||'—')}</div></div><span class="badge green">Approved</span></div><div class="itemActions"><a class="btn small" href="book.html?id=${encodeURIComponent(b.id)}">View Book</a><button class="btn small" onclick="prepareSchedule('${escapeHtml(b.id)}')">Schedule</button></div></div>`;
+  const bookUrl = (b.book_link || '').trim();
+
+  return `<div class="item">
+    <div class="itemTop">
+      <div>
+        <div class="itemTitle">${escapeHtml(b.title || 'Untitled Book')}</div>
+        <div class="itemMeta">
+          Author: ${escapeHtml(authorMap.get(b.author_id) || 'Unknown author')}<br>
+          Genre: ${escapeHtml(b.genre_topic || '—')}
+        </div>
+      </div>
+      <span class="badge green">Approved</span>
+    </div>
+    <div class="itemActions">
+      ${
+        bookUrl
+          ? `<a class="btn small" href="${escapeHtml(bookUrl)}" target="_blank" rel="noopener noreferrer">View Book</a>`
+          : `<span class="itemMeta">No external book link provided.</span>`
+      }
+      <button class="btn small" onclick="prepareSchedule('${escapeHtml(b.id)}')">Schedule</button>
+    </div>
+  </div>`;
 }
 
 async function loadApprovedBooks(){

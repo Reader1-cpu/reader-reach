@@ -908,7 +908,7 @@ $("photoFile").addEventListener("change", async event => {
 
   const extension = extensionByType[file.type];
   const storagePath =
-    `${currentUser.id}/profile-photo.${extension}`;
+    {currentUser.id}/profile-photo.${extension}`;
 
   input.disabled = true;
 

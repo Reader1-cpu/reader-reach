@@ -3551,6 +3551,36 @@ async function loadMessages(conversationId) {
   renderMessages(messagesWithAttachments);
 }
 
+async function openAttachment(id) {
+  const { data, error } = await supabaseClient
+    .from("message_attachments")
+    .select("id,file_path,file_name")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    showToast("Could not load attachment: " + error.message, true);
+    return;
+  }
+
+  const { data: signed, error: signedError } =
+    await supabaseClient
+      .storage
+      .from("conversation-files")
+      .createSignedUrl(data.file_path, 3600);
+
+  if (signedError || !signed?.signedUrl) {
+    showToast(
+      "Could not open attachment: " +
+        (signedError?.message || "No file URL returned"),
+      true
+    );
+    return;
+  }
+
+  window.open(signed.signedUrl, "_blank", "noopener");
+}
+    
     async function sendMessage(){
 
       if(!activeConversationId){

@@ -402,6 +402,16 @@
       gap:7px;
     }
 
+    .book-actions{
+      flex-direction:column;
+      align-items:flex-start;
+    }
+
+    .book-actions .btn{
+      width:max-content;
+      max-width:100%;
+    }
+
     /* TABLE */
     .table-wrap{
       overflow-x:auto;
@@ -988,6 +998,7 @@
           <div class="card">
 
             <div class="card-head">
+            
               <h3>Authors</h3>
             </div>
 
@@ -1043,7 +1054,7 @@
                   type="search"
                   placeholder="Search title, genre or description…"
                 />
-
+                
                 <select id="bookStatusFilter" class="select">
                   <option value="all">All statuses</option>
                   <option value="pending">Pending</option>
@@ -2042,7 +2053,7 @@
                       <div class="title-cell">
                         ${escapeHTML(author.author_name)}
                       </div>
-
+                      
                       <div class="sub-cell">
                         ${escapeHTML(
                           String(author.bio || "")
@@ -2330,7 +2341,7 @@
 
                     <td>
 
-                      <div class="button-row">
+                      <div class="button-row book-actions">
 
                         ${
                           bookURL
@@ -2363,7 +2374,7 @@
                         }
 
                         ${
-                          book.status !== "approved"
+                          book.status === "pending"
                           ? `
                             <button
                               class="btn btn-success"
@@ -2371,18 +2382,35 @@
                             >
                               Approve
                             </button>
+                            <button
+                              class="btn btn-danger"
+                              onclick="updateBookStatus('${book.id}','rejected')"
+                            >
+                              Reject
+                            </button>
                           `
-                          : ""
-                        }
-
-                        ${
-                          book.status !== "rejected"
+                          : book.status === "approved"
                           ? `
                             <button
                               class="btn btn-danger"
                               onclick="updateBookStatus('${book.id}','rejected')"
                             >
                               Reject
+                            </button>
+                            <button
+                              class="btn btn-danger"
+                              onclick="deleteBook('${book.id}')"
+                            >
+                              Delete
+                            </button>
+                          `
+                          : book.status === "rejected"
+                          ? `
+                            <button
+                              class="btn btn-danger"
+                              onclick="deleteBook('${book.id}')"
+                            >
+                              Delete
                             </button>
                           `
                           : ""
@@ -2424,6 +2452,51 @@
       await Promise.all([
         loadBooks(),
         loadFeatured(),
+        loadScheduleOptions(),
+        loadOverview(),
+        loadRecentActivity()
+      ]);
+    }
+
+    async function deleteBook(bookId){
+
+      const book = booksCache.find(item => item.id === bookId);
+
+      if(!book){
+        showToast("Book not found. Refresh the dashboard and try again.",true);
+        return;
+      }
+
+      const confirmed = window.confirm(
+        `Permanently delete "${book.title}"? This cannot be undone. Related book records may also be deleted. Author accounts and user profiles will not be deleted.`
+      );
+
+      if(!confirmed){
+        return;
+      }
+
+      const {error} = await supabaseClient
+        .from("books")
+        .delete()
+        .eq("id",bookId)
+        .select("id")
+        .maybeSingle();
+
+      if(error){
+        console.error("Book deletion failed:",error);
+        showToast(error.message,true);
+        return;
+      }
+
+      showToast("Book deleted.");
+
+      await Promise.all([
+        loadBooks(),
+        loadFeatured(),
+        loadTrailers(),
+        loadSchedules(),
+        loadPublicDiscussions(),
+        loadNotifications(),
         loadScheduleOptions(),
         loadOverview(),
         loadRecentActivity()
@@ -2980,7 +3053,7 @@
             </thead>
 
             <tbody>
-
+            
               ${schedulesCache.map(schedule=>`
                 <tr>
 
@@ -3981,6 +4054,7 @@
             <tbody>
 
               ${moderatorsCache.map(moderator=>`
+              
                 <tr>
 
                   <td>

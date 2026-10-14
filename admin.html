@@ -3453,29 +3453,54 @@
       await loadMessages(conversationId);
     }
 
-    async function loadMessages(conversationId){
+async function loadMessages(conversationId) {
+  const { data, error } = await supabaseClient
+    .from("messages")
+    .select("id,conversation_id,sender_profile_id,message,created_at,read_at")
+    .eq("conversation_id", conversationId)
+    .order("created_at", { ascending: true });
 
-      const {data,error} = await supabaseClient
-        .from("messages")
-        .select(`
-          id,
-          conversation_id,
-          sender_profile_id,
-          message,
-          created_at,
-          read_at
-        `)
-        .eq("conversation_id",conversationId)
-        .order("created_at",{ascending:true});
+  if (error) {
+    console.error(error);
+    renderError("messages", error.message);
+    return;
+  }
 
-      if(error){
-        console.error(error);
-        renderError("messages",error.message);
-        return;
-      }
+  const messages = data || [];
+  const messageIds = messages.map(message => message.id);
+  let attachments = [];
 
-      renderMessages(data || []);
+  if (messageIds.length) {
+    const result = await supabaseClient
+      .from("message_attachments")
+      .select("id,message_id,file_path,file_name,file_type,file_size,created_at")
+      .in("message_id", messageIds);
+
+    if (result.error) {
+      console.error("Attachment lookup error:", result.error);
+      showToast("Could not load attachments: " + result.error.message, true);
+    } else {
+      attachments = result.data || [];
     }
+  }
+
+  const attachmentMap = new Map();
+
+  attachments.forEach(attachment => {
+    if (!attachmentMap.has(attachment.message_id)) {
+      attachmentMap.set(attachment.message_id, []);
+    }
+
+    attachmentMap.get(attachment.message_id).push(attachment);
+  });
+
+  const messagesWithAttachments = messages.map(message => ({
+    ...message,
+    attachments: attachmentMap.get(message.id) || []
+  }));
+
+  renderMessages(messagesWithAttachments);
+}
 
     function renderMessages(messages){
 

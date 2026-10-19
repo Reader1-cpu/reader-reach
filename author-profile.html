@@ -2052,13 +2052,20 @@
                 </span>
 
 
-                <div class="book-actions">
+<div class="book-actions">
 
-                  ${bookLink}
+  ${bookLink}
 
-                  ${saveButton}
+  <a
+    href="book-corner.html?book_id=${encodeURIComponent(book.id)}"
+    class="book-link"
+  >
+    Visit Book Corner →
+  </a>
 
-                </div>
+  ${saveButton}
+
+</div>
 
               </div>
 

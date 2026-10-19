@@ -1,0 +1,467 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book Corner | Reader Reach</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --cream: #f8f3e9;
+      --white: #fffdf9;
+      --brown: #3f2a1f;
+      --soft: #6f5443;
+      --gold: #b8955a;
+      --border: #e4d8c6;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--brown);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 18px 6%;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header a { color: var(--brown); text-decoration: none; }
+
+    main {
+      width: min(850px, 92%);
+      margin: 35px auto;
+    }
+
+    .panel, .topic {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    h1, h2, h3 { line-height: 1.25; }
+
+    .muted { color: var(--soft); }
+
+    label {
+      display: block;
+      margin: 14px 0 5px;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: white;
+      color: var(--brown);
+      font: inherit;
+    }
+
+    textarea { min-height: 100px; resize: vertical; }
+
+    button {
+      margin-top: 12px;
+      padding: 11px 17px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--brown);
+      color: white;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button:disabled { opacity: .6; cursor: wait; }
+
+    .reply {
+      margin: 12px 0;
+      padding: 12px;
+      border-left: 3px solid var(--gold);
+      background: var(--cream);
+      border-radius: 5px;
+      overflow-wrap: anywhere;
+    }
+
+    .reply-form { margin-top: 16px; }
+
+    .notice { margin: 12px 0; white-space: pre-wrap; }
+
+    .hidden { display: none; }
+
+    .small { font-size: .9rem; }
+
+    footer {
+      padding: 25px;
+      text-align: center;
+      color: var(--soft);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <a href="index.html"><strong>Reader Reach</strong></a>
+    <span style="float:right">
+      <a href="javascript:history.back()">← Go back</a>
+    </span>
+  </header>
+
+  <main>
+    <section class="panel">
+      <p class="muted">READER REACH · BOOK CORNER</p>
+      <h1 id="bookTitle">Loading book…</h1>
+      <p id="bookDescription" class="muted"></p>
+      <p id="authorName"></p>
+      <div id="pageNotice" class="notice" role="status"></div>
+    </section>
+
+    <section id="createTopicPanel" class="panel hidden">
+      <h2>Start a topic</h2>
+      <p class="muted">Invite readers to share their thoughts about your book.</p>
+
+      <form id="topicForm">
+        <label for="topicTitle">Topic title</label>
+        <input id="topicTitle" maxlength="200" required
+          placeholder="e.g. A question about the main character">
+
+        <label for="openingQuestion">Opening question</label>
+        <textarea id="openingQuestion" maxlength="5000" required
+          placeholder="What would you like readers to discuss?"></textarea>
+
+        <button id="topicButton" type="submit">Publish topic</button>
+      </form>
+      <div id="topicNotice" class="notice" role="status"></div>
+    </section>
+
+    <section>
+      <h2>Topics and conversations</h2>
+      <p class="muted">
+        Explore questions about this book and share your thoughts with other readers.
+      </p>
+      <div id="topicsList">
+        <div class="panel">Loading topics…</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Reader Reach · Connecting readers and authors</footer>
+
+  <script>
+    // Use the same Supabase project as your existing Reader Reach pages.
+    const SUPABASE_URL = "https://bublmnfhyyrefcdkloak.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY";
+
+    const db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    const $ = id => document.getElementById(id);
+    const params = new URLSearchParams(window.location.search);
+    const bookId = params.get("book_id");
+
+    let currentUser = null;
+    let currentBook = null;
+    let authorProfileId = null;
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    function showNotice(id, message) {
+      $(id).textContent = message;
+    }
+
+    function friendlyError(error) {
+      console.error(error);
+      return error?.message || "Something went wrong. Please try again.";
+    }
+
+    async function loadBook() {
+      if (!bookId) {
+        throw new Error("No book was selected. Open Book Corner from a book's profile card.");
+      }
+
+      const { data: book, error } = await db
+        .from("books")
+        .select("id,title,description,author_id,status")
+        .eq("id", bookId)
+        .eq("status", "approved")
+        .maybeSingle();
+
+      if (error) throw error;
+      if (!book) throw new Error("This book is unavailable or has not been approved.");
+
+      const { data: author, error: authorError } = await db
+        .from("authors")
+        .select("id,profile_id,author_name,status")
+        .eq("id", book.author_id)
+        .eq("status", "approved")
+        .maybeSingle();
+
+      if (authorError) throw authorError;
+      if (!author) throw new Error("The approved author profile could not be found.");
+
+      currentBook = book;
+      authorProfileId = author.profile_id;
+
+      $("bookTitle").textContent = book.title || "Untitled Book";
+      $("bookDescription").textContent = book.description || "";
+      $("authorName").textContent = "By " + (author.author_name || "Author");
+
+      document.title = (book.title || "Book") + " | Book Corner";
+    }
+
+    async function loadCurrentUser() {
+      const { data, error } = await db.auth.getUser();
+      if (error) throw error;
+      currentUser = data.user || null;
+    }
+
+    async function checkAuthorAccess() {
+      if (!currentUser || !currentBook) return;
+
+      const { data, error } = await db
+        .from("authors")
+        .select("id")
+        .eq("profile_id", currentUser.id)
+        .eq("id", currentBook.author_id)
+        .eq("status", "approved")
+        .maybeSingle();
+
+      if (error) {
+        console.error("Author access check:", error);
+        return;
+      }
+
+      if (data) $("createTopicPanel").classList.remove("hidden");
+    }
+
+    async function loadTopics() {
+      const { data: topics, error } = await db
+        .from("book_corner_topics")
+        .select("id,book_id,author_profile_id,title,opening_question,created_at")
+        .eq("book_id", bookId)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        $("topicsList").textContent = friendlyError(error);
+        return;
+      }
+
+      if (!topics?.length) {
+        $("topicsList").innerHTML =
+          '<div class="panel">No topics yet. The author can start the first one.</div>';
+        return;
+      }
+
+      $("topicsList").innerHTML = topics.map(topic => `
+        <article class="topic">
+          <h3>${escapeHtml(topic.title)}</h3>
+          <p>${escapeHtml(topic.opening_question).replace(/\n/g, "<br>")}</p>
+          <p class="muted small">Posted ${escapeHtml(
+            new Date(topic.created_at).toLocaleString()
+          )}</p>
+          <div id="replies-${topic.id}">Loading replies…</div>
+          <form class="reply-form" data-topic-id="${topic.id}">
+            <label for="reply-${topic.id}">Your reply</label>
+            <textarea id="reply-${topic.id}" maxlength="5000" required
+              placeholder="Share your thoughts…"></textarea>
+            <button type="submit">Post reply</button>
+            ${!currentUser
+              ? '<p class="muted small">Sign in to post a reply.</p>'
+              : ''}
+          </form>
+          <div id="reply-notice-${topic.id}" class="notice" role="status"></div>
+        </article>
+      `).join("");
+
+      for (const topic of topics) {
+        await loadReplies(topic.id);
+      }
+
+      document.querySelectorAll(".reply-form").forEach(form => {
+        form.addEventListener("submit", submitReply);
+        const textarea = form.querySelector("textarea");
+        const button = form.querySelector("button");
+
+        if (!currentUser) {
+          textarea.disabled = true;
+          button.disabled = true;
+        }
+      });
+    }
+
+    async function loadReplies(topicId) {
+      const container = $("replies-" + topicId);
+
+      const { data: replies, error } = await db
+        .from("book_corner_replies")
+        .select("id,profile_id,message,created_at")
+        .eq("topic_id", topicId)
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        container.textContent = friendlyError(error);
+        return;
+      }
+
+      if (!replies?.length) {
+        container.innerHTML = '<p class="muted small">No replies yet.</p>';
+        return;
+      }
+
+      const profileIds = [...new Set(replies.map(r => r.profile_id))];
+      const names = {};
+
+      if (profileIds.length) {
+        const { data: profiles, error: profileError } = await db
+          .from("profiles")
+          .select("id,display_name")
+          .in("id", profileIds);
+
+        if (!profileError) {
+          for (const profile of profiles || []) {
+            names[profile.id] = profile.display_name || "Reader";
+          }
+        }
+      }
+
+      container.innerHTML = replies.map(reply => `
+        <div class="reply">
+          <strong>${escapeHtml(
+            reply.profile_id === authorProfileId
+              ? "Author"
+              : (names[reply.profile_id] || "Reader")
+          )}</strong>
+          <p>${escapeHtml(reply.message).replace(/\n/g, "<br>")}</p>
+          <small class="muted">${escapeHtml(
+            new Date(reply.created_at).toLocaleString()
+          )}</small>
+        </div>
+      `).join("");
+    }
+
+    async function submitTopic(event) {
+      event.preventDefault();
+
+      if (!currentUser || !currentBook) {
+        showNotice("topicNotice", "Please sign in as the author of this book.");
+        return;
+      }
+
+      const title = $("topicTitle").value.trim();
+      const question = $("openingQuestion").value.trim();
+      const button = $("topicButton");
+
+      if (title.length < 3 || question.length < 3) {
+        showNotice("topicNotice", "Please enter a topic title and opening question.");
+        return;
+      }
+
+      button.disabled = true;
+      showNotice("topicNotice", "Publishing topic…");
+
+      try {
+        const { error } = await db
+          .from("book_corner_topics")
+          .insert({
+            book_id: currentBook.id,
+            author_profile_id: currentUser.id,
+            title,
+            opening_question: question
+          });
+
+        if (error) throw error;
+
+        $("topicForm").reset();
+        showNotice("topicNotice", "Topic published.");
+        await loadTopics();
+      } catch (error) {
+        showNotice("topicNotice", friendlyError(error));
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    async function submitReply(event) {
+      event.preventDefault();
+
+      if (!currentUser) {
+        showNotice("pageNotice", "Please sign in before posting a reply.");
+        return;
+      }
+
+      const form = event.currentTarget;
+      const topicId = form.dataset.topicId;
+      const textarea = form.querySelector("textarea");
+      const button = form.querySelector("button");
+      const message = textarea.value.trim();
+
+      if (!message) return;
+
+      button.disabled = true;
+
+      try {
+        const { error } = await db
+          .from("book_corner_replies")
+          .insert({
+            topic_id: topicId,
+            profile_id: currentUser.id,
+            message
+          });
+
+        if (error) throw error;
+
+        textarea.value = "";
+        showNotice("reply-notice-" + topicId, "Reply posted.");
+        await loadReplies(topicId);
+      } catch (error) {
+        showNotice("reply-notice-" + topicId, friendlyError(error));
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    async function init() {
+      try {
+        await loadCurrentUser();
+        await loadBook();
+        await checkAuthorAccess();
+        await loadTopics();
+
+        if (!currentUser) {
+          showNotice(
+            "pageNotice",
+            "You can read the conversation. Sign in to post replies."
+          );
+        }
+      } catch (error) {
+        showNotice("pageNotice", friendlyError(error));
+        $("topicsList").textContent = "Topics could not be loaded.";
+      }
+    }
+
+    $("topicForm").addEventListener("submit", submitTopic);
+
+    init();
+  </script>
+</body>
+</html>
+```

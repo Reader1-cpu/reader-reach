@@ -249,8 +249,7 @@
         return;
       }
 
-      if (data) $("createTopicPanel").classList.remove("hidden");
-    }
+$("createTopicPanel").classList.remove("hidden");    }
 
     async function loadTopics() {
       const { data: topics, error } = await db

@@ -421,6 +421,20 @@ footer {padding:36px 15px}
 #newConversationPanel[hidden]{display:none!important}
 @media(max-width:760px){#page-messages .message-layout{height:min(760px,calc(100dvh - 100px));min-height:520px;grid-template-rows:150px minmax(0,1fr)}#page-messages .conversation-list{max-height:none;height:150px;min-height:0}#page-messages .message-list{height:auto}}
 
+
+/* The Reading Room — author topic publishing */
+.reading-room-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
+.rr-book{border:1px solid var(--line);background:#fffdfa;border-radius:17px;padding:20px;min-width:0}
+.rr-book h3{font-size:25px;margin:5px 0 10px}
+.rr-progress{height:8px;border-radius:20px;background:#efe6d9;overflow:hidden;margin:12px 0}
+.rr-progress>span{display:block;height:100%;background:#b8955a;border-radius:20px}
+.rr-topic-form{display:grid;gap:10px;margin-top:14px;border-top:1px solid var(--line);padding-top:15px}
+.rr-topic-form textarea{min-height:100px}
+.rr-topic-form .btn{justify-self:start}
+.rr-existing{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+.rr-existing a{color:var(--brown);text-decoration:underline}
+.rr-status{font-size:12px;color:var(--muted)}
+
 </style>
 
 </head>
@@ -667,6 +681,10 @@ footer {padding:36px 15px}
         </tbody>
       </table>
     </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div><h2>The Reading Room</h2><p class="muted small">Start thoughtful conversations about your approved books once 10 readers have completed them.</p></div></div>
+    <div id="readingRoomBooks" class="reading-room-grid"><div class="empty">Loading your books and reader progress…</div></div>
   </div>
 </section>
 
@@ -1302,6 +1320,7 @@ async function loadBooks() {
   }
 
   myBooks = data || [];
+  loadReadingRoomBooks().catch(error => { console.error("Reading Room:", error); $("readingRoomBooks").textContent = "Could not load The Reading Room: " + friendlyError(error); });
 
   const approved =
     myBooks.filter(book => displayStatus(book.status) === "approved").length;
@@ -1320,6 +1339,7 @@ async function loadBooks() {
     $("recentBooks").innerHTML =
       '<div class="empty">Your submitted books will appear here.</div>';
 
+    $("readingRoomBooks").innerHTML = '<div class="empty">Submit a book to begin.</div>';
     return;
   }
 
@@ -1353,6 +1373,53 @@ async function loadBooks() {
       }
     </article>
   `).join("");
+}
+
+
+/* Reading Room counts and topics: never treat an RLS error as zero readers. */
+async function loadReadingRoomBooks(){
+  const root = $("readingRoomBooks");
+  if (!root) return;
+  const books = myBooks.filter(b => displayStatus(b.status) === "approved");
+  if (!books.length){root.innerHTML = '<div class="empty">Your approved books will appear here when ready.</div>';return;}
+  root.innerHTML = books.map(b => `<article class="rr-book" data-rr-book="${escapeHTML(b.id)}"><h3>${escapeHTML(b.title || "Untitled book")}</h3><div class="rr-status">Checking completed readers…</div></article>`).join("");
+  await Promise.all(books.map(async book => {
+    const card = Array.from(root.querySelectorAll('[data-rr-book]')).find(el => el.dataset.rrBook === book.id);
+    if (!card) return;
+    const [countResult, topicsResult] = await Promise.all([
+      supabaseClient.from("reader_books").select("reader_id",{count:"exact",head:true}).eq("book_id",book.id).eq("status","completed"),
+      supabaseClient.from("book_corner_topics").select("id,title,created_at").eq("book_id",book.id).order("created_at",{ascending:false}).limit(10)
+    ]);
+    if(countResult.error){
+      card.innerHTML = `<h3>${escapeHTML(book.title)}</h3><p class="rr-status">Reader count unavailable: ${escapeHTML(friendlyError(countResult.error))}. The author count permissions may need updating.</p>`;
+      return;
+    }
+    const count = countResult.count ?? 0;
+    const eligible = count >= 10;
+    const topics = topicsResult.data || [];
+    card.innerHTML = `<div class="eyebrow">Approved book</div><h3>${escapeHTML(book.title || "Untitled book")}</h3>
+      <p class="small"><strong>${count}</strong> ${count === 1 ? "reader has" : "readers have"} completed this book</p>
+      <div class="rr-progress" role="progressbar" aria-valuenow="${Math.min(count,10)}" aria-valuemin="0" aria-valuemax="10"><span style="width:${Math.min(100,count*10)}%"></span></div>
+      <p class="rr-status">${eligible ? "The Reading Room is unlocked for this book." : `${10-count} more completed ${10-count===1?"reader":"readers"} needed to unlock topic publishing.`}</p>
+      <button type="button" class="btn gold rr-open" ${eligible ? "" : "disabled"}>${eligible ? "Start a Topic" : "Start a Topic · Locked"}</button>
+      <form class="rr-topic-form" hidden><label>Topic title<input name="title" maxlength="160" required placeholder="What should readers reflect on?"></label>
+      <label>Opening question<textarea name="opening_question" maxlength="5000" required placeholder="Invite readers to share their thoughts…"></textarea></label>
+      <div class="actions"><button class="btn" type="submit">Publish Topic</button><button class="btn secondary rr-cancel" type="button">Cancel</button></div><p class="rr-status rr-feedback" aria-live="polite"></p></form>
+      <div class="rr-existing"><strong>Published topics</strong>${topicsResult.error ? `<p class="rr-status">Could not load topics: ${escapeHTML(friendlyError(topicsResult.error))}</p>` : topics.length ? `<ul>${topics.map(t=>`<li><a href="book-corner.html?book_id=${encodeURIComponent(book.id)}">${escapeHTML(t.title)}</a></li>`).join("")}</ul>` : '<p class="rr-status">No topics published yet.</p>'}</div>`;
+    const form=card.querySelector(".rr-topic-form");
+    card.querySelector(".rr-open").addEventListener("click",()=>{form.hidden=false;form.querySelector('input[name="title"]').focus();});
+    card.querySelector(".rr-cancel").addEventListener("click",()=>{form.hidden=true;});
+    form.addEventListener("submit",async e=>{
+      e.preventDefault();
+      const button=form.querySelector('button[type="submit"]');
+      const feedback=form.querySelector(".rr-feedback");
+      button.disabled=true;feedback.textContent="Publishing your topic…";
+      const {error}=await supabaseClient.from("book_corner_topics").insert({book_id:book.id,author_profile_id:currentUser.id,title:form.elements.title.value.trim(),opening_question:form.elements.opening_question.value.trim()});
+      if(error){feedback.textContent="Could not publish: "+friendlyError(error);button.disabled=false;return;}
+      feedback.textContent="Topic published successfully!";
+      await loadReadingRoomBooks();
+    });
+  }));
 }
 
 function formatDate(value) {

@@ -7,6 +7,10 @@
 <title>Author Dashboard | Reader Reach</title>
 <meta name="theme-color" content="#3b241b">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
 :root {
   --brown:#3b241b;
@@ -174,6 +178,230 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
   .navbtn{font-size:12px;padding:10px 8px}
   .top-actions .btn{padding:9px;font-size:12px}
 }
+
+/* Reader Reach — Author Dashboard visual refresh
+   Preserves the original Supabase and dashboard JavaScript. */
+:root {
+  --brown:#35241d;
+  --brown2:#624535;
+  --cream:#f8f3e9;
+  --soft:#f3eade;
+  --butter:#d8b879;
+  --text:#382920;
+  --muted:#79685b;
+  --line:#e8ded1;
+  --white:#fffdf9;
+  --shadow:0 14px 40px rgba(54,35,25,.065);
+}
+html {scroll-behavior:smooth}
+body {
+  background:var(--cream);
+  font-family:"Manrope",Arial,sans-serif;
+  font-size:13px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,textarea,select {font-family:"Manrope",Arial,sans-serif}
+h1,h2,h3,.brand,.sidebar h3,.stat .number {
+  font-family:"EB Garamond",Georgia,serif;
+  letter-spacing:-.35px;
+}
+h1 {font-size:clamp(36px,4.3vw,52px);line-height:1.07}
+h2 {font-size:30px;line-height:1.16}
+h3 {font-size:24px;line-height:1.2}
+p {line-height:1.85}
+.topbar {
+  height:78px;
+  padding:0 max(3%,calc((100vw - 1500px)/2));
+  background:rgba(255,253,249,.97);
+  box-shadow:0 3px 16px rgba(63,42,31,.025);
+  backdrop-filter:blur(12px);
+}
+.brand {font-size:31px;letter-spacing:-1px}
+.brand span {color:#b8955a}
+.top-actions {gap:16px}
+.container {
+  width:min(1450px,94%);
+  grid-template-columns:258px minmax(0,1fr);
+  gap:29px;
+  margin-top:34px;
+}
+.sidebar {
+  border-radius:20px;
+  padding:22px 15px;
+  top:101px;
+  box-shadow:var(--shadow);
+}
+.sidebar h3 {font-size:28px;padding:3px 8px 13px;margin:0 0 12px;border-bottom:1px solid var(--line)}
+.sidebar nav {display:flex;flex-direction:column;gap:5px}
+.navbtn {
+  border-radius:11px;
+  padding:13px 15px;
+  font-size:12px;
+  font-weight:700;
+  transition:background .2s,transform .2s;
+}
+.navbtn:hover {background:#f5eee4;transform:translateX(2px)}
+.navbtn.active {
+  background:var(--brown);
+  color:#fffdf9;
+  font-weight:800;
+  box-shadow:0 6px 16px rgba(53,36,29,.13);
+}
+.page-heading {margin:2px 0 26px}
+.page-heading .eyebrow,.eyebrow {
+  color:#a27d44;
+  letter-spacing:2.1px;
+  font-size:10px;
+  font-weight:800;
+}
+.page-heading p {margin-top:9px}
+#page-overview .page-heading {
+  background:#2e2019;
+  color:#fffaf2;
+  padding:39px 43px;
+  border-radius:23px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 16px 35px rgba(47,32,25,.12);
+}
+#page-overview .page-heading:after {
+  content:"";
+  position:absolute;
+  width:320px;height:320px;
+  right:-115px;top:-195px;
+  border:1px solid rgba(216,184,121,.3);
+  border-radius:50%;
+  box-shadow:0 0 0 55px rgba(216,184,121,.035),0 0 0 115px rgba(216,184,121,.025);
+  pointer-events:none;
+}
+#page-overview .page-heading h1 {color:#fffaf2;font-size:clamp(38px,5vw,60px)}
+#page-overview .page-heading p {color:#dfd0bf}
+#page-overview .page-heading .eyebrow {color:#d8b879}
+.panel,.stat,.notice {
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:19px;
+  box-shadow:var(--shadow);
+}
+.panel {padding:29px;margin-bottom:24px}
+.panel-head {margin-bottom:19px}
+.panel-head h2 {margin-bottom:0}
+.grid {gap:17px}
+.stat {
+  padding:24px;
+  border-top:3px solid #c4a16b;
+  transition:transform .2s,box-shadow .2s;
+}
+.stat:hover {transform:translateY(-3px);box-shadow:0 18px 38px rgba(54,35,25,.1)}
+.stat .number {
+  font-size:44px;
+  font-weight:700;
+  line-height:1.1;
+  margin:12px 0 8px;
+}
+.btn {
+  border-radius:28px;
+  padding:11px 19px;
+  font-size:12px;
+  font-weight:800;
+  transition:transform .2s,background .2s;
+}
+.btn:hover:not(:disabled) {transform:translateY(-1px)}
+.btn.secondary {background:var(--white);border-color:#d8c9b6}
+.btn.gold {background:#d8b879;border-color:#d8b879}
+label {font-size:12px}
+input,textarea,select {
+  border-radius:12px;
+  padding:13px 15px;
+  background:#fffefa;
+  font-size:12px;
+  transition:border-color .2s,box-shadow .2s;
+}
+input:focus,textarea:focus,select:focus {
+  border-color:#b8955a;
+  box-shadow:0 0 0 3px rgba(184,149,90,.13);
+}
+.avatar {width:105px;height:105px;border:3px solid #e3c88f;font-family:"EB Garamond",serif;font-size:42px}
+.profile-row {gap:24px}
+.book-grid {gap:18px}
+.book-card {
+  border-radius:16px;
+  padding:23px;
+  background:linear-gradient(145deg,#fffefa,#faf5ec);
+  transition:transform .2s,box-shadow .2s;
+}
+.book-card:hover {transform:translateY(-2px);box-shadow:0 10px 25px rgba(54,35,25,.07)}
+.book-card h3 {font-size:26px}
+.badge {padding:6px 11px;font-size:10px}
+.table-wrap {border:1px solid var(--line);border-radius:13px}
+th,td {padding:15px 14px}
+th {background:#f7f0e7;font-size:11px;letter-spacing:.25px}
+tbody tr:hover {background:#fffcf6}
+.message-layout {border-radius:16px}
+.conversation-list {background:#f8f2e9}
+.conversation-button {padding:17px}
+.conversation-button.active {border-left:3px solid #b8955a}
+.message-list {background:#fffdf9}
+.message {border-radius:16px 16px 16px 4px;padding:13px 16px}
+.message.mine {border-radius:16px 16px 4px 16px}
+.empty {
+  border-radius:16px;
+  background:#fbf6ee;
+  padding:34px 20px;
+}
+#bootScreen {margin-top:85px}
+#bootScreen .panel {padding:40px}
+footer {padding:36px 15px}
+@media(max-width:850px) {
+  .container {grid-template-columns:1fr}
+  .sidebar {position:static}
+  .sidebar nav {display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+  .navbtn:hover {transform:none}
+}
+@media(max-width:550px) {
+  .topbar {height:66px}
+  .brand {font-size:25px}
+  .container {margin-top:18px}
+  #page-overview .page-heading {padding:29px 24px}
+  .panel {padding:21px}
+  .sidebar nav {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid,.form-grid,.book-grid {grid-template-columns:1fr}
+  .message-layout {grid-template-columns:1fr}
+  .stat .number {font-size:39px}
+  .top-actions {gap:8px}
+  .top-actions .btn {padding:9px 12px}
+}
+
+
+/* Reader Reach — refined author messaging */
+#page-messages .page-heading{margin-bottom:24px}
+#page-messages .page-heading h1{font-family:'EB Garamond',Georgia,serif;font-size:clamp(35px,4vw,52px);letter-spacing:-.025em}
+#page-messages>.panel{padding:24px;background:linear-gradient(145deg,#fffdf9 0%,#fffaf2 100%);border-radius:24px}
+#page-messages .panel-head{align-items:center;gap:14px}
+#page-messages .panel-head h2{font-family:'EB Garamond',Georgia,serif;font-size:27px}
+#newConversationButton{border-radius:999px;padding:12px 20px;box-shadow:0 5px 16px #4a32221a}
+.support-intro{display:flex;align-items:center;gap:14px;margin:16px 0 18px;padding:17px 20px;background:#f7f0e3;border:1px solid #eadcc8;border-radius:16px;color:#463326}
+.support-intro-icon{display:grid;place-items:center;width:44px;height:44px;flex-shrink:0;border-radius:14px;background:#e7d4ac;color:#644721;font-size:26px}
+.support-intro strong{font-size:14px}.support-intro p{margin:5px 0 0;font-size:12px;color:#806f60;line-height:1.6}
+#page-messages #conversationStatus{border-radius:12px;margin-bottom:14px;font-size:12px;padding:10px 13px}
+#page-messages .message-layout{grid-template-columns:minmax(220px,30%) minmax(0,1fr);border:1px solid #e8dcca;border-radius:19px;min-height:530px;box-shadow:0 9px 30px #5c3e1d0b}
+#page-messages .conversation-list{background:#f8f2e8;min-height:530px;max-height:650px}
+#page-messages .conversation-button{padding:20px 17px;border-bottom:1px solid #e8ddcf;transition:background .18s}
+#page-messages .conversation-button strong{font-family:'EB Garamond',Georgia,serif;font-size:21px;font-weight:600}
+#page-messages .conversation-button.active{background:#fffdf9;border-left:4px solid #b9975e}
+#page-messages .message-list-wrap>.chat-compose:first-child{background:#fffdf9;padding:19px 22px!important}
+#page-messages #messageHeading{font-family:'EB Garamond',Georgia,serif;font-size:26px}
+#page-messages .message-list{height:385px;padding:22px;gap:15px;background:radial-gradient(circle at top left,#fdf7ed,#fffdf9 65%)}
+#page-messages .message{border-radius:17px 17px 17px 5px;padding:13px 17px;box-shadow:0 3px 10px #3f2b1509;line-height:1.65}
+#page-messages .message.mine{border-radius:17px 17px 5px 17px;background:#513c2d;border-color:#513c2d}
+#page-messages #messageForm{padding:17px 20px;background:#fffdf9}
+#page-messages #messageText{min-height:85px;border-radius:13px;background:#fff;border:1px solid #e1d3c2;padding:14px 16px;resize:vertical}
+#page-messages #sendMessageButton{border-radius:999px;padding:11px 23px}
+#page-messages .attachment-row input[type=file]{max-width:100%;font-size:12px}
+#page-messages .attachment-preview{border-radius:12px}
+@media(max-width:760px){#page-messages>.panel{padding:14px}#page-messages .message-layout{grid-template-columns:1fr}#page-messages .conversation-list{min-height:0;max-height:190px;border-right:0;border-bottom:1px solid #e8dcca}#page-messages .message-list{height:340px}#page-messages .panel-head{flex-wrap:wrap}.support-intro{padding:12px}}
+
 </style>
 
 </head>
@@ -234,7 +462,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
     <div class="stat">
       <div class="muted small">Approved Books</div>
       <div class="number" id="statApproved">0</div>
-      <div class="small muted">Approved by the Admin</div>
+      <div class="small muted">Approved by The Curator</div>
     </div>
     <div class="stat">
       <div class="muted small">Pending Books</div>
@@ -263,7 +491,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
     </p>
     <div class="actions">
       <button class="btn" data-go="submit">Submit a Book</button>
-      <button class="btn secondary" data-go="messages">Message a Moderator</button>
+      <button class="btn secondary" data-go="messages">Message The Literary Guardian</button>
     </div>
   </div>
 
@@ -333,7 +561,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
   <div class="page-heading">
     <div class="eyebrow">Share your work</div>
     <h1>Submit a Book</h1>
-    <p class="muted">Submissions are sent to the Admin for review, including incomplete submissions.</p>
+    <p class="muted">Submissions are sent to The Curator for review, including incomplete submissions.</p>
   </div>
 
   <div class="panel">
@@ -427,29 +655,14 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
   <div class="page-heading">
     <div class="eyebrow">Author support</div>
     <h1>Messages</h1>
-    <p class="muted">Communicate with your assigned Moderator.</p>
+    <p class="muted">A thoughtful space to connect directly with The Literary Guardian.</p>
   </div>
   <div class="panel">
     <div class="panel-head">
       <h2>Your Conversations</h2>
-      <button class="btn" id="newConversationButton">New Message</button>
+      <button class="btn" id="newConversationButton">Start a Message</button>
     </div>
-    <div id="newConversationPanel" class="new-conversation-box" hidden>
-      <div class="form-grid">
-        <div class="field">
-          <label for="newConversationBook">Book *</label>
-          <select id="newConversationBook"><option value="">Select a book</option></select>
-        </div>
-        <div class="field">
-          <label for="newConversationModerator">Moderator *</label>
-          <select id="newConversationModerator"><option value="">Select a Moderator</option></select>
-        </div>
-      </div>
-      <div class="actions">
-        <button class="btn" type="button" id="createConversationButton">Start Conversation</button>
-        <button class="btn secondary" type="button" id="cancelConversationButton">Cancel</button>
-      </div>
-    </div>
+    <div class="support-intro"><span class="support-intro-icon">✦</span><div><strong>A direct line to our literary support team</strong><p>Ask about your books, your account, or anything related to Reader Reach. No book or moderator selection required.</p></div></div>
     <div id="conversationStatus" class="notice info">Your conversations will load here.</div>
     <div class="message-layout">
       <div id="conversationList" class="conversation-list"></div>
@@ -462,15 +675,15 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
         <div id="messageList" class="message-list"><div class="empty">Select a conversation to view messages.</div></div>
         <form id="messageForm" class="chat-compose">
           <div class="field">
-            <label for="messageText">Your message</label>
-            <textarea id="messageText" maxlength="10000" placeholder="Write your message…"></textarea>
+            <label for="messageText">Your message to Reader Reach</label>
+            <textarea id="messageText" maxlength="10000" placeholder="Share a question, an update, or a thought…"></textarea>
             <div class="attachment-row">
               <input id="messageFile" type="file" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp,.mp4,.webm,.mov,.avi,.mkv,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,video/*,image/*,text/plain">
               <span class="file-note">Files: PDF, Word, text, image or video · max 50 MB each · up to 5 files</span>
             </div>
             <div id="messageFileName" class="file-note"></div>
           </div>
-          <div class="actions"><button class="btn" type="submit" id="sendMessageButton">Send Message</button></div>
+          <div class="actions"><button class="btn" type="submit" id="sendMessageButton">Send Message ↗</button></div>
         </form>
       </div>
     </div>
@@ -1355,7 +1568,7 @@ console.log("Book submission payload:", payload);
     const notificationText = missing.length
       ? "Book submitted for review. Missing items: " +
         missing.join(", ")
-      : "Book submitted for Admin review.";
+      : "Book submitted for The Curator review.";
 
     const {error:notificationError} =
       await supabaseClient
@@ -1389,9 +1602,9 @@ console.log("Book submission payload:", payload);
     showPage("books");
 
     let resultMessage = missing.length
-      ? "Your book has been submitted as incomplete and is pending Admin review. Missing: " +
+      ? "Your book has been submitted as incomplete and is pending The Curator review. Missing: " +
         missing.join(", ")
-      : "Your book has been submitted and is pending Admin review.";
+      : "Your book has been submitted and is pending The Curator review.";
 
     if (uploadWarnings.length) {
       resultMessage +=
@@ -1557,7 +1770,7 @@ async function loadConversations() {
 
   if (!myConversations.length) {
     $("conversationStatus").textContent =
-      "No conversations yet. Click New Message to choose a book and Moderator.";
+      "No conversations yet. Click Start a Message to contact The Literary Guardian.";
 
     $("conversationList").innerHTML =
       '<div class="empty">No conversations yet.</div>';
@@ -1569,7 +1782,7 @@ async function loadConversations() {
   }
 
   $("conversationStatus").textContent =
-    "Each conversation is tied to one book. Select a conversation to reply.";
+    "Select a conversation to read and reply. For general support, contact The Literary Guardian directly.";
 
   const moderatorIds =
     [...new Set(
@@ -1642,16 +1855,10 @@ async function loadConversations() {
           data-conversation="${escapeHTML(c.id)}"
         >
           <strong>
-            ${escapeHTML(book?.title || "Book conversation")}
+            ${escapeHTML(c.book_id ? (book?.title || "Book conversation") : "The Literary Guardian")}
           </strong>
 
-          <div class="small muted">
-            Moderator:
-            ${escapeHTML(
-              profile?.display_name ||
-              "Reader Reach Moderator"
-            )}
-          </div>
+          <div class="small muted">${c.book_id ? "Book-specific conversation" : "Reader Reach · Author support"}</div>
         </button>
       `;
     }).join("");
@@ -1699,13 +1906,11 @@ async function loadConversations() {
     );
 
   $("messageHeading").textContent =
-    book?.title || "Book conversation";
+    active?.book_id ? (book?.title || "Book conversation") : "The Literary Guardian";
 
-  $("messageModerator").textContent =
-    `Moderator: ${
-      profile?.display_name ||
-      "Reader Reach Moderator"
-    }`;
+  $("messageModerator").textContent = active?.book_id
+    ? "Reader Reach · Book support"
+    : "Reader Reach · Literary support";
 
   await loadMessages();
 }
@@ -1804,7 +2009,7 @@ async function loadMessages() {
 
             <div class="message-meta">
               <span>
-                ${mine ? "You" : "Moderator"}
+                ${mine ? "You" : "The Literary Guardian"}
               </span>
 
               <span>
@@ -1948,176 +2153,44 @@ async function startEditAuthorMessage(messageId) {
 }
 
 async function openNewConversationPanel() {
-if (!currentAuthor?.id || !currentUser?.id)
-return;
-
-if (!myBooks.length)
-await loadBooks();
-
-const {
-data:mods,
-error
-} = await supabaseClient
-.from("moderators")
-.select("id,profile_id,active")
-.eq("active", true);
-
-if (error) {
-setNotice(
-"Could not find available Moderators: " +
-friendlyError(error),
-"error"
-);
-return;
-}
-
-const profileIds =
-(mods || [])
-.map(m => m.profile_id)
-.filter(Boolean);
-
-const profiles =
-profileIds.length
-? (
-await supabaseClient
-.from("profiles")
-.select("id,display_name")
-.in("id", profileIds)
-).data || []
-: [];
-
-$("newConversationBook").innerHTML =
-'<option value="">Select a book</option>' +
-myBooks
-.map(
-b =>
-`<option value="${escapeHTML(b.id)}">${escapeHTML(b.title || "Untitled book")}</option>`
-)
-.join("");
-
-$("newConversationModerator").innerHTML =
-'<option value="">Select a Moderator</option>' +
-(mods || [])
-.map(
-m =>
-`<option value="${escapeHTML(m.id)}">${escapeHTML(
-            profiles.find(
-              p => p.id === m.profile_id
-            )?.display_name ||
-            "Reader Reach Moderator"
-          )}</option>`
-)
-.join("");
-
-$("newConversationPanel").hidden =
-false;
-}
-
-$("newConversationButton").addEventListener(
-"click",
-openNewConversationPanel
-);
-
-$("cancelConversationButton").addEventListener(
-"click",
-() =>
-$("newConversationPanel").hidden = true
-);
-
-$("createConversationButton").addEventListener(
-"click",
-async () => {
-const bookId =
-$("newConversationBook").value;
-
-
-const moderatorId =
-  $("newConversationModerator").value;
-
-if (!bookId || !moderatorId) {
-  setNotice(
-    "Choose both the book and Moderator before starting the conversation.",
-    "info"
-  );
-  return;
-}
-
-const button =
-  $("createConversationButton");
-
-button.disabled = true;
-
-try {
-  const {
-    data:existing,
-    error:ee
-  } = await supabaseClient
-    .from("conversations")
-    .select("id")
-    .eq(
-      "author_id",
-      currentAuthor.id
-    )
-    .eq(
-      "moderator_id",
-      moderatorId
-    )
-    .eq(
-      "book_id",
-      bookId
-    )
-    .limit(1);
-
-  if (ee) throw ee;
-
-  activeConversationId =
-    existing?.[0]?.id || null;
-
-  if (!activeConversationId) {
-    const {
-      data:created,
-      error:ce
-    } = await supabaseClient
-      .from("conversations")
-      .insert({
-        author_id:currentAuthor.id,
-        moderator_id:moderatorId,
-        book_id:bookId
-      })
-      .select("id")
-      .single();
-
-    if (ce) throw ce;
-
-    activeConversationId =
-      created.id;
+  if (!currentAuthor?.id || !currentUser?.id) {
+    setNotice("Please sign in to send a message.", "info");
+    return;
   }
-
-  $("newConversationPanel").hidden =
-    true;
-
-  showPage("messages");
-
-  await loadConversations();
-
-  setNotice(
-    "Your book-specific conversation is ready.",
-    "success"
-  );
-
-} catch (e) {
-  setNotice(
-    "Conversation could not be created: " +
-    friendlyError(e),
-    "error"
-  );
-} finally {
-  button.disabled = false;
+  const button = $("newConversationButton");
+  button.disabled = true;
+  button.textContent = "Opening…";
+  try {
+    const {data: existing, error: lookupError} = await supabaseClient
+      .from("conversations")
+      .select("id")
+      .eq("author_id", currentAuthor.id)
+      .is("book_id", null)
+      .order("created_at", {ascending: false})
+      .limit(1);
+    if (lookupError) throw lookupError;
+    if (existing?.length) {
+      activeConversationId = existing[0].id;
+    } else {
+      const {data: created, error: createError} = await supabaseClient
+        .from("conversations")
+        .insert({author_id: currentAuthor.id, book_id: null, moderator_id: null})
+        .select("id")
+        .single();
+      if (createError) throw createError;
+      activeConversationId = created.id;
+    }
+    showPage("messages");
+    await loadConversations();
+    $("messageText").focus();
+  } catch (error) {
+    setNotice("Unable to open your support conversation: " + friendlyError(error), "error");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Start a Message";
+  }
 }
-
-
-}
-);
+$("newConversationButton").addEventListener("click", openNewConversationPanel);
 
 $("messageFile").addEventListener(
 "change",
@@ -2179,7 +2252,7 @@ if (!text && !files.length) {
 
 if (!activeConversationId) {
   setNotice(
-    "Select a book conversation before sending.",
+    "Click Start a Message to open your support chat first.",
     "info"
   );
   return;
@@ -2223,7 +2296,7 @@ try {
 
   for (const file of files) {
     const path =
-      `${currentUser.id}/${activeConversationId}/${Date.now()}-${Math.random().toString(36).slice(2,8)}-${normalizeStoragePath(file.name)}`;
+      `${activeConversationId}/${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2,8)}-${normalizeStoragePath(file.name)}`;
 
     const {
       data:up,

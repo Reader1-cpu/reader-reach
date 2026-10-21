@@ -550,54 +550,49 @@
       readerStatus = shelf?.status || null;
     }
 
-    async function loadCompletedCount() {
-      completedReaders = null;
+async function loadCompletedCount() {
+  completedReaders = null;
 
-      const { data, error } = await db
-        .from("reader_books")
-        .select("reader_id")
-        .eq("book_id", bookId)
-        .eq("status", "completed");
+  const { data, error } = await db.rpc(
+    "get_book_completed_reader_count",
+    { p_book_id: bookId }
+  );
 
-      if (error) {
-        console.error("Completed reader count:", error);
+  if (error) {
+    console.error("Completed reader count:", error);
 
-        $("readerCount").textContent =
-          "Reader count unavailable";
+    $("readerCount").textContent =
+      "Reader count unavailable";
 
-        $("progressText").textContent =
-          "The Reading Room opens after 10 unique readers complete the book.";
+    $("progressText").textContent =
+      "The Reading Room opens after 10 unique readers complete the book.";
 
-        updateAuthorRequirement();
-        return;
-      }
+    updateAuthorRequirement();
+    return;
+  }
 
-      completedReaders = new Set(
-        (data || []).map(row => row.reader_id)
-      ).size;
+  completedReaders = Number(data ?? 0);
 
-      $("readerCount").textContent =
-        completedReaders === 1
-          ? "1 person has read this book"
-          : completedReaders +
-            " people have read this book";
+  $("readerCount").textContent =
+    completedReaders === 1
+      ? "1 person has read this book"
+      : completedReaders + " people have read this book";
 
-      const percentage = Math.min(
-        (completedReaders / 10) * 100,
-        100
-      );
+  const percentage = Math.min(
+    (completedReaders / 10) * 100,
+    100
+  );
 
-      $("progressFill").style.width =
-        percentage + "%";
+  $("progressFill").style.width = percentage + "%";
 
-      $("progressText").textContent =
-        completedReaders >= 10
-          ? "The Reading Room has reached its 10-reader milestone."
-          : completedReaders +
-            " of 10 completed readers needed to unlock author topics.";
+  $("progressText").textContent =
+    completedReaders >= 10
+      ? "The Reading Room has reached its 10-reader milestone."
+      : completedReaders +
+        " of 10 completed readers needed to unlock author topics.";
 
-      updateAuthorRequirement();
-    }
+  updateAuthorRequirement();
+}
 
     function updateAuthorRequirement() {
       if (!isBookAuthor) return;

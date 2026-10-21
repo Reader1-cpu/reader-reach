@@ -271,11 +271,13 @@
 
       </div>
 
-      <div class="progress-track">
-        <div id="progressFill" class="progress-fill"></div>
-      </div>
+<div id="authorProgress" class="hidden">
+  <div class="progress-track">
+    <div id="progressFill" class="progress-fill"></div>
+  </div>
 
-      <p id="progressText" class="muted small"></p>
+  <p id="progressText" class="muted small"></p>
+</div>
 
       <div id="pageNotice" class="notice" role="status"></div>
 
@@ -573,10 +575,10 @@ async function loadCompletedCount() {
 
   completedReaders = Number(data ?? 0);
 
-  $("readerCount").textContent =
-    completedReaders === 1
-      ? "1 person has read this book"
-      : completedReaders + " people have read this book";
+$("readerCount").textContent =
+  completedReaders === 1
+    ? "1 person has read this book"
+    : completedReaders + " people have read this book";
 
   const percentage = Math.min(
     (completedReaders / 10) * 100,
@@ -594,8 +596,13 @@ async function loadCompletedCount() {
   updateAuthorRequirement();
 }
 
-    function updateAuthorRequirement() {
-      if (!isBookAuthor) return;
+function updateAuthorRequirement() {
+  $("authorProgress").classList.toggle(
+    "hidden",
+    !isBookAuthor
+  );
+
+  if (!isBookAuthor) return;
 
       const form = $("topicForm");
 

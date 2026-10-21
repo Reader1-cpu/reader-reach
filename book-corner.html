@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Book Corner | Reader Reach</title>
+
+  <title>The Reading Room | Reader Reach</title>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -14,9 +16,12 @@
       --soft: #6f5443;
       --gold: #b8955a;
       --border: #e4d8c6;
+      --warning: #fff2d7;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -32,14 +37,18 @@
       border-bottom: 1px solid var(--border);
     }
 
-    header a { color: var(--brown); text-decoration: none; }
+    header a {
+      color: var(--brown);
+      text-decoration: none;
+    }
 
     main {
-      width: min(850px, 92%);
+      width: min(900px, 92%);
       margin: 35px auto;
     }
 
-    .panel, .topic {
+    .panel,
+    .topic {
       background: var(--white);
       border: 1px solid var(--border);
       border-radius: 16px;
@@ -47,9 +56,69 @@
       margin-bottom: 20px;
     }
 
-    h1, h2, h3 { line-height: 1.25; }
+    h1, h2, h3 {
+      line-height: 1.25;
+    }
 
-    .muted { color: var(--soft); }
+    .muted {
+      color: var(--soft);
+    }
+
+    .small {
+      font-size: 0.9rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .book-header {
+      display: flex;
+      gap: 22px;
+      align-items: flex-start;
+    }
+
+    .book-cover {
+      width: 150px;
+      max-width: 35%;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: 0.85rem;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .reader-count {
+      display: inline-block;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 30px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: #eee5d8;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 14px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
 
     label {
       display: block;
@@ -57,7 +126,8 @@
       font-weight: bold;
     }
 
-    input, textarea {
+    input,
+    textarea {
       width: 100%;
       padding: 12px;
       border: 1px solid var(--border);
@@ -67,7 +137,10 @@
       font: inherit;
     }
 
-    textarea { min-height: 100px; resize: vertical; }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
 
     button {
       margin-top: 12px;
@@ -80,7 +153,19 @@
       cursor: pointer;
     }
 
-    button:disabled { opacity: .6; cursor: wait; }
+    button:hover:not(:disabled) {
+      background: #624332;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .secondary-button {
+      background: var(--gold);
+      color: #24190f;
+    }
 
     .reply {
       margin: 12px 0;
@@ -91,74 +176,195 @@
       overflow-wrap: anywhere;
     }
 
-    .reply-form { margin-top: 16px; }
+    .reply-form {
+      margin-top: 16px;
+    }
 
-    .notice { margin: 12px 0; white-space: pre-wrap; }
+    .notice {
+      margin: 12px 0;
+      white-space: pre-wrap;
+    }
 
-    .hidden { display: none; }
+    .warning {
+      background: var(--warning);
+      border: 1px solid #e7c785;
+      border-radius: 12px;
+      padding: 18px;
+      margin: 16px 0;
+    }
 
-    .small { font-size: .9rem; }
+    .topic-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 14px;
+      background: var(--white);
+    }
+
+    .topic-content {
+      margin-top: 16px;
+    }
 
     footer {
       padding: 25px;
       text-align: center;
       color: var(--soft);
     }
+
+    @media (max-width: 600px) {
+      .book-header {
+        flex-direction: column;
+      }
+
+      .book-cover {
+        width: 130px;
+        max-width: 100%;
+      }
+
+      .panel,
+      .topic {
+        padding: 17px;
+      }
+    }
   </style>
 </head>
 
 <body>
+
   <header>
-    <a href="index.html"><strong>Reader Reach</strong></a>
+    <a href="index.html">
+      <strong>Reader Reach</strong>
+    </a>
+
     <span style="float:right">
       <a href="javascript:history.back()">← Go back</a>
     </span>
   </header>
 
   <main>
+
     <section class="panel">
-      <p class="muted">READER REACH · BOOK CORNER</p>
-      <h1 id="bookTitle">Loading book…</h1>
-      <p id="bookDescription" class="muted"></p>
-      <p id="authorName"></p>
+
+      <p class="eyebrow">
+        Reader Reach · The Reading Room
+      </p>
+
+      <div class="book-header">
+
+        <img
+          id="bookCover"
+          class="book-cover hidden"
+          alt="Book cover"
+        >
+
+        <div>
+          <h1 id="bookTitle">Loading book…</h1>
+
+          <p id="bookDescription" class="muted"></p>
+
+          <p id="authorName"></p>
+
+          <div id="readerCount" class="reader-count">
+            Loading reader count…
+          </div>
+        </div>
+
+      </div>
+
+      <div class="progress-track">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+
+      <p id="progressText" class="muted small"></p>
+
       <div id="pageNotice" class="notice" role="status"></div>
+
     </section>
 
     <section id="createTopicPanel" class="panel hidden">
-      <h2>Start a topic</h2>
-      <p class="muted">Invite readers to share their thoughts about your book.</p>
 
-      <form id="topicForm">
+      <h2>Start a topic</h2>
+
+      <p class="muted">
+        As the author of this book, you can invite your
+        readers to reflect on the story and share their thoughts.
+      </p>
+
+      <div id="authorRequirement" class="notice"></div>
+
+      <form id="topicForm" class="hidden">
+
         <label for="topicTitle">Topic title</label>
-        <input id="topicTitle" maxlength="200" required
-          placeholder="e.g. A question about the main character">
+
+        <input
+          id="topicTitle"
+          maxlength="200"
+          required
+          placeholder="e.g. What did Elizabeth's decision teach you?"
+        >
 
         <label for="openingQuestion">Opening question</label>
-        <textarea id="openingQuestion" maxlength="5000" required
-          placeholder="What would you like readers to discuss?"></textarea>
 
-        <button id="topicButton" type="submit">Publish topic</button>
+        <textarea
+          id="openingQuestion"
+          maxlength="5000"
+          required
+          placeholder="What would you like your readers to reflect on?"
+        ></textarea>
+
+        <button id="topicButton" type="submit">
+          Publish topic
+        </button>
+
       </form>
+
       <div id="topicNotice" class="notice" role="status"></div>
+
+    </section>
+
+    <section class="panel">
+
+      <h2>Welcome to The Reading Room</h2>
+
+      <p>
+        A special place where authors and readers reflect
+        on the stories, characters, lessons, and moments
+        that stay with them long after reading.
+      </p>
+
+      <p class="muted">
+        Authors begin each topic. Readers who are currently
+        reading or have completed the book can participate.
+      </p>
+
     </section>
 
     <section>
-      <h2>Topics and conversations</h2>
+
+      <h2>Reading Room Topics</h2>
+
       <p class="muted">
-        Explore questions about this book and share your thoughts with other readers.
+        Explore reflections started by the author.
       </p>
+
       <div id="topicsList">
         <div class="panel">Loading topics…</div>
       </div>
+
     </section>
+
   </main>
 
-  <footer>Reader Reach · Connecting readers and authors</footer>
+  <footer>
+    Reader Reach · Connecting readers and authors
+  </footer>
 
   <script>
-    // Use the same Supabase project as your existing Reader Reach pages.
-    const SUPABASE_URL = "https://bublmnfhyyrefcdkloak.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY";
+    const SUPABASE_URL =
+      "https://bublmnfhyyrefcdkloak.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_-bqN7xBRoMoOsueGOmA0sw_0n6GbXtY";
 
     const db = window.supabase.createClient(
       SUPABASE_URL,
@@ -166,21 +372,33 @@
     );
 
     const $ = id => document.getElementById(id);
+
     const params = new URLSearchParams(window.location.search);
+
     const bookId = params.get("book_id");
+    const requestedTopicId = params.get("topic_id");
 
     let currentUser = null;
     let currentBook = null;
     let authorProfileId = null;
 
+    let isBookAuthor = false;
+    let readerStatus = null;
+    let completedReaders = null;
+
+    const openedTopics = new Set();
+
     function escapeHtml(value) {
-      return String(value ?? "").replace(/[&<>"']/g, char => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      })[char]);
+      return String(value ?? "").replace(
+        /[&<>"']/g,
+        char => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        })[char]
+      );
     }
 
     function showNotice(id, message) {
@@ -189,23 +407,51 @@
 
     function friendlyError(error) {
       console.error(error);
-      return error?.message || "Something went wrong. Please try again.";
+      return error?.message ||
+        "Something went wrong. Please try again.";
+    }
+
+    function canParticipate() {
+      return (
+        isBookAuthor ||
+        readerStatus === "currently_reading" ||
+        readerStatus === "completed"
+      );
+    }
+
+    async function loadCurrentUser() {
+      const { data, error } = await db.auth.getUser();
+
+      if (error) {
+        console.warn("Authentication check:", error.message);
+      }
+
+      currentUser = data?.user || null;
     }
 
     async function loadBook() {
       if (!bookId) {
-        throw new Error("No book was selected. Open Book Corner from a book's profile card.");
+        throw new Error(
+          "No book was selected. Open The Reading Room from a book."
+        );
       }
 
       const { data: book, error } = await db
         .from("books")
-        .select("id,title,description,author_id,status")
+        .select(
+          "id,title,description,cover_url,author_id,status"
+        )
         .eq("id", bookId)
         .eq("status", "approved")
         .maybeSingle();
 
       if (error) throw error;
-      if (!book) throw new Error("This book is unavailable or has not been approved.");
+
+      if (!book) {
+        throw new Error(
+          "This book is unavailable or has not been approved."
+        );
+      }
 
       const { data: author, error: authorError } = await db
         .from("authors")
@@ -215,25 +461,40 @@
         .maybeSingle();
 
       if (authorError) throw authorError;
-      if (!author) throw new Error("The approved author profile could not be found.");
+
+      if (!author) {
+        throw new Error(
+          "The approved author profile could not be found."
+        );
+      }
 
       currentBook = book;
       authorProfileId = author.profile_id;
 
-      $("bookTitle").textContent = book.title || "Untitled Book";
-      $("bookDescription").textContent = book.description || "";
-      $("authorName").textContent = "By " + (author.author_name || "Author");
+      $("bookTitle").textContent =
+        book.title || "Untitled Book";
 
-      document.title = (book.title || "Book") + " | Book Corner";
-    }
+      $("bookDescription").textContent =
+        book.description || "";
 
-    async function loadCurrentUser() {
-      const { data, error } = await db.auth.getUser();
-      if (error) throw error;
-      currentUser = data.user || null;
+      $("authorName").textContent =
+        "By " + (author.author_name || "Author");
+
+      if (book.cover_url) {
+        $("bookCover").src = book.cover_url;
+        $("bookCover").alt =
+          "Cover of " + (book.title || "the book");
+
+        $("bookCover").classList.remove("hidden");
+      }
+
+      document.title =
+        (book.title || "Book") + " | The Reading Room";
     }
 
     async function checkAuthorAccess() {
+      isBookAuthor = false;
+
       if (!currentUser || !currentBook) return;
 
       const { data, error } = await db
@@ -249,61 +510,329 @@
         return;
       }
 
-$("createTopicPanel").classList.remove("hidden");    }
+      isBookAuthor = !!data;
+
+      if (isBookAuthor) {
+        $("createTopicPanel").classList.remove("hidden");
+      }
+    }
+
+    async function loadReaderStatus() {
+      readerStatus = null;
+
+      if (!currentUser || isBookAuthor) return;
+
+      const { data: reader, error: readerError } = await db
+        .from("readers")
+        .select("id")
+        .eq("profile_id", currentUser.id)
+        .maybeSingle();
+
+      if (readerError) {
+        console.error("Reader lookup:", readerError);
+        return;
+      }
+
+      if (!reader) return;
+
+      const { data: shelf, error: shelfError } = await db
+        .from("reader_books")
+        .select("status")
+        .eq("reader_id", reader.id)
+        .eq("book_id", bookId)
+        .maybeSingle();
+
+      if (shelfError) {
+        console.error("Reader shelf lookup:", shelfError);
+        return;
+      }
+
+      readerStatus = shelf?.status || null;
+    }
+
+    async function loadCompletedCount() {
+      completedReaders = null;
+
+      const { data, error } = await db
+        .from("reader_books")
+        .select("reader_id")
+        .eq("book_id", bookId)
+        .eq("status", "completed");
+
+      if (error) {
+        console.error("Completed reader count:", error);
+
+        $("readerCount").textContent =
+          "Reader count unavailable";
+
+        $("progressText").textContent =
+          "The Reading Room opens after 10 unique readers complete the book.";
+
+        updateAuthorRequirement();
+        return;
+      }
+
+      completedReaders = new Set(
+        (data || []).map(row => row.reader_id)
+      ).size;
+
+      $("readerCount").textContent =
+        completedReaders === 1
+          ? "1 person has read this book"
+          : completedReaders +
+            " people have read this book";
+
+      const percentage = Math.min(
+        (completedReaders / 10) * 100,
+        100
+      );
+
+      $("progressFill").style.width =
+        percentage + "%";
+
+      $("progressText").textContent =
+        completedReaders >= 10
+          ? "The Reading Room has reached its 10-reader milestone."
+          : completedReaders +
+            " of 10 completed readers needed to unlock author topics.";
+
+      updateAuthorRequirement();
+    }
+
+    function updateAuthorRequirement() {
+      if (!isBookAuthor) return;
+
+      const form = $("topicForm");
+
+      if (completedReaders === null) {
+        form.classList.add("hidden");
+
+        $("authorRequirement").textContent =
+          "We couldn't verify the completed-reader count. " +
+          "Topic creation is temporarily unavailable.";
+        return;
+      }
+
+      if (completedReaders < 10) {
+        form.classList.add("hidden");
+
+        $("authorRequirement").textContent =
+          "Your book currently has " +
+          completedReaders +
+          " completed reader(s). " +
+          "You need at least 10 unique completed readers " +
+          "before you can start a topic.";
+        return;
+      }
+
+      form.classList.remove("hidden");
+
+      $("authorRequirement").textContent =
+        "Your book has reached the required 10 completed readers. " +
+        "You can now start a topic!";
+    }
 
     async function loadTopics() {
+      const container = $("topicsList");
+
+      if (!canParticipate()) {
+        container.innerHTML = `
+          <div class="panel">
+            <h3>Reading Room access</h3>
+            <p>
+              To participate in this book's Reading Room,
+              you must be the author or a reader who is
+              currently reading or has completed the book.
+            </p>
+            <p class="muted">
+              Update your Reader Shelf status to
+              "Currently Reading" or "Completed"
+              to unlock your participation.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
       const { data: topics, error } = await db
         .from("book_corner_topics")
-        .select("id,book_id,author_profile_id,title,opening_question,created_at")
+        .select(
+          "id,book_id,author_profile_id,title,opening_question,created_at"
+        )
         .eq("book_id", bookId)
         .order("created_at", { ascending: false });
 
       if (error) {
-        $("topicsList").textContent = friendlyError(error);
+        container.textContent = friendlyError(error);
         return;
       }
 
       if (!topics?.length) {
-        $("topicsList").innerHTML =
-          '<div class="panel">No topics yet. The author can start the first one.</div>';
+        container.innerHTML = `
+          <div class="panel">
+            No topics yet.
+            The author can start the first one once
+            the book reaches 10 completed readers.
+          </div>
+        `;
         return;
       }
 
-      $("topicsList").innerHTML = topics.map(topic => `
-        <article class="topic">
+      container.innerHTML = topics.map(topic => `
+        <article class="topic-card" id="topic-${topic.id}">
           <h3>${escapeHtml(topic.title)}</h3>
-          <p>${escapeHtml(topic.opening_question).replace(/\n/g, "<br>")}</p>
-          <p class="muted small">Posted ${escapeHtml(
-            new Date(topic.created_at).toLocaleString()
-          )}</p>
-          <div id="replies-${topic.id}">Loading replies…</div>
-          <form class="reply-form" data-topic-id="${topic.id}">
-            <label for="reply-${topic.id}">Your reply</label>
-            <textarea id="reply-${topic.id}" maxlength="5000" required
-              placeholder="Share your thoughts…"></textarea>
-            <button type="submit">Post reply</button>
-            ${!currentUser
-              ? '<p class="muted small">Sign in to post a reply.</p>'
-              : ''}
-          </form>
-          <div id="reply-notice-${topic.id}" class="notice" role="status"></div>
+
+          <p class="muted small">
+            Posted ${escapeHtml(
+              new Date(topic.created_at).toLocaleString()
+            )}
+          </p>
+
+          <div id="warning-${topic.id}" class="warning hidden">
+            <strong>Spoiler warning</strong>
+
+            <p>
+              This topic may contain important details
+              about the book, including its ending.
+              Would you like to continue?
+            </p>
+
+            <button
+              class="secondary-button"
+              type="button"
+              data-continue-topic="${topic.id}"
+            >
+              Continue to topic
+            </button>
+          </div>
+
+          <button
+            type="button"
+            data-open-topic="${topic.id}"
+          >
+            Open topic
+          </button>
+
+          <div
+            id="content-${topic.id}"
+            class="topic-content hidden"
+          >
+            <p>${escapeHtml(topic.opening_question)
+              .replace(/\n/g, "<br>")}</p>
+
+            <div id="replies-${topic.id}">
+              Loading replies…
+            </div>
+
+            <form
+              class="reply-form"
+              data-topic-id="${topic.id}"
+            >
+              <label for="reply-${topic.id}">
+                Your reflection
+              </label>
+
+              <textarea
+                id="reply-${topic.id}"
+                maxlength="5000"
+                required
+                placeholder="Share your thoughts…"
+              ></textarea>
+
+              <button type="submit">
+                Post reply
+              </button>
+            </form>
+
+            <div
+              id="reply-notice-${topic.id}"
+              class="notice"
+              role="status"
+            ></div>
+          </div>
         </article>
       `).join("");
 
-      for (const topic of topics) {
-        await loadReplies(topic.id);
+      document.querySelectorAll(
+        "[data-open-topic]"
+      ).forEach(button => {
+        button.addEventListener("click", async () => {
+          const topicId =
+            button.dataset.openTopic;
+
+          if (readerStatus === "currently_reading") {
+            $("warning-" + topicId)
+              .classList.remove("hidden");
+
+            button.classList.add("hidden");
+          } else {
+            await openTopic(topicId);
+          }
+        });
+      });
+
+      document.querySelectorAll(
+        "[data-continue-topic]"
+      ).forEach(button => {
+        button.addEventListener("click", async () => {
+          await openTopic(
+            button.dataset.continueTopic
+          );
+        });
+      });
+
+      document.querySelectorAll(
+        ".reply-form"
+      ).forEach(form => {
+        form.addEventListener(
+          "submit",
+          submitReply
+        );
+      });
+
+      if (
+        requestedTopicId &&
+        topics.some(t => t.id === requestedTopicId)
+      ) {
+        const selected =
+          $("topic-" + requestedTopicId);
+
+        selected?.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    }
+
+    async function openTopic(topicId) {
+      const content = $("content-" + topicId);
+
+      if (!content) return;
+
+      content.classList.remove("hidden");
+
+      const warning = $("warning-" + topicId);
+
+      if (warning) {
+        warning.classList.add("hidden");
       }
 
-      document.querySelectorAll(".reply-form").forEach(form => {
-        form.addEventListener("submit", submitReply);
-        const textarea = form.querySelector("textarea");
-        const button = form.querySelector("button");
+      const openButton = document.querySelector(
+        '[data-open-topic="' + topicId + '"]'
+      );
 
-        if (!currentUser) {
-          textarea.disabled = true;
-          button.disabled = true;
-        }
-      });
+      if (openButton) {
+        openButton.classList.add("hidden");
+      }
+
+      if (!openedTopics.has(topicId)) {
+        openedTopics.add(topicId);
+        await loadReplies(topicId);
+      }
+
+      const url = new URL(window.location.href);
+      url.searchParams.set("topic_id", topicId);
+      window.history.replaceState({}, "", url);
     }
 
     async function loadReplies(topicId) {
@@ -311,7 +840,9 @@ $("createTopicPanel").classList.remove("hidden");    }
 
       const { data: replies, error } = await db
         .from("book_corner_replies")
-        .select("id,profile_id,message,created_at")
+        .select(
+          "id,profile_id,message,created_at"
+        )
         .eq("topic_id", topicId)
         .order("created_at", { ascending: true });
 
@@ -321,37 +852,56 @@ $("createTopicPanel").classList.remove("hidden");    }
       }
 
       if (!replies?.length) {
-        container.innerHTML = '<p class="muted small">No replies yet.</p>';
+        container.innerHTML =
+          '<p class="muted small">No reflections yet. Be the first to reply.</p>';
         return;
       }
 
-      const profileIds = [...new Set(replies.map(r => r.profile_id))];
+      const profileIds = [
+        ...new Set(
+          replies.map(reply => reply.profile_id)
+        )
+      ];
+
       const names = {};
 
       if (profileIds.length) {
-        const { data: profiles, error: profileError } = await db
+        const {
+          data: profiles,
+          error: profileError
+        } = await db
           .from("profiles")
           .select("id,display_name")
           .in("id", profileIds);
 
         if (!profileError) {
           for (const profile of profiles || []) {
-            names[profile.id] = profile.display_name || "Reader";
+            names[profile.id] =
+              profile.display_name || "Reader";
           }
         }
       }
 
       container.innerHTML = replies.map(reply => `
         <div class="reply">
-          <strong>${escapeHtml(
-            reply.profile_id === authorProfileId
-              ? "Author"
-              : (names[reply.profile_id] || "Reader")
-          )}</strong>
-          <p>${escapeHtml(reply.message).replace(/\n/g, "<br>")}</p>
-          <small class="muted">${escapeHtml(
-            new Date(reply.created_at).toLocaleString()
-          )}</small>
+          <strong>
+            ${escapeHtml(
+              reply.profile_id === authorProfileId
+                ? "Author"
+                : (names[reply.profile_id] || "Reader")
+            )}
+          </strong>
+
+          <p>
+            ${escapeHtml(reply.message)
+              .replace(/\n/g, "<br>")}
+          </p>
+
+          <small class="muted">
+            ${escapeHtml(
+              new Date(reply.created_at).toLocaleString()
+            )}
+          </small>
         </div>
       `).join("");
     }
@@ -359,22 +909,48 @@ $("createTopicPanel").classList.remove("hidden");    }
     async function submitTopic(event) {
       event.preventDefault();
 
-      if (!currentUser || !currentBook) {
-        showNotice("topicNotice", "Please sign in as the author of this book.");
+      if (!currentUser || !isBookAuthor) {
+        showNotice(
+          "topicNotice",
+          "Only the approved author of this book can start a topic."
+        );
+        return;
+      }
+
+      if (
+        completedReaders === null ||
+        completedReaders < 10
+      ) {
+        showNotice(
+          "topicNotice",
+          "This book needs at least 10 unique completed readers."
+        );
         return;
       }
 
       const title = $("topicTitle").value.trim();
-      const question = $("openingQuestion").value.trim();
+      const question =
+        $("openingQuestion").value.trim();
+
       const button = $("topicButton");
 
-      if (title.length < 3 || question.length < 3) {
-        showNotice("topicNotice", "Please enter a topic title and opening question.");
+      if (
+        title.length < 3 ||
+        question.length < 3
+      ) {
+        showNotice(
+          "topicNotice",
+          "Please enter a topic title and opening question."
+        );
         return;
       }
 
       button.disabled = true;
-      showNotice("topicNotice", "Publishing topic…");
+
+      showNotice(
+        "topicNotice",
+        "Publishing topic…"
+      );
 
       try {
         const { error } = await db
@@ -389,10 +965,19 @@ $("createTopicPanel").classList.remove("hidden");    }
         if (error) throw error;
 
         $("topicForm").reset();
-        showNotice("topicNotice", "Topic published.");
+
+        showNotice(
+          "topicNotice",
+          "Your Reading Room topic has been published!"
+        );
+
         await loadTopics();
+
       } catch (error) {
-        showNotice("topicNotice", friendlyError(error));
+        showNotice(
+          "topicNotice",
+          friendlyError(error)
+        );
       } finally {
         button.disabled = false;
       }
@@ -401,8 +986,11 @@ $("createTopicPanel").classList.remove("hidden");    }
     async function submitReply(event) {
       event.preventDefault();
 
-      if (!currentUser) {
-        showNotice("pageNotice", "Please sign in before posting a reply.");
+      if (!currentUser || !canParticipate()) {
+        showNotice(
+          "pageNotice",
+          "You are not eligible to reply to this book's topics."
+        );
         return;
       }
 
@@ -428,10 +1016,19 @@ $("createTopicPanel").classList.remove("hidden");    }
         if (error) throw error;
 
         textarea.value = "";
-        showNotice("reply-notice-" + topicId, "Reply posted.");
+
+        showNotice(
+          "reply-notice-" + topicId,
+          "Your reflection has been posted."
+        );
+
         await loadReplies(topicId);
+
       } catch (error) {
-        showNotice("reply-notice-" + topicId, friendlyError(error));
+        showNotice(
+          "reply-notice-" + topicId,
+          friendlyError(error)
+        );
       } finally {
         button.disabled = false;
       }
@@ -441,24 +1038,45 @@ $("createTopicPanel").classList.remove("hidden");    }
       try {
         await loadCurrentUser();
         await loadBook();
+
         await checkAuthorAccess();
+        await loadReaderStatus();
+        await loadCompletedCount();
         await loadTopics();
 
         if (!currentUser) {
           showNotice(
             "pageNotice",
-            "You can read the conversation. Sign in to post replies."
+            "Sign in and update your Reader Shelf status to participate."
+          );
+        } else if (
+          !isBookAuthor &&
+          !canParticipate()
+        ) {
+          showNotice(
+            "pageNotice",
+            "Only readers who are currently reading or have completed this book can participate."
           );
         }
+
       } catch (error) {
-        showNotice("pageNotice", friendlyError(error));
-        $("topicsList").textContent = "Topics could not be loaded.";
+        showNotice(
+          "pageNotice",
+          friendlyError(error)
+        );
+
+        $("topicsList").textContent =
+          "Topics could not be loaded.";
       }
     }
 
-    $("topicForm").addEventListener("submit", submitTopic);
+    $("topicForm").addEventListener(
+      "submit",
+      submitTopic
+    );
 
     init();
   </script>
+
 </body>
 </html>

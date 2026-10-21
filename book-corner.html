@@ -1,364 +1,703 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <meta name="theme-color" content="#f8f3e9">
   <title>The Reading Room | Reader Reach</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
       --cream: #f8f3e9;
-      --white: #fffdf9;
+      --paper: #fffdf9;
       --brown: #3f2a1f;
-      --soft: #6f5443;
+      --deep: #291b15;
+      --soft: #756253;
       --gold: #b8955a;
-      --border: #e4d8c6;
-      --warning: #fff2d7;
+      --border: #e8dfd2;
+      --pale: #f2eadf;
+      --warning: #fff3da;
+      --shadow: 0 14px 45px rgba(63,42,31,.07);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
       background: var(--cream);
       color: var(--brown);
-      font-family: Georgia, "Times New Roman", serif;
-      line-height: 1.6;
+      font-family: "Manrope", sans-serif;
+      font-size: 14px;
+      line-height: 1.75;
     }
 
-    header {
-      padding: 18px 6%;
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-    }
-
-    header a {
-      color: var(--brown);
-      text-decoration: none;
-    }
-
-    main {
-      width: min(900px, 92%);
-      margin: 35px auto;
-    }
-
-    .panel,
-    .topic {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 22px;
-      margin-bottom: 20px;
+    h1, h2, h3, .brand, .quote {
+      font-family: "EB Garamond", Georgia, serif;
     }
 
     h1, h2, h3 {
-      line-height: 1.25;
+      line-height: 1.15;
+      margin-top: 0;
+      font-weight: 600;
     }
 
-    .muted {
-      color: var(--soft);
+    h1 { font-size: clamp(38px, 5vw, 64px); }
+    h2 { font-size: clamp(29px, 3.5vw, 39px); }
+    h3 { font-size: 27px; }
+
+    p { margin: 0 0 15px; }
+
+    a { color: inherit; }
+
+    button, input, textarea {
+      font-family: "Manrope", sans-serif;
     }
 
-    .small {
-      font-size: 0.9rem;
+    .hidden { display: none !important; }
+    .muted { color: var(--soft); }
+    .small { font-size: 12px; }
+
+    .site-header {
+      background: rgba(255,253,249,.96);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      z-index: 5;
     }
 
-    .hidden {
-      display: none !important;
-    }
-
-    .book-header {
+    .header-inner {
+      max-width: 1160px;
+      margin: auto;
+      padding: 19px 24px;
       display: flex;
-      gap: 22px;
-      align-items: flex-start;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
     }
 
-    .book-cover {
-      width: 150px;
-      max-width: 35%;
-      border-radius: 10px;
-      object-fit: cover;
+    .brand {
+      font-size: 30px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: -.8px;
+    }
+
+    .brand span { color: var(--gold); }
+
+    .back-link {
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 11px 16px;
       border: 1px solid var(--border);
+      border-radius: 30px;
+      transition: .2s;
+    }
+
+    .back-link:hover { background: var(--pale); }
+
+    .hero {
+      background: var(--deep);
+      color: var(--paper);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 430px;
+      height: 430px;
+      right: -150px;
+      top: -230px;
+      border: 1px solid rgba(184,149,90,.25);
+      border-radius: 50%;
+      box-shadow: 0 0 0 65px rgba(184,149,90,.035),
+                  0 0 0 130px rgba(184,149,90,.025);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1160px;
+      margin: auto;
+      padding: 64px 24px 72px;
+      position: relative;
     }
 
     .eyebrow {
-      color: var(--gold);
-      font-size: 0.85rem;
-      font-weight: bold;
-      letter-spacing: 1.5px;
+      color: #d7b984;
+      font-size: 11px;
+      font-weight: 800;
       text-transform: uppercase;
+      letter-spacing: 2.5px;
+      margin-bottom: 15px;
     }
 
-    .reader-count {
-      display: inline-block;
+    .hero h1 {
+      font-size: clamp(48px, 7vw, 84px);
+      margin-bottom: 10px;
+      letter-spacing: -1.5px;
+    }
+
+    .hero-description {
+      color: #e0d2c4;
+      max-width: 530px;
+      font-size: 14px;
+      line-height: 1.9;
+    }
+
+    .gold-line {
+      width: 65px;
+      height: 2px;
+      background: var(--gold);
+      margin: 24px 0;
+    }
+
+    .main-content {
+      width: min(1080px, 92%);
+      margin: -36px auto 75px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 34px;
+      margin-bottom: 25px;
+    }
+
+    .book-layout {
+      display: grid;
+      grid-template-columns: 205px minmax(0, 1fr);
+      gap: 35px;
+      align-items: center;
+    }
+
+    .cover-wrap {
+      background: var(--pale);
+      border-radius: 12px;
+      padding: 8px;
+      min-height: 245px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .book-cover {
+      width: 100%;
+      max-height: 305px;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 12px 24px rgba(41,27,21,.16);
+    }
+
+    .cover-placeholder {
+      text-align: center;
+      color: var(--soft);
+      font-family: "EB Garamond", serif;
+      font-size: 25px;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .book-title { margin-bottom: 8px; }
+
+    .book-author {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .book-description {
+      color: var(--soft);
+      max-width: 620px;
+      line-height: 1.9;
+      overflow-wrap: anywhere;
+    }
+
+    .book-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 30px;
       background: var(--cream);
       border: 1px solid var(--border);
-      padding: 8px 14px;
-      border-radius: 30px;
-      font-weight: bold;
-      margin-top: 10px;
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 800;
     }
 
+    .meta-pill svg {
+      width: 17px;
+      height: 17px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.8;
+    }
+
+    .author-progress {
+      margin-top: 26px;
+      border-top: 1px solid var(--border);
+      padding-top: 22px;
+    }
+
+    .progress-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 11px;
+    }
+
+    .progress-head strong { font-size: 12px; }
+
     .progress-track {
-      width: 100%;
-      height: 10px;
-      background: #eee5d8;
+      height: 9px;
+      background: #ede3d6;
       border-radius: 20px;
       overflow: hidden;
-      margin-top: 14px;
     }
 
     .progress-fill {
       height: 100%;
       width: 0;
-      background: var(--gold);
-      transition: width 0.3s;
+      background: linear-gradient(90deg, #9f7841, #d1ad72);
+      border-radius: 20px;
+      transition: width .35s ease;
+    }
+
+    .progress-text {
+      font-size: 12px;
+      color: var(--soft);
+      margin-top: 11px;
+    }
+
+    .intro {
+      text-align: center;
+      padding: 40px 25px;
+    }
+
+    .intro h2 { margin-bottom: 14px; }
+
+    .intro p {
+      max-width: 680px;
+      margin: 0 auto 12px;
+      color: var(--soft);
+      line-height: 2;
+    }
+
+    .ornament {
+      color: var(--gold);
+      font-size: 23px;
+      letter-spacing: 8px;
+      margin: 12px 0 18px;
+    }
+
+    .author-card {
+      border-top: 4px solid var(--gold);
+    }
+
+    .author-badge {
+      display: inline-block;
+      background: var(--pale);
+      color: var(--brown);
+      border-radius: 30px;
+      padding: 8px 13px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .author-requirement {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 17px 19px;
+      font-size: 13px;
+      margin: 20px 0;
     }
 
     label {
       display: block;
-      margin: 14px 0 5px;
-      font-weight: bold;
+      font-size: 12px;
+      font-weight: 800;
+      margin: 18px 0 8px;
     }
 
-    input,
-    textarea {
+    input, textarea {
       width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      background: white;
+      background: #fff;
       color: var(--brown);
-      font: inherit;
+      border: 1px solid #ded3c4;
+      border-radius: 12px;
+      padding: 14px 16px;
+      outline: none;
+      font-size: 13px;
+      transition: .2s;
     }
 
     textarea {
-      min-height: 100px;
       resize: vertical;
+      min-height: 125px;
+      line-height: 1.8;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(184,149,90,.12);
     }
 
     button {
-      margin-top: 12px;
-      padding: 11px 17px;
-      border: 0;
-      border-radius: 9px;
       background: var(--brown);
       color: white;
-      font: inherit;
+      border: 0;
+      border-radius: 30px;
+      padding: 13px 23px;
+      font-size: 12px;
+      font-weight: 800;
       cursor: pointer;
+      transition: .2s;
     }
 
     button:hover:not(:disabled) {
-      background: #624332;
+      background: #674936;
+      transform: translateY(-1px);
     }
 
     button:disabled {
-      opacity: 0.55;
+      opacity: .55;
       cursor: not-allowed;
     }
 
-    .secondary-button {
+    .gold-button {
       background: var(--gold);
-      color: #24190f;
+      color: var(--deep);
     }
 
-    .reply {
-      margin: 12px 0;
-      padding: 12px;
-      border-left: 3px solid var(--gold);
-      background: var(--cream);
-      border-radius: 5px;
-      overflow-wrap: anywhere;
-    }
-
-    .reply-form {
-      margin-top: 16px;
+    .gold-button:hover:not(:disabled) {
+      background: #d3ad70;
     }
 
     .notice {
-      margin: 12px 0;
       white-space: pre-wrap;
+      color: var(--soft);
+      font-size: 12px;
+      margin-top: 14px;
+    }
+
+    .topics-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 15px;
+      margin: 45px 0 22px;
+    }
+
+    .topics-heading h2 { margin-bottom: 7px; }
+
+    .topic-card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 19px;
+      padding: 30px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow);
+      scroll-margin-top: 24px;
+    }
+
+    .topic-card h3 { margin-bottom: 9px; }
+
+    .topic-date {
+      font-size: 11px;
+      color: var(--soft);
+      margin-bottom: 18px;
+    }
+
+    .topic-content {
+      border-top: 1px solid var(--border);
+      padding-top: 23px;
+      margin-top: 23px;
+    }
+
+    .opening-question {
+      font-family: "EB Garamond", serif;
+      font-size: 24px;
+      line-height: 1.45;
+      margin-bottom: 23px;
+    }
+
+    .reply {
+      background: var(--cream);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 12px 12px 0;
+      padding: 16px 19px;
+      margin: 13px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .reply strong { font-size: 12px; }
+
+    .reply p {
+      margin: 8px 0;
+      line-height: 1.9;
+    }
+
+    .reply-form {
+      margin-top: 25px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
     }
 
     .warning {
       background: var(--warning);
-      border: 1px solid #e7c785;
-      border-radius: 12px;
-      padding: 18px;
-      margin: 16px 0;
+      border: 1px solid #e8c98b;
+      border-radius: 14px;
+      padding: 23px;
+      margin-top: 20px;
     }
 
-    .topic-card {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px;
-      margin-bottom: 14px;
-      background: var(--white);
+    .warning h3 { margin-bottom: 8px; }
+
+    .empty-state {
+      background: var(--paper);
+      border: 1px dashed #d9c8b1;
+      border-radius: 20px;
+      padding: 50px 24px;
+      text-align: center;
     }
 
-    .topic-content {
-      margin-top: 16px;
+    .empty-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: var(--cream);
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      font-size: 28px;
+    }
+
+    .empty-state h3 { margin-bottom: 10px; }
+
+    .empty-state p {
+      color: var(--soft);
+      max-width: 470px;
+      margin: auto;
+    }
+
+    .access-card {
+      text-align: center;
+      padding: 35px 25px;
+    }
+
+    .access-card h3 { margin-bottom: 12px; }
+
+    .access-card p {
+      color: var(--soft);
+      max-width: 500px;
+      margin: auto;
     }
 
     footer {
-      padding: 25px;
+      border-top: 1px solid var(--border);
+      background: var(--paper);
       text-align: center;
-      color: var(--soft);
+      padding: 35px 20px;
     }
 
-    @media (max-width: 600px) {
-      .book-header {
-        flex-direction: column;
-      }
+    .footer-brand {
+      font-family: "EB Garamond", serif;
+      font-size: 29px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
 
-      .book-cover {
-        width: 130px;
-        max-width: 100%;
-      }
+    footer p {
+      color: var(--soft);
+      font-size: 11px;
+      margin: 0;
+    }
 
-      .panel,
-      .topic {
-        padding: 17px;
-      }
+    @media (max-width: 680px) {
+      .hero-inner { padding: 50px 22px 70px; }
+      .book-layout { grid-template-columns: 1fr; gap: 22px; }
+      .cover-wrap { width: 180px; min-height: 230px; }
+      .card { padding: 24px; }
+      .intro { padding: 35px 20px; }
+      .topic-card { padding: 23px; }
+      .topics-heading { display: block; }
+      .brand { font-size: 26px; }
+      .back-link { font-size: 11px; padding: 9px 12px; }
     }
   </style>
 </head>
 
 <body>
-
-  <header>
-    <a href="index.html">
-      <strong>Reader Reach</strong>
-    </a>
-
-    <span style="float:right">
-      <a href="javascript:history.back()">← Go back</a>
-    </span>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html">Reader <span>Reach</span></a>
+      <a class="back-link" href="index.html">← Back to Reader Reach</a>
+    </div>
   </header>
 
-  <main>
-
-    <section class="panel">
-
-      <p class="eyebrow">
-        Reader Reach · The Reading Room
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">A space for stories that stay with us</p>
+      <h1>The Reading Room</h1>
+      <div class="gold-line"></div>
+      <p class="hero-description">
+        Every book leaves something behind. A thought, a question,
+        a feeling worth sharing. Welcome to a place where those
+        moments find a voice.
       </p>
+    </div>
+  </section>
 
-      <div class="book-header">
+  <main class="main-content">
 
-        <img
-          id="bookCover"
-          class="book-cover hidden"
-          alt="Book cover"
-        >
-
-        <div>
-          <h1 id="bookTitle">Loading book…</h1>
-
-          <p id="bookDescription" class="muted"></p>
-
-          <p id="authorName"></p>
-
-          <div id="readerCount" class="reader-count">
-            Loading reader count…
+    <section class="card">
+      <div class="book-layout">
+        <div class="cover-wrap">
+          <img id="bookCover" class="book-cover hidden" alt="Book cover">
+          <div id="coverPlaceholder" class="cover-placeholder">
+            Reader Reach
           </div>
         </div>
 
+        <div>
+          <p class="section-label">Featured Book Reflection</p>
+          <h2 id="bookTitle" class="book-title">Loading book…</h2>
+          <p id="authorName" class="book-author"></p>
+          <p id="bookDescription" class="book-description"></p>
+
+          <div class="book-meta">
+            <div id="readerCount" class="meta-pill">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 5.5c3-1.5 5.5-1 8 1v13c-2.5-2-5-2.5-8-1z"/>
+                <path d="M20 5.5c-3-1.5-5.5-1-8 1v13c2.5-2 5-2.5 8-1z"/>
+              </svg>
+              <span id="readerCountText">Loading readers…</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-<div id="authorProgress" class="hidden">
-  <div class="progress-track">
-    <div id="progressFill" class="progress-fill"></div>
-  </div>
-
-  <p id="progressText" class="muted small"></p>
-</div>
+      <div id="authorProgress" class="author-progress hidden">
+        <div class="progress-head">
+          <strong>Your Reading Room milestone</strong>
+          <span id="progressFraction" class="small muted"></span>
+        </div>
+        <div class="progress-track">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+        <p id="progressText" class="progress-text"></p>
+      </div>
 
       <div id="pageNotice" class="notice" role="status"></div>
-
     </section>
 
-    <section id="createTopicPanel" class="panel hidden">
+    <section class="card intro">
+      <p class="section-label">More than the final page</p>
+      <h2>Where stories become shared experiences</h2>
+      <div class="ornament">✦</div>
+      <p>
+        A beautiful story doesn't always end when the book closes.
+        Sometimes, it begins a new conversation.
+      </p>
+      <p>
+        The Reading Room brings authors and readers together to
+        explore meaningful moments, unforgettable characters,
+        and the lessons hidden between the lines.
+      </p>
+    </section>
 
-      <h2>Start a topic</h2>
-
+    <section id="createTopicPanel" class="card author-card hidden">
+      <span class="author-badge">Author Workspace</span>
+      <h2>Lead the reflection</h2>
       <p class="muted">
-        As the author of this book, you can invite your
-        readers to reflect on the story and share their thoughts.
+        This is your space to invite readers into a deeper
+        reflection on your book. Start with a thoughtful question
+        and let their perspectives unfold.
       </p>
 
-      <div id="authorRequirement" class="notice"></div>
+      <div id="authorRequirement" class="author-requirement"></div>
 
       <form id="topicForm" class="hidden">
-
-        <label for="topicTitle">Topic title</label>
-
+        <label for="topicTitle">Reflection title</label>
         <input
           id="topicTitle"
           maxlength="200"
           required
-          placeholder="e.g. What did Elizabeth's decision teach you?"
+          placeholder="Give your reflection a meaningful title"
         >
 
-        <label for="openingQuestion">Opening question</label>
-
+        <label for="openingQuestion">Your opening question</label>
         <textarea
           id="openingQuestion"
           maxlength="5000"
           required
-          placeholder="What would you like your readers to reflect on?"
+          placeholder="What would you love your readers to reflect on?"
         ></textarea>
 
-        <button id="topicButton" type="submit">
-          Publish topic
+        <button id="topicButton" class="gold-button" type="submit">
+          Publish Reflection →
         </button>
-
       </form>
 
       <div id="topicNotice" class="notice" role="status"></div>
-
-    </section>
-
-    <section class="panel">
-
-      <h2>Welcome to The Reading Room</h2>
-
-      <p>
-        A special place where authors and readers reflect
-        on the stories, characters, lessons, and moments
-        that stay with them long after reading.
-      </p>
-
-      <p class="muted">
-        Authors begin each topic. Readers who are currently
-        reading or have completed the book can participate.
-      </p>
-
     </section>
 
     <section>
-
-      <h2>Reading Room Topics</h2>
-
-      <p class="muted">
-        Explore reflections started by the author.
-      </p>
-
-      <div id="topicsList">
-        <div class="panel">Loading topics…</div>
+      <div class="topics-heading">
+        <div>
+          <p class="section-label">Thoughts worth sharing</p>
+          <h2>Inside The Reading Room</h2>
+          <p class="muted">
+            Explore reflections inspired by this book.
+          </p>
+        </div>
       </div>
 
+      <div id="topicsList">
+        <div class="empty-state">
+          <p>Preparing The Reading Room…</p>
+        </div>
+      </div>
     </section>
 
   </main>
 
   <footer>
-    Reader Reach · Connecting readers and authors
+    <div class="footer-brand">Reader Reach</div>
+    <p>Connecting stories, authors, and the people who love to read.</p>
   </footer>
 
   <script>
@@ -376,14 +715,12 @@
     const $ = id => document.getElementById(id);
 
     const params = new URLSearchParams(window.location.search);
-
     const bookId = params.get("book_id");
     const requestedTopicId = params.get("topic_id");
 
     let currentUser = null;
     let currentBook = null;
     let authorProfileId = null;
-
     let isBookAuthor = false;
     let readerStatus = null;
     let completedReaders = null;
@@ -391,16 +728,13 @@
     const openedTopics = new Set();
 
     function escapeHtml(value) {
-      return String(value ?? "").replace(
-        /[&<>"']/g,
-        char => ({
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#39;"
-        })[char]
-      );
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
     }
 
     function showNotice(id, message) {
@@ -414,11 +748,9 @@
     }
 
     function canParticipate() {
-      return (
-        isBookAuthor ||
+      return isBookAuthor ||
         readerStatus === "currently_reading" ||
-        readerStatus === "completed"
-      );
+        readerStatus === "completed";
     }
 
     async function loadCurrentUser() {
@@ -440,9 +772,7 @@
 
       const { data: book, error } = await db
         .from("books")
-        .select(
-          "id,title,description,cover_url,author_id,status"
-        )
+        .select("id,title,description,cover_url,author_id,status")
         .eq("id", bookId)
         .eq("status", "approved")
         .maybeSingle();
@@ -488,6 +818,7 @@
           "Cover of " + (book.title || "the book");
 
         $("bookCover").classList.remove("hidden");
+        $("coverPlaceholder").classList.add("hidden");
       }
 
       document.title =
@@ -552,57 +883,53 @@
       readerStatus = shelf?.status || null;
     }
 
-async function loadCompletedCount() {
-  completedReaders = null;
+    async function loadCompletedCount() {
+      completedReaders = null;
 
-  const { data, error } = await db.rpc(
-    "get_book_completed_reader_count",
-    { p_book_id: bookId }
-  );
+      const { data, error } = await db.rpc(
+        "get_book_completed_reader_count",
+        { p_book_id: bookId }
+      );
 
-  if (error) {
-    console.error("Completed reader count:", error);
+      if (error) {
+        console.error("Completed reader count:", error);
 
-    $("readerCount").textContent =
-      "Reader count unavailable";
+        $("readerCountText").textContent =
+          "Reader count unavailable";
 
-    $("progressText").textContent =
-      "The Reading Room opens after 10 unique readers complete the book.";
+        updateAuthorRequirement();
+        return;
+      }
 
-    updateAuthorRequirement();
-    return;
-  }
+      completedReaders = Number(data ?? 0);
 
-  completedReaders = Number(data ?? 0);
+      $("readerCountText").textContent =
+        completedReaders === 1
+          ? "Read by 1 person"
+          : "Read by " + completedReaders + " people";
 
-$("readerCount").textContent =
-  completedReaders === 1
-    ? "1 person has read this book"
-    : completedReaders + " people have read this book";
+      $("progressFill").style.width =
+        Math.min((completedReaders / 10) * 100, 100) + "%";
 
-  const percentage = Math.min(
-    (completedReaders / 10) * 100,
-    100
-  );
+      $("progressFraction").textContent =
+        completedReaders + " / 10";
 
-  $("progressFill").style.width = percentage + "%";
+      $("progressText").textContent =
+        completedReaders >= 10
+          ? "Milestone reached. You can now publish reflections."
+          : completedReaders +
+            " of 10 completed readers needed to unlock author topics.";
 
-  $("progressText").textContent =
-    completedReaders >= 10
-      ? "The Reading Room has reached its 10-reader milestone."
-      : completedReaders +
-        " of 10 completed readers needed to unlock author topics.";
+      updateAuthorRequirement();
+    }
 
-  updateAuthorRequirement();
-}
+    function updateAuthorRequirement() {
+      $("authorProgress").classList.toggle(
+        "hidden",
+        !isBookAuthor
+      );
 
-function updateAuthorRequirement() {
-  $("authorProgress").classList.toggle(
-    "hidden",
-    !isBookAuthor
-  );
-
-  if (!isBookAuthor) return;
+      if (!isBookAuthor) return;
 
       const form = $("topicForm");
 
@@ -619,19 +946,38 @@ function updateAuthorRequirement() {
         form.classList.add("hidden");
 
         $("authorRequirement").textContent =
-          "Your book currently has " +
-          completedReaders +
-          " completed reader(s). " +
-          "You need at least 10 unique completed readers " +
-          "before you can start a topic.";
+          "Your book has " + completedReaders +
+          " completed reader(s). Once 10 unique readers " +
+          "finish your book, you can begin publishing reflections.";
         return;
       }
 
       form.classList.remove("hidden");
 
       $("authorRequirement").textContent =
-        "Your book has reached the required 10 completed readers. " +
-        "You can now start a topic!";
+        "Your book has reached its reading milestone. " +
+        "Your Reading Room is ready for its first reflection!";
+    }
+
+    function renderEmptyState() {
+      const authorMessage = isBookAuthor
+        ? "You haven't published a reflection yet. " +
+          "Your first reflection will appear here."
+        : "No reflections have been shared for this book yet. " +
+          "When the author opens a topic, eligible readers " +
+          "can join and share their thoughts.";
+
+      $("topicsList").innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon" aria-hidden="true">✧</div>
+          <h3>
+            ${isBookAuthor
+              ? "Your story's next chapter begins here"
+              : "A little quiet, for now"}
+          </h3>
+          <p>${escapeHtml(authorMessage)}</p>
+        </div>
+      `;
     }
 
     async function loadTopics() {
@@ -639,17 +985,14 @@ function updateAuthorRequirement() {
 
       if (!canParticipate()) {
         container.innerHTML = `
-          <div class="panel">
-            <h3>Reading Room access</h3>
+          <div class="card access-card">
+            <p class="section-label">Your invitation awaits</p>
+            <h3>Every reader has a place here</h3>
             <p>
-              To participate in this book's Reading Room,
-              you must be the author or a reader who is
-              currently reading or has completed the book.
-            </p>
-            <p class="muted">
-              Update your Reader Shelf status to
-              "Currently Reading" or "Completed"
-              to unlock your participation.
+              Readers who are currently reading or have
+              completed this book can take part in its
+              reflections. Update your Reader Shelf status
+              to join The Reading Room.
             </p>
           </div>
         `;
@@ -670,79 +1013,72 @@ function updateAuthorRequirement() {
       }
 
       if (!topics?.length) {
-        container.innerHTML = `
-          <div class="panel">
-            No topics yet.
-            The author can start the first one once
-            the book reaches 10 completed readers.
-          </div>
-        `;
+        renderEmptyState();
         return;
       }
 
       container.innerHTML = topics.map(topic => `
         <article class="topic-card" id="topic-${topic.id}">
+          <p class="section-label">Author's Reflection</p>
+
           <h3>${escapeHtml(topic.title)}</h3>
 
-          <p class="muted small">
-            Posted ${escapeHtml(
-              new Date(topic.created_at).toLocaleString()
+          <p class="topic-date">
+            Shared ${escapeHtml(
+              new Date(topic.created_at).toLocaleDateString(
+                undefined,
+                { year: "numeric", month: "long", day: "numeric" }
+              )
             )}
           </p>
 
-          <div id="warning-${topic.id}" class="warning hidden">
-            <strong>Spoiler warning</strong>
+          <button type="button" data-open-topic="${topic.id}">
+            Explore Reflection →
+          </button>
 
+          <div id="warning-${topic.id}" class="warning hidden">
+            <p class="section-label">A gentle reminder</p>
+            <h3>Spoilers may be ahead</h3>
             <p>
-              This topic may contain important details
-              about the book, including its ending.
+              This reflection may reveal important details
+              about the story, including its ending.
               Would you like to continue?
             </p>
-
             <button
-              class="secondary-button"
+              class="gold-button"
               type="button"
               data-continue-topic="${topic.id}"
             >
-              Continue to topic
+              Continue to Reflection →
             </button>
           </div>
 
-          <button
-            type="button"
-            data-open-topic="${topic.id}"
-          >
-            Open topic
-          </button>
-
-          <div
-            id="content-${topic.id}"
-            class="topic-content hidden"
-          >
-            <p>${escapeHtml(topic.opening_question)
-              .replace(/\n/g, "<br>")}</p>
-
-            <div id="replies-${topic.id}">
-              Loading replies…
+          <div id="content-${topic.id}" class="topic-content hidden">
+            <div class="opening-question">
+              ${escapeHtml(topic.opening_question)
+                .replace(/\n/g, "<br>")}
             </div>
 
-            <form
-              class="reply-form"
-              data-topic-id="${topic.id}"
-            >
+            <p class="section-label">Reader Reflections</p>
+
+            <div id="replies-${topic.id}">
+              Loading reflections…
+            </div>
+
+            <form class="reply-form" data-topic-id="${topic.id}">
               <label for="reply-${topic.id}">
-                Your reflection
+                Add your reflection
               </label>
 
               <textarea
                 id="reply-${topic.id}"
                 maxlength="5000"
                 required
-                placeholder="Share your thoughts…"
+                placeholder="What did this moment in the story mean to you?"
               ></textarea>
 
               <button type="submit">
-                Post reply
+                Share Reflection →
               </button>
             </form>
 
@@ -755,51 +1091,37 @@ function updateAuthorRequirement() {
         </article>
       `).join("");
 
-      document.querySelectorAll(
-        "[data-open-topic]"
-      ).forEach(button => {
-        button.addEventListener("click", async () => {
-          const topicId =
-            button.dataset.openTopic;
+      document.querySelectorAll("[data-open-topic]")
+        .forEach(button => {
+          button.addEventListener("click", async () => {
+            const topicId = button.dataset.openTopic;
 
-          if (readerStatus === "currently_reading") {
-            $("warning-" + topicId)
-              .classList.remove("hidden");
-
-            button.classList.add("hidden");
-          } else {
-            await openTopic(topicId);
-          }
+            if (readerStatus === "currently_reading") {
+              $("warning-" + topicId).classList.remove("hidden");
+              button.classList.add("hidden");
+            } else {
+              await openTopic(topicId);
+            }
+          });
         });
-      });
 
-      document.querySelectorAll(
-        "[data-continue-topic]"
-      ).forEach(button => {
-        button.addEventListener("click", async () => {
-          await openTopic(
-            button.dataset.continueTopic
-          );
+      document.querySelectorAll("[data-continue-topic]")
+        .forEach(button => {
+          button.addEventListener("click", async () => {
+            await openTopic(button.dataset.continueTopic);
+          });
         });
-      });
 
-      document.querySelectorAll(
-        ".reply-form"
-      ).forEach(form => {
-        form.addEventListener(
-          "submit",
-          submitReply
-        );
-      });
+      document.querySelectorAll(".reply-form")
+        .forEach(form => {
+          form.addEventListener("submit", submitReply);
+        });
 
       if (
         requestedTopicId &&
         topics.some(t => t.id === requestedTopicId)
       ) {
-        const selected =
-          $("topic-" + requestedTopicId);
-
-        selected?.scrollIntoView({
+        $("topic-" + requestedTopicId)?.scrollIntoView({
           behavior: "smooth",
           block: "start"
         });
@@ -808,24 +1130,14 @@ function updateAuthorRequirement() {
 
     async function openTopic(topicId) {
       const content = $("content-" + topicId);
-
       if (!content) return;
 
       content.classList.remove("hidden");
+      $("warning-" + topicId)?.classList.add("hidden");
 
-      const warning = $("warning-" + topicId);
-
-      if (warning) {
-        warning.classList.add("hidden");
-      }
-
-      const openButton = document.querySelector(
+      document.querySelector(
         '[data-open-topic="' + topicId + '"]'
-      );
-
-      if (openButton) {
-        openButton.classList.add("hidden");
-      }
+      )?.classList.add("hidden");
 
       if (!openedTopics.has(topicId)) {
         openedTopics.add(topicId);
@@ -842,9 +1154,7 @@ function updateAuthorRequirement() {
 
       const { data: replies, error } = await db
         .from("book_corner_replies")
-        .select(
-          "id,profile_id,message,created_at"
-        )
+        .select("id,profile_id,message,created_at")
         .eq("topic_id", topicId)
         .order("created_at", { ascending: true });
 
@@ -855,23 +1165,18 @@ function updateAuthorRequirement() {
 
       if (!replies?.length) {
         container.innerHTML =
-          '<p class="muted small">No reflections yet. Be the first to reply.</p>';
+          '<p class="muted">No reflections yet. Be the first to share your thoughts.</p>';
         return;
       }
 
       const profileIds = [
-        ...new Set(
-          replies.map(reply => reply.profile_id)
-        )
+        ...new Set(replies.map(reply => reply.profile_id))
       ];
 
       const names = {};
 
       if (profileIds.length) {
-        const {
-          data: profiles,
-          error: profileError
-        } = await db
+        const { data: profiles, error: profileError } = await db
           .from("profiles")
           .select("id,display_name")
           .in("id", profileIds);
@@ -895,8 +1200,7 @@ function updateAuthorRequirement() {
           </strong>
 
           <p>
-            ${escapeHtml(reply.message)
-              .replace(/\n/g, "<br>")}
+            ${escapeHtml(reply.message).replace(/\n/g, "<br>")}
           </p>
 
           <small class="muted">
@@ -914,45 +1218,33 @@ function updateAuthorRequirement() {
       if (!currentUser || !isBookAuthor) {
         showNotice(
           "topicNotice",
-          "Only the approved author of this book can start a topic."
+          "Only the approved author of this book can publish a reflection."
         );
         return;
       }
 
-      if (
-        completedReaders === null ||
-        completedReaders < 10
-      ) {
+      if (completedReaders === null || completedReaders < 10) {
         showNotice(
           "topicNotice",
-          "This book needs at least 10 unique completed readers."
+          "Your book needs at least 10 unique completed readers."
         );
         return;
       }
 
       const title = $("topicTitle").value.trim();
-      const question =
-        $("openingQuestion").value.trim();
-
+      const question = $("openingQuestion").value.trim();
       const button = $("topicButton");
 
-      if (
-        title.length < 3 ||
-        question.length < 3
-      ) {
+      if (title.length < 3 || question.length < 3) {
         showNotice(
           "topicNotice",
-          "Please enter a topic title and opening question."
+          "Please enter a title and opening question."
         );
         return;
       }
 
       button.disabled = true;
-
-      showNotice(
-        "topicNotice",
-        "Publishing topic…"
-      );
+      showNotice("topicNotice", "Publishing your reflection…");
 
       try {
         const { error } = await db
@@ -970,16 +1262,12 @@ function updateAuthorRequirement() {
 
         showNotice(
           "topicNotice",
-          "Your Reading Room topic has been published!"
+          "Your reflection has been published successfully!"
         );
 
         await loadTopics();
-
       } catch (error) {
-        showNotice(
-          "topicNotice",
-          friendlyError(error)
-        );
+        showNotice("topicNotice", friendlyError(error));
       } finally {
         button.disabled = false;
       }
@@ -991,7 +1279,7 @@ function updateAuthorRequirement() {
       if (!currentUser || !canParticipate()) {
         showNotice(
           "pageNotice",
-          "You are not eligible to reply to this book's topics."
+          "You are not eligible to reply to this book's reflections."
         );
         return;
       }
@@ -1021,11 +1309,10 @@ function updateAuthorRequirement() {
 
         showNotice(
           "reply-notice-" + topicId,
-          "Your reflection has been posted."
+          "Your reflection has been shared!"
         );
 
         await loadReplies(topicId);
-
       } catch (error) {
         showNotice(
           "reply-notice-" + topicId,
@@ -1040,7 +1327,6 @@ function updateAuthorRequirement() {
       try {
         await loadCurrentUser();
         await loadBook();
-
         await checkAuthorAccess();
         await loadReaderStatus();
         await loadCompletedCount();
@@ -1051,34 +1337,22 @@ function updateAuthorRequirement() {
             "pageNotice",
             "Sign in and update your Reader Shelf status to participate."
           );
-        } else if (
-          !isBookAuthor &&
-          !canParticipate()
-        ) {
+        } else if (!canParticipate()) {
           showNotice(
             "pageNotice",
-            "Only readers who are currently reading or have completed this book can participate."
+            "Readers currently reading or finished with this book can join its reflections."
           );
         }
-
       } catch (error) {
-        showNotice(
-          "pageNotice",
-          friendlyError(error)
-        );
+        showNotice("pageNotice", friendlyError(error));
 
         $("topicsList").textContent =
-          "Topics could not be loaded.";
+          "The Reading Room could not be loaded.";
       }
     }
 
-    $("topicForm").addEventListener(
-      "submit",
-      submitTopic
-    );
-
+    $("topicForm").addEventListener("submit", submitTopic);
     init();
   </script>
-
 </body>
 </html>

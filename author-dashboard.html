@@ -402,6 +402,25 @@ footer {padding:36px 15px}
 #page-messages .attachment-preview{border-radius:12px}
 @media(max-width:760px){#page-messages>.panel{padding:14px}#page-messages .message-layout{grid-template-columns:1fr}#page-messages .conversation-list{min-height:0;max-height:190px;border-right:0;border-bottom:1px solid #e8dcca}#page-messages .message-list{height:340px}#page-messages .panel-head{flex-wrap:wrap}.support-intro{padding:12px}}
 
+
+/* Stable Reader Reach chat: header and composer never jump with message length */
+#page-messages .message-layout{height:min(680px,calc(100dvh - 160px));min-height:480px;max-height:720px;align-items:stretch}
+#page-messages .conversation-list{height:100%;min-height:0;max-height:none;overflow-y:auto;overscroll-behavior:contain}
+#page-messages .message-list-wrap{height:100%;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+#page-messages .message-list-wrap>.chat-compose:first-child{flex:0 0 auto}
+#page-messages .message-list{flex:1 1 auto;height:auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scroll-behavior:auto;align-items:stretch;gap:12px}
+#page-messages .message{width:fit-content;min-width:0;max-width:min(78%,480px);flex:0 0 auto;align-self:flex-start;white-space:normal;overflow-wrap:anywhere}
+#page-messages .message.mine{align-self:flex-end}
+#page-messages .messageBody{white-space:pre-wrap;overflow-wrap:anywhere}
+#page-messages .message-meta{gap:18px}
+#page-messages #messageForm{flex:0 0 auto;min-height:0;padding:11px 16px}
+#page-messages #messageText{min-height:42px;height:46px;max-height:100px;resize:none;padding:10px 13px}
+#page-messages #messageForm .actions{margin-top:7px}
+#page-messages .attachment-row{margin-top:5px}
+#page-messages .support-intro{margin-top:8px}
+#newConversationPanel[hidden]{display:none!important}
+@media(max-width:760px){#page-messages .message-layout{height:min(760px,calc(100dvh - 100px));min-height:520px;grid-template-rows:150px minmax(0,1fr)}#page-messages .conversation-list{max-height:none;height:150px;min-height:0}#page-messages .message-list{height:auto}}
+
 </style>
 
 </head>
@@ -662,8 +681,14 @@ footer {padding:36px 15px}
       <h2>Your Conversations</h2>
       <button class="btn" id="newConversationButton">Start a Message</button>
     </div>
-    <div class="support-intro"><span class="support-intro-icon">✦</span><div><strong>A direct line to our literary support team</strong><p>Ask about your books, your account, or anything related to Reader Reach. No book or moderator selection required.</p></div></div>
-    <div id="conversationStatus" class="notice info">Your conversations will load here.</div>
+    <div class="support-intro"><span class="support-intro-icon">✦</span><div><strong>A direct line to our literary support team</strong><p>Ask about your books, your account, or anything related to Reader Reach. Choose a book when your message is about a particular title, or contact our team for general support.</p></div></div>
+    <div id="newConversationPanel" class="new-conversation-box" hidden>
+        <div class="field"><label for="newConversationBook">What would you like to discuss?</label>
+          <select id="newConversationBook"><option value="">General support — no book selected</option></select>
+        </div>
+        <div class="actions"><button type="button" class="btn" id="createConversationButton">Open Conversation</button><button type="button" class="btn secondary" id="cancelConversationButton">Cancel</button></div>
+      </div>
+      <div id="conversationStatus" class="notice info">Your conversations will load here.</div>
     <div class="message-layout">
       <div id="conversationList" class="conversation-list"></div>
       <div class="message-list-wrap">
@@ -1782,7 +1807,7 @@ async function loadConversations() {
   }
 
   $("conversationStatus").textContent =
-    "Select a conversation to read and reply. For general support, contact The Literary Guardian directly.";
+    "Choose a conversation, or start a new general or book-specific message.";
 
   const moderatorIds =
     [...new Set(
@@ -1872,7 +1897,12 @@ async function loadConversations() {
           activeConversationId =
             button.dataset.conversation;
 
-          await loadConversations();
+          document.querySelectorAll("[data-conversation]").forEach(item => item.classList.toggle("active",item.dataset.conversation === activeConversationId));
+          const conversation = myConversations.find(c => c.id === activeConversationId);
+          const chosenBook = books.find(b => b.id === conversation?.book_id);
+          $("messageHeading").textContent = conversation?.book_id ? (chosenBook?.title || "Book conversation") : "Reader Reach Support";
+          $("messageModerator").textContent = conversation?.book_id ? "Book support" : "General support";
+          await loadMessages();
         }
       );
     });
@@ -1906,7 +1936,7 @@ async function loadConversations() {
     );
 
   $("messageHeading").textContent =
-    active?.book_id ? (book?.title || "Book conversation") : "The Literary Guardian";
+    active?.book_id ? (book?.title || "Book conversation") : "Reader Reach Support";
 
   $("messageModerator").textContent = active?.book_id
     ? "Reader Reach · Book support"
@@ -1915,8 +1945,18 @@ async function loadConversations() {
   await loadMessages();
 }
 
+let messagesLoadInFlight = false;
+let lastMessagesSignature = "";
+let lastMessagesConversationId = null;
 async function loadMessages() {
-  if (!activeConversationId) return;
+  if (!activeConversationId || messagesLoadInFlight) return;
+  messagesLoadInFlight = true;
+  const requestedConversationId = activeConversationId;
+  const scrollBox = $("messageList");
+  const nearBottom = scrollBox.scrollHeight - scrollBox.scrollTop - scrollBox.clientHeight < 90;
+  const oldScroll = scrollBox.scrollTop;
+  const oldHeight = scrollBox.scrollHeight;
+  try {
 
   const {
     data:messages,
@@ -1936,7 +1976,14 @@ async function loadMessages() {
     return;
   }
 
+  if (requestedConversationId !== activeConversationId) return;
   const rows = messages || [];
+  const others = [...new Set(rows.map(m => m.sender_profile_id).filter(id => id && id !== currentUser.id))];
+  let senderRoles = {};
+  if (others.length) {
+    const {data:senderProfiles} = await supabaseClient.from("profiles").select("id,role").in("id",others);
+    for (const profile of senderProfiles || []) senderRoles[profile.id] = profile.role;
+  }
   let attachments = [];
 
   if (rows.length) {
@@ -1982,6 +2029,9 @@ async function loadMessages() {
     }
   }
 
+  const signature = JSON.stringify({conversation:requestedConversationId,rows,attachments:attachments.map(a=>[a.id,a.file_path])});
+  if (signature === lastMessagesSignature) return;
+  lastMessagesSignature = signature;
   if (!rows.length) {
     $("messageList").innerHTML =
       '<div class="empty">No messages yet. Start the conversation below.</div>';
@@ -2009,7 +2059,7 @@ async function loadMessages() {
 
             <div class="message-meta">
               <span>
-                ${mine ? "You" : "The Literary Guardian"}
+                ${mine ? "You" : senderRoles[m.sender_profile_id] === "admin" ? "The Curator" : "The Literary Guardian"}
               </span>
 
               <span>
@@ -2051,8 +2101,14 @@ async function loadMessages() {
       );
     });
 
-  $("messageList").scrollTop =
-    $("messageList").scrollHeight;
+  if (activeConversationId === requestedConversationId) {
+    if (nearBottom || lastMessagesConversationId !== requestedConversationId) {
+      scrollBox.scrollTop = scrollBox.scrollHeight;
+    } else {
+      scrollBox.scrollTop = oldScroll + Math.max(0, scrollBox.scrollHeight - oldHeight);
+    }
+    lastMessagesConversationId = requestedConversationId;
+  }
 
   const unread =
     rows
@@ -2071,6 +2127,7 @@ async function loadMessages() {
       })
       .in("id", unread);
   }
+  } finally { messagesLoadInFlight = false; }
 }
 
 async function startEditAuthorMessage(messageId) {
@@ -2152,45 +2209,42 @@ async function startEditAuthorMessage(messageId) {
   });
 }
 
-async function openNewConversationPanel() {
-  if (!currentAuthor?.id || !currentUser?.id) {
-    setNotice("Please sign in to send a message.", "info");
-    return;
-  }
-  const button = $("newConversationButton");
+function openNewConversationPanel() {
+  if (!currentAuthor?.id || !currentUser?.id) { setNotice("Please sign in to send a message.","info"); return; }
+  const select = $("newConversationBook");
+  select.innerHTML = '<option value="">General support — no book selected</option>' + myBooks.map(book =>
+    `<option value="${escapeHTML(book.id)}">${escapeHTML(book.title || "Untitled book")}</option>`).join("");
+  $("newConversationPanel").hidden = false;
+  select.focus();
+}
+$("newConversationButton").addEventListener("click", openNewConversationPanel);
+$("cancelConversationButton").addEventListener("click", () => { $("newConversationPanel").hidden = true; });
+$("createConversationButton").addEventListener("click", async () => {
+  const button = $("createConversationButton");
+  const bookId = $("newConversationBook").value || null;
   button.disabled = true;
-  button.textContent = "Opening…";
   try {
-    const {data: existing, error: lookupError} = await supabaseClient
-      .from("conversations")
-      .select("id")
-      .eq("author_id", currentAuthor.id)
-      .is("book_id", null)
-      .order("created_at", {ascending: false})
-      .limit(1);
+    // Reuse the latest matching support conversation when possible.
+    let query = supabaseClient.from("conversations").select("id")
+      .eq("author_id",currentAuthor.id).is("moderator_id",null)
+      .order("created_at",{ascending:false}).limit(1);
+    query = bookId ? query.eq("book_id",bookId) : query.is("book_id",null);
+    const {data:existing,error:lookupError} = await query;
     if (lookupError) throw lookupError;
-    if (existing?.length) {
-      activeConversationId = existing[0].id;
-    } else {
-      const {data: created, error: createError} = await supabaseClient
-        .from("conversations")
-        .insert({author_id: currentAuthor.id, book_id: null, moderator_id: null})
-        .select("id")
-        .single();
+    if (existing?.length) activeConversationId = existing[0].id;
+    else {
+      const {data:created,error:createError} = await supabaseClient.from("conversations")
+        .insert({author_id:currentAuthor.id,book_id:bookId,moderator_id:null})
+        .select("id").single();
       if (createError) throw createError;
       activeConversationId = created.id;
     }
-    showPage("messages");
+    $("newConversationPanel").hidden = true;
     await loadConversations();
     $("messageText").focus();
-  } catch (error) {
-    setNotice("Unable to open your support conversation: " + friendlyError(error), "error");
-  } finally {
-    button.disabled = false;
-    button.textContent = "Start a Message";
-  }
-}
-$("newConversationButton").addEventListener("click", openNewConversationPanel);
+  } catch(error) { setNotice("Could not open conversation: " + friendlyError(error),"error"); }
+  finally { button.disabled = false; }
+});
 
 $("messageFile").addEventListener(
 "change",
@@ -2315,7 +2369,7 @@ try {
       );
 
     if (ue) {
-      failed.push(file.name);
+      failed.push(file.name + " (" + friendlyError(ue) + ")");
       continue;
     }
 
@@ -2340,7 +2394,7 @@ try {
         .from(CHAT_BUCKET)
         .remove([up.path]);
 
-      failed.push(file.name);
+      failed.push(file.name + " (" + friendlyError(ae) + ")");
     }
   }
 
@@ -2359,8 +2413,8 @@ try {
   $("messageFile").value = "";
   $("messageFileName").textContent = "";
 
+  lastMessagesSignature = "";
   await loadMessages();
-  await loadConversations();
 
   if (failed.length) {
     setNotice(
@@ -2448,12 +2502,13 @@ setInterval(
 async () => {
 if (
 document.visibilityState === "visible" &&
+document.getElementById("page-messages").classList.contains("active") &&
 activeConversationId
 ) {
 await loadMessages();
 }
 },
-5000
+25000
 );
 }
 

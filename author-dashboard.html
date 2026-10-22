@@ -467,8 +467,9 @@ footer {padding:36px 15px}
       <button class="navbtn" data-page="profile">My Profile</button>
       <button class="navbtn" data-page="submit">Submit a Book</button>
       <button class="navbtn" data-page="books">My Books</button>
+      <button class="navbtn" data-page="materials">Manage Book Materials</button>
       <button class="navbtn" data-page="messages">Messages</button>
-      <button class="navbtn" data-page="schedule">Feature Schedule</button>
+      <button class="navbtn" data-page="schedule">My Spotlight Schedule</button>
       <button class="navbtn" data-page="notifications">Notifications</button>
       <button class="navbtn" data-page="account">My Account</button>
       <button class="navbtn" data-page="signout">Sign Out</button>
@@ -644,14 +645,24 @@ footer {padding:36px 15px}
           <label for="bookTrailer">Book Trailer Video</label>
           <input id="bookTrailer" type="file" accept="video/*">
           <div class="file-note">
-            Video upload requires a configured storage bucket and a connected
-            book_trailers table. The book submission itself does not depend on
-            that optional table.
+            A trailer is required before Book Spotlight. You can submit an incomplete book now and provide the trailer later.
           </div>
         </div>
         <div class="field full">
-          <label for="bookFlipper">Flipper Guide Link *</label>
-          <input id="bookFlipper" type="url" placeholder="https://...">
+          <label for="bookFlipper">Flipper Guide file (PDF or ZIP)</label>
+          <input id="bookFlipper" type="file" accept=".pdf,.zip,application/pdf,application/zip,application/x-zip-compressed">
+          <div class="file-note">Upload now, or select Provide Later. After submitting your book, you can manage its file in Manage Book Materials. Maximum 200 MB, subject to project limits.</div>
+        </div>
+        <div class="field full">
+          <label><input type="checkbox" id="bookFlipperLater" style="width:auto;margin-right:7px">Provide Flipper Guide Later</label>
+        </div>
+        <div class="field full">
+          <label for="bookPreviewPreference">Trailer preview preference</label>
+          <select id="bookPreviewPreference">
+            <option value="wait_until_ready">Wait until my Flipper Guide is approved (recommended)</option>
+            <option value="allow_early_preview">Allow early two-day trailer preview while the guide is pending</option>
+          </select>
+          <div class="file-note">Every book must complete a two-day trailer preview before Book Spotlight. If an early preview ends without an approved guide, Spotlight is delayed privately and the trailer must stop displaying. The Curator confirms scheduling.</div>
         </div>
       </div>
       <div class="actions">
@@ -686,6 +697,28 @@ footer {padding:36px 15px}
     <div class="panel-head"><div><h2>The Reading Room</h2><p class="muted small">Start thoughtful conversations about your approved books once 10 readers have completed them.</p></div></div>
     <div id="readingRoomBooks" class="reading-room-grid"><div class="empty">Loading your books and reader progress…</div></div>
   </div>
+</section>
+
+<section class="page" id="page-materials">
+  <div class="page-heading">
+    <div class="eyebrow">Your books · materials</div>
+    <h1>Manage Book Materials</h1>
+    <p class="muted">Upload your PDF or ZIP Flipper Guide for The Curator to review. An approved file stays in place until a replacement is approved.</p>
+  </div>
+  <div class="notice info">A mandatory two-day trailer preview comes before every Book Spotlight. Choosing early preview does not bypass Flipper Guide approval. A delayed Spotlight is visible only to the author and The Curator.</div>
+  <div class="panel">
+    <div class="panel-head"><h2>Submit a Flipper Guide</h2><button type="button" class="btn secondary" id="refreshMaterials">Refresh Status</button></div>
+    <form id="materialForm">
+      <div class="form-grid">
+        <div class="field full"><label for="materialBook">Select your book</label><select id="materialBook" required><option value="">Select a book</option></select></div>
+        <div class="field full"><label for="materialFile">PDF or ZIP file · up to 200 MB</label><input id="materialFile" type="file" accept=".pdf,.zip,application/pdf,application/zip,application/x-zip-compressed" required><div class="file-note">Files are stored privately in your own book folder. ZIP contents must pass safety review before reader access.</div></div>
+      </div>
+      <div id="materialProgress" class="small muted" role="status" aria-live="polite" style="margin-top:12px"></div>
+      <div class="actions"><button type="submit" id="materialSubmitButton" class="btn">Upload for Curator Review</button></div>
+    </form>
+  </div>
+  <div class="panel"><h2>Your Materials &amp; Review Status</h2><div id="materialsList" class="book-grid"><div class="empty">Loading your books…</div></div></div>
+  <div class="panel"><h2>3D Book Mockups</h2><p class="muted">Your book mockup will display in full without cropping or stretching. The dedicated mockup upload will be enabled after its storage bucket and review permissions are configured. Until then, do not upload mockups into the private Flipper Guide bucket.</p></div>
 </section>
 
 <section class="page" id="page-messages">
@@ -736,8 +769,8 @@ footer {padding:36px 15px}
 <section class="page" id="page-schedule">
   <div class="page-heading">
     <div class="eyebrow">Your upcoming features</div>
-    <h1>Feature Schedule</h1>
-    <p class="muted">View feature dates assigned to your books.</p>
+    <h1>My Spotlight Schedule</h1>
+    <p class="muted">Track Curator-confirmed Spotlight dates. Every book requires a full two-day trailer preview before Spotlight. Delayed dates are private.</p>
   </div>
   <div class="panel">
     <div class="table-wrap">
@@ -806,6 +839,7 @@ footer {padding:36px 15px}
 <footer>© 2026 Reader Reach. Every Book Has Its Readers.</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script>
 
 <script>
 "use strict";
@@ -1302,7 +1336,7 @@ async function loadBooks() {
   const {data, error} = await supabaseClient
     .from("books")
     .select(
-      "id,author_id,title,description,genre_topic,who_its_for,availability,cover_url,status,submitted_at,created_at,submission_complete,missing_fields"
+      "id,author_id,title,description,genre_topic,who_its_for,availability,cover_url,status,submitted_at,created_at,submission_complete,missing_fields,flipper_file_path,flipper_file_type,flipper_review_status,flipper_provide_later,spotlight_trailer_preference,mockup_url"
     )
     .eq("author_id", currentAuthor.id)
     .order("created_at", {ascending:false});
@@ -1485,7 +1519,10 @@ $("bookForm").addEventListener("submit", async event => {
     const description = $("bookDescription").value.trim();
     const availability = $("bookAvailability").value.trim();
     const bio = $("bookBio").value.trim();
-    const flipper = $("bookFlipper").value.trim();
+    const flipperFile = $("bookFlipper").files?.[0] || null;
+    const provideLater = $("bookFlipperLater").checked;
+    const previewPreference = $("bookPreviewPreference").value;
+    if (flipperFile) validateFlipperFile(flipperFile);
 
     const coverFile =
       $("bookCover").files?.[0] || null;
@@ -1525,8 +1562,7 @@ $("bookForm").addEventListener("submit", async event => {
     if (!trailerFile)
       missing.push("Book Trailer Video");
 
-    if (!flipper)
-      missing.push("Flipper Guide Link");
+    missing.push("Flipper Guide (awaiting Curator approval)");
 
     if (bio && bio !== (currentAuthor.bio || "")) {
       const {error:bioError} = await supabaseClient
@@ -1597,7 +1633,9 @@ const payload = {
   description:description || null,
   who_its_for:audience || null,
   availability:availability || null,
-  book_link:flipper || null,
+  book_link:null,
+  flipper_provide_later:provideLater || !flipperFile,
+  spotlight_trailer_preference:previewPreference,
   cover_url:coverURL,
   status:"pending",
   submission_complete:missing.length === 0,
@@ -1622,20 +1660,14 @@ console.log("Book submission payload:", payload);
       );
     }
 
-    if (flipper) {
-      const guideResult =
-        await supabaseClient
-          .from("flipper_guides")
-          .insert({
-            book_id:createdBook.id,
-            content_url:flipper
-          });
-
-      if (guideResult.error) {
-        uploadWarnings.push(
-          "The book was submitted, but the Flipper Guide link could not be saved: " +
-          friendlyError(guideResult.error)
-        );
+    if (flipperFile) {
+      try {
+        myBooks.push({id:createdBook.id,author_id:currentAuthor.id,title:createdBook.title});
+        await submitFlipperForBook(createdBook.id, flipperFile, message => {
+          setNotice(message, "info");
+        });
+      } catch (guideError) {
+        uploadWarnings.push("The book was created, but the Flipper Guide could not be submitted: " + friendlyError(guideError) + ". Retry in Manage Book Materials.");
       }
     }
 
@@ -1687,11 +1719,12 @@ console.log("Book submission payload:", payload);
 
     $("bookForm").reset();
     $("bookBio").value = currentAuthor.bio || "";
+    $("bookPreviewPreference").value = "wait_until_ready";
 
     await loadBooks();
     await loadNotifications();
 
-    showPage("books");
+    showPage("materials");
 
     let resultMessage = missing.length
       ? "Your book has been submitted as incomplete and is pending The Curator review. Missing: " +
@@ -1717,6 +1750,125 @@ console.log("Book submission payload:", payload);
     button.disabled = false;
     button.textContent = "Submit Book for Review";
   }
+});
+
+/* -------------------------------------------------------
+   FLIPPER GUIDE MATERIALS — PRIVATE STORAGE & CURATOR REVIEW
+------------------------------------------------------- */
+const FLIPPER_BUCKET = "flipper-guides";
+const MAX_FLIPPER_BYTES = 200 * 1024 * 1024;
+const FLIPPER_STANDARD_UPLOAD_BYTES = 6 * 1024 * 1024;
+let materialSubmissionBusy = false;
+
+function validateFlipperFile(file) {
+  if (!file) throw new Error("Choose a PDF or ZIP file.");
+  const ext = file.name.toLowerCase().split(".").pop();
+  if (!["pdf", "zip"].includes(ext)) throw new Error("Only PDF and ZIP files are accepted.");
+  if (!file.size || file.size > MAX_FLIPPER_BYTES) throw new Error("The file must be between 1 byte and 200 MB.");
+  const allowed = ext === "pdf" ? ["application/pdf", ""] : ["application/zip", "application/x-zip-compressed", "application/octet-stream", ""];
+  if (!allowed.includes(file.type)) throw new Error("The selected file's type does not match its extension.");
+  return ext;
+}
+
+async function uploadFlipperPrivate(bookId, file, onProgress = () => {}) {
+  const ext = validateFlipperFile(file);
+  const book = myBooks.find(b => b.id === bookId);
+  if (!book || book.author_id !== currentAuthor?.id) throw new Error("Select a book you own.");
+  if (currentAuthor?.status !== "approved") throw new Error("Your author account must be approved to upload materials.");
+  const storagePath = `${currentUser.id}/${bookId}/${crypto.randomUUID()}.${ext}`;
+  const contentType = ext === "pdf" ? "application/pdf" : "application/zip";
+  if (file.size <= FLIPPER_STANDARD_UPLOAD_BYTES) {
+    onProgress("Uploading privately…");
+    const {error} = await supabaseClient.storage.from(FLIPPER_BUCKET).upload(storagePath, file, {upsert:false,contentType});
+    if (error) throw error;
+  } else {
+    if (!window.tus?.Upload) throw new Error("Large-file uploader could not load. Check your internet connection and retry.");
+    const {data:{session},error:sessionError} = await supabaseClient.auth.getSession();
+    if (sessionError || !session?.access_token) throw new Error("Please sign in again before uploading.");
+    await new Promise((resolve,reject) => {
+      const upload = new window.tus.Upload(file, {
+        endpoint: `${SUPABASE_URL}/storage/v1/upload/resumable`,
+        retryDelays:[0,1000,3000,5000,10000],
+        chunkSize:6 * 1024 * 1024,
+        headers:{authorization:`Bearer ${session.access_token}`,apikey:SUPABASE_PUBLISHABLE_KEY,"x-upsert":"false"},
+        uploadDataDuringCreation:true,
+        removeFingerprintOnSuccess:true,
+        metadata:{bucketName:FLIPPER_BUCKET,objectName:storagePath,contentType,cacheControl:"3600"},
+        onError:reject,
+        onProgress:(sent,total) => onProgress(`Uploading privately… ${Math.floor(sent / total * 100)}%`),
+        onSuccess:resolve
+      });
+      upload.start();
+    });
+  }
+  return {storagePath,ext};
+}
+
+async function submitFlipperForBook(bookId,file,onProgress = () => {}) {
+  const {storagePath,ext} = await uploadFlipperPrivate(bookId,file,onProgress);
+  onProgress("File uploaded. Sending to The Curator for review…");
+  const {error} = await supabaseClient.from("book_material_submissions").insert({
+    book_id:bookId,submitted_by:currentUser.id,flipper_file_path:storagePath,flipper_file_type:ext,status:"pending"
+  });
+  if (error) throw new Error("File uploaded, but the review submission failed: " + friendlyError(error) + ". Contact support if retrying creates duplicate files.");
+  return storagePath;
+}
+
+async function loadMaterials() {
+  const list = $("materialsList");
+  const picker = $("materialBook");
+  if (!currentAuthor?.id) return;
+  const selectedBookId = picker.value;
+  picker.innerHTML = '<option value="">Select a book</option>' + myBooks.map(b => `<option value="${escapeHTML(b.id)}">${escapeHTML(b.title || "Untitled book")}</option>`).join("");
+  if (myBooks.some(b => b.id === selectedBookId)) picker.value = selectedBookId;
+  if (!myBooks.length) {list.innerHTML='<div class="empty">Submit a book first to manage its materials.</div>';return;}
+  list.innerHTML='<div class="empty">Loading material submissions…</div>';
+  const {data,error} = await supabaseClient.from("book_material_submissions")
+    .select("id,book_id,status,flipper_file_type,created_at,reviewed_at,review_notes")
+    .in("book_id",myBooks.map(b=>b.id)).order("created_at",{ascending:false});
+  if (error) {list.innerHTML=`<div class="notice error">Unable to load submission statuses: ${escapeHTML(friendlyError(error))}</div>`;return;}
+  const submissions = data || [];
+  list.innerHTML = myBooks.map(b => {
+    const latest = submissions.find(x=>x.book_id===b.id);
+    const state = latest?.status || b.flipper_review_status || "not_submitted";
+    const badge = state === "approved" ? "approved" : state === "rejected" ? "rejected" : "pending";
+    const stateLabel = state === "not_submitted" ? "Not submitted" : state.charAt(0).toUpperCase()+state.slice(1);
+    return `<article class="book-card"><div class="eyebrow">${escapeHTML(b.status || "Book")}</div>
+      <h3>${escapeHTML(b.title || "Untitled book")}</h3>
+      <p><span class="badge ${badge}">${escapeHTML(stateLabel)}</span></p>
+      <p class="small muted">${latest ? `Latest submission: ${escapeHTML(formatDate(latest.created_at))} · ${escapeHTML((latest.flipper_file_type || "").toUpperCase())}` : "No file submitted for review yet."}</p>
+      ${latest?.review_notes ? `<p class="small"><strong>Curator feedback:</strong> ${escapeHTML(latest.review_notes)}</p>` : ""}
+      ${b.flipper_review_status === "approved" ? '<p class="small" style="color:var(--green)">Approved reading material is on record.</p>' : ''}
+      <button type="button" class="btn secondary material-choose" data-book="${escapeHTML(b.id)}">${state === "rejected" ? "Submit corrected file" : "Submit new file"}</button></article>`;
+  }).join("");
+  list.querySelectorAll(".material-choose").forEach(btn=>btn.addEventListener("click",()=>{
+    picker.value=btn.dataset.book;
+    $("materialFile").focus();
+    $("materialForm").scrollIntoView({behavior:"smooth",block:"center"});
+  }));
+}
+
+$("refreshMaterials").addEventListener("click",loadMaterials);
+$("materialForm").addEventListener("submit",async event=>{
+  event.preventDefault();
+  if(materialSubmissionBusy)return;
+  const bookId=$("materialBook").value;
+  const file=$("materialFile").files?.[0];
+  const progress=$("materialProgress");
+  const button=$("materialSubmitButton");
+  materialSubmissionBusy=true;button.disabled=true;
+  try {
+    if (!bookId) throw new Error("Choose a book.");
+    await submitFlipperForBook(bookId,file,message=>{progress.textContent=message;});
+    progress.textContent="Submitted successfully. Awaiting The Curator's review.";
+    $("materialFile").value="";
+    await loadBooks();
+    await loadMaterials();
+    setNotice("Your Flipper Guide has been submitted for Curator review.","success");
+  } catch(error) {
+    progress.textContent="Upload or submission failed: " + friendlyError(error);
+    setNotice(progress.textContent,"error");
+  } finally {materialSubmissionBusy=false;button.disabled=false;}
 });
 
 /* -------------------------------------------------------

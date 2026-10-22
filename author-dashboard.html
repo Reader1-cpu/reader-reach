@@ -467,7 +467,8 @@ footer {padding:36px 15px}
       <button class="navbtn" data-page="profile">My Profile</button>
       <button class="navbtn" data-page="submit">Submit a Book</button>
       <button class="navbtn" data-page="books">My Books</button>
-      <button class="navbtn" data-page="materials">Manage Book Materials</button>
+      <button class="navbtn" data-page="removed">Removed Books</button>
+       <button class="navbtn" data-page="materials">Manage Book Materials</button>
       <button class="navbtn" data-page="messages">Messages</button>
       <button class="navbtn" data-page="schedule">My Spotlight Schedule</button>
       <button class="navbtn" data-page="notifications">Notifications</button>
@@ -634,7 +635,7 @@ footer {padding:36px 15px}
           <textarea id="bookAvailability" placeholder="Describe where readers can find it"></textarea>
         </div>
         <div class="field full">
-          <label for="bookCover">Book Cover Image</label>
+          <label for="bookCover">Book Cover Image (3D mockup submitted separately)</label>
           <input id="bookCover" type="file" accept="image/*">
           <div class="file-note">
             Upload requires a configured Supabase Storage bucket and its policies.
@@ -677,7 +678,7 @@ footer {padding:36px 15px}
   <div class="page-heading">
     <div class="eyebrow">Your submissions</div>
     <h1>My Books</h1>
-    <p class="muted">Track each book independently through the review process.</p>
+    <p class="muted">Track each book independently through the review process. Removing a book hides it publicly without deleting its history.</p>
   </div>
   <div class="panel">
     <div class="panel-head">
@@ -697,6 +698,12 @@ footer {padding:36px 15px}
     <div class="panel-head"><div><h2>The Reading Room</h2><p class="muted small">Start thoughtful conversations about your approved books once 10 readers have completed them.</p></div></div>
     <div id="readingRoomBooks" class="reading-room-grid"><div class="empty">Loading your books and reader progress…</div></div>
   </div>
+</section>
+
+<section class="page" id="page-removed">
+  <div class="page-heading"><div class="eyebrow">Your archive</div><h1>Removed Books</h1>
+  <p class="muted">Your removed books are preserved privately. Only The Curator can restore a book following your request.</p></div>
+  <div class="panel"><h2>Removed Book Archive</h2><div id="removedBooksList" class="book-grid"><div class="empty">Loading removed books…</div></div></div>
 </section>
 
 <section class="page" id="page-materials">
@@ -924,7 +931,8 @@ function showPage(name) {
     button.classList.toggle("active", button.dataset.page === name);
   });
 
-  if (name === "messages") loadConversations();
+  if (name === "materials") loadMaterials();
+   if (name === "messages") loadConversations();
   if (name === "schedule") loadSchedule();
   if (name === "notifications") loadNotifications();
 
@@ -1336,7 +1344,7 @@ async function loadBooks() {
   const {data, error} = await supabaseClient
     .from("books")
     .select(
-      "id,author_id,title,description,genre_topic,who_its_for,availability,cover_url,status,submitted_at,created_at,submission_complete,missing_fields,flipper_file_path,flipper_file_type,flipper_review_status,flipper_provide_later,spotlight_trailer_preference,mockup_url"
+      "id,author_id,title,description,genre_topic,who_its_for,availability,cover_url,status,submitted_at,created_at,submission_complete,missing_fields,flipper_file_path,flipper_file_type,flipper_review_status,flipper_provide_later,spotlight_trailer_preference,mockup_url,is_removed,removed_at"
     )
     .eq("author_id", currentAuthor.id)
     .order("created_at", {ascending:false});
@@ -1354,15 +1362,21 @@ async function loadBooks() {
   }
 
   myBooks = data || [];
+  const activeBooks = myBooks.filter(book => !book.is_removed);
+  const removedBooks = myBooks.filter(book => book.is_removed);
+  $("removedBooksList").innerHTML = removedBooks.length
+    ? removedBooks.map(book => `<article class="book-card"><h3>${escapeHTML(book.title || "Untitled book")}</h3><p class="muted small">Removed ${escapeHTML(formatDate(book.removed_at))}</p><span class="badge">Archived · Curator restoration required</span></article>`).join("")
+    : '<div class="empty">You have no removed books.</div>';
+  loadMaterials().catch(error => console.error("Materials:", error));
   loadReadingRoomBooks().catch(error => { console.error("Reading Room:", error); $("readingRoomBooks").textContent = "Could not load The Reading Room: " + friendlyError(error); });
 
   const approved =
-    myBooks.filter(book => displayStatus(book.status) === "approved").length;
+    activeBooks.filter(book => displayStatus(book.status) === "approved").length;
 
   const pending =
-    myBooks.filter(book => displayStatus(book.status) === "pending").length;
+    activeBooks.filter(book => displayStatus(book.status) === "pending").length;
 
-  $("statBooks").textContent = myBooks.length;
+  $("statBooks").textContent = activeBooks.length;
   $("statApproved").textContent = approved;
   $("statPending").textContent = pending;
 
@@ -1389,11 +1403,12 @@ async function loadBooks() {
       </td>
       <td>${escapeHTML(book.genre_topic || "—")}</td>
       <td>${statusBadge(book.status)}</td>
-      <td>${escapeHTML(formatDate(book.submitted_at || book.created_at))}</td>
+      <td>${escapeHTML(formatDate(book.submitted_at || book.created_at))}
+      <div style="margin-top:8px"><button type="button" class="btn danger remove-book-btn" data-book-id="${escapeHTML(book.id)}">Remove Book</button></div></td>
     </tr>
   `).join("");
 
-  $("recentBooks").innerHTML = myBooks.slice(0,4).map(book => `
+  $("recentBooks").innerHTML = activeBooks.slice(0,4).map(book => `
     <article class="book-card">
       <h3>${escapeHTML(book.title || "Untitled book")}</h3>
       <p class="small muted">
@@ -1407,6 +1422,17 @@ async function loadBooks() {
       }
     </article>
   `).join("");
+  $("booksTable").querySelectorAll(".remove-book-btn").forEach(button => {
+    button.addEventListener("click", async () => {
+      const book = myBooks.find(b => b.id === button.dataset.bookId);
+      if (!book || !window.confirm(`Remove "${book.title}" from Reader Reach? Only The Curator can restore it.`)) return;
+      button.disabled = true;
+      const {error} = await supabaseClient.rpc("remove_my_book", {p_book_id:book.id});
+      if (error) {setNotice("Could not remove book: " + friendlyError(error),"error");button.disabled=false;return;}
+      setNotice("Book removed. Its history is preserved and The Curator can restore it on request.","success");
+      await loadBooks();
+    });
+  });
 }
 
 
@@ -1414,21 +1440,21 @@ async function loadBooks() {
 async function loadReadingRoomBooks(){
   const root = $("readingRoomBooks");
   if (!root) return;
-  const books = myBooks.filter(b => displayStatus(b.status) === "approved");
+  const books = myBooks.filter(b => !b.is_removed && displayStatus(b.status) === "approved");
   if (!books.length){root.innerHTML = '<div class="empty">Your approved books will appear here when ready.</div>';return;}
   root.innerHTML = books.map(b => `<article class="rr-book" data-rr-book="${escapeHTML(b.id)}"><h3>${escapeHTML(b.title || "Untitled book")}</h3><div class="rr-status">Checking completed readers…</div></article>`).join("");
   await Promise.all(books.map(async book => {
     const card = Array.from(root.querySelectorAll('[data-rr-book]')).find(el => el.dataset.rrBook === book.id);
     if (!card) return;
     const [countResult, topicsResult] = await Promise.all([
-      supabaseClient.from("reader_books").select("reader_id",{count:"exact",head:true}).eq("book_id",book.id).eq("status","completed"),
+      supabaseClient.rpc("get_book_completed_reader_count", {p_book_id:book.id}),
       supabaseClient.from("book_corner_topics").select("id,title,created_at").eq("book_id",book.id).order("created_at",{ascending:false}).limit(10)
     ]);
     if(countResult.error){
       card.innerHTML = `<h3>${escapeHTML(book.title)}</h3><p class="rr-status">Reader count unavailable: ${escapeHTML(friendlyError(countResult.error))}. The author count permissions may need updating.</p>`;
       return;
     }
-    const count = countResult.count ?? 0;
+    const count = Number(countResult.data ?? 0);
     const eligible = count >= 10;
     const topics = topicsResult.data || [];
     card.innerHTML = `<div class="eyebrow">Approved book</div><h3>${escapeHTML(book.title || "Untitled book")}</h3>
@@ -1819,16 +1845,16 @@ async function loadMaterials() {
   const picker = $("materialBook");
   if (!currentAuthor?.id) return;
   const selectedBookId = picker.value;
-  picker.innerHTML = '<option value="">Select a book</option>' + myBooks.map(b => `<option value="${escapeHTML(b.id)}">${escapeHTML(b.title || "Untitled book")}</option>`).join("");
-  if (myBooks.some(b => b.id === selectedBookId)) picker.value = selectedBookId;
-  if (!myBooks.length) {list.innerHTML='<div class="empty">Submit a book first to manage its materials.</div>';return;}
+  picker.innerHTML = '<option value="">Select a book</option>' + myBooks.filter(b => !b.is_removed).map(b => `<option value="${escapeHTML(b.id)}">${escapeHTML(b.title || "Untitled book")}</option>`).join("");
+  if (myBooks.some(b => !b.is_removed && b.id === selectedBookId)) picker.value = selectedBookId;
+  if (!myBooks.some(b => !b.is_removed)) {list.innerHTML='<div class="empty">Submit a book first to manage its materials.</div>';return;}
   list.innerHTML='<div class="empty">Loading material submissions…</div>';
   const {data,error} = await supabaseClient.from("book_material_submissions")
     .select("id,book_id,status,flipper_file_type,created_at,reviewed_at,review_notes")
-    .in("book_id",myBooks.map(b=>b.id)).order("created_at",{ascending:false});
+    .in("book_id",myBooks.filter(b=>!b.is_removed).map(b=>b.id)).order("created_at",{ascending:false});
   if (error) {list.innerHTML=`<div class="notice error">Unable to load submission statuses: ${escapeHTML(friendlyError(error))}</div>`;return;}
   const submissions = data || [];
-  list.innerHTML = myBooks.map(b => {
+  list.innerHTML = myBooks.filter(b => !b.is_removed).map(b => {
     const latest = submissions.find(x=>x.book_id===b.id);
     const state = latest?.status || b.flipper_review_status || "not_submitted";
     const badge = state === "approved" ? "approved" : state === "rejected" ? "rejected" : "pending";

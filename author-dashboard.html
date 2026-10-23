@@ -422,6 +422,9 @@ footer {padding:36px 15px}
 @media(max-width:760px){#page-messages .message-layout{height:min(760px,calc(100dvh - 100px));min-height:520px;grid-template-rows:150px minmax(0,1fr)}#page-messages .conversation-list{max-height:none;height:150px;min-height:0}#page-messages .message-list{height:auto}}
 
 
+/* 3D Book Mockups — preserve the complete image */
+.mockup-image{display:block;width:100%;height:240px;object-fit:contain;background:#f8f3e9;border:1px solid var(--line);border-radius:12px;margin:12px 0 16px}
+
 /* The Reading Room — author topic publishing */
 .reading-room-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
 .rr-book{border:1px solid var(--line);background:#fffdfa;border-radius:17px;padding:20px;min-width:0}
@@ -596,7 +599,7 @@ footer {padding:36px 15px}
   <div class="page-heading">
     <div class="eyebrow">Share your work</div>
     <h1>Submit a Book</h1>
-    <p class="muted">Submissions are sent to The Curator for review, including incomplete submissions.</p>
+    <p class="muted">Upload your 3D Book Mockup to submit a book for The Curator's review. Other materials may remain pending.</p>
   </div>
 
   <div class="panel">
@@ -635,12 +638,9 @@ footer {padding:36px 15px}
           <textarea id="bookAvailability" placeholder="Describe where readers can find it"></textarea>
         </div>
         <div class="field full">
-          <label for="bookCover">Book Cover Image (3D mockup submitted separately)</label>
-          <input id="bookCover" type="file" accept="image/*">
-          <div class="file-note">
-            Upload requires a configured Supabase Storage bucket and its policies.
-            If upload is unavailable, the book can still be submitted as incomplete.
-          </div>
+          <label for="bookMockup">3D Book Mockup Image *</label>
+          <input id="bookMockup" type="file" accept="image/png,image/jpeg,image/webp" required>
+          <div class="file-note">Required for every new submission. Upload a PNG, JPG or WebP image (maximum 50 MB). The full mockup will display without cropping. This is an image of your 3D book, not a 3D model file.</div>
         </div>
         <div class="field full">
           <label for="bookTrailer">Book Trailer Video</label>
@@ -725,7 +725,19 @@ footer {padding:36px 15px}
     </form>
   </div>
   <div class="panel"><h2>Your Materials &amp; Review Status</h2><div id="materialsList" class="book-grid"><div class="empty">Loading your books…</div></div></div>
-  <div class="panel"><h2>3D Book Mockups</h2><p class="muted">Your book mockup will display in full without cropping or stretching. The dedicated mockup upload will be enabled after its storage bucket and review permissions are configured. Until then, do not upload mockups into the private Flipper Guide bucket.</p></div>
+  <div class="panel">
+    <h2>3D Book Mockups</h2>
+    <p class="muted">Your mockup is displayed in full without cropping. Uploading a replacement updates the image associated with your book; it does not approve the book or its materials.</p>
+    <form id="mockupForm">
+      <div class="form-grid">
+        <div class="field full"><label for="mockupBook">Select your book</label><select id="mockupBook" required><option value="">Select a book</option></select></div>
+        <div class="field full"><label for="mockupFile">Replacement 3D Book Mockup · PNG, JPG or WebP · up to 50 MB</label><input id="mockupFile" type="file" accept="image/png,image/jpeg,image/webp" required></div>
+      </div>
+      <div id="mockupProgress" class="small muted" role="status" aria-live="polite" style="margin-top:12px"></div>
+      <div class="actions"><button type="submit" class="btn" id="mockupSubmitButton">Upload Mockup</button></div>
+    </form>
+    <div id="mockupList" class="book-grid" style="margin-top:20px"><div class="empty">Loading mockups…</div></div>
+  </div>
 </section>
 
 <section class="page" id="page-messages">
@@ -931,7 +943,7 @@ function showPage(name) {
     button.classList.toggle("active", button.dataset.page === name);
   });
 
-  if (name === "materials") loadMaterials();
+  if (name === "materials") { loadMaterials(); renderMockupMaterials(); }
    if (name === "messages") loadConversations();
   if (name === "schedule") loadSchedule();
   if (name === "notifications") loadNotifications();
@@ -1368,6 +1380,7 @@ async function loadBooks() {
     ? removedBooks.map(book => `<article class="book-card"><h3>${escapeHTML(book.title || "Untitled book")}</h3><p class="muted small">Removed ${escapeHTML(formatDate(book.removed_at))}</p><span class="badge">Archived · Curator restoration required</span></article>`).join("")
     : '<div class="empty">You have no removed books.</div>';
   loadMaterials().catch(error => console.error("Materials:", error));
+  renderMockupMaterials();
   loadReadingRoomBooks().catch(error => { console.error("Reading Room:", error); $("readingRoomBooks").textContent = "Could not load The Reading Room: " + friendlyError(error); });
 
   const approved =
@@ -1410,6 +1423,7 @@ async function loadBooks() {
 
   $("recentBooks").innerHTML = activeBooks.slice(0,4).map(book => `
     <article class="book-card">
+      ${book.mockup_url ? `<img class="mockup-image" src="${escapeHTML(book.mockup_url)}" alt="3D mockup of ${escapeHTML(book.title || "book")}" loading="lazy">` : ""}
       <h3>${escapeHTML(book.title || "Untitled book")}</h3>
       <p class="small muted">
         ${escapeHTML(book.genre_topic || "Genre not provided")}
@@ -1522,6 +1536,95 @@ async function uploadOptionalFile(bucket, file) {
   };
 }
 
+/* Dedicated 3D Book Mockup image storage. */
+const MOCKUP_BUCKET = "book-mockups";
+const MAX_MOCKUP_BYTES = 50 * 1024 * 1024;
+const MOCKUP_MIME_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
+function validateMockupFile(file) {
+  if (!file) throw new Error("Choose a 3D Book Mockup image before submitting your book.");
+  if (!MOCKUP_MIME_TYPES.has(file.type)) throw new Error("Mockup must be a PNG, JPG or WebP image.");
+  if (!file.size || file.size > MAX_MOCKUP_BYTES) throw new Error("Mockup image must be between 1 byte and 50 MB.");
+}
+async function uploadMockupImage(file) {
+  validateMockupFile(file);
+  if (!currentUser?.id || currentAuthor?.status !== "approved") {
+    throw new Error("Only approved authors can upload 3D Book Mockups.");
+  }
+  const ext = file.type === "image/jpeg" ? "jpg" : file.type === "image/png" ? "png" : "webp";
+  const path = `${currentUser.id}/${crypto.randomUUID()}.${ext}`;
+  if (file.size <= 6 * 1024 * 1024) {
+    const {error} = await supabaseClient.storage.from(MOCKUP_BUCKET)
+      .upload(path,file,{upsert:false,contentType:file.type,cacheControl:"3600"});
+    if (error) throw new Error("3D Book Mockup upload failed: " + friendlyError(error));
+  } else {
+    if (!window.tus?.Upload) throw new Error("Large image uploader could not load. Please refresh and try again.");
+    const {data:{session},error:sessionError} = await supabaseClient.auth.getSession();
+    if (sessionError || !session?.access_token) throw new Error("Please sign in again to upload.");
+    await new Promise((resolve,reject) => {
+      const upload = new window.tus.Upload(file,{
+        endpoint:`${SUPABASE_URL}/storage/v1/upload/resumable`,
+        retryDelays:[0,1000,3000,5000,10000],
+        chunkSize:6 * 1024 * 1024,
+        headers:{authorization:`Bearer ${session.access_token}`,apikey:SUPABASE_PUBLISHABLE_KEY,"x-upsert":"false"},
+        uploadDataDuringCreation:true,
+        removeFingerprintOnSuccess:true,
+        metadata:{bucketName:MOCKUP_BUCKET,objectName:path,contentType:file.type,cacheControl:"3600"},
+        onError:reject,onSuccess:resolve
+      });
+      upload.start();
+    });
+  }
+  const {data:publicData} = supabaseClient.storage.from(MOCKUP_BUCKET).getPublicUrl(path);
+  if (!publicData?.publicUrl) throw new Error("Mockup uploaded, but no public URL was returned.");
+  return {url:publicData.publicUrl,path};
+}
+function renderMockupMaterials() {
+  const picker = $("mockupBook");
+  const list = $("mockupList");
+  if (!picker || !list) return;
+  const books = myBooks.filter(b => !b.is_removed);
+  const previous = picker.value;
+  picker.innerHTML = '<option value="">Select a book</option>' + books.map(b =>
+    `<option value="${escapeHTML(b.id)}">${escapeHTML(b.title || "Untitled book")}</option>`).join("");
+  if (books.some(b => b.id === previous)) picker.value = previous;
+  list.innerHTML = books.length ? books.map(b => `<article class="book-card">
+    <h3>${escapeHTML(b.title || "Untitled book")}</h3>
+    ${b.mockup_url ? `<img class="mockup-image" src="${escapeHTML(b.mockup_url)}" alt="3D mockup of ${escapeHTML(b.title || "book")}" loading="lazy">` : '<p class="muted small">No 3D Book Mockup uploaded yet.</p>'}
+    <button type="button" class="btn secondary mockup-choose" data-book="${escapeHTML(b.id)}">${b.mockup_url ? "Replace mockup" : "Upload mockup"}</button>
+  </article>`).join("") : '<div class="empty">Submit a book to manage its mockup.</div>';
+  list.querySelectorAll(".mockup-choose").forEach(button => button.addEventListener("click",() => {
+    picker.value = button.dataset.book;
+    $("mockupFile").focus();
+    $("mockupForm").scrollIntoView({behavior:"smooth",block:"center"});
+  }));
+}
+$("mockupForm").addEventListener("submit",async event => {
+  event.preventDefault();
+  const button = $("mockupSubmitButton");
+  const progress = $("mockupProgress");
+  const bookId = $("mockupBook").value;
+  const book = myBooks.find(b => b.id === bookId && !b.is_removed);
+  const file = $("mockupFile").files?.[0];
+  button.disabled = true;
+  try {
+    if (!book || book.author_id !== currentAuthor?.id) throw new Error("Select one of your active books.");
+    validateMockupFile(file);
+    progress.textContent = "Uploading your 3D Book Mockup…";
+    const uploaded = await uploadMockupImage(file);
+    const {data,error} = await supabaseClient.from("books")
+      .update({mockup_url:uploaded.url,updated_at:new Date().toISOString()})
+      .eq("id",book.id).eq("author_id",currentAuthor.id).select("id,mockup_url").maybeSingle();
+    if (error || !data) throw new Error("Mockup uploaded, but its URL could not be saved: " + friendlyError(error));
+    progress.textContent = "Mockup saved. The Curator's approval process remains separate.";
+    $("mockupFile").value = "";
+    await loadBooks();
+    setNotice("3D Book Mockup saved successfully.","success");
+  } catch (error) {
+    progress.textContent = friendlyError(error);
+    setNotice("Could not save mockup: " + friendlyError(error),"error");
+  } finally { button.disabled = false; }
+});
+
 $("bookForm").addEventListener("submit", async event => {
   event.preventDefault();
 
@@ -1550,8 +1653,8 @@ $("bookForm").addEventListener("submit", async event => {
     const previewPreference = $("bookPreviewPreference").value;
     if (flipperFile) validateFlipperFile(flipperFile);
 
-    const coverFile =
-      $("bookCover").files?.[0] || null;
+    const mockupFile = $("bookMockup").files?.[0] || null;
+    validateMockupFile(mockupFile);
 
     const trailerFile =
       $("bookTrailer").files?.[0] || null;
@@ -1582,9 +1685,6 @@ $("bookForm").addEventListener("submit", async event => {
     if (!availability)
       missing.push("Where Is the Book Currently Available?");
 
-    if (!coverFile)
-      missing.push("Book Cover Image");
-
     if (!trailerFile)
       missing.push("Book Trailer Video");
 
@@ -1610,27 +1710,14 @@ $("bookForm").addEventListener("submit", async event => {
       }
     }
 
-    let coverURL = null;
+    let mockupURL = null;
     let trailerURL = null;
 
     const uploadWarnings = [];
 
-    if (coverFile) {
-      const uploaded =
-        await uploadOptionalFile("book-covers", coverFile);
-
-      coverURL = uploaded.url;
-
-      if (uploaded.error) {
-        uploadWarnings.push(
-          "Cover upload failed: " +
-          friendlyError(uploaded.error)
-        );
-
-        if (!missing.includes("Book Cover Image")) {
-          missing.push("Book Cover Image (upload failed)");
-        }
-      }
+    {
+      const uploaded = await uploadMockupImage(mockupFile);
+      mockupURL = uploaded.url;
     }
 
     if (trailerFile) {
@@ -1662,7 +1749,7 @@ const payload = {
   book_link:null,
   flipper_provide_later:provideLater || !flipperFile,
   spotlight_trailer_preference:previewPreference,
-  cover_url:coverURL,
+  mockup_url:mockupURL,
   status:"pending",
   submission_complete:missing.length === 0,
   missing_fields:missing,

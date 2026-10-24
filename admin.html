@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reader Reach — Admin Dashboard</title>
+  <title>Reader Reach — The Curator</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -100,10 +100,10 @@
     }
 
     .brand-title{
-      font-family:Georgia,serif;
+      font-family:Georgia,"Times New Roman",serif;
       font-size:26px;
       font-weight:700;
-      letter-spacing:-.4px;
+      letter-spacing:-.45px;
     }
 
     .brand-subtitle{
@@ -193,8 +193,9 @@
 
     .topbar h1{
       margin:0;
-      font-family:Georgia,serif;
-      font-size:28px;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:29px;
+      letter-spacing:-.55px;
       color:var(--brown);
     }
 
@@ -234,9 +235,10 @@
 
     .section-heading h2{
       margin:0;
-      font-family:Georgia,serif;
+      font-family:Georgia,"Times New Roman",serif;
       color:var(--brown);
-      font-size:24px;
+      font-size:25px;
+      letter-spacing:-.3px;
     }
 
     .section-heading p{
@@ -869,7 +871,7 @@
 <body>
 
   <div id="loading" class="loading-screen">
-    Loading Reader Reach Admin…
+    Loading The Curator…
   </div>
 
   <div id="app" class="app hidden">
@@ -878,7 +880,7 @@
 
       <div class="brand">
         <div class="brand-title">Reader Reach</div>
-        <div class="brand-subtitle">Administration Centre</div>
+        <div class="brand-subtitle">The Curator’s Office</div>
       </div>
 
       <div class="nav-label">Management</div>
@@ -887,9 +889,9 @@
         <button data-target="overview" class="active">Overview</button>
         <button data-target="authors">Authors</button>
         <button data-target="books">Books</button>
-        <button data-target="featured">Featured Books</button>
+        <button data-target="featured">The Book Spotlight</button>
         <button data-target="trailers">Book Trailers</button>
-        <button data-target="schedules">Feature Schedule</button>
+        <button data-target="schedules">Spotlight Schedule</button>
         <button data-target="readers">Readers</button>
         <button data-target="discussions">Conversations</button>
         <button data-target="visitorSupport">Visitor Support</button>
@@ -910,8 +912,8 @@
       <header class="topbar">
         <div>
           <button id="mobileMenuBtn" class="mobile-menu">☰</button>
-          <h1>Admin Dashboard</h1>
-          <p>Manage Reader Reach without disturbing existing reader, author or moderator records.</p>
+          <h1>The Curator</h1>
+          <p>Oversee books, authors, The Book Spotlight and the Reader Reach community.</p>
         </div>
       </header>
 
@@ -971,12 +973,12 @@
             </div>
 
             <div class="stat">
-              <div class="stat-label">Featured Books</div>
+              <div class="stat-label">Spotlight Books</div>
               <div id="statFeatured" class="stat-value">—</div>
             </div>
 
             <div class="stat">
-              <div class="stat-label">Scheduled Features</div>
+              <div class="stat-label">Scheduled Spotlights</div>
               <div id="statSchedules" class="stat-value">—</div>
             </div>
 
@@ -1056,7 +1058,7 @@
 
           <div class="section-heading">
             <div>
-              <h2>Book Management</h2>
+              <h2>Book Review &amp; Approval</h2>
               <p>Review submitted books and approve or reject them without deleting records.</p>
             </div>
           </div>
@@ -1099,15 +1101,15 @@
 
           <div class="section-heading">
             <div>
-              <h2>Featured Books</h2>
-              <p>Select approved books for homepage featuring. Existing records are preserved.</p>
+              <h2>The Book Spotlight</h2>
+              <p>Select approved books for The Book Spotlight. Existing records are preserved.</p>
             </div>
           </div>
 
           <div class="card">
 
             <div class="card-head">
-              <h3>Homepage Featured Books</h3>
+              <h3>Homepage Spotlight Books</h3>
             </div>
 
             <div class="card-body">
@@ -1118,7 +1120,7 @@
                 </select>
 
                 <button class="btn btn-primary" onclick="addFeatured()">
-                  Add to Featured
+                  Add to Spotlight
                 </button>
               </div>
 
@@ -1161,15 +1163,15 @@
 
           <div class="section-heading">
             <div>
-              <h2>Feature Schedule</h2>
-              <p>Manage scheduled homepage features while preventing duplicate book/date/time entries.</p>
+              <h2>Spotlight Schedule</h2>
+              <p>Manage scheduled Book Spotlights while preventing duplicate book/date/time entries.</p>
             </div>
           </div>
 
           <div class="card">
 
             <div class="card-head">
-              <h3>Schedule a Feature</h3>
+              <h3>Schedule a Spotlight</h3>
             </div>
 
             <div class="card-body">
@@ -1213,7 +1215,7 @@
 
               <div style="margin-top:13px;">
                 <button class="btn btn-primary" onclick="createSchedule()">
-                  Schedule Feature
+                  Schedule Spotlight
                 </button>
               </div>
 
@@ -1335,9 +1337,9 @@
 
               <div class="card-head">
                 <div>
-                  <h3>Public Book Discussions</h3>
+                  <h3>The Reading Room</h3>
                   <div class="small muted">
-                    Existing discussion records associated with books.
+                    Book topics and reader reflections from The Reading Room.
                   </div>
                 </div>
               </div>
@@ -1672,8 +1674,8 @@
               padding:30px;
               text-align:center;
             ">
-              <h2>Admin access required</h2>
-              <p>You do not have permission to access this dashboard.</p>
+              <h2>Curator access required</h2>
+              <p>You do not have permission to access The Curator.</p>
               <button
                 onclick="window.location.href='auth.html?mode=signin'"
                 style="
@@ -2609,7 +2611,7 @@
     function renderFeatured(){
 
       if(!featuredCache.length){
-        renderEmpty("featuredTable","No featured books have been selected.");
+        renderEmpty("featuredTable","No Spotlight books have been selected.");
         return;
       }
 
@@ -2687,7 +2689,7 @@
       );
 
       if(duplicate){
-        showToast("That book is already featured.",true);
+        showToast("That book is already in The Book Spotlight.",true);
         return;
       }
 
@@ -2704,7 +2706,7 @@
         return;
       }
 
-      showToast("Book added to featured books.");
+      showToast("Book added to The Book Spotlight.");
 
       await Promise.all([
         loadFeatured(),
@@ -2715,7 +2717,7 @@
     async function removeFeatured(id){
 
       const confirmed = window.confirm(
-        "Remove this book from homepage featured books?"
+        "Remove this book from The Book Spotlight?"
       );
 
       if(!confirmed){
@@ -2732,7 +2734,7 @@
         return;
       }
 
-      showToast("Book removed from featured books.");
+      showToast("Book removed from The Book Spotlight.");
 
       await Promise.all([
         loadFeatured(),
@@ -3057,7 +3059,7 @@
     function renderSchedules(){
 
       if(!schedulesCache.length){
-        renderEmpty("schedulesTable","No feature schedules found.");
+        renderEmpty("schedulesTable","No Spotlight schedules found.");
         return;
       }
 
@@ -3179,7 +3181,7 @@
       $("scheduleTime").value = "";
       $("scheduleNotes").value = "";
 
-      showToast("Feature scheduled successfully.");
+      showToast("Spotlight scheduled successfully.");
 
       await Promise.all([
         loadSchedules(),

@@ -11,6 +11,13 @@
     content="Contact Reader Reach for support, questions, feedback, and book discovery enquiries."
   >
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
   <style>
     :root{
       --cream:#f8f1e6;
@@ -38,14 +45,7 @@
 
     body{
       margin:0;
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+      font-family: "Manrope", sans-serif;
       background:var(--cream);
       color:var(--brown);
       line-height:1.6;
@@ -89,20 +89,12 @@
       letter-spacing:-.3px;
     }
 
-    .brand-mark{
-      width:42px;
-      height:42px;
-      border-radius:13px;
-      display:grid;
-      place-items:center;
-      background:var(--brown);
-      color:#fff;
-      font-size:21px;
-      box-shadow:0 7px 18px rgba(59,36,24,.16);
-    }
-
-    .brand-text{
-      font-size:19px;
+    .brand-logo{
+      display:block;
+      width:auto;
+      height:48px;
+      max-width:220px;
+      object-fit:contain;
     }
 
     .nav-links{
@@ -152,7 +144,7 @@
 
     h1{
       margin:18px 0 10px;
-      font-family:Georgia, "Times New Roman", serif;
+      font-family: "EB Garamond", Georgia, serif;
       font-size:clamp(38px, 6vw, 64px);
       line-height:1.02;
       letter-spacing:-1.7px;
@@ -191,7 +183,7 @@
     .info-card h2,
     .form-card h2{
       margin:0 0 10px;
-      font-family:Georgia, "Times New Roman", serif;
+      font-family: "EB Garamond", Georgia, serif;
       font-size:28px;
     }
 
@@ -455,9 +447,16 @@
   <header>
     <nav class="nav">
 
-      <a class="brand" href="index.html" aria-label="Reader Reach home">
-        <span class="brand-mark">📖</span>
-        <span class="brand-text">Reader Reach</span>
+      <a
+        class="brand"
+        href="index.html"
+        aria-label="Reader Reach home"
+      >
+        <img
+          class="brand-logo"
+          src="assets/Reader Reach Elegant Serif Wordmark.png"
+          alt="Reader Reach"
+        >
       </a>
 
       <div class="nav-links">
@@ -702,7 +701,8 @@
 <script>
 
   const GOOGLE_SCRIPT_URL =
-    "https://script.google.com/macros/s/AKfycbzr915JDrxx0O1EFiSHSjznSxcMBIOl8fGbK0dlZKer9876elgsKInowXc148aaxMloCg/exec";
+    "https://script.google.com/macros/s/" +
+    "AKfycbzr915JDrxx0O1EFiSHSjznSxcMBIOl8fGbK0dlZKer9876elgsKInowXc148aaxMloCg/exec";
 
 
   const form = document.getElementById("contactForm");
@@ -739,7 +739,8 @@
         "status-message success";
 
       statusMessage.textContent =
-        "Your message has been sent successfully. Thank you for contacting Reader Reach.";
+        "Your message has been sent successfully. " +
+        "Thank you for contacting Reader Reach.";
 
     }catch(error){
 
@@ -749,7 +750,9 @@
         "status-message error";
 
       statusMessage.textContent =
-        "We couldn't send your message right now. Please try again or email readerreach.support@gmail.com directly.";
+        "We couldn't send your message right now. " +
+        "Please try again or email " +
+        "readerreach.support@gmail.com directly.";
 
     }finally{
 

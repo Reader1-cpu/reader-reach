@@ -1,10 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Reader Reach — Every Book Has Its Readers</title>
+<title>Reader Reach | Every Book Has Its Readers</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --cream:#f8f3ea;
@@ -19,9 +23,9 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--cream);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:"Manrope","Manrope",Arial,sans-serif}
 a{text-decoration:none;color:inherit}
-.wrap{width:min(1180px,calc(100% - 40px));margin:auto}
+.wrap{width:min(1240px,calc(100% - 40px));margin:auto}
 
 .top{background:var(--brown);color:#eadfd5;font-size:12px}
 .top .wrap{min-height:32px;display:flex;justify-content:space-between;align-items:center}
@@ -41,8 +45,8 @@ nav .wrap{
   justify-content:space-between;
   gap:20px
 }
-.logo{font:700 24px Georgia,serif;color:var(--brown)}
-.logo small{display:block;font:10px Arial,sans-serif;color:var(--muted);margin-top:2px}
+.logo{font:700 24px "EB Garamond",Georgia,serif;color:var(--brown)}
+.logo small{display:block;font:10px "Manrope",Arial,sans-serif;color:var(--muted);margin-top:2px}
 .links{display:flex;gap:24px;font-size:13px}
 .links a:hover{color:var(--gold)}
 .navActions{display:flex;gap:8px}
@@ -82,7 +86,7 @@ nav .wrap{
   color:#d8b56b;
   margin-bottom:10px
 }
-.hero h1{font:700 clamp(44px,6vw,72px)/.98 Georgia,serif;margin:0 0 18px}
+.hero h1{font:600 clamp(48px,6vw,78px)/1.02 "EB Garamond",Georgia,serif;margin:0 0 18px}
 .hero p{max-width:560px;line-height:1.7;margin:0 0 25px}
 .actions{display:flex;gap:10px;flex-wrap:wrap}
 .hero .btn{border-color:#fff;color:#fff}
@@ -97,7 +101,7 @@ section{padding:68px 0}
   gap:20px;
   margin-bottom:25px
 }
-.title{font:700 34px Georgia,serif;color:var(--brown);margin:0}
+.title{font:600 40px "EB Garamond",Georgia,serif;color:var(--brown);margin:0}
 .intro{font-size:13px;line-height:1.65;color:var(--muted);max-width:650px;margin:8px 0 0}
 
 .trailerFeature{
@@ -107,7 +111,7 @@ section{padding:68px 0}
   align-items:center
 }
 .trailerFeature h3,.trailerCard h3{
-  font:700 24px Georgia,serif;
+  font:700 24px "EB Garamond",Georgia,serif;
   color:var(--brown);
   margin:0 0 10px
 }
@@ -175,15 +179,15 @@ section{padding:68px 0}
   place-items:center;
   margin-bottom:14px
 }
-.cover img{width:100%;height:100%;object-fit:cover}
+.cover img{width:100%;height:100%;object-fit:contain;padding:9px}
 .fallback{
-  font:700 18px Georgia,serif;
+  font:700 18px "EB Garamond",Georgia,serif;
   text-align:center;
   color:var(--brown);
   padding:18px
 }
 .book h3,.author h3{
-  font:700 18px Georgia,serif;
+  font:600 23px "EB Garamond",Georgia,serif;
   color:var(--brown);
   margin:0 0 5px
 }
@@ -215,7 +219,7 @@ section{padding:68px 0}
   display:grid;
   place-items:center;
   color:var(--brown);
-  font:700 25px Georgia,serif;
+  font:700 25px "EB Garamond",Georgia,serif;
   overflow:hidden
 }
 .avatar img{
@@ -257,9 +261,9 @@ section{padding:68px 0}
   padding:8px 4px;
   color:var(--brown)
 }
-.date strong{display:block;font:700 20px Georgia,serif}
+.date strong{display:block;font:700 20px "EB Garamond",Georgia,serif}
 .date span{font-size:9px;text-transform:uppercase}
-.schedule strong{font:700 15px Georgia,serif;color:var(--brown)}
+.schedule strong{font:700 15px "EB Garamond",Georgia,serif;color:var(--brown)}
 .schedule small{display:block;color:var(--muted);margin-top:4px}
 .badge{
   margin-left:auto;
@@ -288,7 +292,7 @@ section{padding:68px 0}
   color:var(--brown)
 }
 .discussion h3{
-  font:700 16px Georgia,serif;
+  font:700 16px "EB Garamond",Georgia,serif;
   color:var(--brown);
   margin:0 0 4px
 }
@@ -311,9 +315,9 @@ section{padding:68px 0}
   display:flex;
   align-items:end
 }
-.aboutImg h2{font:700 34px Georgia,serif;margin:0}
+.aboutImg h2{font:700 34px "EB Garamond",Georgia,serif;margin:0}
 .aboutCard{border-radius:18px;background:var(--brown);color:#fff;padding:35px}
-.aboutCard h2{font:700 28px Georgia,serif;margin:0 0 12px}
+.aboutCard h2{font:700 28px "EB Garamond",Georgia,serif;margin:0 0 12px}
 .aboutCard p{color:#dfd0c5;font-size:13px;line-height:1.7}
 
 .cta{background:#ead8ad;padding:28px 0}
@@ -323,7 +327,7 @@ section{padding:68px 0}
   align-items:center;
   gap:20px
 }
-.cta h2{font:700 28px Georgia,serif;color:var(--brown);margin:0 0 5px}
+.cta h2{font:700 28px "EB Garamond",Georgia,serif;color:var(--brown);margin:0 0 5px}
 .cta p{font-size:12px;color:#665344;margin:0}
 
 footer{background:#2d1a12;color:#fff;padding:55px 0 25px}
@@ -332,7 +336,7 @@ footer{background:#2d1a12;color:#fff;padding:55px 0 25px}
   grid-template-columns:1.5fr 1fr 1fr 1fr;
   gap:30px
 }
-footer h3,footer h4{font-family:Georgia,serif;margin:0 0 12px}
+footer h3,footer h4{font-family:"EB Garamond",Georgia,serif;margin:0 0 12px}
 footer p,footer a{color:#d9c9bd;font-size:12px;line-height:1.7}
 footer a{display:block;margin-bottom:5px}
 .copy{
@@ -358,8 +362,7 @@ footer a{display:block;margin-bottom:5px}
 }
 .toast.show{opacity:1;transform:none}
 
-/* =========================
-   VISITOR SUPPORT CHAT
+/* VISITOR SUPPORT CHAT
    ========================= */
 
 .chat-launcher{
@@ -428,7 +431,7 @@ footer a{display:block;margin-bottom:5px}
   font-size:18px
 }
 .support-header h3{
-  font:700 17px Georgia,serif;
+  font:700 17px "EB Garamond",Georgia,serif;
   margin:0 0 3px
 }
 .support-header p{
@@ -543,7 +546,7 @@ footer a{display:block;margin-bottom:5px}
   border-radius:11px;
   padding:11px;
   outline:none;
-  font:12px Arial,sans-serif;
+  font:12px "Manrope",Arial,sans-serif;
   color:var(--ink)
 }
 .support-composer textarea:focus{
@@ -573,7 +576,7 @@ footer a{display:block;margin-bottom:5px}
 }
 
 @media(max-width:1000px){
-  .links{display:none}
+  .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 15px}.links a{font-size:11px}nav .wrap{flex-wrap:wrap;padding:12px 0;justify-content:center}
   .trailerFeature{grid-template-columns:1fr}
   .books,.authors{grid-template-columns:repeat(2,1fr)}
   .two,.about{grid-template-columns:1fr}
@@ -581,13 +584,15 @@ footer a{display:block;margin-bottom:5px}
 @media(max-width:650px){
   .wrap{width:calc(100% - 28px)}
   .top .wrap span:last-child{display:none}
-  .navActions .btn:first-child{display:none}
+  .navActions .btn:first-child{display:inline-flex}
   .hero{min-height:500px}
   .hero h1{font-size:46px}
   .books,.authors{grid-template-columns:1fr}
   .trailerCard{grid-template-columns:1fr}
   .cta .wrap{flex-direction:column;align-items:flex-start}
   .footerGrid{grid-template-columns:1fr 1fr}
+  .links{width:100%;order:3}
+  .navActions{margin-left:auto}
   .head{align-items:flex-start;flex-direction:column}
 
   .chat-launcher{
@@ -627,7 +632,8 @@ footer a{display:block;margin-bottom:5px}
     <div class="links">
       <a href="#home">Home</a>
       <a href="authors.html">Authors</a>
-      <a href="#featured">Featured</a>
+      <a href="#featured">The Book Spotlight</a>
+       <a href="#readingRoom">The Reading Room</a>
       <a href="#about">About Us</a>
       <a href="contact.html">Contact Us</a>
     </div>
@@ -650,7 +656,7 @@ footer a{display:block;margin-bottom:5px}
       and find stories worth carrying with you.
     </p>
     <div class="actions">
-      <a class="btn primary" href="#featured">Explore Featured Books →</a>
+      <a class="btn primary" href="#featured">Explore The Book Spotlight →</a>
       <a class="btn" href="authors.html">Meet Our Authors</a>
     </div>
   </div>
@@ -661,18 +667,16 @@ footer a{display:block;margin-bottom:5px}
     <div class="head">
       <div>
         <div class="label">Watch</div>
-        <h2 class="title">Featured Book Trailer</h2>
+        <h2 class="title">Book Trailer Preview</h2>
         <p class="intro">
-          When Admin selects <strong>Show</strong>, the author's uploaded
-          trailer appears here. When Admin selects <strong>Hide</strong>,
-          it disappears from the homepage without deleting the trailer.
+          Discover the stories behind the books through trailers selected by The Curator.
         </p>
       </div>
       <a class="btn" href="#allTrailers">View More Trailers →</a>
     </div>
 
     <div id="featuredTrailer">
-      <div class="loading">Loading featured trailer…</div>
+      <div class="loading">Loading book trailer…</div>
     </div>
 
     <div id="allTrailers"></div>
@@ -684,15 +688,15 @@ footer a{display:block;margin-bottom:5px}
     <div class="head">
       <div>
         <div class="label">Featured</div>
-        <h2 class="title">Featured Books</h2>
+        <h2 class="title">The Book Spotlight</h2>
         <p class="intro">
-          Handpicked books currently selected for the Reader Reach homepage.
+          Discover books thoughtfully selected by The Curator for readers to explore.
         </p>
       </div>
     </div>
 
     <div id="featuredBookGrid" class="books">
-      <div class="loading">Loading featured books…</div>
+      <div class="loading">Loading spotlight books…</div>
     </div>
   </div>
 </section>
@@ -717,14 +721,14 @@ footer a{display:block;margin-bottom:5px}
   </div>
 </section>
 
-<section class="alt">
+<section class="alt" id="readingRoom">
   <div class="wrap two">
 
     <div>
       <div class="label">Calendar</div>
-      <h2 class="title">Upcoming Features</h2>
+      <h2 class="title">Spotlight Schedule</h2>
       <p class="intro">
-        Keep track of scheduled Reader Reach features and book events.
+        See the upcoming books selected for the spotlight.
       </p>
 
       <div class="panel" style="margin-top:20px">
@@ -736,14 +740,15 @@ footer a{display:block;margin-bottom:5px}
 
     <div>
       <div class="label">Community</div>
-      <h2 class="title">Book Discussions</h2>
+      <h2 class="title">The Reading Room</h2>
       <p class="intro">
-        Follow discussion activity around approved books.
+        Follow reading activity around approved books.
       </p>
 
       <div class="panel" style="margin-top:20px">
+        <div style="margin:12px 0 14px"><a class="btn dark" href="book-corner.html">Explore The Reading Room</a></div>
         <div id="discussionList">
-          <div class="loading">Loading discussions…</div>
+          <div class="loading">Loading Reading Room topics…</div>
         </div>
       </div>
     </div>
@@ -763,9 +768,7 @@ footer a{display:block;margin-bottom:5px}
     <div class="aboutCard">
       <h2>Books deserve to be discovered.</h2>
       <p>
-        Reader Reach connects readers, authors, moderators and administrators
-        through a structured platform for discovering books, supporting authors,
-        coordinating features and building meaningful reader communities.
+        Reader Reach brings readers and authors together through memorable books, thoughtful recommendations and meaningful conversations. Every story deserves the chance to find its audience.
       </p>
       <a class="btn" href="authors.html">Explore Authors →</a>
     </div>
@@ -806,8 +809,9 @@ footer a{display:block;margin-bottom:5px}
       <div>
         <h4>Explore</h4>
         <a href="authors.html">Authors</a>
-        <a href="#featured">Featured Books</a>
+        <a href="#featured">The Book Spotlight</a>
         <a href="#trailers">Book Trailers</a>
+        <a href="#readingRoom">The Reading Room</a>
         <a href="#home">Home</a>
       </div>
 
@@ -824,6 +828,7 @@ footer a{display:block;margin-bottom:5px}
         <a href="#authors">Authors</a>
         <a href="#featured">Books</a>
         <a href="#trailers">Trailers</a>
+        <a href="#readingRoom">The Reading Room</a>
         <a href="#about">About</a>
       </div>
 
@@ -967,7 +972,7 @@ function date(v){
       month:"short",
       day:"numeric"
     })
-    :"—";
+    :"Not available";
 }
 
 function time(v){
@@ -987,7 +992,7 @@ function time(v){
 async function books(ids=[]){
   let q=supabaseClient
     .from("books")
-    .select("id,author_id,title,description,genre_topic,who_its_for,availability,book_link,cover_url,status,created_at")
+    .select("id,author_id,title,description,genre_topic,who_its_for,availability,book_link,mockup_url,status,created_at")
     .eq("status","approved");
 
   if(ids.length)q=q.in("id",ids);
@@ -1014,14 +1019,14 @@ async function books(ids=[]){
 }
 
 function card(b,a){
-  let c=url(b.cover_url);
+  let c=url(b.mockup_url);
 
   return `
     <article class="book">
       <div class="cover">
         ${
           c
-          ? `<img src="${esc(c)}" alt="${esc(b.title||"Book cover")}" loading="lazy">`
+          ? `<img src="${esc(c)}" alt="${esc(b.title||"3D Book Mockup")}" loading="lazy">`
           : `<div class="fallback">${esc(b.title||"Untitled Book")}</div>`
         }
       </div>
@@ -1058,9 +1063,8 @@ async function loadTrailers(){
     if(!ts.length){
       box.innerHTML=`
         <div class="notice">
-          <strong>No featured trailer is currently live.</strong><br>
-          When Admin selects <strong>Show</strong> for an uploaded trailer,
-          it will appear here. Hiding a trailer does not delete it.
+          <strong>No book trailer is currently live.</strong><br>
+          Visit again to discover new book trailers selected by The Curator.
         </div>
       `;
 
@@ -1091,7 +1095,7 @@ async function loadTrailers(){
       <div class="trailerFeature">
 
         <div>
-          <div class="label">Featured Trailer</div>
+          <div class="label">Book Trailer</div>
           <h3>${esc(t.title||b.title)}</h3>
 
           <p>
@@ -1117,7 +1121,7 @@ async function loadTrailers(){
                 controls
                 preload="metadata"
                 playsinline
-                poster="${esc(url(b.cover_url))}">
+                poster="${esc(url(b.mockup_url))}">
                 <source src="${esc(v)}">
               </video>
             `
@@ -1158,7 +1162,7 @@ async function loadTrailers(){
                         controls
                         preload="metadata"
                         playsinline
-                        poster="${esc(url(b.cover_url))}">
+                        poster="${esc(url(b.mockup_url))}">
                         <source src="${esc(v)}">
                       </video>
                     `
@@ -1170,7 +1174,7 @@ async function loadTrailers(){
                   }
 
                   <div>
-                    <div class="label">Featured Trailer</div>
+                    <div class="label">Book Trailer</div>
                     <h3>${esc(t.title||b.title)}</h3>
                     <p>By ${esc(a?.author_name||"Reader Reach Author")}</p>
                     <p>${esc(t.description||b.description||"")}</p>
@@ -1221,7 +1225,7 @@ async function loadFeatured(){
     if(!ids.length){
       box.innerHTML=`
         <div class="notice" style="grid-column:1/-1">
-          No books have been selected for Featured Books yet.
+          The next Book Spotlight selection is coming soon.
         </div>
       `;
       return;
@@ -1243,7 +1247,7 @@ async function loadFeatured(){
       ||
       `
         <div class="notice" style="grid-column:1/-1">
-          No approved featured books are currently available.
+          New books will appear here once they are approved and selected.
         </div>
       `;
 
@@ -1252,7 +1256,7 @@ async function loadFeatured(){
 
     box.innerHTML=`
       <div class="notice error" style="grid-column:1/-1">
-        Featured books could not be loaded right now.
+        Spotlight books could not be loaded right now.
       </div>
     `;
   }
@@ -1417,9 +1421,10 @@ async function loadDiscussions(){
 
   try{
     let r=await supabaseClient
-      .from("discussions")
-      .select("id,book_id,created_at")
-      .order("created_at",{ascending:false});
+      .from("book_corner_topics")
+      .select("id,book_id,title,opening_question,created_at")
+      .order("created_at",{ascending:false})
+      .limit(6);
 
     if(r.error)throw r.error;
 
@@ -1428,7 +1433,7 @@ async function loadDiscussions(){
     if(!rows.length){
       box.innerHTML=`
         <div class="notice">
-          No public book discussions are currently listed.
+          No public book Reading Room topics are currently listed.
         </div>
       `;
       return;
@@ -1453,7 +1458,7 @@ async function loadDiscussions(){
           <div style="flex:1">
             <h3>${esc(b.title)}</h3>
             <p>
-              Discussion activity is available for this book.
+              Reading Room activity is available for this book.
               Created ${esc(date(d.created_at))}.
             </p>
           </div>
@@ -1470,7 +1475,7 @@ async function loadDiscussions(){
     ||
     `
       <div class="notice">
-        No discussions are attached to approved books yet.
+        No Reading Room topics are attached to approved books yet.
       </div>
     `;
 

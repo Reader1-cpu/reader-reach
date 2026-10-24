@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +25,7 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--cream);color:var(--ink);font-family:"Manrope","Manrope",Arial,sans-serif}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:"Manrope",Arial,sans-serif}
 a{text-decoration:none;color:inherit}
 .wrap{width:min(1240px,calc(100% - 40px));margin:auto}
 
@@ -107,7 +108,7 @@ section{padding:68px 0}
 
 .trailerFeature{
   display:grid;
-  grid-template-columns:1fr 1.7fr 1fr;
+  grid-template-columns:minmax(0,1.4fr) minmax(280px,1fr);
   gap:22px;
   align-items:center
 }
@@ -172,7 +173,7 @@ section{padding:68px 0}
   box-shadow:0 5px 18px rgba(61,36,24,.05)
 }
 .cover{
-  height:230px;
+  height:340px;
   border-radius:10px;
   overflow:hidden;
   background:var(--soft);
@@ -180,7 +181,7 @@ section{padding:68px 0}
   place-items:center;
   margin-bottom:14px
 }
-.cover img{width:100%;height:100%;object-fit:contain;padding:9px}
+.cover img{width:100%;height:100%;object-fit:contain;padding:4px;filter:drop-shadow(0 12px 10px rgba(45,26,18,.16))}
 .fallback{
   font:700 18px "EB Garamond",Georgia,serif;
   text-align:center;
@@ -203,13 +204,13 @@ section{padding:68px 0}
   margin-bottom:13px
 }
 
-.authors{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.authors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
 .author{
   background:var(--paper);
   border:1px solid var(--line);
   border-radius:16px;
   padding:20px;
-  text-align:center
+  text-align:center;min-width:0;overflow:hidden
 }
 .avatar{
   width:68px;
@@ -234,7 +235,7 @@ section{padding:68px 0}
   font-size:12px;
   line-height:1.6;
   color:var(--muted);
-  min-height:38px
+  min-height:54px;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden
 }
 .count{font-size:11px;color:var(--gold);font-weight:700;margin:8px 0 13px}
 
@@ -576,6 +577,40 @@ footer a{display:block;margin-bottom:5px}
   background:var(--paper)
 }
 
+
+/* HOMEPAGE REFINEMENTS */
+html{scroll-padding-top:100px}
+section{scroll-margin-top:90px}
+.hero{min-height:440px} /* original banner intentionally preserved */
+.trailerFeature{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow);align-items:center}
+.trailerFeature .video{grid-column:1;grid-row:1}
+.trailerFeature > div:first-child{grid-column:2;grid-row:1}
+.trailerFeature .video video{min-height:310px;max-height:450px;object-fit:contain}
+.trailerByline{font-weight:700;color:var(--brown)!important}
+#allTrailers{scroll-margin-top:110px}
+.book{min-width:0}
+.book .cover{height:340px;background:linear-gradient(145deg,#f8f1e6,#ede1d1)}
+.book .cover img{padding:3px}
+.author h3{overflow-wrap:anywhere}
+.schedule{gap:12px}
+.scheduleMockup{width:54px;height:75px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 5px 4px rgba(0,0,0,.12))}
+.schedule>div:nth-last-child(2){min-width:0;flex:1}
+.schedule .badge{white-space:nowrap}
+.stepsGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.stepCard{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:25px 20px;min-width:0}
+.stepNumber{font:700 28px "EB Garamond",Georgia,serif;color:var(--gold)}
+.stepCard h3{font:700 23px "EB Garamond",Georgia,serif;color:var(--brown);margin:12px 0}
+.stepCard p{font-size:12px;line-height:1.8;color:var(--muted)}
+.aboutCard strong{color:#fff7e9}
+.aboutCard .btn{color:#fff5e5;border-color:#cbb39c;margin-top:8px}
+.closingBanner{background:linear-gradient(90deg,rgba(35,20,13,.94),rgba(35,20,13,.74),rgba(35,20,13,.22)),url('https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1800&q=85') center/cover;color:#fff;min-height:300px;display:flex;align-items:center}
+.closingInner{padding:56px 0}
+.closingBanner h2{font:600 clamp(38px,5vw,58px)/1.1 "EB Garamond",Georgia,serif;margin:0 0 12px}
+.closingBanner p{max-width:580px;line-height:1.75;font-size:14px;margin:0 0 24px}
+.closingBanner .btn:not(.primary){color:#fff;border-color:#e3cdb8}
+@media(max-width:1000px){.stepsGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.trailerFeature{grid-template-columns:1fr}.trailerFeature .video,.trailerFeature>div:first-child{grid-column:1;grid-row:auto}}
+@media(max-width:650px){.stepsGrid{grid-template-columns:1fr}.schedule{flex-wrap:wrap}.schedule .badge{margin-left:68px}.book .cover{height:360px}.closingBanner{min-height:340px}}
+
 @media(max-width:1000px){
   .links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 15px}.links a{font-size:11px}nav .wrap{flex-wrap:wrap;padding:12px 0;justify-content:center}
   .trailerFeature{grid-template-columns:1fr}
@@ -683,7 +718,7 @@ footer a{display:block;margin-bottom:5px}
       <div class="loading">Loading book trailer…</div>
     </div>
 
-    <div id="allTrailers"></div>
+    <div id="allTrailers" aria-label="More book trailers"></div>
   </div>
 </section>
 
@@ -745,12 +780,10 @@ footer a{display:block;margin-bottom:5px}
     <div>
       <div class="label">Community</div>
       <h2 class="title">The Reading Room</h2>
-      <p class="intro">
-        Follow reading activity around approved books.
-      </p>
+      <p class="intro">Authors begin thoughtful reflections once their book has reached 10 completed readers. Readers currently reading or finished can take part.</p>
 
       <div class="panel" style="margin-top:20px">
-        <div style="margin:12px 0 14px"><a class="btn dark" href="book-corner.html">Explore The Reading Room</a></div>
+        <div style="margin:12px 0 14px"><a class="btn dark" href="reading-room.html">Explore The Reading Room</a></div>
         <div id="discussionList">
           <div class="loading">Loading Reading Room topics…</div>
         </div>
@@ -760,21 +793,34 @@ footer a{display:block;margin-bottom:5px}
   </div>
 </section>
 
+<section class="alt" id="howItWorks">
+ <div class="wrap">
+  <div class="head"><div><div class="label">A simple connection</div><h2 class="title">How Reader Reach Works</h2><p class="intro">Discover stories, get to know their authors, and find where to read or purchase books outside Reader Reach.</p></div></div>
+  <div class="stepsGrid">
+   <article class="stepCard"><span class="stepNumber">01</span><h3>Discover books and short stories</h3><p>Browse approved books, trailers, and author profiles to find something that speaks to you.</p></article>
+   <article class="stepCard"><span class="stepNumber">02</span><h3>Connect with the author</h3><p>Learn about the writer and follow the book's official website or external buying link when available.</p></article>
+   <article class="stepCard"><span class="stepNumber">03</span><h3>Build your reading shelf</h3><p>Save books, track what you're currently reading, and mark books completed when you've finished.</p></article>
+   <article class="stepCard"><span class="stepNumber">04</span><h3>Join The Reading Room</h3><p>Once a book reaches 10 completed readers, its approved author can start a topic. Eligible readers can participate.</p></article>
+  </div>
+ </div>
+</section>
+
 <section id="about">
   <div class="wrap about">
 
     <div class="aboutImg">
       <h2>
-        A platform built around books and the people who bring them to readers.
+        Where stories meet readers — and readers meet their authors.
       </h2>
     </div>
 
     <div class="aboutCard">
-      <h2>Books deserve to be discovered.</h2>
-      <p>
-        Reader Reach brings readers and authors together through memorable books, thoughtful recommendations and meaningful conversations. Every story deserves the chance to find its audience.
-      </p>
-      <a class="btn" href="authors.html">Explore Authors →</a>
+      <div class="label">About Reader Reach</div>
+      <h2>More Than a Place to Discover Books.</h2>
+      <p>Reader Reach connects readers with the authors behind the stories. Explore approved books and short stories, discover the people who wrote them, and build meaningful connections through reading.</p>
+      <p><strong>We don't sell books.</strong> Instead, we help readers reach an author's official website or an external buying platform where a book is available. Purchases take place outside Reader Reach.</p>
+      <p>Our community also brings books to life through personal reading shelves, curated Book Spotlights, trailers, and <strong>The Reading Room</strong>.</p>
+      <a class="btn" href="#howItWorks">See How It Works →</a>
     </div>
 
   </div>
@@ -785,8 +831,7 @@ footer a{display:block;margin-bottom:5px}
     <div>
       <h2>Join Reader Reach</h2>
       <p>
-        Create an account to follow authors, save books, receive notifications
-        and participate in the Reader Reach community.
+        Create an account to discover authors, save books to your shelf, follow reading activity, and take part in eligible Reading Room topics.
       </p>
     </div>
 
@@ -795,6 +840,15 @@ footer a{display:block;margin-bottom:5px}
       <a class="btn" href="auth.html?mode=reader">Sign In</a>
     </div>
   </div>
+</section>
+
+<section class="closingBanner" aria-label="Discover more stories">
+ <div class="wrap closingInner">
+  <div class="label">REAL STORIES. REAL PEOPLE.</div>
+  <h2>Find Your Next Great Read.</h2>
+  <p>Explore remarkable books, meet the authors behind them, and discover where their stories can take you.</p>
+  <div class="actions"><a class="btn primary" href="#featured">Explore Books →</a><a class="btn" href="authors.html">Meet the Authors →</a></div>
+ </div>
 </section>
 
 </main>
@@ -829,6 +883,7 @@ footer a{display:block;margin-bottom:5px}
       <div>
         <h4>Reader Reach</h4>
         <a href="#about">About Us</a>
+        <a href="#howItWorks">How It Works</a>
         <a href="contact.html">Contact Us</a>
         <a href="auth.html?mode=reader">Sign In</a>
         <a href="auth.html?mode=reader">Sign Up</a>
@@ -1097,6 +1152,7 @@ async function loadTrailers(){
 
     ts=ts.filter(t=>bm.has(t.book_id));
 
+    if(!ts.length){box.innerHTML='<div class="notice">No approved book trailers are currently available.</div>';more.innerHTML='';return;}
     let t=ts[0];
     let b=bm.get(t.book_id);
     let a=am.get(b.author_id);
@@ -1108,6 +1164,7 @@ async function loadTrailers(){
         <div>
           <div class="label">Book Trailer</div>
           <h3>${esc(t.title||b.title)}</h3>
+          <p class="trailerByline">By ${esc(a?.author_name||"Reader Reach Author")}</p>
 
           <p>
             ${esc(
@@ -1144,19 +1201,13 @@ async function loadTrailers(){
           }
         </div>
 
-        <div>
-          <div class="label">Book</div>
-          <h3>${esc(b.title)}</h3>
-          <p>By ${esc(a?.author_name||"Reader Reach Author")}</p>
-          <p>${esc(b.genre_topic||"Book")}</p>
-        </div>
 
       </div>
     `;
 
     more.innerHTML=ts.length>1
       ? `
-        <div class="trailers">
+        <div class="trailers" id="allTrailersList">
           ${
             ts.slice(1).map(t=>{
               let b=bm.get(t.book_id);
@@ -1362,12 +1413,18 @@ async function loadCalendar(){
 
     if(r.error)throw r.error;
 
-    let rows=r.data||[];
+    const today=new Date(); today.setHours(0,0,0,0);
+    const seenBooks=new Set();
+    let rows=(r.data||[]).filter(item=>{
+      const day=new Date(item.scheduled_date+"T00:00:00");
+      if(Number.isNaN(day.getTime())||day<today||seenBooks.has(item.book_id))return false;
+      seenBooks.add(item.book_id);return true;
+    });
 
     if(!rows.length){
       box.innerHTML=`
         <div class="notice">
-          There are no scheduled features at the moment.
+          No upcoming Book Spotlights are scheduled right now. Check back soon.
         </div>
       `;
       return;
@@ -1396,6 +1453,7 @@ async function loadCalendar(){
             </span>
           </div>
 
+          ${url(b.mockup_url)?`<img class="scheduleMockup" src="${esc(url(b.mockup_url))}" alt="${esc(b.title)} book mockup" loading="lazy">`:""}
           <div>
             <strong>${esc(b.title)}</strong>
             <small>
@@ -1404,7 +1462,7 @@ async function loadCalendar(){
             </small>
           </div>
 
-          <span class="badge">Scheduled</span>
+          <span class="badge">Upcoming Spotlight</span>
 
         </div>
       `;

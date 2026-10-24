@@ -712,6 +712,51 @@ section{scroll-margin-top:90px}
 @media(max-width:1100px){#featuredBookGrid{grid-template-columns:repeat(2,minmax(0,1fr))}#featuredBookGrid .cover{height:400px}}
 @media(max-width:650px){#featuredBookGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#featuredBookGrid .book{padding:8px 8px 14px}#featuredBookGrid .cover{height:245px}#featuredBookGrid .cover img{transform:scale(1.42) translateY(-4px)}#featuredBookGrid .cover::before{bottom:12px;height:24px}#featuredBookGrid .cover::after{bottom:26px}#featuredBookGrid .book h3{font-size:20px}#featuredBookGrid .book .btn{min-width:0;width:100%;font-size:11px}}
 
+
+/* Final approved Spotlight: transparent individual mockup boxes, no stands. */
+#featuredBookGrid{gap:22px;align-items:stretch}
+#featuredBookGrid .book{
+  background:transparent;border:0;border-right:1px solid var(--line);
+  border-radius:0;box-shadow:none;padding:0 18px 12px 0;
+  display:flex;flex-direction:column;align-items:stretch;text-align:left;
+  overflow:visible;min-width:0;
+}
+#featuredBookGrid .book:last-child{border-right:0}
+#featuredBookGrid .cover{
+  height:360px;width:100%;position:relative;display:flex;
+  align-items:center;justify-content:center;overflow:hidden;
+  background:transparent;border:0;border-radius:0;margin:0 0 12px;
+}
+#featuredBookGrid .cover::before,#featuredBookGrid .cover::after{content:none;display:none}
+#featuredBookGrid .cover img{
+  width:100%;height:100%;padding:0;object-fit:contain;
+  transform:scale(1.48);filter:drop-shadow(0 12px 10px rgba(45,28,16,.18));
+}
+#featuredBookGrid .book h3{font-size:25px;margin:0 0 4px}
+#featuredBookGrid .book .meta{font-size:13px;margin-bottom:8px}
+#featuredBookGrid .book .pill{align-self:flex-start;margin:0 0 12px}
+#featuredBookGrid .book-description{font-size:13px;color:var(--muted);line-height:1.7;margin:0 0 14px;overflow-wrap:anywhere}
+#featuredBookGrid .book-description summary{cursor:pointer;list-style:none}
+#featuredBookGrid .book-description summary::-webkit-details-marker{display:none}
+#featuredBookGrid .book-description .view-more{color:var(--gold);font-weight:700}
+#featuredBookGrid .book-description[open] summary{display:none}
+#featuredBookGrid .book-description .full-description{display:none}
+#featuredBookGrid .book-description[open] .full-description{display:block}
+#featuredBookGrid .book-description .view-less{color:var(--gold);font-weight:700;cursor:pointer;display:block;margin-top:5px}
+#featuredBookGrid .book .btn{margin-top:auto;align-self:flex-start;min-width:145px}
+@media(max-width:1100px){
+  #featuredBookGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #featuredBookGrid .book:nth-child(2n){border-right:0}
+  #featuredBookGrid .cover{height:360px}
+}
+@media(max-width:650px){
+  #featuredBookGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  #featuredBookGrid .book{padding:0 8px 12px 0}
+  #featuredBookGrid .cover{height:240px}
+  #featuredBookGrid .cover img{transform:scale(1.35)}
+  #featuredBookGrid .book h3{font-size:20px}
+  #featuredBookGrid .book .btn{width:100%;min-width:0;justify-content:center;font-size:11px}
+}
 </style>
 </head>
 
@@ -1154,28 +1199,26 @@ async function books(ids=[]){
 }
 
 function card(b,a){
-  let c=url(b.mockup_url);
-
+  const c=url(b.mockup_url);
+  const description=String(b.description||"").trim();
+  const short=description.length>115 ? description.slice(0,115).trimEnd()+"…" : description;
+  const descriptionHTML=description
+    ? (description.length>115
+      ? `<details class="book-description"><summary>${esc(short)} <span class="view-more">View More</span></summary><div class="full-description">${esc(description)}<span class="view-less" onclick="this.closest('details').open=false">View Less</span></div></details>`
+      : `<p class="book-description">${esc(description)}</p>`)
+    : "";
   return `
     <article class="book">
       <div class="cover">
-        ${
-          c
+        ${c
           ? `<img src="${esc(c)}" alt="${esc(b.title||"3D Book Mockup")}" loading="lazy">`
-          : `<div class="fallback">${esc(b.title||"Untitled Book")}</div>`
-        }
+          : `<div class="fallback">${esc(b.title||"Untitled Book")}</div>`}
       </div>
-
       <h3>${esc(b.title||"Untitled Book")}</h3>
       <div class="meta">By ${esc(a||"Reader Reach Author")}</div>
       <span class="pill">${esc(b.genre_topic||"Book")}</span>
-      <br>
-
-      <a
-        class="btn small primary"
-        href="book.html?id=${encodeURIComponent(b.id)}">
-        View Details →
-      </a>
+      ${descriptionHTML}
+      <a class="btn small primary" href="book.html?id=${encodeURIComponent(b.id)}">View Details →</a>
     </article>
   `;
 }

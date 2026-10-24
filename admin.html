@@ -1,13 +1,17 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reader Reach — The Curator</title>
+  <title>Reader Reach | The Curator</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root{
       --cream:#f7f1e7;
@@ -40,7 +44,7 @@
 
     body{
       margin:0;
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      font-family:"Manrope",sans-serif;
       background:var(--cream);
       color:var(--text);
     }
@@ -100,7 +104,7 @@
     }
 
     .brand-title{
-      font-family:Georgia,"Times New Roman",serif;
+      font-family:"EB Garamond",Georgia,serif;
       font-size:26px;
       font-weight:700;
       letter-spacing:-.45px;
@@ -193,7 +197,7 @@
 
     .topbar h1{
       margin:0;
-      font-family:Georgia,"Times New Roman",serif;
+      font-family:"EB Garamond",Georgia,serif;
       font-size:29px;
       letter-spacing:-.55px;
       color:var(--brown);
@@ -235,7 +239,7 @@
 
     .section-heading h2{
       margin:0;
-      font-family:Georgia,"Times New Roman",serif;
+      font-family:"EB Garamond",Georgia,serif;
       color:var(--brown);
       font-size:25px;
       letter-spacing:-.3px;
@@ -845,6 +849,7 @@
       }
     }
 
+    .card-head h3,.title-cell,.chat-header h3{font-family:"EB Garamond",Georgia,serif;}
     /* Display the full 3D book mockup without cropping */
     .mockup-preview-link{
       display:inline-flex;
@@ -894,6 +899,7 @@
         <button data-target="schedules">Spotlight Schedule</button>
         <button data-target="readers">Readers</button>
         <button data-target="discussions">Conversations</button>
+        <button data-target="readingRooms">Ongoing Reading Rooms</button>
         <button data-target="visitorSupport">Visitor Support</button>
         <button data-target="notifications">Notifications</button>
         <button data-target="moderators">Moderators</button>
@@ -1214,9 +1220,10 @@
               </div>
 
               <div style="margin-top:13px;">
-                <button class="btn btn-primary" onclick="createSchedule()">
+                <button id="scheduleSaveButton" class="btn btn-primary" onclick="saveSchedule()">
                   Schedule Spotlight
                 </button>
+                <button id="scheduleCancelEdit" class="btn btn-light hidden" onclick="cancelScheduleEdit()">Cancel Editing</button>
               </div>
 
             </div>
@@ -1246,7 +1253,7 @@
           <div class="section-heading">
             <div>
               <h2>Reader Management</h2>
-              <p>View basic reader information available to the administrator.</p>
+              <p>Review registered readers and their Reader Reach profiles.</p>
             </div>
           </div>
 
@@ -1354,6 +1361,11 @@
 
         </section>
 
+
+        <section id="readingRooms" class="section">
+          <div class="section-heading"><div><h2>Ongoing Reading Rooms</h2><p>See every author started Reading Room topic and follow its activity.</p></div><button class="btn btn-light" onclick="loadPublicDiscussions()">Refresh Rooms</button></div>
+          <div class="card"><div class="card-head"><h3>Reading Room Activity</h3></div><div class="card-body"><div id="ongoingReadingRoomsTable"><div class="empty">Loading Reading Rooms…</div></div></div></div>
+        </section>
 
         <!-- VISITOR SUPPORT -->
         <section id="visitorSupport" class="section">
@@ -1510,6 +1522,7 @@
     let featuredCache = [];
     let trailersCache = [];
     let schedulesCache = [];
+    let editingScheduleId = null;
     let readersCache = [];
     let moderatorsCache = [];
     let conversationsCache = [];
@@ -3075,6 +3088,7 @@
                 <th>Moderator</th>
                 <th>Status</th>
                 <th>Notes</th>
+                <th>Actions</th>
               </tr>
             </thead>
 
@@ -3107,10 +3121,8 @@
                     ${statusBadge(schedule.status)}
                   </td>
 
-                  <td>
-                    ${escapeHTML(schedule.notes || "—")}
-                  </td>
-
+                  <td>${escapeHTML(schedule.notes || "Not provided")}</td>
+                  <td><button class="btn btn-secondary" onclick="editSchedule('${'${escapeHTML(schedule.id)}'}')">Edit Schedule</button></td>
                 </tr>
               `).join("")}
 
@@ -3119,6 +3131,56 @@
           </table>
         </div>
       `;
+    }
+
+    function editSchedule(id){
+      const schedule=schedulesCache.find(item=>item.id===id);
+      if(!schedule)return showToast("Schedule not found.",true);
+      editingScheduleId=id;
+      $("scheduleBook").value=schedule.book_id||"";
+      $("scheduleModerator").value=schedule.moderator_id||"";
+      $("scheduleDate").value=schedule.scheduled_date||"";
+      $("scheduleTime").value=String(schedule.scheduled_time||"").slice(0,5);
+      $("scheduleNotes").value=schedule.notes||"";
+      $("scheduleSaveButton").textContent="Save Schedule Changes";
+      $("scheduleCancelEdit").classList.remove("hidden");
+      $("schedules").scrollIntoView({behavior:"smooth",block:"start"});
+    }
+
+    function cancelScheduleEdit(){
+      editingScheduleId=null;
+      $("scheduleBook").value="";
+      $("scheduleModerator").value="";
+      $("scheduleDate").value="";
+      $("scheduleTime").value="";
+      $("scheduleNotes").value="";
+      $("scheduleSaveButton").textContent="Schedule Spotlight";
+      $("scheduleCancelEdit").classList.add("hidden");
+    }
+
+    async function saveSchedule(){
+      if(!editingScheduleId)return createSchedule();
+      const book_id=$("scheduleBook").value;
+      const moderator_id=$("scheduleModerator").value||null;
+      const scheduled_date=$("scheduleDate").value;
+      const scheduled_time=$("scheduleTime").value;
+      const notes=$("scheduleNotes").value.trim()||null;
+      if(!book_id||!scheduled_date||!scheduled_time){
+        showToast("Choose a book, date and time.",true);return;
+      }
+      const {data:duplicates,error:checkError}=await supabaseClient
+        .from("feature_schedules").select("id").eq("book_id",book_id)
+        .eq("scheduled_date",scheduled_date).eq("scheduled_time",scheduled_time)
+        .neq("id",editingScheduleId).limit(1);
+      if(checkError){showToast(checkError.message,true);return;}
+      if(duplicates?.length){showToast("This book already has a Spotlight at that time.",true);return;}
+      const {error}=await supabaseClient.from("feature_schedules")
+        .update({book_id,moderator_id,scheduled_date,scheduled_time,notes})
+        .eq("id",editingScheduleId);
+      if(error){showToast(error.message,true);return;}
+      cancelScheduleEdit();
+      showToast("Spotlight schedule updated.");
+      await Promise.all([loadSchedules(),loadOverview()]);
     }
 
     async function createSchedule(){
@@ -3812,109 +3874,37 @@ async function openAttachment(id) {
     /* PUBLIC DISCUSSIONS */
 
     async function loadPublicDiscussions(){
-
-      const {data,error} = await supabaseClient
-        .from("discussions")
-        .select(`
-          id,
-          book_id,
-          created_at
-        `)
-        .order("created_at",{ascending:false})
-        .limit(100);
-
-      if(error){
-        console.error(error);
-        renderError("publicDiscussionsTable",error.message);
-        return;
+      const targets=["publicDiscussionsTable","ongoingReadingRoomsTable"];
+      const {data,error}=await supabaseClient.from("book_corner_topics")
+        .select("id,book_id,author_profile_id,title,opening_question,created_at")
+        .order("created_at",{ascending:false});
+      if(error){targets.forEach(id=>renderError(id,error.message));return;}
+      const topics=data||[];
+      if(!topics.length){targets.forEach(id=>renderEmpty(id,"No Reading Room topics have started yet."));return;}
+      const bookIds=[...new Set(topics.map(t=>t.book_id).filter(Boolean))];
+      const authorIds=[...new Set(topics.map(t=>t.author_profile_id).filter(Boolean))];
+      const [booksResult,authorsResult,repliesResult]=await Promise.all([
+        supabaseClient.from("books").select("id,title").in("id",bookIds),
+        authorIds.length?supabaseClient.from("authors").select("profile_id,author_name").in("profile_id",authorIds):Promise.resolve({data:[]}),
+        supabaseClient.from("book_corner_replies").select("topic_id,profile_id").in("topic_id",topics.map(t=>t.id))
+      ]);
+      const titles=new Map((booksResult.data||[]).map(b=>[b.id,b.title]));
+      const authors=new Map((authorsResult.data||[]).map(a=>[a.profile_id,a.author_name]));
+      const replies=new Map();
+      for(const r of repliesResult.data||[]){
+        if(!replies.has(r.topic_id))replies.set(r.topic_id,{count:0,people:new Set()});
+        const v=replies.get(r.topic_id);v.count++;v.people.add(r.profile_id);
       }
-
-      discussionsCache = data || [];
-
-      const bookIds = [
-        ...new Set(
-          discussionsCache
-            .map(item=>item.book_id)
-            .filter(Boolean)
-        )
-      ];
-
-      const bookMap = {};
-
-      if(bookIds.length){
-
-        const {data:books,error:bookError} =
-          await supabaseClient
-            .from("books")
-            .select("id,title")
-            .in("id",bookIds);
-
-        if(!bookError){
-          for(const book of books || []){
-            bookMap[book.id] = book.title;
-          }
-        }
-      }
-
-      discussionsCache = discussionsCache.map(item=>({
-        ...item,
-        bookTitle:bookMap[item.book_id] || "Unknown book"
-      }));
-
-      renderPublicDiscussions();
-    }
-
-    function renderPublicDiscussions(){
-
-      if(!discussionsCache.length){
-        renderEmpty(
-          "publicDiscussionsTable",
-          "No public discussion records found."
-        );
-        return;
-      }
-
-      $("publicDiscussionsTable").innerHTML = `
-        <div class="table-wrap">
-          <table>
-
-            <thead>
-              <tr>
-                <th>Book</th>
-                <th>Discussion ID</th>
-                <th>Created</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              ${discussionsCache.map(item=>`
-                <tr>
-
-                  <td>
-                    <div class="title-cell">
-                      ${escapeHTML(item.bookTitle)}
-                    </div>
-                  </td>
-
-                  <td>
-                    <span class="small">
-                      ${escapeHTML(item.id)}
-                    </span>
-                  </td>
-
-                  <td>
-                    ${escapeHTML(formatDate(item.created_at))}
-                  </td>
-
-                </tr>
-              `).join("")}
-
-            </tbody>
-
-          </table>
-        </div>
-      `;
+      const html=`<div class="table-wrap"><table><thead><tr><th>Book</th><th>Topic</th><th>Author</th><th>Started</th><th>Replies</th><th>Participants</th><th>Open</th></tr></thead><tbody>${topics.map(t=>{
+        const stats=replies.get(t.id)||{count:0,people:new Set()};
+        return `<tr><td class="title-cell">${escapeHTML(titles.get(t.book_id)||"Unknown book")}</td>
+          <td>${escapeHTML(t.title||"Untitled topic")}</td>
+          <td>${escapeHTML(authors.get(t.author_profile_id)||"Reader Reach Author")}</td>
+          <td>${escapeHTML(formatDate(t.created_at))}</td>
+          <td>${stats.count}</td><td>${stats.people.size}</td>
+          <td><a class="btn btn-secondary" href="book-corner.html?book_id=${encodeURIComponent(t.book_id)}">View Room</a></td></tr>`;
+      }).join("")}</tbody></table></div>`;
+      targets.forEach(id=>$(id).innerHTML=html);
     }
 
     /* NOTIFICATIONS */

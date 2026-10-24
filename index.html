@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -646,6 +645,33 @@ section{scroll-margin-top:90px}
     border-radius:17px
   }
 }
+
+/* Approved homepage trailer + spotlight layout */
+.trailerShowcase{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(270px,.95fr);gap:16px;align-items:stretch}
+.trailerShowcase #featuredTrailer{min-width:0}
+.trailerShowcase .trailerFeature{height:100%;grid-template-columns:minmax(0,1.4fr) minmax(170px,.8fr);padding:16px;gap:16px}
+.trailerShowcase .trailerFeature .video{grid-column:1;grid-row:1;min-width:0}
+.trailerShowcase .trailerFeature>div:first-child{grid-column:2;grid-row:1;min-width:0}
+.trailerShowcase .trailerFeature .video video{width:100%;height:265px;min-height:0;max-height:none;object-fit:contain;background:#1b100b}
+.trailerShowcase .trailerFeature h3{font-size:28px}
+.trailerSidebar{border:1px solid var(--line);background:var(--paper);border-radius:18px;padding:15px;min-width:0}
+.trailerSidebarHead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.trailerSidebarHead strong{font-size:11px;letter-spacing:1.5px;color:#a56b23}
+.trailerSidebarHead a{font-size:10px;text-decoration:none;color:var(--brown);white-space:nowrap}
+#allTrailers{display:grid;gap:10px}
+.sideTrailer{display:grid;grid-template-columns:105px minmax(0,1fr);gap:12px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:10px}
+.sideTrailer:last-child{border-bottom:0;padding-bottom:0}
+.sideTrailerMedia video{width:105px;height:73px;display:block;object-fit:cover;border-radius:9px;background:#1b100b}
+.sideTrailerInfo h3{font:600 19px/1.05 "EB Garamond",Georgia,serif;margin:0 0 5px;color:var(--brown);overflow-wrap:anywhere}
+.sideTrailerInfo p{font-size:10px;color:var(--muted);margin:0 0 5px}
+.sideTrailerInfo a{font-size:10px;color:#a56b23;text-decoration:none}
+#featuredBookGrid .book{display:flex;flex-direction:column;align-items:flex-start}
+#featuredBookGrid .cover{width:100%;height:355px;background:transparent;overflow:visible}
+#featuredBookGrid .cover img{width:100%;height:100%;object-fit:contain;padding:0;filter:drop-shadow(0 12px 9px rgba(35,22,12,.22))}
+#featuredBookGrid .book .btn{margin-top:auto}
+@media(max-width:1050px){.trailerShowcase{grid-template-columns:1fr}.trailerShowcase #allTrailers{grid-template-columns:repeat(3,minmax(0,1fr))}.sideTrailer{grid-template-columns:90px minmax(0,1fr)}.sideTrailerMedia video{width:90px}}
+@media(max-width:650px){.trailerShowcase .trailerFeature{grid-template-columns:1fr}.trailerShowcase .trailerFeature .video,.trailerShowcase .trailerFeature>div:first-child{grid-column:1;grid-row:auto}.trailerShowcase .trailerFeature .video{grid-row:1}.trailerShowcase #allTrailers{grid-template-columns:1fr}.sideTrailer{grid-template-columns:105px 1fr}.sideTrailerMedia video{width:105px}#featuredBookGrid .cover{height:350px}}
+
 </style>
 </head>
 
@@ -671,8 +697,8 @@ section{scroll-margin-top:90px}
     <div class="links">
       <a href="#home">Home</a>
       <a href="authors.html">Authors</a>
-      <a href="#featured">The Book Spotlight</a>
-       <a href="#readingRoom">The Reading Room</a>
+      <a href="spotlight.html">The Book Spotlight</a>
+       <a href="reading-room.html">The Reading Room</a>
       <a href="#about">About Us</a>
       <a href="contact.html">Contact Us</a>
     </div>
@@ -711,14 +737,16 @@ section{scroll-margin-top:90px}
           Discover the stories behind the books through trailers selected by The Curator.
         </p>
       </div>
-      <a class="btn" href="#allTrailers">View More Trailers →</a>
+      <a class="btn" href="book-trailers.html">View All Trailers →</a>
     </div>
 
-    <div id="featuredTrailer">
-      <div class="loading">Loading book trailer…</div>
+    <div class="trailerShowcase">
+      <div id="featuredTrailer"><div class="loading">Loading book trailer…</div></div>
+      <aside class="trailerSidebar" aria-label="More book trailers">
+        <div class="trailerSidebarHead"><strong>MORE BOOK TRAILERS</strong><a href="book-trailers.html">View All Trailers →</a></div>
+        <div id="allTrailers"><div class="loading">Loading previews…</div></div>
+      </aside>
     </div>
-
-    <div id="allTrailers" aria-label="More book trailers"></div>
   </div>
 </section>
 
@@ -732,6 +760,7 @@ section{scroll-margin-top:90px}
           Discover books thoughtfully selected by The Curator for readers to explore.
         </p>
       </div>
+      <a class="btn" href="spotlight.html">View All Spotlight Books →</a>
     </div>
 
     <div id="featuredBookGrid" class="books">
@@ -874,9 +903,9 @@ section{scroll-margin-top:90px}
       <div>
         <h4>Explore</h4>
         <a href="authors.html">Authors</a>
-        <a href="#featured">The Book Spotlight</a>
+        <a href="spotlight.html">The Book Spotlight</a>
         <a href="#trailers">Book Trailers</a>
-        <a href="#readingRoom">The Reading Room</a>
+        <a href="reading-room.html">The Reading Room</a>
         <a href="#home">Home</a>
       </div>
 
@@ -894,7 +923,7 @@ section{scroll-margin-top:90px}
         <a href="#authors">Authors</a>
         <a href="#featured">Books</a>
         <a href="#trailers">Trailers</a>
-        <a href="#readingRoom">The Reading Room</a>
+        <a href="reading-room.html">The Reading Room</a>
         <a href="#about">About</a>
       </div>
 
@@ -1120,7 +1149,8 @@ async function loadTrailers(){
       .from("book_trailers")
       .select("id,book_id,trailer_url,title,description,created_at,show_on_homepage")
       .eq("show_on_homepage",true)
-      .order("created_at",{ascending:false});
+      .order("created_at",{ascending:false})
+      .limit(4);
 
     if(r.error)throw r.error;
 
@@ -1205,56 +1235,13 @@ async function loadTrailers(){
       </div>
     `;
 
-    more.innerHTML=ts.length>1
-      ? `
-        <div class="trailers" id="allTrailersList">
-          ${
-            ts.slice(1).map(t=>{
-              let b=bm.get(t.book_id);
-              let a=am.get(b.author_id);
-              let v=url(t.trailer_url);
-
-              return `
-                <article class="trailerCard">
-
-                  ${
-                    v
-                    ? `
-                      <video
-                        controls
-                        preload="metadata"
-                        playsinline
-                        poster="${esc(url(b.mockup_url))}">
-                        <source src="${esc(v)}">
-                      </video>
-                    `
-                    : `
-                      <div class="notice">
-                        Video unavailable.
-                      </div>
-                    `
-                  }
-
-                  <div>
-                    <div class="label">Book Trailer</div>
-                    <h3>${esc(t.title||b.title)}</h3>
-                    <p>By ${esc(a?.author_name||"Reader Reach Author")}</p>
-                    <p>${esc(t.description||b.description||"")}</p>
-
-                    <a
-                      class="btn small"
-                      href="book.html?id=${encodeURIComponent(b.id)}">
-                      View Book →
-                    </a>
-                  </div>
-
-                </article>
-              `;
-            }).join("")
-          }
-        </div>
-      `
-      :"";
+    more.innerHTML=ts.length>1 ? ts.slice(1,4).map(t=>{
+      let b=bm.get(t.book_id), a=am.get(b.author_id), v=url(t.trailer_url);
+      return `<article class="sideTrailer">
+        <div class="sideTrailerMedia">${v?`<video controls preload="none" playsinline poster="${esc(url(b.mockup_url))}"><source src="${esc(v)}"></video>`:`<div class="notice">Video unavailable</div>`}</div>
+        <div class="sideTrailerInfo"><h3>${esc(t.title||b.title)}</h3><p>By ${esc(a?.author_name||"Reader Reach Author")}</p><a href="book.html?id=${encodeURIComponent(b.id)}">View Book →</a></div>
+      </article>`;
+    }).join("") : '<p class="intro">More book trailers are coming soon.</p>';
 
   }catch(e){
     console.error(e);
@@ -1280,9 +1267,9 @@ async function loadFeatured(){
 
     if(r.error)throw r.error;
 
-    let ids=(r.data||[])
+    let ids=[...new Set((r.data||[])
       .map(x=>x.book_id)
-      .filter(Boolean);
+      .filter(Boolean))].slice(0,4);
 
     if(!ids.length){
       box.innerHTML=`
@@ -1328,7 +1315,7 @@ async function loadAuthors(){
   let box=$("authorGrid");
 
   try{
-    let as=await authors();
+    let as=(await authors()).slice(0,4);
 
     if(!as.length){
       box.innerHTML=`

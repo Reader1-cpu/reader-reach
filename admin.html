@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -840,6 +841,27 @@
       .message-bubble{
         max-width:90%;
       }
+    }
+
+    /* Display the full 3D book mockup without cropping */
+    .mockup-preview-link{
+      display:inline-flex;
+      flex-direction:column;
+      align-items:center;
+      gap:6px;
+      color:var(--brown);
+      font-size:12px;
+      font-weight:700;
+      text-decoration:none;
+    }
+    .mockup-preview{
+      width:110px;
+      height:130px;
+      object-fit:contain;
+      background:var(--cream-2);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:5px;
     }
   </style>
 </head>
@@ -2181,7 +2203,7 @@
           who_its_for,
           availability,
           book_link,
-          cover_url,
+          mockup_url,
           status,
           submitted_at,
           reviewed_at,
@@ -2290,7 +2312,7 @@
               ${rows.map(book=>{
 
                 const bookURL = safeURL(book.book_link);
-                const coverURL = safeURL(book.cover_url);
+                const mockupURL = safeURL(book.mockup_url);
 
                 return `
                   <tr>
@@ -2359,18 +2381,20 @@
                         }
 
                         ${
-                          coverURL
+                          mockupURL
                           ? `
                             <a
-                              class="btn btn-light"
-                              href="${escapeHTML(coverURL)}"
+                              class="mockup-preview-link"
+                              href="${escapeHTML(mockupURL)}"
                               target="_blank"
                               rel="noopener noreferrer"
+                              title="View full 3D Book Mockup"
                             >
-                              Cover
+                              <img class="mockup-preview" src="${escapeHTML(mockupURL)}" alt="3D mockup of ${escapeHTML(book.title)}" loading="lazy" />
+                              <span>View 3D Mockup</span>
                             </a>
                           `
-                          : ""
+                          : `<span class="small muted">No 3D mockup uploaded</span>`
                         }
 
                         ${

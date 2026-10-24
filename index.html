@@ -695,6 +695,23 @@ section{scroll-margin-top:90px}
   #featuredBookGrid .cover{height:370px}
   #featuredBookGrid .cover img{transform:scale(1.7)}
 }
+
+/* Book Spotlight: editorial gallery with display plinths */
+#featuredBookGrid{gap:22px;align-items:stretch}
+#featuredBookGrid .book{background:linear-gradient(180deg,#fffdf9 0%,#fffaf3 100%);border:1px solid #ebdfd0;border-radius:18px;padding:14px 14px 20px;align-items:center;text-align:center;min-width:0;overflow:hidden}
+#featuredBookGrid .cover{position:relative;isolation:isolate;width:100%;height:365px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 50% 72%,#f3e9db 0%,#fffdf9 67%);margin:0 0 15px;border-radius:12px}
+#featuredBookGrid .cover::before{content:"";position:absolute;z-index:0;left:8%;right:8%;bottom:15px;height:39px;border-radius:50% / 28%;background:linear-gradient(180deg,#fffdf8 0%,#f3e4ce 60%,#d9bd95 100%);border:1px solid #dec6a2;box-shadow:0 11px 16px rgba(72,45,20,.13),inset 0 3px 3px rgba(255,255,255,.9)}
+#featuredBookGrid .cover::after{content:"";position:absolute;z-index:0;left:11%;right:11%;bottom:38px;height:10px;border-radius:50%;background:rgba(66,43,24,.13);filter:blur(8px)}
+#featuredBookGrid .cover img{position:relative;z-index:1;width:100%;height:100%;padding:0;object-fit:contain;transform:scale(1.45) translateY(-7px);filter:drop-shadow(0 9px 7px rgba(45,28,16,.20))}
+#featuredBookGrid .fallback{position:relative;z-index:1}
+#featuredBookGrid .book h3{font-size:25px;margin:0 0 5px;overflow-wrap:anywhere}
+#featuredBookGrid .book .meta{font-size:13px}
+#featuredBookGrid .book .pill{margin:3px 0 15px}
+#featuredBookGrid .book br{display:none}
+#featuredBookGrid .book .btn{margin-top:auto;min-width:145px;justify-content:center}
+@media(max-width:1100px){#featuredBookGrid{grid-template-columns:repeat(2,minmax(0,1fr))}#featuredBookGrid .cover{height:400px}}
+@media(max-width:650px){#featuredBookGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#featuredBookGrid .book{padding:8px 8px 14px}#featuredBookGrid .cover{height:245px}#featuredBookGrid .cover img{transform:scale(1.42) translateY(-4px)}#featuredBookGrid .cover::before{bottom:12px;height:24px}#featuredBookGrid .cover::after{bottom:26px}#featuredBookGrid .book h3{font-size:20px}#featuredBookGrid .book .btn{min-width:0;width:100%;font-size:11px}}
+
 </style>
 </head>
 

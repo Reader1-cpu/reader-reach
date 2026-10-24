@@ -11,6 +11,10 @@
     content="Explore an author and discover their books on Reader Reach."
   />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -41,10 +45,14 @@
     }
 
     body {
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: "Manrope", sans-serif;
       background: var(--cream);
       color: var(--brown);
       line-height: 1.6;
+    }
+
+    h1, h2, h3, .stat-number, .book-cover-title {
+      font-family: "EB Garamond", Georgia, serif;
     }
 
     a {
@@ -76,9 +84,17 @@
     }
 
     .brand {
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .brand img {
+      display: block;
+      width: auto;
+      max-width: 220px;
+      max-height: 52px;
+      object-fit: contain;
     }
 
     .brand span {
@@ -514,8 +530,15 @@
     }
 
     .footer-brand {
-      font-size: 1.15rem;
-      font-weight: 700;
+      display: flex;
+      align-items: center;
+    }
+
+    .footer-brand img {
+      width: auto;
+      max-width: 190px;
+      max-height: 48px;
+      object-fit: contain;
     }
 
     .footer-brand span {
@@ -546,6 +569,10 @@
     }
 
     @media (max-width: 650px) {
+      .brand img {
+        max-width: 180px;
+      }
+
       .nav-inner {
         align-items: flex-start;
         flex-direction: column;
@@ -606,8 +633,11 @@
   <nav class="navbar">
     <div class="nav-inner">
 
-      <a href="index.html" class="brand">
-        Reader <span>Reach</span>
+      <a href="index.html" class="brand" aria-label="Reader Reach home">
+        <img
+          src="assets/Reader Reach Elegant Serif Wordmark.png"
+          alt="Reader Reach"
+        >
       </a>
 
       <div class="nav-links">
@@ -798,7 +828,10 @@
     <div class="footer-inner">
 
       <div class="footer-brand">
-        Reader <span>Reach</span>
+        <img
+          src="assets/Reader Reach Elegant Serif Wordmark.png"
+          alt="Reader Reach"
+        >
       </div>
 
       <div class="footer-text">
@@ -2057,10 +2090,10 @@
   ${bookLink}
 
   <a
-    href="book-corner.html?book_id=${encodeURIComponent(book.id)}"
+    href="reading-room.html?book_id=${encodeURIComponent(book.id)}"
     class="book-link"
   >
-    Visit Book Corner →
+    Visit The Reading Room →
   </a>
 
   ${saveButton}

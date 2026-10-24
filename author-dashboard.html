@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -529,7 +530,7 @@ footer {padding:36px 15px}
     </p>
     <div class="actions">
       <button class="btn" data-go="submit">Submit a Book</button>
-      <button class="btn secondary" data-go="messages">Message The Literary Guardian</button>
+      <button class="btn secondary" data-go="messages">Message Reader Reach Support</button>
     </div>
   </div>
 
@@ -744,7 +745,7 @@ footer {padding:36px 15px}
   <div class="page-heading">
     <div class="eyebrow">Author support</div>
     <h1>Messages</h1>
-    <p class="muted">A thoughtful space to connect directly with The Literary Guardian.</p>
+    <p class="muted">A thoughtful space to connect with The Curator and The Literary Guardian.</p>
   </div>
   <div class="panel">
     <div class="panel-head">
@@ -2127,7 +2128,7 @@ async function loadConversations() {
 
   if (!myConversations.length) {
     $("conversationStatus").textContent =
-      "No conversations yet. Click Start a Message to contact The Literary Guardian.";
+      "No conversations yet. Click Start a Message to contact Reader Reach Support.";
 
     $("conversationList").innerHTML =
       '<div class="empty">No conversations yet.</div>';
@@ -2212,7 +2213,7 @@ async function loadConversations() {
           data-conversation="${escapeHTML(c.id)}"
         >
           <strong>
-            ${escapeHTML(c.book_id ? (book?.title || "Book conversation") : "The Literary Guardian")}
+            ${escapeHTML(c.book_id ? (book?.title || "Book conversation") : "Reader Reach Support")}
           </strong>
 
           <div class="small muted">${c.book_id ? "Book-specific conversation" : "Reader Reach · Author support"}</div>
@@ -2311,11 +2312,31 @@ async function loadMessages() {
   if (requestedConversationId !== activeConversationId) return;
   const rows = messages || [];
   const others = [...new Set(rows.map(m => m.sender_profile_id).filter(id => id && id !== currentUser.id))];
+  // Resolve the sender's real role, rather than assuming every non-author is a moderator.
+  // Some RLS policies may hide other users' profiles from authors.
   let senderRoles = {};
   if (others.length) {
-    const {data:senderProfiles} = await supabaseClient.from("profiles").select("id,role").in("id",others);
+    const {data:senderProfiles,error:senderProfileError} = await supabaseClient
+      .from("profiles").select("id,role").in("id",others);
+    if (senderProfileError) console.warn("Sender role lookup:",senderProfileError.message);
     for (const profile of senderProfiles || []) senderRoles[profile.id] = profile.role;
+    const unresolved = others.filter(id => !senderRoles[id]);
+    if (unresolved.length) {
+      // A moderator record can identify a Literary Guardian even when the profile
+      // role is not visible. Do not guess that an unresolved sender is a moderator.
+      const {data:moderatorRows,error:moderatorError} = await supabaseClient
+        .from("moderators").select("profile_id").in("profile_id",unresolved);
+      if (moderatorError) console.warn("Moderator sender lookup:",moderatorError.message);
+      for (const moderator of moderatorRows || []) senderRoles[moderator.profile_id] = "moderator";
+    }
   }
+  const senderDisplayName = id => {
+    const role = String(senderRoles[id] || "").toLowerCase();
+    if (role === "admin") return "The Curator";
+    if (role === "moderator") return "The Literary Guardian";
+    if (role === "author") return "Author";
+    return "Reader Reach Team"; // Unknown role must never be mislabeled as moderator.
+  };
   let attachments = [];
 
   if (rows.length) {
@@ -2361,7 +2382,7 @@ async function loadMessages() {
     }
   }
 
-  const signature = JSON.stringify({conversation:requestedConversationId,rows,attachments:attachments.map(a=>[a.id,a.file_path])});
+  const signature = JSON.stringify({conversation:requestedConversationId,rows,senderRoles,attachments:attachments.map(a=>[a.id,a.file_path])});
   if (signature === lastMessagesSignature) return;
   lastMessagesSignature = signature;
   if (!rows.length) {
@@ -2391,7 +2412,7 @@ async function loadMessages() {
 
             <div class="message-meta">
               <span>
-                ${mine ? "You" : senderRoles[m.sender_profile_id] === "admin" ? "The Curator" : "The Literary Guardian"}
+                ${mine ? "You" : senderDisplayName(m.sender_profile_id)}
               </span>
 
               <span>

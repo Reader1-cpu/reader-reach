@@ -4,37 +4,166 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Reading Room | Reader Reach</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    :root { --cream:#f8f3e9; --white:#fffdf9; --brown:#3f2a1f; --soft:#6f5443; --gold:#b8955a; --border:#e4d8c6; }
-    * { box-sizing:border-box; }
-    body { margin:0; background:var(--cream); color:var(--brown); font-family:Georgia,"Times New Roman",serif; line-height:1.6; }
-    header { padding:18px 6%; background:var(--white); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; gap:15px; }
-    a { color:var(--brown); }
-    header a { text-decoration:none; }
-    main { width:min(850px,92%); margin:35px auto; }
-    .panel,.topic { background:var(--white); border:1px solid var(--border); border-radius:16px; padding:22px; margin-bottom:20px; }
-    h1,h2,h3 { line-height:1.25; }
-    .muted { color:var(--soft); }
-    .small { font-size:.9rem; }
-    label { display:block; margin:14px 0 5px; font-weight:bold; }
-    input,textarea { width:100%; padding:12px; border:1px solid var(--border); border-radius:9px; background:white; color:var(--brown); font:inherit; }
-    textarea { min-height:100px; resize:vertical; }
-    button { margin-top:12px; padding:11px 17px; border:0; border-radius:9px; background:var(--brown); color:white; font:inherit; cursor:pointer; }
-    button:disabled { opacity:.55; cursor:not-allowed; }
-    .reply { margin:12px 0; padding:12px; border-left:3px solid var(--gold); background:var(--cream); border-radius:5px; overflow-wrap:anywhere; }
-    .notice { margin:12px 0; white-space:pre-wrap; }
-    .hidden { display:none !important; }
-    .cover { width:115px; max-height:170px; object-fit:cover; border-radius:9px; border:1px solid var(--border); }
-    .book-head { display:flex; gap:20px; align-items:flex-start; }
-    .count { display:inline-block; border:1px solid var(--border); border-radius:30px; padding:6px 12px; background:var(--cream); }
-    .warning { border-left:4px solid var(--gold); background:var(--cream); padding:15px; border-radius:8px; margin:12px 0; }
-    footer { padding:25px; text-align:center; color:var(--soft); }
-    @media(max-width:520px) { .book-head { flex-direction:column; } }
-  </style>
+    :root {
+   --cream:#f8f3e9;
+   --white:#fffdf9;
+   --brown:#3f2a1f;
+   --soft:#6f5443;
+   --gold:#b8955a;
+   --border:#e4d8c6;
+}
+    * {
+   box-sizing:border-box;
+}
+    body {
+   margin:0;
+   background:var(--cream);
+   color:var(--brown);
+   font-family:"Manrope",sans-serif;
+   line-height:1.6;
+}
+    header {
+   padding:18px 6%;
+   background:var(--white);
+   border-bottom:1px solid var(--border);
+   display:flex;
+   justify-content:space-between;
+   gap:15px;
+}
+    a {
+   color:var(--brown);
+}
+    header a {
+   text-decoration:none;
+}
+    .site-logo {
+   display:block;
+   width:190px;
+   max-width:55vw;
+   height:auto;
+}
+    main {
+   width:min(850px,92%);
+   margin:35px auto;
+}
+    .panel,.topic {
+   background:var(--white);
+   border:1px solid var(--border);
+   border-radius:16px;
+   padding:22px;
+   margin-bottom:20px;
+}
+    h1,h2,h3 {
+   line-height:1.25;
+   font-family:"EB Garamond",Georgia,serif;
+}
+    .muted {
+   color:var(--soft);
+}
+    .small {
+   font-size:.9rem;
+}
+    label {
+   display:block;
+   margin:14px 0 5px;
+   font-weight:bold;
+}
+    input,textarea {
+   width:100%;
+   padding:12px;
+   border:1px solid var(--border);
+   border-radius:9px;
+   background:white;
+   color:var(--brown);
+   font:inherit;
+}
+    textarea {
+   min-height:100px;
+   resize:vertical;
+}
+    button {
+   margin-top:12px;
+   padding:11px 17px;
+   border:0;
+   border-radius:9px;
+   background:var(--brown);
+   color:white;
+   font:inherit;
+   cursor:pointer;
+}
+    button:disabled {
+   opacity:.55;
+   cursor:not-allowed;
+}
+    .reply {
+   margin:12px 0;
+   padding:12px;
+   border-left:3px solid var(--gold);
+   background:var(--cream);
+   border-radius:5px;
+   overflow-wrap:anywhere;
+}
+    .notice {
+   margin:12px 0;
+   white-space:pre-wrap;
+}
+    .hidden {
+   display:none !important;
+}
+    .cover {
+   width:115px;
+   max-height:170px;
+   object-fit:cover;
+   border-radius:9px;
+   border:1px solid var(--border);
+}
+    .book-head {
+   display:flex;
+   gap:20px;
+   align-items:flex-start;
+}
+    .count {
+   display:inline-block;
+   border:1px solid var(--border);
+   border-radius:30px;
+   padding:6px 12px;
+   background:var(--cream);
+}
+    .warning {
+   border-left:4px solid var(--gold);
+   background:var(--cream);
+   padding:15px;
+   border-radius:8px;
+   margin:12px 0;
+}
+    footer {
+   padding:25px;
+   text-align:center;
+   color:var(--soft);
+}
+    @media(max-width:520px) {
+   .book-head {
+   flex-direction:column;
+}
+}
+      .milestone { margin: 18px 0; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--cream); }
+      .milestone p { margin: 0 0 10px; }
+      .milestone-track { width: 100%; height: 10px; background: #e4d8c6; border-radius: 999px; overflow: hidden; }
+      .milestone-fill { height: 100%; width: 0; background: var(--gold); border-radius: 999px; transition: width .25s ease; }
+    </style>
 </head>
 <body>
-  <header><a href="index.html"><strong>Reader Reach</strong></a><a href="javascript:history.back()">← Go back</a></header>
+  <header>
+    <a href="index.html" aria-label="Reader Reach home">
+      <img class="site-logo" src="assets/Reader Reach Elegant Serif Wordmark.png" alt="Reader Reach">
+    </a>
+    <a href="javascript:history.back()">← Go back</a>
+  </header>
   <main>
     <section class="panel">
       <p class="muted">READER REACH · THE READING ROOM</p>
@@ -44,7 +173,7 @@
           <h1 id="bookTitle">Loading book…</h1>
           <p id="bookDescription" class="muted"></p>
           <p id="authorName"></p>
-          <p id="readerCount" class="count">Reading milestone: 10 completed readers required</p>
+          <p id="readerCount" class="count">Loading completed reader count…</p>
         </div>
       </div>
       <div id="pageNotice" class="notice" role="status"></div>
@@ -53,7 +182,13 @@
     <section id="createTopicPanel" class="panel hidden">
       <h2>Start a topic</h2>
       <p class="muted">Only the approved author of this book can publish a topic. At least 10 unique readers must have completed the book first.</p>
-      <form id="topicForm">
+      <div id="authorMilestone" class="milestone" aria-live="polite">
+        <p id="milestoneText">Checking completed readers…</p>
+        <div class="milestone-track" role="progressbar" aria-label="Completed readers toward topic unlock" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" id="milestoneProgress">
+          <div id="milestoneFill" class="milestone-fill"></div>
+        </div>
+      </div>
+      <form id="topicForm" class="hidden">
         <label for="topicTitle">Topic title</label>
         <input id="topicTitle" maxlength="200" required placeholder="e.g. What did you think of the ending?">
         <label for="openingQuestion">Opening question</label>
@@ -85,6 +220,7 @@
     const selectedTopicId = params.get("topic_id");
     let currentUser = null, currentBook = null, authorProfileId = null;
     let isAuthor = false, readerStatus = null, roomUnlocked = false;
+    let completedReaderCount = null;
     const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
     const showNotice = (id, msg) => { $(id).textContent = msg; };
     const friendlyError = e => { console.error(e); return e?.message || "Something went wrong. Please try again."; };
@@ -103,6 +239,50 @@
       $("authorName").textContent = "By " + (author.author_name || "Author");
       if (book.cover_url && /^https:\/\//i.test(book.cover_url)) { $("bookCover").src = book.cover_url; $("bookCover").classList.remove("hidden"); }
       document.title = (book.title || "Book") + " | The Reading Room";
+    }
+
+    // Count distinct completed readers, not total shelf entries.
+    // Pagination prevents Supabase's default row limit from undercounting.
+    async function countCompletedReaders() {
+      const uniqueReaders = new Set();
+      const pageSize = 500;
+      let offset = 0;
+
+      while (true) {
+        const { data, error } = await db
+          .from("reader_books")
+          .select("reader_id")
+          .eq("book_id", bookId)
+          .eq("status", "completed")
+          .order("reader_id", { ascending: true })
+          .range(offset, offset + pageSize - 1);
+
+        if (error) throw error;
+        for (const row of data || []) {
+          if (row.reader_id) uniqueReaders.add(row.reader_id);
+        }
+        if (!data || data.length < pageSize) break;
+        offset += pageSize;
+      }
+      return uniqueReaders.size;
+    }
+
+    function renderReaderMilestone() {
+      if (completedReaderCount === null) return;
+      const count = completedReaderCount;
+      $("readerCount").textContent =
+        count === 1 ? "1 person has read this book" : `${count} people have read this book`;
+
+      // Unlock progress and author controls must never be shown to readers.
+      if (!isAuthor) return;
+      const unlocked = count >= 10;
+      $("milestoneText").textContent = unlocked
+        ? `${count} completed readers — you can now start a topic.`
+        : `${count} of 10 completed readers needed to unlock Start a Topic.`;
+      $("milestoneFill").style.width = `${Math.min(count / 10, 1) * 100}%`;
+      $("milestoneProgress").setAttribute("aria-valuenow", Math.min(count, 10));
+      $("topicForm").classList.toggle("hidden", !unlocked);
+      $("topicButton").disabled = !unlocked;
     }
 
     async function loadAccess() {
@@ -174,6 +354,18 @@
     async function submitTopic(event) {
       event.preventDefault();
       if (!isAuthor || !currentUser || !currentBook) { showNotice("topicNotice","Only this book's approved author can start a topic."); return; }
+      // Recheck immediately before publishing; server-side author/threshold rules remain authoritative.
+      try {
+        completedReaderCount = await countCompletedReaders();
+        renderReaderMilestone();
+        if (completedReaderCount < 10) {
+          showNotice("topicNotice", "This book needs 10 completed readers before you can publish a topic.");
+          return;
+        }
+      } catch (error) {
+        showNotice("topicNotice", "Unable to verify the completed reader count. Please try again.");
+        return;
+      }
       const title = $("topicTitle").value.trim(), question = $("openingQuestion").value.trim();
       if (title.length < 3 || question.length < 3) { showNotice("topicNotice","Enter a topic title and opening question."); return; }
       const button = $("topicButton"); button.disabled = true; showNotice("topicNotice","Publishing topic…");
@@ -200,7 +392,21 @@
     }
 
     async function init() {
-      try { await loadBook(); await loadAccess(); }
+      try {
+        await loadBook();
+        await loadAccess();
+        try {
+          completedReaderCount = await countCompletedReaders();
+          renderReaderMilestone();
+        } catch (countError) {
+          console.error("Completed reader count error:", countError);
+          $("readerCount").textContent = "Completed reader count unavailable";
+          if (isAuthor) {
+            $("milestoneText").textContent = "Unable to verify the reading milestone. Please refresh and try again.";
+            $("topicForm").classList.add("hidden");
+          }
+        }
+      }
       catch(e) { showNotice("pageNotice",friendlyError(e)); $("accessMessage").textContent = "Unable to load The Reading Room."; }
     }
     $("topicForm").addEventListener("submit",submitTopic);

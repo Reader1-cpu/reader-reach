@@ -715,6 +715,22 @@ section{scroll-margin-top:90px}
  #featuredBookGrid .book h3{font-size:19px}
  #featuredBookGrid .book .btn{width:100%;min-width:0;font-size:11px;padding:10px 7px}
 }
+
+/* Larger artwork, with descriptions opened in a separate overlay. */
+#featuredBookGrid .cover{height:360px!important;overflow:hidden!important;margin-bottom:8px!important}
+#featuredBookGrid .cover img{transform:scale(2.15)!important;object-fit:contain!important;max-width:none!important}
+#featuredBookGrid .book{min-width:0;overflow:hidden}
+#featuredBookGrid .book-description{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:5px}
+#featuredBookGrid .spotlight-more{border:0;background:none;color:#a86d22;font:700 13px Manrope,sans-serif;cursor:pointer;padding:0;margin:0 0 16px;text-align:left}
+#featuredBookGrid .spotlight-more:hover{text-decoration:underline}
+#spotlightDescDialog{border:1px solid #e6d8c6;border-radius:20px;padding:0;width:min(520px,calc(100% - 28px));max-height:85vh;box-shadow:0 20px 80px #24181244;color:#3d2418;background:#fffdfa}
+#spotlightDescDialog::backdrop{background:rgba(30,19,13,.6)}
+.spotlight-dialog-inner{padding:28px;max-height:85vh;overflow:auto}
+.spotlight-dialog-top{display:flex;justify-content:space-between;align-items:start;gap:14px}
+.spotlight-dialog-top h2{font:600 29px 'EB Garamond',serif;margin:0 0 12px}
+.spotlight-dialog-close{border:0;background:#f1e8dc;border-radius:50%;width:35px;height:35px;cursor:pointer;font-size:23px}
+#spotlightDialogText{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.85;color:#5e5045;font-size:14px}
+@media(max-width:600px){#featuredBookGrid .cover{height:250px!important}#featuredBookGrid .cover img{transform:scale(1.85)!important}}
 </style>
 </head>
 
@@ -1156,15 +1172,19 @@ async function books(ids=[]){
   return r.data||[];
 }
 
+const spotlightDescriptions = new Map();
+function openSpotlightDescription(id){
+  const data=spotlightDescriptions.get(String(id));
+  if(!data)return;
+  document.getElementById("spotlightDialogTitle").textContent=data.title;
+  document.getElementById("spotlightDialogText").textContent=data.description;
+  document.getElementById("spotlightDescDialog").showModal();
+}
 function card(b,a){
   const c=url(b.mockup_url);
   const description=String(b.description||"").trim();
-  const short=description.length>115 ? description.slice(0,115).trimEnd()+"…" : description;
-  const descriptionHTML=description
-    ? (description.length>115
-      ? `<details class="book-description"><summary>${esc(short)} <span class="view-more">View More</span></summary><div class="full-description">${esc(description)}<span class="view-less" onclick="this.closest('details').open=false">View Less</span></div></details>`
-      : `<p class="book-description">${esc(description)}</p>`)
-    : "";
+  spotlightDescriptions.set(String(b.id),{title:String(b.title||"About the Book"),description});
+  const short=description.length>125 ? description.slice(0,125).trimEnd()+"…" : description;
   return `
     <article class="book">
       <div class="cover">
@@ -1175,11 +1195,16 @@ function card(b,a){
       <h3>${esc(b.title||"Untitled Book")}</h3>
       <div class="meta">By ${esc(a||"Reader Reach Author")}</div>
       <span class="pill">${esc(b.genre_topic||"Book")}</span>
-      ${descriptionHTML}
+      ${description ? `<p class="book-description">${esc(short)}</p>` : ""}
+      ${description.length>125 ? `<button type="button" class="spotlight-more" data-book-id="${esc(b.id)}">View More →</button>` : ""}
       <a class="btn small primary" href="book.html?id=${encodeURIComponent(b.id)}">View Details →</a>
     </article>
   `;
 }
+document.addEventListener("click",e=>{
+  const button=e.target.closest(".spotlight-more");
+  if(button)openSpotlightDescription(button.dataset.bookId);
+});
 
 async function loadTrailers(){
   let box=$("featuredTrailer");
@@ -2031,5 +2056,14 @@ prepareSupportChat();
 
 </script>
 
+<dialog id="spotlightDescDialog" aria-labelledby="spotlightDialogTitle">
+  <div class="spotlight-dialog-inner">
+    <div class="spotlight-dialog-top">
+      <h2 id="spotlightDialogTitle"></h2>
+      <form method="dialog"><button class="spotlight-dialog-close" aria-label="Close description">×</button></form>
+    </div>
+    <p id="spotlightDialogText"></p>
+  </div>
+</dialog>
 </body>
 </html> 

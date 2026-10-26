@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Reader Reach — Reader Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
@@ -34,7 +38,7 @@
     }
 
     body{
-      font-family:Georgia,"Times New Roman",serif;
+      font-family:"Manrope",Arial,sans-serif;
       background:var(--cream);
       color:var(--text);
       min-height:100vh;
@@ -45,7 +49,33 @@
     input,
     select,
     textarea{
-      font:inherit;
+      font-family:"Manrope",Arial,sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .stat-value,
+    .book-title{
+      font-family:"EB Garamond",Georgia,serif;
+    }
+
+    .brand img{
+      display:block;
+      width:185px;
+      max-width:100%;
+      height:auto;
+      object-fit:contain;
+    }
+
+    .footer-logo{
+      display:block;
+      width:185px;
+      max-width:100%;
+      height:auto;
+      object-fit:contain;
+      margin-bottom:8px;
     }
 
     a{
@@ -994,8 +1024,11 @@
   <nav class="navbar">
     <div class="nav-inner">
 
-      <a class="brand" href="index.html">
-        Reader Reach
+      <a class="brand" href="index.html" aria-label="Reader Reach Home">
+        <img
+          src="assets/Reader Reach Elegant Serif Wordmark.png"
+          alt="Reader Reach"
+        >
         <small>Every Book Has Its Readers</small>
       </a>
 
@@ -1589,9 +1622,11 @@
 
       <div class="footer-brand">
 
-        <h3>
-          Reader Reach
-        </h3>
+        <img
+          class="footer-logo"
+          src="assets/Reader Reach Elegant Serif Wordmark.png"
+          alt="Reader Reach"
+        >
 
         <p>
           Every Book Has Its Readers.
@@ -1787,8 +1822,6 @@
     Book link unavailable
   </span>
 `}
-                View Book
-              </a>
               ${book.author_id ? `
                 <a class="btn" href="author-profile.html?id=${encodeURIComponent(book.author_id)}">
                   Author

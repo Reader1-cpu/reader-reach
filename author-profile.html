@@ -394,12 +394,7 @@
       margin-bottom: 14px;
     }
 
-    .book-description {
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
+
 
     .view-more-button {
       display: inline-block;
@@ -414,6 +409,27 @@
       text-decoration: underline;
       text-underline-offset: 3px;
       cursor: pointer;
+    }
+
+
+    /* Keep text within cards without changing their layout. */
+    .overflow-preview {
+      display: -webkit-box !important;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: var(--preview-lines, 3);
+      overflow: hidden !important;
+      overflow-wrap: anywhere;
+      word-break: normal;
+      min-width: 0;
+    }
+    .overflow-view-more {
+      display: inline-block;
+      margin: 7px 0 12px;
+    }
+    .profile-bio, .book-title, .book-genre, .book-cover-title,
+    .book-description, .profile-name, .stat-label, .stat-number {
+      overflow-wrap: anywhere;
+      min-width: 0;
     }
 
     .description-modal {
@@ -2004,8 +2020,7 @@
             book.description || "No description available."
           );
 
-          const description = escapeHtml(shortenText(fullDescription));
-          const hasMoreDescription = fullDescription.trim().length > 170;
+          const description = escapeHtml(fullDescription);
 
 
           const genre =
@@ -2157,12 +2172,6 @@
                   ${description}
                 </p>
 
-                ${hasMoreDescription ? `
-                  <button type="button" class="view-more-button" data-view-description="${escapeHtml(book.id)}">
-                    View More
-                  </button>
-                ` : ""}
-
 
                 <span class="book-genre">
                   ${genre}
@@ -2194,16 +2203,6 @@
 
 
       books.forEach(book => {
-
-        const viewMoreButton = document.querySelector(
-          `[data-view-description="${CSS.escape(book.id)}"]`
-        );
-
-        if (viewMoreButton) {
-          viewMoreButton.addEventListener("click", () => {
-            openDescriptionModal(book.title || "Untitled Book", book.description || "No description available.");
-          });
-        }
 
         const saveButton =
           document.querySelector(
@@ -2275,6 +2274,76 @@
         closeDescriptionModal();
       }
     });
+
+
+    // Automatically add View More only where visible text exceeds its box.
+    // Form fields, navigation controls and editable messages are never truncated.
+    const overflowSelectors = [
+      ".profile-bio", ".book-title", ".book-description",
+      ".book-genre", ".book-cover-title", ".profile-name",
+      ".stat-label", ".stat-number", ".profile-label"
+    ].join(", ");
+
+    function refreshOverflowPreviews() {
+      document.querySelectorAll(overflowSelectors).forEach(element => {
+        const originalText = element.dataset.overflowFullText || element.textContent.trim();
+        if (!originalText) return;
+        const existingButton = element.nextElementSibling?.classList.contains("overflow-view-more")
+          ? element.nextElementSibling : null;
+        element.classList.remove("overflow-preview");
+        element.style.removeProperty("--preview-lines");
+        // Measure the natural height before applying a line clamp.
+        const computed = getComputedStyle(element);
+        const lineHeight = parseFloat(computed.lineHeight) || parseFloat(computed.fontSize) * 1.5;
+        const maxLines = element.matches(".profile-bio") ? 5 :
+          element.matches(".book-description") ? 3 : 2;
+        const naturalHeight = element.scrollHeight;
+        const tooTall = naturalHeight > lineHeight * maxLines + 3;
+        const tooWide = element.scrollWidth > element.clientWidth + 3;
+        if (!tooTall && !tooWide) {
+          existingButton?.remove();
+          return;
+        }
+        element.dataset.overflowFullText = originalText;
+        element.style.setProperty("--preview-lines", String(maxLines));
+        element.classList.add("overflow-preview");
+        if (!existingButton) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "view-more-button overflow-view-more";
+          button.textContent = "View More";
+          button.addEventListener("click", () => {
+            const bookCard = element.closest(".book-card");
+            const heading = bookCard?.querySelector(".book-title")?.textContent.trim() ||
+              element.closest(".profile-card")?.querySelector("h1")?.textContent.trim() ||
+              "Full text";
+            openDescriptionModal(heading, element.dataset.overflowFullText || element.textContent);
+          });
+          element.insertAdjacentElement("afterend", button);
+        }
+      });
+    }
+
+    let overflowRefreshQueued = false;
+    function queueOverflowRefresh() {
+      if (overflowRefreshQueued) return;
+      overflowRefreshQueued = true;
+      requestAnimationFrame(() => {
+        overflowRefreshQueued = false;
+        refreshOverflowPreviews();
+      });
+    }
+    const overflowObserver = new MutationObserver(mutations => {
+      if (mutations.some(m => m.addedNodes.length &&
+          Array.from(m.addedNodes).some(node => node.nodeType === 1 &&
+            !node.classList?.contains("overflow-view-more")))) {
+        queueOverflowRefresh();
+      }
+    });
+    overflowObserver.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener("resize", queueOverflowRefresh);
+    document.fonts?.ready.then(queueOverflowRefresh);
+    queueOverflowRefresh();
 
     async function loadProfile() {
 

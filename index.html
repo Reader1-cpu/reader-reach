@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -720,7 +721,7 @@ section{scroll-margin-top:90px}
 #featuredBookGrid .cover{height:360px!important;overflow:hidden!important;margin-bottom:8px!important}
 #featuredBookGrid .cover img{transform:scale(2.15)!important;object-fit:contain!important;max-width:none!important}
 #featuredBookGrid .book{min-width:0;overflow:hidden}
-#featuredBookGrid .book-description{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:5px}
+#featuredBookGrid .book-description{overflow-wrap:anywhere;margin-bottom:5px}
 #featuredBookGrid .spotlight-more{border:0;background:none;color:#a86d22;font:700 13px Manrope,sans-serif;cursor:pointer;padding:0;margin:0 0 16px;text-align:left}
 #featuredBookGrid .spotlight-more:hover{text-decoration:underline}
 #spotlightDescDialog{border:1px solid #e6d8c6;border-radius:20px;padding:0;width:min(520px,calc(100% - 28px));max-height:85vh;box-shadow:0 20px 80px #24181244;color:#3d2418;background:#fffdfa}
@@ -731,6 +732,16 @@ section{scroll-margin-top:90px}
 .spotlight-dialog-close{border:0;background:#f1e8dc;border-radius:50%;width:35px;height:35px;cursor:pointer;font-size:23px}
 #spotlightDialogText{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.85;color:#5e5045;font-size:14px}
 @media(max-width:600px){#featuredBookGrid .cover{height:250px!important}#featuredBookGrid .cover img{transform:scale(1.85)!important}}
+
+/* Compact long text, with the full wording in a separate popup. */
+.rr-text-preview{display:-webkit-box!important;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden!important;overflow-wrap:anywhere;white-space:pre-line;min-width:0}
+.rr-text-more{display:block;margin:7px 0 13px;padding:0;border:0;background:transparent;color:#a86d22;font:700 12px "Manrope",sans-serif;text-align:left;cursor:pointer}
+.rr-text-more:hover{text-decoration:underline}
+.author .rr-text-more{margin:6px auto 12px;text-align:center}
+.author p.rr-text-preview{min-height:0}
+.trailerFeature .rr-text-more{margin-bottom:15px}
+.schedule>div:nth-last-child(2),.discussion>div{min-width:0}
+.rr-text-preview:focus-visible,.rr-text-more:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 </style>
 </head>
 
@@ -2055,6 +2066,73 @@ Promise.allSettled([
 ]);
 
 prepareSupportChat();
+
+
+/* Add View More only to long display text. Leave links, headings, buttons,
+   inputs and live support-chat messages untouched. */
+const rrPreviewSelector = [
+  '#authorGrid .author p',
+  '#featuredTrailer .trailerFeature p:not(.trailerByline)',
+  '#eventList .schedule small',
+  '#discussionList .discussion p',
+  '.stepCard p',
+  '.aboutCard p',
+  '.trailerSidebar .sideTrailerInfo p',
+  '.intro',
+  '.closingBanner p',
+  '.cta p'
+].join(',');
+let rrPreviewScheduled = false;
+let rrLastFocus = null;
+function rrOpenFullText(heading, fullText){
+  const dialog = document.getElementById('spotlightDescDialog');
+  if(!dialog || dialog.open)return;
+  rrLastFocus=document.activeElement;
+  document.getElementById('spotlightDialogTitle').textContent=heading;
+  document.getElementById('spotlightDialogText').textContent=fullText;
+  dialog.showModal();
+}
+function rrRefreshPreviews(){
+  document.querySelectorAll(rrPreviewSelector).forEach(el=>{
+    if(!el.isConnected || el.getClientRects().length===0)return;
+    const fullText=el.textContent.trim();
+    if(!fullText)return;
+    let button=el.nextElementSibling;
+    if(!button?.classList.contains('rr-text-more'))button=null;
+    el.classList.remove('rr-text-preview');
+    const style=getComputedStyle(el);
+    const lineHeight=Number.parseFloat(style.lineHeight)||Number.parseFloat(style.fontSize)*1.6;
+    const isLong=el.scrollHeight>lineHeight*3+4;
+    if(!isLong){button?.remove();return;}
+    el.classList.add('rr-text-preview');
+    if(button)return;
+    button=document.createElement('button');
+    button.type='button';
+    button.className='rr-text-more';
+    button.textContent='View More';
+    button.setAttribute('aria-label','View more text');
+    button.addEventListener('click',()=>{
+      const card=el.closest('.author,.trailerFeature,.schedule,.discussion,.stepCard,.aboutCard,.sideTrailer');
+      const heading=card?.querySelector('h3,h2,strong')?.textContent.trim() || 'Read More';
+      rrOpenFullText(heading,el.textContent.trim());
+    });
+    el.insertAdjacentElement('afterend',button);
+  });
+}
+function rrSchedulePreviews(){
+  if(rrPreviewScheduled)return;
+  rrPreviewScheduled=true;
+  requestAnimationFrame(()=>{rrPreviewScheduled=false;rrRefreshPreviews()});
+}
+const rrPreviewObserver=new MutationObserver(changes=>{
+  if(changes.some(c=>[...c.addedNodes].some(n=>n.nodeType===1 && !n.classList?.contains('rr-text-more'))))rrSchedulePreviews();
+});
+rrPreviewObserver.observe(document.body,{childList:true,subtree:true});
+window.addEventListener('resize',rrSchedulePreviews);
+document.fonts?.ready.then(rrSchedulePreviews);
+document.getElementById('spotlightDescDialog')?.addEventListener('close',()=>rrLastFocus?.focus());
+rrSchedulePreviews();
+
 
 </script>
 

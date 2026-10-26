@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -5,7 +6,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Moderator Dashboard — Reader Reach</title>
+<title>The Literary Guardian — Reader Reach</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -35,7 +38,7 @@ body{
   margin:0;
   background:var(--cream);
   color:var(--text);
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:Manrope,system-ui,sans-serif;
 }
 
 a{
@@ -92,7 +95,7 @@ nav{
 
 .logo{
   color:var(--brown);
-  font-family:Georgia,serif;
+  font-family:"EB Garamond",Georgia,serif;
   font-size:22px;
   font-weight:700;
   line-height:1.05;
@@ -196,7 +199,7 @@ nav{
 .hero h1{
   margin:12px 0 14px;
   max-width:760px;
-  font-family:Georgia,serif;
+  font-family:"EB Garamond",Georgia,serif;
   font-size:clamp(40px,6vw,68px);
   line-height:1;
   color:var(--brown);
@@ -235,7 +238,7 @@ nav{
 .statusValue{
   margin-top:8px;
   color:var(--brown);
-  font-family:Georgia,serif;
+  font-family:"EB Garamond",Georgia,serif;
   font-size:28px;
   font-weight:700;
 }
@@ -326,7 +329,7 @@ nav{
 .sectionTitle{
   margin:0;
   color:var(--brown);
-  font-family:Georgia,serif;
+  font-family:"EB Garamond",Georgia,serif;
   font-size:28px;
 }
 
@@ -353,7 +356,7 @@ nav{
 
 .statNumber{
   color:var(--brown);
-  font-family:Georgia,serif;
+  font-family:"EB Garamond",Georgia,serif;
   font-size:32px;
   font-weight:700;
 }
@@ -514,7 +517,7 @@ nav{
 .scheduleBook{
   margin-top:5px;
   color:var(--brown);
-  font-family:Georgia,serif;
+  font-family:"EB Garamond",Georgia,serif;
   font-size:17px;
   font-weight:700;
 }
@@ -684,7 +687,7 @@ footer{
 footer h3,
 footer h4{
   margin:0 0 10px;
-  font-family:Georgia,serif;
+  font-family:"EB Garamond",Georgia,serif;
 }
 
 footer p,
@@ -839,7 +842,7 @@ footer a{
 
 <div class="top">
   <div class="wrap">
-    <span>Reader Reach • Moderator Workspace</span>
+    <span>Reader Reach • The Literary Guardian</span>
     <span>Author Communication • Scheduling • Feature Calendar</span>
   </div>
 </div>
@@ -848,8 +851,8 @@ footer a{
   <div class="wrap nav">
 
 <a class="logo" href="index.html">
-  Reader Reach
-  <small>Every Book Has Its Readers</small>
+  <img src="assets/Reader Reach Elegant Serif Wordmark.png" alt="Reader Reach" style="display:block;width:190px;max-width:100%;height:auto">
+  <small>The Literary Guardian</small>
 </a>
 
 <div class="links">
@@ -871,7 +874,7 @@ footer a{
   <div class="wrap heroGrid">
 
 <div>
-  <div class="eyebrow">Moderator Dashboard</div>
+  <div class="eyebrow">The Literary Guardian</div>
 
   <h1>Keep authors, books and features moving.</h1>
 
@@ -893,7 +896,7 @@ footer a{
 </div>
 
 <div class="statusCard">
-  <div class="statusLabel">Moderator Status</div>
+  <div class="statusLabel">Literary Guardian Status</div>
 
   <div class="statusValue">
     <span class="statusDot"></span>
@@ -1412,7 +1415,7 @@ footer a{
 
           <div class="profileField">
             <label>Role</label>
-            <div id="accountRole">Moderator</div>
+            <div id="accountRole">The Literary Guardian</div>
           </div>
 
           <div class="profileField">
@@ -1554,7 +1557,7 @@ async function requireModerator(){
 function loadAccount(){
   $('accountName').textContent=currentProfile?.display_name||'Moderator';
   $('accountEmail').textContent=currentUser?.email||'—';
-  $('accountRole').textContent='Moderator';
+  $('accountRole').textContent='The Literary Guardian';
   $('accountCreated').textContent=formatDate(currentProfile?.created_at);
 }
 
@@ -1680,7 +1683,7 @@ async function markNotificationRead(id){const {error}=await supabaseClient.from(
 async function loadConversations(preferredId=null){
   const container=$('conversationList');if(!container||!currentModerator)return;
   container.innerHTML='<div class="empty">Loading conversations...</div>';
-  const {data,error}=await supabaseClient.from('conversations').select('id,author_id,moderator_id,book_id,created_at,updated_at').eq('moderator_id',currentModerator.id).order('updated_at',{ascending:false});
+  const {data,error}=await supabaseClient.from('conversations').select('id,author_id,moderator_id,book_id,created_at,updated_at').or('moderator_id.eq.'+currentModerator.id+',moderator_id.is.null').order('updated_at',{ascending:false});
   if(error){console.error('Conversation lookup error:',error);container.innerHTML=`<div class="empty">Unable to load conversations: ${escapeHtml(friendlyError(error))}</div>`;return;}
   conversations=data||[];
   if(!conversations.length){selectedConversation=null;container.innerHTML='<div class="empty">No conversations yet.</div>';resetChat();return;}
@@ -1695,12 +1698,12 @@ async function loadConversations(preferredId=null){
   await renderSelectedConversation();
 }
 
-function resetChat(){$('conversationTitle').textContent='Select a conversation';$('conversationMeta').textContent='Author conversations will appear here.';$('chatMessages').innerHTML='<div class="empty">Select an author conversation to view messages.</div>';$('replyInput').disabled=true;$('sendReplyBtn').disabled=true;$('messageFile').disabled=true;$('messageFile').value='';$('attachmentStatus').textContent='Optional attachment';}
+function resetChat(){$('conversationTitle').textContent='Select a conversation';$('conversationMeta').textContent='Author conversations will appear here.';$('chatMessages').innerHTML='<div class="empty">Select an author conversation to view messages.</div>';$('chatMessages').dataset.conversationId='';$('replyInput').disabled=true;$('sendReplyBtn').disabled=true;$('messageFile').disabled=true;$('messageFile').value='';$('attachmentStatus').textContent='Optional attachment';}
 async function openConversation(id){selectedConversation=conversations.find(c=>c.id===id)||null;if(!selectedConversation)return;await renderSelectedConversation();}
 async function renderSelectedConversation(){
   if(!selectedConversation){resetChat();return;}
   $('conversationTitle').textContent='Author Conversation';
-  $('conversationMeta').textContent=`Book: ${selectedConversation.book_id||'Assigned conversation'} • ${formatDateTime(selectedConversation.updated_at||selectedConversation.created_at)}`;
+  $('conversationMeta').textContent=`${selectedConversation.book_id?'Book-specific':'General support'} • ${selectedConversation.moderator_id?'Assigned':'Unassigned'} • ${formatDateTime(selectedConversation.updated_at||selectedConversation.created_at)}`;
   $('replyInput').disabled=false;$('sendReplyBtn').disabled=false;$('messageFile').disabled=false;
   document.querySelectorAll('.conversation').forEach(btn=>btn.classList.toggle('active',btn.getAttribute('onclick')?.includes(selectedConversation.id)));
   await loadConversationMessages(selectedConversation.id);
@@ -1708,7 +1711,10 @@ async function renderSelectedConversation(){
 
 async function loadConversationMessages(conversationId){
   if(loadingConversation)return;loadingConversation=true;
-  const container=$('chatMessages');container.innerHTML='<div class="empty">Loading messages...</div>';
+  const container=$('chatMessages');const previousScroll=container.scrollTop;
+  const wasNearBottom=container.scrollHeight-container.scrollTop-container.clientHeight<65;
+  const sameConversation=container.dataset.conversationId===conversationId;
+  if(!sameConversation)container.innerHTML='<div class="empty">Loading messages...</div>';
   const {data,error}=await supabaseClient.from('messages').select('id,conversation_id,sender_profile_id,message,created_at,read_at').eq('conversation_id',conversationId).order('created_at',{ascending:true});
   if(error){console.error(error);container.innerHTML=`<div class="empty">Unable to load messages: ${escapeHtml(friendlyError(error))}</div>`;loadingConversation=false;return;}
   const messages=data||[];
@@ -1733,7 +1739,9 @@ const attachmentMap=new Map();attachments.forEach(a=>{if(!attachmentMap.has(a.me
     const files=(attachmentMap.get(m.id)||[]).map(a=>`<button type="button" class="btn small soft" onclick="openAttachment('${escapeHtml(a.id)}')">📎 ${escapeHtml(a.file_name||'Attachment')}</button>`).join('');
     return `<div class="chatBubble ${mine?'moderator':'author'}"><div>${escapeHtml(m.message||'')}</div>${files?`<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${files}</div>`:''}<small>${escapeHtml(p?.display_name||p?.role||'User')} · ${escapeHtml(formatDateTime(m.created_at))}</small>${canEdit?`<div style="margin-top:7px;display:flex;gap:6px;flex-wrap:wrap"><button class="btn small" type="button" onclick="editMessage('${escapeHtml(m.id)}')">Edit</button>${canDelete?`<button class="btn small danger" type="button" onclick="deleteMessage('${escapeHtml(m.id)}')">Delete</button>`:''}</div>`:''}</div>`;
   }).join(''):'<div class="empty">No messages in this conversation yet.</div>';
-  container.scrollTop=container.scrollHeight;
+  container.dataset.conversationId=conversationId;
+  if(!sameConversation||wasNearBottom)container.scrollTop=container.scrollHeight;
+  else container.scrollTop=previousScroll;
   const unread=messages.filter(m=>m.sender_profile_id!==currentUser.id&&!m.read_at).map(m=>m.id);if(unread.length)await supabaseClient.from('messages').update({read_at:new Date().toISOString()}).in('id',unread);
   loadingConversation=false;
 }
@@ -1780,6 +1788,11 @@ async function openAttachment(id) {
 
 async function sendReply(){
   if(!selectedConversation){showToast('Select a conversation first.');return;}
+  if(!selectedConversation.moderator_id){
+    const claim=await supabaseClient.from('conversations').update({moderator_id:currentModerator.id}).eq('id',selectedConversation.id).is('moderator_id',null).select('id,moderator_id').maybeSingle();
+    if(claim.error||!claim.data){showToast('This conversation could not be assigned to you. Please refresh. '+(claim.error?friendlyError(claim.error):''));return;}
+    selectedConversation.moderator_id=currentModerator.id;
+  }
   const input=$('replyInput'),message=input.value.trim(),file=$('messageFile').files[0];
   if(!message&&!file){showToast('Write a message or choose a file first.');return;}
   const button=$('sendReplyBtn');button.disabled=true;$('messageFile').disabled=true;
@@ -1810,7 +1823,7 @@ async function deleteMessage(id){
 function startAuthorConversation(authorId){const candidate=conversations.find(c=>c.author_id===authorId);showSection('messages');if(candidate){selectedConversation=candidate;renderSelectedConversation();}else showToast('No conversation exists for this author yet.');}
 
 function subscribeToNotifications(){if(realtimeNotificationsChannel)supabaseClient.removeChannel(realtimeNotificationsChannel);realtimeNotificationsChannel=supabaseClient.channel('moderator-notifications-'+currentUser.id).on('postgres_changes',{event:'*',schema:'public',table:'notifications',filter:'profile_id=eq.'+currentUser.id},()=>loadNotifications()).subscribe();}
-function subscribeToMessages(){if(realtimeMessagesChannel)supabaseClient.removeChannel(realtimeMessagesChannel);realtimeMessagesChannel=supabaseClient.channel('moderator-messages-'+currentUser.id).on('postgres_changes',{event:'*',schema:'public',table:'messages'},async payload=>{const newId=payload.new?.conversation_id,oldId=payload.old?.conversation_id;if(selectedConversation?.id===newId||selectedConversation?.id===oldId)await loadConversationMessages(selectedConversation.id);await loadConversations(selectedConversation?.id);}).subscribe();}
+function subscribeToMessages(){if(realtimeMessagesChannel)supabaseClient.removeChannel(realtimeMessagesChannel);realtimeMessagesChannel=supabaseClient.channel('moderator-messages-'+currentUser.id).on('postgres_changes',{event:'*',schema:'public',table:'messages'},async payload=>{const newId=payload.new?.conversation_id,oldId=payload.old?.conversation_id;if(selectedConversation?.id===newId||selectedConversation?.id===oldId)await loadConversationMessages(selectedConversation.id);else await loadConversations(selectedConversation?.id);}).subscribe();}
 
 async function initialise(){
   const allowed=await requireModerator();if(!allowed)return;

@@ -293,24 +293,40 @@
       line-height: 1.2;
     }
 
+    .author-bio-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      min-width: 0;
+      margin-bottom: 18px;
+    }
     .author-bio {
+      flex: 0 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       color: var(--brown-soft);
       font-size: 0.94rem;
       line-height: 1.6;
-      min-height: 72px;
-      margin-bottom: 10px;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3;
-      overflow: hidden;
-      overflow-wrap: anywhere;
-      white-space: pre-line;
+      margin: 0;
     }
-
-    .author-card { position:relative; }
-    .author-card-link { height:auto; }
-    .author-more { display:none; margin:0 24px 18px; padding:0; background:none; border:0; color:var(--brown); font:700 0.85rem "Manrope",sans-serif; text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px; cursor:pointer; text-align:left; }
-    .author-more.visible { display:block; }
+    .author-more {
+      display: none;
+      flex-shrink: 0;
+      padding: 0;
+      background: none;
+      border: 0;
+      color: var(--brown);
+      font: 700 0.82rem "Manrope", sans-serif;
+      text-decoration: underline;
+      text-decoration-color: var(--gold);
+      text-underline-offset: 3px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .author-more.visible { display: inline-block; }
+    .author-card-link { height: auto; }
     .author-name { overflow-wrap:anywhere; }
     .bio-dialog { border:1px solid var(--border); border-radius:20px; background:var(--white); color:var(--brown); padding:0; width:min(590px,calc(100% - 32px)); max-height:85vh; box-shadow:0 20px 65px #24181244; margin:auto; }
     .bio-dialog::backdrop { background:rgba(36,23,17,.65); }
@@ -667,7 +683,9 @@
         const bio = card.querySelector(".author-bio");
         const button = card.querySelector(".author-more");
         if (!bio || !button) return;
-        const overflowing = bio.scrollHeight > bio.clientHeight + 2;
+        // Measure the natural single-line width before reserving space for View More.
+        button.classList.remove("visible");
+        const overflowing = bio.scrollWidth > bio.clientWidth + 2;
         button.classList.toggle("visible", overflowing);
       });
     }
@@ -721,36 +739,25 @@
               class="author-card-link"
               aria-label="View profile of ${name}"
             >
-
               <div class="author-top">
                 <div class="author-avatar">
                   ${photo ? `<img src="${escapeHtml(photo)}" alt="${name} profile photo" loading="lazy" onerror="this.remove();this.parentElement.textContent='${initials}'">` : initials}
                 </div>
               </div>
-
-              <div class="author-body">
-                <h3 class="author-name">
-                  ${name}
-                </h3>
-
-                <p class="author-bio">
-                  ${bio}
-                </p>
-
-                <div class="author-meta">
-                  <div class="meta-item">
-                    Reader Reach Author
-                  </div>
-
-                  <div class="view-profile">
-                    View Profile
-                    <span>→</span>
-                  </div>
-                </div>
+              <div class="author-body" style="padding-bottom:0">
+                <h3 class="author-name">${name}</h3>
               </div>
-
             </a>
-            <button type="button" class="author-more" data-author-id="${escapeHtml(author.id)}">View More</button>
+            <div class="author-body" style="padding-top:0">
+              <div class="author-bio-row">
+                <p class="author-bio">${bio}</p>
+                <button type="button" class="author-more" data-author-id="${escapeHtml(author.id)}">View More</button>
+              </div>
+              <div class="author-meta">
+                <div class="meta-item">Reader Reach Author</div>
+                <a href="author-profile.html?id=${id}" class="view-profile">View Profile <span>→</span></a>
+              </div>
+            </div>
           </article>
         `;
       }).join("");

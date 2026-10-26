@@ -944,6 +944,8 @@ footer a{
     Messages
   </button>
 
+  <button class="sideLink" data-section="spotlight" onclick="showSection('spotlight')">Book Spotlight</button>
+
   <button class="sideLink"
           data-section="calendar"
           onclick="showSection('calendar')">
@@ -1343,6 +1345,36 @@ footer a{
   </section>
 
 
+  <!-- SPOTLIGHT PROPOSALS -->
+  <section id="spotlight" class="pageSection hidden">
+    <section class="section"><div class="card">
+      <div class="sectionHead"><div>
+        <h2 class="sectionTitle">Book Spotlight</h2>
+        <p class="muted">Recommend an approved book for Spotlight. The Curator reviews every proposal before it can be scheduled.</p>
+      </div><button class="btn small" onclick="loadSpotlightProposals()">Refresh</button></div>
+      <div class="grid2">
+        <div>
+          <h3 style="color:var(--brown);margin-top:0">Propose a Book</h3>
+          <form id="spotlightProposalForm">
+            <div class="field"><label for="spotlightBook">Approved Book</label><select id="spotlightBook" required><option value="">Select an approved book</option></select></div>
+            <div class="field"><label for="spotlightReason">Why should this book be featured?</label><textarea id="spotlightReason" required maxlength="2000" placeholder="Explain why this book deserves a Spotlight..."></textarea></div>
+            <div class="field"><label for="spotlightProposedDate">Suggested Date (optional)</label><input id="spotlightProposedDate" type="date"></div>
+            <button class="btn primary" id="spotlightSubmitBtn" type="submit">Submit to The Curator</button>
+          </form>
+        </div>
+        <div>
+          <h3 style="color:var(--brown);margin-top:0">How Spotlight Works</h3>
+          <div class="notice">1. The Literary Guardian proposes an approved book.<br>2. The Curator approves or rejects it.<br>3. Rejected proposals include a reason.<br>4. Only approved proposals can be scheduled.</div>
+          <p class="muted" style="margin-top:15px">Spotlight scheduling is separate from the regular Feature Calendar.</p>
+        </div>
+      </div>
+    </div></section>
+    <section class="section"><div class="card">
+      <div class="sectionHead"><div><h2 class="sectionTitle">Spotlight Proposals &amp; History</h2><p class="muted">Track pending, approved, rejected, and scheduled proposals.</p></div></div>
+      <div id="spotlightProposalList" class="list"><div class="empty">Loading Spotlight proposals...</div></div>
+    </div></section>
+  </section>
+
   <!-- NOTIFICATIONS -->
 
   <section id="notifications" class="pageSection hidden">
@@ -1612,7 +1644,7 @@ async function loadApprovedBooks(){
   const {data,error}=await supabaseClient.from('books')
 .select('id,author_id,title,genre_topic,book_link,status,created_at').eq('status','approved').order('created_at',{ascending:false});
   if(error){console.error(error);container.innerHTML='<div class="empty">Unable to load approved books: '+escapeHtml(friendlyError(error))+'</div>';return;}
-  approvedBooks=data||[];$('approvedBooksCount').textContent=approvedBooks.length;populateBookSelect();
+  approvedBooks=data||[];$('approvedBooksCount').textContent=approvedBooks.length;populateBookSelect();populateSpotlightBookSelect();
   const authorIds=[...new Set(approvedBooks.map(b=>b.author_id).filter(Boolean))];
   let authors=[];
   if(authorIds.length){const r=await supabaseClient.from('authors').select('id,author_name').in('id',authorIds);if(r.error)console.error(r.error);authors=r.data||[];}
@@ -1621,6 +1653,14 @@ async function loadApprovedBooks(){
   container.innerHTML=html||'<div class="empty">No approved books are available.</div>';
   const recent=$('recentBooksList');
   if(recent)recent.innerHTML=approvedBooks.slice(0,5).map(b=>renderBookItem(b,authorMap)).join('')||'<div class="empty">No approved books are available.</div>';
+}
+
+function populateSpotlightBookSelect(){
+  const select=$('spotlightBook'); if(!select)return;
+  const previous=select.value;
+  select.innerHTML='<option value="">Select an approved book</option>';
+  approvedBooks.forEach(b=>{const option=document.createElement('option');option.value=b.id;option.textContent=b.title||'Untitled Book';select.appendChild(option);});
+  if(approvedBooks.some(b=>b.id===previous))select.value=previous;
 }
 
 function populateBookSelect(){const select=$('scheduleBook');if(!select)return;select.innerHTML='<option value="">Select an approved book</option>';approvedBooks.forEach(b=>{const o=document.createElement('option');o.value=b.id;o.textContent=b.title||'Untitled Book';select.appendChild(o);});}
@@ -1825,13 +1865,61 @@ function startAuthorConversation(authorId){const candidate=conversations.find(c=
 function subscribeToNotifications(){if(realtimeNotificationsChannel)supabaseClient.removeChannel(realtimeNotificationsChannel);realtimeNotificationsChannel=supabaseClient.channel('moderator-notifications-'+currentUser.id).on('postgres_changes',{event:'*',schema:'public',table:'notifications',filter:'profile_id=eq.'+currentUser.id},()=>loadNotifications()).subscribe();}
 function subscribeToMessages(){if(realtimeMessagesChannel)supabaseClient.removeChannel(realtimeMessagesChannel);realtimeMessagesChannel=supabaseClient.channel('moderator-messages-'+currentUser.id).on('postgres_changes',{event:'*',schema:'public',table:'messages'},async payload=>{const newId=payload.new?.conversation_id,oldId=payload.old?.conversation_id;if(selectedConversation?.id===newId||selectedConversation?.id===oldId)await loadConversationMessages(selectedConversation.id);else await loadConversations(selectedConversation?.id);}).subscribe();}
 
+let spotlightProposals=[];
+let spotlightLoading=false;
+async function loadSpotlightProposals(){
+  const list=$('spotlightProposalList');if(!list||!currentUser)return;
+  list.innerHTML='<div class="empty">Loading Spotlight proposals...</div>';
+  const {data,error}=await supabaseClient.from('spotlight_proposals')
+    .select('id,book_id,proposed_by,proposal_reason,proposed_date,status,rejection_reason,reviewed_at,scheduled_date,created_at')
+    .eq('proposed_by',currentUser.id).order('created_at',{ascending:false});
+  if(error){list.innerHTML='<div class="empty">Could not load Spotlight proposals: '+escapeHtml(friendlyError(error))+'</div>';return;}
+  spotlightProposals=data||[];
+  const ids=[...new Set(spotlightProposals.map(p=>p.book_id).filter(Boolean))];
+  let bookMap=new Map(approvedBooks.map(b=>[b.id,b.title]));
+  if(ids.length){const result=await supabaseClient.from('books').select('id,title').in('id',ids);
+    if(!result.error)(result.data||[]).forEach(b=>bookMap.set(b.id,b.title));}
+  if(!spotlightProposals.length){list.innerHTML='<div class="empty">You have not submitted any Spotlight proposals yet.</div>';return;}
+  list.innerHTML=spotlightProposals.map(p=>{
+    const status=p.status||'pending';
+    const color=status==='approved'||status==='scheduled'?'green':status==='rejected'?'red':'gold';
+    const scheduling=status==='approved'?`<div class="itemActions" style="align-items:center"><label for="spotlightDate-${p.id}" class="itemMeta">Spotlight Date</label><input type="date" id="spotlightDate-${p.id}" min="${new Date().toLocaleDateString('en-CA')}" value="${escapeHtml(p.proposed_date||'')}" style="padding:8px;border:1px solid var(--line);border-radius:9px"><button class="btn small primary" onclick="scheduleSpotlight('${p.id}')">Schedule Approved Spotlight</button></div>`:'';
+    return `<div class="item"><div class="itemTop"><div><div class="itemTitle">${escapeHtml(bookMap.get(p.book_id)||'Book')}</div><div class="itemMeta">Proposed ${escapeHtml(formatDate(p.created_at))}${p.proposed_date?' · Suggested '+escapeHtml(formatDate(p.proposed_date)):''}</div></div><span class="badge ${color}">${escapeHtml(status.charAt(0).toUpperCase()+status.slice(1))}</span></div><div class="itemMeta" style="white-space:pre-wrap">${escapeHtml(p.proposal_reason)}</div>${status==='rejected'?`<div class="notice" style="margin-top:12px;background:#faece9;border-color:#ead0cc;color:var(--red)"><strong>The Curator's rejection reason:</strong> ${escapeHtml(p.rejection_reason||'Not provided')}</div>`:''}${p.reviewed_at?`<div class="itemMeta">Reviewed: ${escapeHtml(formatDate(p.reviewed_at))}</div>`:''}${status==='scheduled'?`<div class="itemMeta"><strong>Spotlight scheduled:</strong> ${escapeHtml(formatDate(p.scheduled_date))}</div>`:''}${scheduling}</div>`;
+  }).join('');
+}
+async function submitSpotlightProposal(event){
+  event.preventDefault();if(spotlightLoading)return;
+  const bookId=$('spotlightBook').value,reason=$('spotlightReason').value.trim(),date=$('spotlightProposedDate').value;
+  if(!approvedBooks.some(b=>b.id===bookId&&b.status==='approved')){showToast('Choose an approved book.');return;}
+  if(!reason){showToast('Explain why the book deserves Spotlight.');return;}
+  spotlightLoading=true;$('spotlightSubmitBtn').disabled=true;
+  try{
+    const {error}=await supabaseClient.from('spotlight_proposals').insert({book_id:bookId,proposed_by:currentUser.id,proposal_reason:reason,proposed_date:date||null});
+    if(error)throw error;
+    $('spotlightProposalForm').reset();showToast('Spotlight proposal submitted to The Curator.');await loadSpotlightProposals();
+  }catch(error){console.error(error);showToast('Could not submit Spotlight proposal: '+friendlyError(error));}
+  finally{spotlightLoading=false;$('spotlightSubmitBtn').disabled=false;}
+}
+async function scheduleSpotlight(id){
+  const proposal=spotlightProposals.find(p=>p.id===id);
+  if(!proposal||proposal.status!=='approved'){showToast('Only approved proposals can be scheduled.');return;}
+  const date=$('spotlightDate-'+id)?.value;
+  if(!date){showToast('Choose a Spotlight date.');return;}
+  if(date<new Date().toLocaleDateString('en-CA')){showToast('Choose today or a future date.');return;}
+  if(!window.confirm('Schedule this approved Spotlight for '+date+'?'))return;
+  const {error}=await supabaseClient.rpc('schedule_approved_spotlight',{p_proposal_id:id,p_scheduled_date:date});
+  if(error){console.error(error);showToast('Could not schedule Spotlight: '+friendlyError(error));return;}
+  showToast('Spotlight scheduled successfully.');await loadSpotlightProposals();
+}
+
 async function initialise(){
   const allowed=await requireModerator();if(!allowed)return;
-  await Promise.all([loadApprovedAuthors(),loadApprovedBooks(),loadSchedules(),loadNotifications(),loadConversations()]);
+  await Promise.all([loadApprovedAuthors(),loadApprovedBooks(),loadSchedules(),loadNotifications(),loadConversations(),loadSpotlightProposals()]);
   subscribeToNotifications();subscribeToMessages();
 }
 
 $('scheduleBtn').addEventListener('click',createSchedule);
+$('spotlightProposalForm').addEventListener('submit',submitSpotlightProposal);
 $('signOutBtn').addEventListener('click',signOut);
 $('replyInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();sendReply();}});
 $('messageFile').addEventListener('change',()=>{const file=$('messageFile').files[0];$('attachmentStatus').textContent=file?`${file.name} (${Math.ceil(file.size/1024)} KB)`:'Optional attachment';});

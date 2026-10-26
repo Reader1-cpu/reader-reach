@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -199,6 +200,7 @@
 
     .profile-info {
       flex: 1;
+      min-width: 0;
     }
 
     .profile-name {
@@ -223,6 +225,7 @@
       color: var(--brown-soft);
       font-size: 1.02rem;
       white-space: pre-line;
+      overflow-wrap: anywhere;
     }
 
     .website-link {
@@ -2202,6 +2205,8 @@
         }).join("");
 
 
+      queueOverflowRefresh();
+
       books.forEach(book => {
 
         const saveButton =
@@ -2276,37 +2281,38 @@
     });
 
 
-    // Automatically add View More only where visible text exceeds its box.
-    // Form fields, navigation controls and editable messages are never truncated.
-    const overflowSelectors = [
-      ".profile-bio", ".book-title", ".book-description",
-      ".book-genre", ".book-cover-title", ".profile-name",
-      ".stat-label", ".stat-number", ".profile-label"
-    ].join(", ");
+    // Show a compact preview for long prose, with the full text in a popup.
+    // Names, titles, counts, buttons, and editable controls remain fully visible.
+    const overflowSelectors = ".profile-bio, .book-description";
 
     function refreshOverflowPreviews() {
       document.querySelectorAll(overflowSelectors).forEach(element => {
-        const originalText = element.dataset.overflowFullText || element.textContent.trim();
-        if (!originalText) return;
+        if (element.closest("[style*='display:none']")) return;
+        const fullText = element.textContent.trim();
         const existingButton = element.nextElementSibling?.classList.contains("overflow-view-more")
           ? element.nextElementSibling : null;
+
         element.classList.remove("overflow-preview");
         element.style.removeProperty("--preview-lines");
-        // Measure the natural height before applying a line clamp.
-        const computed = getComputedStyle(element);
-        const lineHeight = parseFloat(computed.lineHeight) || parseFloat(computed.fontSize) * 1.5;
-        const maxLines = element.matches(".profile-bio") ? 5 :
-          element.matches(".book-description") ? 3 : 2;
-        const naturalHeight = element.scrollHeight;
-        const tooTall = naturalHeight > lineHeight * maxLines + 3;
-        const tooWide = element.scrollWidth > element.clientWidth + 3;
-        if (!tooTall && !tooWide) {
+
+        if (!fullText) {
           existingButton?.remove();
           return;
         }
-        element.dataset.overflowFullText = originalText;
-        element.style.setProperty("--preview-lines", String(maxLines));
+
+        const lineCount = 4;
+        const computed = getComputedStyle(element);
+        const lineHeight = parseFloat(computed.lineHeight) || parseFloat(computed.fontSize) * 1.6;
+        const needsPreview = element.scrollHeight > lineHeight * lineCount + 3;
+
+        if (!needsPreview) {
+          existingButton?.remove();
+          return;
+        }
+
+        element.style.setProperty("--preview-lines", String(lineCount));
         element.classList.add("overflow-preview");
+
         if (!existingButton) {
           const button = document.createElement("button");
           button.type = "button";
@@ -2317,7 +2323,7 @@
             const heading = bookCard?.querySelector(".book-title")?.textContent.trim() ||
               element.closest(".profile-card")?.querySelector("h1")?.textContent.trim() ||
               "Full text";
-            openDescriptionModal(heading, element.dataset.overflowFullText || element.textContent);
+            openDescriptionModal(heading, element.textContent.trim());
           });
           element.insertAdjacentElement("afterend", button);
         }
@@ -2333,17 +2339,9 @@
         refreshOverflowPreviews();
       });
     }
-    const overflowObserver = new MutationObserver(mutations => {
-      if (mutations.some(m => m.addedNodes.length &&
-          Array.from(m.addedNodes).some(node => node.nodeType === 1 &&
-            !node.classList?.contains("overflow-view-more")))) {
-        queueOverflowRefresh();
-      }
-    });
-    overflowObserver.observe(document.body, { childList: true, subtree: true });
+
     window.addEventListener("resize", queueOverflowRefresh);
     document.fonts?.ready.then(queueOverflowRefresh);
-    queueOverflowRefresh();
 
     async function loadProfile() {
 
@@ -2483,6 +2481,8 @@
 
         profileSection.style.display =
           "block";
+
+        queueOverflowRefresh();
 
 
       } catch (error) {

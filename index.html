@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -739,7 +738,7 @@ section{scroll-margin-top:90px}
 .rr-text-more:hover{text-decoration:underline}
 .author .rr-text-more{margin:6px auto 12px;text-align:center}
 .author p.rr-text-preview{min-height:0}
-.trailerFeature .rr-text-more{margin-bottom:15px}
+.trailerFeature .rr-text-more{display:block;margin:7px 0 15px;text-align:left}
 .schedule>div:nth-last-child(2),.discussion>div{min-width:0}
 .rr-text-preview:focus-visible,.rr-text-more:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 </style>
@@ -1314,6 +1313,7 @@ async function loadTrailers(){
       </div>
     `;
 
+    requestAnimationFrame(rrSchedulePreviews);
     more.innerHTML=ts.length>1 ? ts.slice(1,4).map(t=>{
       let b=bm.get(t.book_id), a=am.get(b.author_id), v=url(t.trailer_url);
       return `<article class="sideTrailer">
@@ -2072,7 +2072,7 @@ prepareSupportChat();
    inputs and live support-chat messages untouched. */
 const rrPreviewSelector = [
   '#authorGrid .author p',
-  '#featuredTrailer .trailerFeature p:not(.trailerByline)'
+  '#featuredTrailer .trailerFeature p:not(.trailerByline)' 
 ].join(',');
 let rrPreviewScheduled = false;
 let rrLastFocus = null;
@@ -2095,7 +2095,8 @@ function rrRefreshPreviews(){
     const style=getComputedStyle(el);
     const lineHeight=Number.parseFloat(style.lineHeight)||Number.parseFloat(style.fontSize)*1.6;
     // Only exceptionally long text needs a popup; ordinary paragraphs stay visible.
-    const isLong=fullText.length>240 && el.scrollHeight>lineHeight*3+4;
+    const isTrailer=el.matches('#featuredTrailer .trailerFeature p:not(.trailerByline)');
+    const isLong=(isTrailer ? fullText.length>140 : fullText.length>240) && el.scrollHeight>lineHeight*3+4;
     if(!isLong){button?.remove();return;}
     el.classList.add('rr-text-preview');
     if(button)return;

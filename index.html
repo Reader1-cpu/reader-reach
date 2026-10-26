@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -741,6 +742,12 @@ section{scroll-margin-top:90px}
 .trailerFeature .rr-text-more{display:block;margin:7px 0 15px;text-align:left}
 .schedule>div:nth-last-child(2),.discussion>div{min-width:0}
 .rr-text-preview:focus-visible,.rr-text-more:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+/* Trailer text must never escape the narrow preview column. */
+.trailerShowcase .trailerFeature > div:first-child{min-width:0;overflow:hidden}
+.trailerShowcase .trailerFeature .trailer-description-row{display:flex;align-items:baseline;gap:7px;min-width:0;margin:0 0 14px}
+.trailerShowcase .trailerFeature .trailer-description-row p{display:block!important;flex:1 1 auto;min-width:0;max-width:100%;margin:0;overflow:hidden!important;text-overflow:ellipsis;white-space:nowrap!important;overflow-wrap:normal}
+.trailerShowcase .trailerFeature .trailer-description-row .rr-text-more{display:inline-block;flex:0 0 auto;margin:0;padding:0;white-space:nowrap;font-size:11px}
 </style>
 </head>
 
@@ -1274,13 +1281,9 @@ async function loadTrailers(){
           <h3>${esc(t.title||b.title)}</h3>
           <p class="trailerByline">By ${esc(a?.author_name||"Reader Reach Author")}</p>
 
-          <p>
-            ${esc(
-              t.description||
-              b.description||
-              "Watch the official book trailer and discover the story behind the book."
-            )}
-          </p>
+          <div class="trailer-description-row">
+            <p class="trailer-description-text">${esc(t.description||b.description||"Watch the official book trailer and discover the story behind the book.")}</p>
+          </div>
 
           <a
             class="btn primary"
@@ -2072,7 +2075,7 @@ prepareSupportChat();
    inputs and live support-chat messages untouched. */
 const rrPreviewSelector = [
   '#authorGrid .author p',
-  '#featuredTrailer .trailerFeature p:not(.trailerByline)' 
+  '#featuredTrailer .trailer-description-text' 
 ].join(',');
 let rrPreviewScheduled = false;
 let rrLastFocus = null;
@@ -2095,15 +2098,17 @@ function rrRefreshPreviews(){
     const style=getComputedStyle(el);
     const lineHeight=Number.parseFloat(style.lineHeight)||Number.parseFloat(style.fontSize)*1.6;
     // Only exceptionally long text needs a popup; ordinary paragraphs stay visible.
-    const isTrailer=el.matches('#featuredTrailer .trailerFeature p:not(.trailerByline)');
-    const isLong=(isTrailer ? fullText.length>140 : fullText.length>240) && el.scrollHeight>lineHeight*3+4;
+    const isTrailer=el.matches('#featuredTrailer .trailer-description-text');
+    const isLong=isTrailer
+      ? el.scrollWidth > el.clientWidth + 1
+      : fullText.length>240 && el.scrollHeight>lineHeight*3+4;
     if(!isLong){button?.remove();return;}
-    el.classList.add('rr-text-preview');
+    if(!isTrailer)el.classList.add('rr-text-preview');
     if(button)return;
     button=document.createElement('button');
     button.type='button';
     button.className='rr-text-more';
-    button.textContent='View More';
+    button.textContent=isTrailer?'View More':'View More';
     button.setAttribute('aria-label','View more text');
     button.addEventListener('click',()=>{
       const card=el.closest('.author,.trailerFeature,.schedule,.discussion,.stepCard,.aboutCard,.sideTrailer');

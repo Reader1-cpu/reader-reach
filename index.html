@@ -2072,15 +2072,7 @@ prepareSupportChat();
    inputs and live support-chat messages untouched. */
 const rrPreviewSelector = [
   '#authorGrid .author p',
-  '#featuredTrailer .trailerFeature p:not(.trailerByline)',
-  '#eventList .schedule small',
-  '#discussionList .discussion p',
-  '.stepCard p',
-  '.aboutCard p',
-  '.trailerSidebar .sideTrailerInfo p',
-  '.intro',
-  '.closingBanner p',
-  '.cta p'
+  '#featuredTrailer .trailerFeature p:not(.trailerByline)'
 ].join(',');
 let rrPreviewScheduled = false;
 let rrLastFocus = null;
@@ -2102,7 +2094,8 @@ function rrRefreshPreviews(){
     el.classList.remove('rr-text-preview');
     const style=getComputedStyle(el);
     const lineHeight=Number.parseFloat(style.lineHeight)||Number.parseFloat(style.fontSize)*1.6;
-    const isLong=el.scrollHeight>lineHeight*3+4;
+    // Only exceptionally long text needs a popup; ordinary paragraphs stay visible.
+    const isLong=fullText.length>240 && el.scrollHeight>lineHeight*3+4;
     if(!isLong){button?.remove();return;}
     el.classList.add('rr-text-preview');
     if(button)return;

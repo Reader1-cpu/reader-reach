@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Authors | Reader Reach</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <meta
     name="description"
     content="Discover authors and explore their books on Reader Reach."
@@ -38,11 +42,13 @@
     }
 
     body {
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: "Manrope", Arial, sans-serif;
       background: var(--cream);
       color: var(--brown);
       line-height: 1.6;
     }
+
+    h1, h2, h3, .author-avatar { font-family: "EB Garamond", Georgia, serif; }
 
     a {
       color: inherit;
@@ -272,7 +278,10 @@
       font-weight: 700;
       border: 5px solid rgba(255, 253, 249, 0.9);
       box-shadow: 0 8px 20px rgba(63, 42, 31, 0.16);
+      overflow: hidden;
     }
+
+    .author-avatar img { width:100%; height:100%; object-fit:cover; display:block; border-radius:50%; }
 
     .author-body {
       padding: 23px 24px 25px;
@@ -289,8 +298,27 @@
       font-size: 0.94rem;
       line-height: 1.6;
       min-height: 72px;
-      margin-bottom: 18px;
+      margin-bottom: 10px;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
+      overflow-wrap: anywhere;
+      white-space: pre-line;
     }
+
+    .author-card { position:relative; }
+    .author-card-link { height:auto; }
+    .author-more { display:none; margin:0 24px 18px; padding:0; background:none; border:0; color:var(--brown); font:700 0.85rem "Manrope",sans-serif; text-decoration:underline; text-decoration-color:var(--gold); text-underline-offset:3px; cursor:pointer; text-align:left; }
+    .author-more.visible { display:block; }
+    .author-name { overflow-wrap:anywhere; }
+    .bio-dialog { border:1px solid var(--border); border-radius:20px; background:var(--white); color:var(--brown); padding:0; width:min(590px,calc(100% - 32px)); max-height:85vh; box-shadow:0 20px 65px #24181244; margin:auto; }
+    .bio-dialog::backdrop { background:rgba(36,23,17,.65); }
+    .bio-dialog-inner { padding:28px; max-height:85vh; overflow:auto; }
+    .bio-dialog-head { display:flex; align-items:start; justify-content:space-between; gap:16px; margin-bottom:14px; }
+    .bio-dialog-head h2 { font-size:1.9rem; line-height:1.15; }
+    .bio-dialog-close { flex-shrink:0; width:36px; height:36px; border:0; border-radius:50%; background:var(--cream-dark); color:var(--brown); cursor:pointer; font-size:24px; }
+    #bioDialogText { white-space:pre-wrap; overflow-wrap:anywhere; color:var(--brown-soft); line-height:1.8; }
 
     .author-meta {
       display: flex;
@@ -478,8 +506,8 @@
   <!-- NAVIGATION -->
   <nav class="navbar">
     <div class="nav-inner">
-      <a href="index.html" class="brand">
-        Reader <span>Reach</span>
+      <a href="index.html" class="brand" aria-label="Reader Reach home">
+        <img src="assets/Reader Reach Elegant Serif Wordmark.png" alt="Reader Reach" style="display:block;max-width:190px;width:100%;height:auto;">
       </a>
 
       <div class="nav-links">
@@ -554,7 +582,7 @@
   <footer>
     <div class="footer-inner">
       <div class="footer-brand">
-        Reader <span>Reach</span>
+        <img src="assets/Reader Reach Elegant Serif Wordmark.png" alt="Reader Reach" style="display:block;max-width:190px;width:100%;height:auto;">
       </div>
 
       <div class="footer-text">
@@ -562,6 +590,16 @@
       </div>
     </div>
   </footer>
+
+  <dialog id="bioDialog" class="bio-dialog" aria-labelledby="bioDialogTitle">
+    <div class="bio-dialog-inner">
+      <div class="bio-dialog-head">
+        <h2 id="bioDialogTitle">Author Biography</h2>
+        <button type="button" id="bioDialogClose" class="bio-dialog-close" aria-label="Close biography">&times;</button>
+      </div>
+      <p id="bioDialogText"></p>
+    </div>
+  </dialog>
 
   <script>
     const SUPABASE_URL = "https://bublmnfhyyrefcdkloak.supabase.co";
@@ -614,19 +652,38 @@
       ).toUpperCase();
     }
 
-    function shortenBio(bio) {
-      if (!bio) {
-        return "Author on Reader Reach.";
-      }
-
-      const clean = String(bio).trim();
-
-      if (clean.length <= 150) {
-        return clean;
-      }
-
-      return clean.substring(0, 147).trimEnd() + "...";
+    function safePhotoUrl(value) {
+      const candidate = String(value || "").trim();
+      try {
+        const parsed = new URL(candidate, window.location.href);
+        return ["https:", "http:"].includes(parsed.protocol) ? parsed.href : "";
+      } catch (_) { return ""; }
     }
+
+    const biographyById = new Map();
+
+    function refreshBioButtons() {
+      authorsGrid.querySelectorAll(".author-card").forEach(card => {
+        const bio = card.querySelector(".author-bio");
+        const button = card.querySelector(".author-more");
+        if (!bio || !button) return;
+        const overflowing = bio.scrollHeight > bio.clientHeight + 2;
+        button.classList.toggle("visible", overflowing);
+      });
+    }
+
+    const bioDialog = document.getElementById("bioDialog");
+    document.getElementById("bioDialogClose").addEventListener("click", () => bioDialog.close());
+    bioDialog.addEventListener("click", event => { if (event.target === bioDialog) bioDialog.close(); });
+    authorsGrid.addEventListener("click", event => {
+      const button = event.target.closest(".author-more");
+      if (!button) return;
+      const author = biographyById.get(button.dataset.authorId);
+      if (!author) return;
+      document.getElementById("bioDialogTitle").textContent = author.name;
+      document.getElementById("bioDialogText").textContent = author.bio;
+      bioDialog.showModal();
+    });
 
     function renderAuthors(authors) {
       if (!authors.length) {
@@ -649,7 +706,10 @@
       authorsGrid.innerHTML = authors.map(author => {
         const id = encodeURIComponent(author.id);
         const name = escapeHtml(author.author_name || "Unnamed Author");
-        const bio = escapeHtml(shortenBio(author.bio));
+        const fullBio = String(author.bio || "Author on Reader Reach.").trim();
+        const bio = escapeHtml(fullBio);
+        biographyById.set(String(author.id), { name: author.author_name || "Author", bio: fullBio });
+        const photo = safePhotoUrl(author.profile_photo_url);
         const initials = escapeHtml(
           getInitials(author.author_name || "Author")
         );
@@ -664,7 +724,7 @@
 
               <div class="author-top">
                 <div class="author-avatar">
-                  ${initials}
+                  ${photo ? `<img src="${escapeHtml(photo)}" alt="${name} profile photo" loading="lazy" onerror="this.remove();this.parentElement.textContent='${initials}'">` : initials}
                 </div>
               </div>
 
@@ -690,10 +750,15 @@
               </div>
 
             </a>
+            <button type="button" class="author-more" data-author-id="${escapeHtml(author.id)}">View More</button>
           </article>
         `;
       }).join("");
+      requestAnimationFrame(refreshBioButtons);
     }
+
+    window.addEventListener("resize", refreshBioButtons);
+    document.fonts?.ready.then(refreshBioButtons);
 
     async function loadAuthors() {
       authorsGrid.innerHTML = `
@@ -714,6 +779,7 @@
             profile_id,
             author_name,
             bio,
+            profile_photo_url,
             website_url,
             status,
             created_at
@@ -793,4 +859,3 @@
 
 </body>
 </html>
-```

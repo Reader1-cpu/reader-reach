@@ -180,6 +180,7 @@
       margin-top: -67px;
       border: 7px solid var(--white);
       border-radius: 50%;
+      overflow: hidden;
       background: var(--brown);
       color: #fffaf2;
       display: flex;
@@ -218,6 +219,25 @@
       font-weight: 700;
       letter-spacing: 1.4px;
       text-transform: uppercase;
+    }
+
+    .bio-block {
+      display: block;
+      max-width: 720px;
+      margin-bottom: 16px;
+    }
+
+    .bio-block .overflow-view-more {
+      display: block;
+      margin: 7px 0 0;
+    }
+
+    .avatar img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
     }
 
     .profile-bio {
@@ -426,8 +446,18 @@
       min-width: 0;
     }
     .overflow-view-more {
-      display: inline-block;
-      margin: 7px 0 12px;
+      display: block;
+      width: max-content;
+      max-width: 100%;
+      margin: 6px 0 10px;
+      text-align: left;
+    }
+
+    .profile-info .website-link {
+      display: block;
+      width: fit-content;
+      max-width: 100%;
+      overflow-wrap: anywhere;
     }
     .profile-bio, .book-title, .book-genre, .book-cover-title,
     .book-description, .profile-name, .stat-label, .stat-number {
@@ -797,9 +827,11 @@
               Author
             </h1>
 
-            <p id="authorBio" class="profile-bio">
-              This author has not added a biography yet.
-            </p>
+            <div class="bio-block">
+              <p id="authorBio" class="profile-bio">
+                This author has not added a biography yet.
+              </p>
+            </div>
 
             <a
               id="authorWebsite"
@@ -1216,6 +1248,7 @@
           id,
           profile_id,
           author_name,
+          profile_photo_url,
           bio,
           website_url,
           status,
@@ -1472,10 +1505,20 @@
         author.bio ||
         "This author has not added a biography yet.";
 
-      authorAvatar.textContent =
-        getInitials(
-          author.author_name
-        );
+      authorAvatar.textContent = getInitials(author.author_name);
+      const photoUrl = String(author.profile_photo_url || "").trim();
+      if (/^https:\/\//i.test(photoUrl)) {
+        const photo = document.createElement("img");
+        photo.src = photoUrl;
+        photo.alt = (author.author_name || "Author") + " profile photo";
+        photo.loading = "lazy";
+        photo.addEventListener("error", () => {
+          photo.remove();
+          authorAvatar.textContent = getInitials(author.author_name);
+        });
+        authorAvatar.textContent = "";
+        authorAvatar.appendChild(photo);
+      }
 
 
       if (author.website_url) {
@@ -1498,7 +1541,7 @@
           website;
 
         authorWebsite.style.display =
-          "inline-block";
+          "block";
 
       } else {
 
@@ -2300,7 +2343,7 @@
           return;
         }
 
-        const lineCount = 4;
+        const lineCount = 3;
         const computed = getComputedStyle(element);
         const lineHeight = parseFloat(computed.lineHeight) || parseFloat(computed.fontSize) * 1.6;
         const needsPreview = element.scrollHeight > lineHeight * lineCount + 3;
@@ -2481,6 +2524,7 @@
 
         profileSection.style.display =
           "block";
+        queueOverflowRefresh();
 
         queueOverflowRefresh();
 

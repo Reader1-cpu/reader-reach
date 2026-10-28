@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -439,6 +440,21 @@ footer {padding:36px 15px}
 .rr-existing a{color:var(--brown);text-decoration:underline}
 .rr-status{font-size:12px;color:var(--muted)}
 
+
+/* Story Edition guide — integrated author-dashboard section */
+.se-intro{background:#30231c;color:#fff9ef;border-radius:22px;padding:35px;margin-bottom:22px}
+.se-intro h1{color:#fff9ef}.se-intro p{color:#e4d6c5;max-width:680px}
+.se-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.se-book-stage{background:radial-gradient(#f5e8d4,#d5c0a3);border-radius:17px;min-height:320px;display:grid;place-items:center;padding:26px}
+.se-book{height:265px;width:195px;background:#273c4c;color:#f6e7cb;border-left:14px solid #182a38;box-shadow:12px 12px #eee8df,17px 17px #958b7b,27px 27px 30px #34291e66;transform:perspective(800px) rotateY(-15deg);display:grid;place-items:center;text-align:center;padding:18px;font:600 28px/1.15 'EB Garamond',Georgia,serif}
+.se-book small{font:12px Manrope,Arial,sans-serif;letter-spacing:1px}
+.se-pages{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#d4c7b6;padding:10px;border-radius:13px}
+.se-paper{background:#fffefa;min-height:255px;padding:20px;box-shadow:inset 0 0 18px #624a2208}
+.se-paper h3{font-size:23px}.se-paper p{font:12px/1.8 Georgia,serif;color:#63564a}
+.se-credit{margin-top:20px;border-top:1px solid var(--line);padding-top:16px;font-size:12px}
+.se-credit a{color:#805a2d;text-decoration:underline;text-underline-offset:3px;font-weight:800}
+.se-checklist li{margin-bottom:12px;line-height:1.65}
+@media(max-width:700px){.se-columns{grid-template-columns:1fr}.se-intro{padding:25px}.se-paper{padding:12px}}
 </style>
 
 </head>
@@ -469,6 +485,7 @@ footer {padding:36px 15px}
     <nav aria-label="Author dashboard navigation">
       <button class="navbtn active" data-page="overview">Overview</button>
       <button class="navbtn" data-page="profile">My Profile</button>
+      <button class="navbtn" data-page="story-edition">Story Edition Guide &amp; Example</button>
       <button class="navbtn" data-page="submit">Submit a Book</button>
       <button class="navbtn" data-page="books">My Books</button>
       <button class="navbtn" data-page="removed">Removed Books</button>
@@ -593,6 +610,80 @@ footer {padding:36px 15px}
         <button class="btn" type="submit">Save Profile</button>
       </div>
     </form>
+  </div>
+</section>
+
+
+<section class="page" id="page-story-edition">
+  <div class="se-intro">
+    <div class="eyebrow">Reader Reach · Author Resources</div>
+    <h1>Story Edition Guide &amp; Example</h1>
+    <p>A complete story. A shorter reading experience. Learn what Reader Reach asks authors to prepare and explore a visual example before submitting your book.</p>
+  </div>
+  <div class="se-columns">
+    <div class="panel">
+      <div class="eyebrow">Understanding the format</div>
+      <h2>What is a Story Edition?</h2>
+      <p>A Story Edition is a shorter, continuous retelling of your book's <strong>complete story</strong>. It keeps the important characters, events, emotions, turning points and the real ending, while making the reading experience more concise.</p>
+      <p>It is <strong>not</strong> a teaser, an excerpt, a chapter-by-chapter summary, or a study guide. It should feel like reading a complete story.</p>
+    </div>
+    <div class="panel">
+      <div class="eyebrow">The purpose</div>
+      <h2>Why Reader Reach uses it</h2>
+      <p>Reader Reach allows readers to experience complete stories in shorter editions, discover more books, and appreciate the creativity of different authors without spending weeks reading each one.</p>
+      <p><strong>Submit the Story Edition you prepare, not your full original manuscript.</strong> We do not require a fixed page count.</p>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="eyebrow">Illustrative presentation</div>
+    <h2>Explore a sample Story Edition</h2>
+    <p class="muted">The cover and interior below are design placeholders to demonstrate presentation and narrative flow. They are not a completed Leafora publication. We can replace them with the actual Leafora sample when it is ready.</p>
+    <div class="se-columns">
+      <div>
+        <div class="se-book-stage"><div class="se-book"><div>THE STORY<br>EDITION<br><br><small>ILLUSTRATIVE COVER</small></div></div></div>
+        <p class="small muted">Sample cover mockup — for guidance only.</p>
+      </div>
+      <div>
+        <div class="se-pages">
+          <div class="se-paper">
+            <div class="eyebrow">The beginning</div>
+            <h3>A New Chapter</h3>
+            <p>The morning brought a decision that would change everything. As the characters stepped into an unfamiliar world, their hopes and fears began to shape the journey ahead.</p>
+            <p>Each scene connects naturally to the next, even when the story has been shortened.</p>
+          </div>
+          <div class="se-paper">
+            <div class="eyebrow">The journey</div>
+            <h3>The Turning Point</h3>
+            <p>Important choices, relationships and conflicts remain part of the narrative. The Story Edition follows them through to the actual conclusion.</p>
+            <p>Readers should never be left with only a preview of what happens.</p>
+          </div>
+        </div>
+        <p class="small muted">Illustrative interior writing — not taken from a published book.</p>
+      </div>
+    </div>
+    <div class="se-credit">Professional sample credit: <a href="https://orivelle--contactorivelle.replit.app/" target="_blank" rel="noopener noreferrer">Leafora · Visit Orivelle ↗</a><span class="muted"> — opens Orivelle separately; a dedicated Leafora service-page link can replace this homepage link later.</span></div>
+  </div>
+  <div class="se-columns">
+    <div class="panel">
+      <div class="eyebrow">Preparation checklist</div>
+      <h2>What to include</h2>
+      <ul class="se-checklist">
+        <li>Your book title and author name.</li>
+        <li>A clear cover and readable interior.</li>
+        <li>A naturally flowing retelling from beginning to end.</li>
+        <li>Essential characters, major events, and emotional moments.</li>
+        <li>The complete, actual ending of the story.</li>
+      </ul>
+      <p class="muted small">The length depends on your story. Reader Reach does not ask you to choose a page count here.</p>
+    </div>
+    <div class="panel">
+      <div class="eyebrow">Your next step</div>
+      <h2>Prepare your edition independently</h2>
+      <p>Authors prepare their own Story Editions. You may work independently or use a professional of your choice. <strong>No paid service is required</strong> to submit to Reader Reach.</p>
+      <div class="notice info">Only submit material you own or have the rights and permission to adapt and share.</div>
+      <div class="actions"><button class="btn" type="button" data-go="submit">Go to Submit a Book</button></div>
+      <p class="small muted">This guide does not change the existing submission form or upload requirements yet.</p>
+    </div>
   </div>
 </section>
 

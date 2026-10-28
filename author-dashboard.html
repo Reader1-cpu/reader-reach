@@ -455,6 +455,23 @@ footer {padding:36px 15px}
 .se-credit a{color:#805a2d;text-decoration:underline;text-underline-offset:3px;font-weight:800}
 .se-checklist li{margin-bottom:12px;line-height:1.65}
 @media(max-width:700px){.se-columns{grid-template-columns:1fr}.se-intro{padding:25px}.se-paper{padding:12px}}
+
+.se-showcase{overflow:hidden}
+.se-reader{max-width:670px;margin:25px auto 0;background:#dfd3c1;padding:15px;border-radius:20px;box-shadow:0 15px 35px #32221620}
+.se-reader-page{display:none;position:relative;min-height:520px;background:#fffdf8;padding:clamp(25px,6vw,62px);border:1px solid #e9e0d4;box-shadow:inset 0 0 35px #61432309}
+.se-reader-page.is-active{display:block}
+.se-reader-page h3{font-size:clamp(30px,4vw,42px);margin:14px 0 24px}
+.se-reader-page p{font:16px/1.95 'EB Garamond',Georgia,serif;color:#45352b;margin:0 0 18px}
+.se-reader-kicker{font:800 10px Manrope,Arial,sans-serif;letter-spacing:2px;text-transform:uppercase;color:#a17c4b}
+.se-folio{font:11px Manrope,Arial,sans-serif;color:#967c65;text-align:center;margin-top:30px}
+.se-cover-art{min-height:480px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;background:linear-gradient(155deg,#192e3d,#355366 60%,#172b38);color:#f7e9d2;padding:35px 25px;border:2px solid #c7a66c;outline:8px solid #20394b;outline-offset:-14px}
+.se-cover-art span{font:700 10px Manrope,Arial,sans-serif;letter-spacing:2px;color:#e1c994}
+.se-cover-art h2{font-size:clamp(39px,6vw,60px);color:#fff4dd;max-width:430px}
+.se-cover-art p{color:#e4d1ad;font:14px/1.7 Georgia,serif}
+.se-lantern{font-size:65px;color:#edc47e;text-shadow:0 0 35px #f4c877}
+.se-reader-controls{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:18px}
+.se-page-count{font:700 12px Manrope,Arial,sans-serif;color:#765c43;min-width:100px;text-align:center}
+.se-credit{text-align:center}
 </style>
 
 </head>
@@ -615,78 +632,28 @@ footer {padding:36px 15px}
 
 
 <section class="page" id="page-story-edition">
-  <div class="se-intro">
-    <div class="eyebrow">Reader Reach · Author Resources</div>
-    <h1>Story Edition Guide &amp; Example</h1>
-    <p>A complete story. A shorter reading experience. Learn what Reader Reach asks authors to prepare and explore a visual example before submitting your book.</p>
-  </div>
-  <div class="se-columns">
-    <div class="panel">
-      <div class="eyebrow">Understanding the format</div>
-      <h2>What is a Story Edition?</h2>
-      <p>A Story Edition is a shorter, continuous retelling of your book's <strong>complete story</strong>. It keeps the important characters, events, emotions, turning points and the real ending, while making the reading experience more concise.</p>
-      <p>It is <strong>not</strong> a teaser, an excerpt, a chapter-by-chapter summary, or a study guide. It should feel like reading a complete story.</p>
-    </div>
-    <div class="panel">
-      <div class="eyebrow">The purpose</div>
-      <h2>Why Reader Reach uses it</h2>
-      <p>Reader Reach allows readers to experience complete stories in shorter editions, discover more books, and appreciate the creativity of different authors without spending weeks reading each one.</p>
-      <p><strong>Submit the Story Edition you prepare, not your full original manuscript.</strong> We do not require a fixed page count.</p>
-    </div>
-  </div>
-  <div class="panel">
-    <div class="eyebrow">Illustrative presentation</div>
-    <h2>Explore a sample Story Edition</h2>
-    <p class="muted">The cover and interior below are design placeholders to demonstrate presentation and narrative flow. They are not a completed Leafora publication. We can replace them with the actual Leafora sample when it is ready.</p>
-    <div class="se-columns">
-      <div>
-        <div class="se-book-stage"><div class="se-book"><div>THE STORY<br>EDITION<br><br><small>ILLUSTRATIVE COVER</small></div></div></div>
-        <p class="small muted">Sample cover mockup — for guidance only.</p>
-      </div>
-      <div>
-        <div class="se-pages">
-          <div class="se-paper">
-            <div class="eyebrow">The beginning</div>
-            <h3>A New Chapter</h3>
-            <p>The morning brought a decision that would change everything. As the characters stepped into an unfamiliar world, their hopes and fears began to shape the journey ahead.</p>
-            <p>Each scene connects naturally to the next, even when the story has been shortened.</p>
-          </div>
-          <div class="se-paper">
-            <div class="eyebrow">The journey</div>
-            <h3>The Turning Point</h3>
-            <p>Important choices, relationships and conflicts remain part of the narrative. The Story Edition follows them through to the actual conclusion.</p>
-            <p>Readers should never be left with only a preview of what happens.</p>
-          </div>
-        </div>
-        <p class="small muted">Illustrative interior writing — not taken from a published book.</p>
-      </div>
-    </div>
-    <div class="se-credit">Professional sample credit: <a href="https://orivelle--contactorivelle.replit.app/" target="_blank" rel="noopener noreferrer">Leafora · Visit Orivelle ↗</a><span class="muted"> — opens Orivelle separately; a dedicated Leafora service-page link can replace this homepage link later.</span></div>
-  </div>
-  <div class="se-columns">
-    <div class="panel">
-      <div class="eyebrow">Preparation checklist</div>
-      <h2>What to include</h2>
-      <ul class="se-checklist">
-        <li>Your book title and author name.</li>
-        <li>A clear cover and readable interior.</li>
-        <li>A naturally flowing retelling from beginning to end.</li>
-        <li>Essential characters, major events, and emotional moments.</li>
-        <li>The complete, actual ending of the story.</li>
-      </ul>
-      <p class="muted small">The length depends on your story. Reader Reach does not ask you to choose a page count here.</p>
-    </div>
-    <div class="panel">
-      <div class="eyebrow">Your next step</div>
-      <h2>Prepare your edition independently</h2>
-      <p>Authors prepare their own Story Editions. You may work independently or use a professional of your choice. <strong>No paid service is required</strong> to submit to Reader Reach.</p>
-      <div class="notice info">Only submit material you own or have the rights and permission to adapt and share.</div>
-      <div class="actions"><button class="btn" type="button" data-go="submit">Go to Submit a Book</button></div>
-      <p class="small muted">This guide does not change the existing submission form or upload requirements yet.</p>
-    </div>
-  </div>
+<div class="se-intro"><div class="eyebrow">Reader Reach · Author Resources</div><h1>Story Edition Guide &amp; Example</h1><p>A complete story. A shorter reading experience. Discover the format we welcome on Reader Reach and explore a finished storytelling example.</p></div>
+<div class="se-columns">
+<div class="panel"><div class="eyebrow">Understanding the format</div><h2>What is a Story Edition?</h2><p>A Story Edition is a shorter, continuous retelling of your book's <strong>complete story</strong>. It preserves the essential characters, events, emotional moments, and actual ending.</p><p>It reads as a natural story, not as a teaser, chapter summary, or study guide.</p></div>
+<div class="panel"><div class="eyebrow">Our purpose</div><h2>Why Reader Reach uses it</h2><p>Reader Reach helps readers experience complete stories in shorter editions, discover more books, and appreciate the creativity of different authors.</p><p>Prepare and submit your <strong>Story Edition</strong> rather than your full original manuscript.</p></div>
+</div>
+<div class="panel se-showcase">
+<div class="eyebrow">A Story Edition · Original sample</div><h2>Explore the example</h2><p class="muted">Read <em>The Lantern at Willow Harbor</em>, an original demonstration story with a beginning, turning point, and complete ending. Use it as a model for the narrative flow and presentation of your own edition.</p>
+<div class="se-reader" aria-label="Story Edition sample reader"><article class="se-reader-page is-active" data-se-page="0" aria-hidden="false"><div class="se-cover-art"><span>LEAFORA · STORY EDITION</span><div class="se-lantern">✦</div><h2>THE LANTERN AT WILLOW HARBOR</h2><p>A Story Edition · An original short story<br>A Reader Reach presentation example</p><span>READER REACH · SAMPLE</span></div></article>
+<article class="se-reader-page" data-se-page="1" aria-hidden="true"><div class="se-reader-kicker">01 · The Promise</div><h3>The Night the Light Went Out</h3><p>Every evening, Mara Vale climbed the narrow steps of the old harbor tower and lit the lantern her father had tended before her. The fishing boats knew that amber light as surely as they knew the tide. When her father died, the town council called the lantern a relic and voted to replace it with an electric beacon. Mara agreed to one final week, though she could not bring herself to say goodbye.</p><p>On the last evening, the electric beacon failed before its first full night. A storm rose from the east, swallowing the harbor in rain. Somewhere beyond the breakwater, three boats were still at sea.</p><div class="se-folio">1 / 6</div></article>
+<article class="se-reader-page" data-se-page="2" aria-hidden="true"><div class="se-reader-kicker">02 · The Choice</div><h3>A Signal in the Storm</h3><p>Mara ran to the tower with her younger brother, Eli. The lantern&#x27;s fuel tank was nearly empty, and its glass chimney had cracked. Eli offered to fetch more oil from the chandlery, but the floodwater was already climbing the market steps. Mara could not ask him to cross it.</p><p>Then she remembered the brass mirror their father kept beneath the stairs. He had used it years ago to throw the lantern&#x27;s beam farther across the channel. Together, they lifted the heavy mirror into place. Mara wrapped the cracked glass with wire, poured in the last oil, and struck a match. A thin flame caught.</p><div class="se-folio">2 / 6</div></article>
+<article class="se-reader-page" data-se-page="3" aria-hidden="true"><div class="se-reader-kicker">03 · The Crossing</div><h3>What the Harbor Could See</h3><p>From the tower window, Mara saw nothing but rain. She turned the mirror slowly, sending a pulse of gold toward the dark water. Eli counted between flashes, following the pattern their father had taught them: three short signals for the safe channel, one long signal for danger.</p><p>Far out at sea, Captain Soren recognized the rhythm. His boat was drifting toward the rocks, its compass useless in the storm. He steered toward the flashes and sounded his horn. A second horn answered behind him. Mara&#x27;s hands shook, but she kept the signal steady.</p><div class="se-folio">3 / 6</div></article>
+<article class="se-reader-page" data-se-page="4" aria-hidden="true"><div class="se-reader-kicker">04 · The Return</div><h3>Three Boats, One Light</h3><p>The first boat entered the harbor just before midnight. The second followed with a torn sail. The third had lost its engine and came in slowly, pulled by the others. When the final hull crossed the breakwater, Eli shouted so loudly that the sound carried down the stairs. Mara let the lantern burn until the sky began to pale.</p><p>At dawn, the council gathered at the tower. They saw the cracked chimney, the empty tank, and the brass mirror resting against the wall. The mayor admitted that the new beacon had failed because its backup battery had never been installed.</p><div class="se-folio">4 / 6</div></article>
+<article class="se-reader-page" data-se-page="5" aria-hidden="true"><div class="se-reader-kicker">05 · The Ending</div><h3>A Light Kept for Everyone</h3><p>The council repaired the electric beacon, but they also restored the old lantern as an independent backup. Mara refused to keep the tower alone. She trained a team of volunteers, including Eli, so the harbor&#x27;s safety would never again depend on one person.</p><p>On the first calm evening after the storm, the boats returned beneath two lights: one bright and modern, the other warm and familiar. Mara stood beside her brother at the tower window. She finally understood what her father had meant when he said a light was not a possession. It was a promise people made to one another. This time, the whole town would keep it.</p><div class="se-folio">5 / 6</div></article>
+<article class="se-reader-page" data-se-page="6" aria-hidden="true"><div class="se-reader-kicker">About this example</div><h3>A complete reading experience</h3><p>This original fictional sample demonstrates the intended format: a continuous narrative with a beginning, central conflict, turning point, resolution, and actual ending. A submitted Story Edition should similarly preserve the complete arc of its source book, even when the source is much longer.</p><div class="se-folio">6 / 6</div></article></div>
+<div class="se-reader-controls"><button type="button" class="btn secondary" id="sePrevious" disabled>← Previous page</button><span class="se-page-count" id="sePageCount" aria-live="polite">Cover · 1 of 7</span><button type="button" class="btn" id="seNext">Next page →</button></div>
+<div class="se-credit">Sample Story Edition presented by <a href="https://orivelle--contactorivelle.replit.app/" target="_blank" rel="noopener noreferrer" aria-label="Visit Leafora through Orivelle (opens in a new tab)">Leafora ↗</a></div>
+</div>
+<div class="se-columns">
+<div class="panel"><div class="eyebrow">Preparation checklist</div><h2>What your edition should include</h2><ul class="se-checklist"><li>Your book title, author name, and clear cover.</li><li>A readable, thoughtfully organized interior.</li><li>A naturally flowing retelling from beginning to end.</li><li>The essential characters, conflicts, turning points, and emotions.</li><li>The actual conclusion of the story.</li></ul></div>
+<div class="panel"><div class="eyebrow">Ready to share your story?</div><h2>Prepare your Story Edition</h2><p>You can prepare your Story Edition yourself or work with a professional of your choice.</p><div class="notice info">Only submit material you own or have permission to adapt and share.</div><div class="actions"><button type="button" class="btn" data-go="submit">Go to Submit a Book</button></div></div>
+</div>
 </section>
-
 <section class="page" id="page-submit">
   <div class="page-heading">
     <div class="eyebrow">Share your work</div>
@@ -742,17 +709,17 @@ footer {padding:36px 15px}
           </div>
         </div>
         <div class="field full">
-          <label for="bookFlipper">Flipper Guide file (PDF or ZIP)</label>
+          <label for="bookFlipper">Story Edition Guide file (PDF or ZIP)</label>
           <input id="bookFlipper" type="file" accept=".pdf,.zip,application/pdf,application/zip,application/x-zip-compressed">
           <div class="file-note">Upload now, or select Provide Later. After submitting your book, you can manage its file in Manage Book Materials. Maximum 200 MB, subject to project limits.</div>
         </div>
         <div class="field full">
-          <label><input type="checkbox" id="bookFlipperLater" style="width:auto;margin-right:7px">Provide Flipper Guide Later</label>
+          <label><input type="checkbox" id="bookFlipperLater" style="width:auto;margin-right:7px">Provide Story Edition Guide Later</label>
         </div>
         <div class="field full">
           <label for="bookPreviewPreference">Trailer preview preference</label>
           <select id="bookPreviewPreference">
-            <option value="wait_until_ready">Wait until my Flipper Guide is approved (recommended)</option>
+            <option value="wait_until_ready">Wait until my Story Edition Guide is approved (recommended)</option>
             <option value="allow_early_preview">Allow early two-day trailer preview while the guide is pending</option>
           </select>
           <div class="file-note">Every book must complete a two-day trailer preview before Book Spotlight. If an early preview ends without an approved guide, Spotlight is delayed privately and the trailer must stop displaying. The Curator confirms scheduling.</div>
@@ -802,11 +769,11 @@ footer {padding:36px 15px}
   <div class="page-heading">
     <div class="eyebrow">Your books · materials</div>
     <h1>Manage Book Materials</h1>
-    <p class="muted">Upload your PDF or ZIP Flipper Guide for The Curator to review. An approved file stays in place until a replacement is approved.</p>
+    <p class="muted">Upload your Story Edition Guide as a PDF or ZIP for The Curator to review. An approved file stays in place until a replacement is approved.</p>
   </div>
-  <div class="notice info">A mandatory two-day trailer preview comes before every Book Spotlight. Choosing early preview does not bypass Flipper Guide approval. A delayed Spotlight is visible only to the author and The Curator.</div>
+  <div class="notice info">A mandatory two-day trailer preview comes before every Book Spotlight. Choosing early preview does not bypass Story Edition Guide approval. A delayed Spotlight is visible only to the author and The Curator.</div>
   <div class="panel">
-    <div class="panel-head"><h2>Submit a Flipper Guide</h2><button type="button" class="btn secondary" id="refreshMaterials">Refresh Status</button></div>
+    <div class="panel-head"><h2>Submit a Story Edition Guide</h2><button type="button" class="btn secondary" id="refreshMaterials">Refresh Status</button></div>
     <form id="materialForm">
       <div class="form-grid">
         <div class="field full"><label for="materialBook">Select your book</label><select id="materialBook" required><option value="">Select a book</option></select></div>
@@ -1780,7 +1747,7 @@ $("bookForm").addEventListener("submit", async event => {
     if (!trailerFile)
       missing.push("Book Trailer Video");
 
-    missing.push("Flipper Guide (awaiting Curator approval)");
+    missing.push("Story Edition Guide (awaiting Curator approval)");
 
     if (bio && bio !== (currentAuthor.bio || "")) {
       const {error:bioError} = await supabaseClient
@@ -1872,7 +1839,7 @@ console.log("Book submission payload:", payload);
           setNotice(message, "info");
         });
       } catch (guideError) {
-        uploadWarnings.push("The book was created, but the Flipper Guide could not be submitted: " + friendlyError(guideError) + ". Retry in Manage Book Materials.");
+        uploadWarnings.push("The book was created, but the Story Edition Guide could not be submitted: " + friendlyError(guideError) + ". Retry in Manage Book Materials.");
       }
     }
 
@@ -1958,7 +1925,7 @@ console.log("Book submission payload:", payload);
 });
 
 /* -------------------------------------------------------
-   FLIPPER GUIDE MATERIALS — PRIVATE STORAGE & CURATOR REVIEW
+   STORY EDITION GUIDE MATERIALS — PRIVATE STORAGE & CURATOR REVIEW
 ------------------------------------------------------- */
 const FLIPPER_BUCKET = "flipper-guides";
 const MAX_FLIPPER_BYTES = 200 * 1024 * 1024;
@@ -2069,7 +2036,7 @@ $("materialForm").addEventListener("submit",async event=>{
     $("materialFile").value="";
     await loadBooks();
     await loadMaterials();
-    setNotice("Your Flipper Guide has been submitted for Curator review.","success");
+    setNotice("Your Story Edition Guide has been submitted for Curator review.","success");
   } catch(error) {
     progress.textContent="Upload or submission failed: " + friendlyError(error);
     setNotice(progress.textContent,"error");
@@ -3301,5 +3268,15 @@ STARTUP
 
 initializeDashboard(); </script>
 
+
+<script>
+(function(){
+ const pages=[...document.querySelectorAll('#page-story-edition .se-reader-page')];
+ const prev=document.getElementById('sePrevious'),next=document.getElementById('seNext'),counter=document.getElementById('sePageCount');
+ let index=0;
+ function show(i){index=Math.max(0,Math.min(pages.length-1,i));pages.forEach((p,n)=>{p.classList.toggle('is-active',n===index);p.setAttribute('aria-hidden',String(n!==index));});prev.disabled=index===0;next.disabled=index===pages.length-1;counter.textContent=(index===0?'Cover':'Page '+index)+' · '+(index+1)+' of '+pages.length;}
+ prev.addEventListener('click',()=>show(index-1));next.addEventListener('click',()=>show(index+1));show(0);
+})();
+</script>
 </body>
 </html>

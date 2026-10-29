@@ -1,9 +1,13 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reader Reach | The Curator</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="icon" type="image/png" href="assets/favicon.png">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -893,6 +897,7 @@
         <button data-target="overview" class="active">Overview</button>
         <button data-target="authors">Authors</button>
         <button data-target="books">Books</button>
+         <button data-target="materialsReview">Book Materials Review</button>
         <button data-target="featured">The Book Spotlight</button>
         <button data-target="trailers">Book Trailers</button>
         <button data-target="schedules">Spotlight Schedule</button>
@@ -1101,15 +1106,25 @@
         </section>
 
 
+
+        <!-- BOOK MATERIALS REVIEW -->
+        <section id="materialsReview" class="section">
+          <div class="section-heading"><div><h2>Book Materials Review</h2><p>Review authors’ submitted Story Edition materials and send feedback.</p></div><button class="btn btn-light" onclick="loadMaterialsReview()">Refresh</button></div>
+          <div class="card"><div class="card-head"><h3>Submitted Materials</h3></div><div class="card-body"><div id="materialsReviewTable" class="empty">Loading submissions…</div></div></div>
+        </section>
+
         <!-- FEATURED -->
         <section id="featured" class="section">
 
           <div class="section-heading">
             <div>
               <h2>The Book Spotlight</h2>
-              <p>Select approved books for The Book Spotlight. Existing records are preserved.</p>
+              <p>Review Guardian proposals, confirm the Spotlight date, and manually publish when that date arrives.</p>
             </div>
           </div>
+
+
+          <div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Literary Guardian Spotlight Proposals</h3><button class="btn btn-light" onclick="loadSpotlightProposals()">Refresh Proposals</button></div><div class="card-body"><p class="small muted">Approve or reject proposals. After approval, choose a date only. The Spotlight is never published automatically.</p><div id="spotlightProposalTable"><div class="empty">Loading proposals…</div></div></div></div>
 
           <div class="card">
 
@@ -1119,7 +1134,7 @@
 
             <div class="card-body">
 
-              <div class="featured-add">
+              <div class="featured-add hidden">
                 <select id="featuredBookSelect" class="select">
                   <option value="">Select an approved book…</option>
                 </select>
@@ -1169,19 +1184,19 @@
           <div class="section-heading">
             <div>
               <h2>Spotlight Schedule</h2>
-              <p>Manage scheduled Book Spotlights while preventing duplicate book/date/time entries.</p>
+              <p>View previous schedules. New Spotlight dates are confirmed in The Book Spotlight section; no time is required.</p>
             </div>
           </div>
 
           <div class="card">
 
             <div class="card-head">
-              <h3>Schedule a Spotlight</h3>
+              <h3>Legacy Schedule Records (date-only view)</h3>
             </div>
 
             <div class="card-body">
 
-              <div class="form-grid">
+              <div class="form-grid hidden">
 
                 <div class="form-field">
                   <label for="scheduleBook">Approved Book</label>
@@ -1218,7 +1233,7 @@
 
               </div>
 
-              <div style="margin-top:13px;">
+              <div class="hidden" style="margin-top:13px;">
                 <button id="scheduleSaveButton" class="btn btn-primary" onclick="saveSchedule()">
                   Schedule Spotlight
                 </button>
@@ -1238,7 +1253,7 @@
             </div>
 
             <div class="card-body">
-              <div id="schedulesTable"></div>
+              <div id="confirmedSpotlightDates"></div><div id="schedulesTable"></div>
             </div>
 
           </div>
@@ -1287,7 +1302,7 @@
 
           <div class="section-heading">
             <div>
-              <h2>Author ↔ Moderator Conversations</h2>
+              <h2>Author ↔ Literary Guardian Conversations</h2>
               <p>Admins can view all conversations, send messages, edit their own messages and delete their own admin messages.</p>
             </div>
           </div>
@@ -1443,7 +1458,7 @@
           <div class="section-heading">
             <div>
               <h2>Settings</h2>
-              <p>Administrative system information. No unsupported settings are changed here.</p>
+              <p>Manage your profile and session, and review platform access information.</p>
             </div>
           </div>
 
@@ -1452,6 +1467,10 @@
             <div class="card-body">
 
               <div class="settings-grid">
+              <div class="setting-box" style="grid-column:1/-1"><h4>Curator Profile</h4><p>Change the display name on your Reader Reach profile.</p><div class="form-field" style="margin-top:12px"><label for="curatorDisplayName">Display Name</label><input class="input" id="curatorDisplayName" maxlength="100" placeholder="Your display name"></div><button class="btn btn-primary" style="margin-top:12px" onclick="saveCuratorProfile()">Save Profile</button></div>
+              <div class="setting-box"><h4>Refresh Dashboard Data</h4><p>Reload all management information from Supabase.</p><button class="btn btn-secondary" style="margin-top:12px" onclick="refreshAll()">Refresh Now</button></div>
+              <div class="setting-box"><h4>Sign Out</h4><p>Securely end your Curator session.</p><button class="btn btn-light" style="margin-top:12px" onclick="signOut()">Sign Out</button></div>
+
 
                 <div class="setting-box">
                   <h4>Authentication</h4>
@@ -1709,6 +1728,7 @@
       }
 
       currentProfile = profile;
+      if($("curatorDisplayName")) $("curatorDisplayName").value=profile.display_name||"";
 
       $("loading").classList.add("hidden");
       $("app").classList.remove("hidden");
@@ -2531,6 +2551,8 @@
       await Promise.all([
         loadBooks(),
         loadFeatured(),
+        loadSpotlightProposals(),
+        loadMaterialsReview(),
         loadTrailers(),
         loadSchedules(),
         loadPublicDiscussions(),
@@ -3092,8 +3114,8 @@
               <tr>
                 <th>Book</th>
                 <th>Date</th>
-                <th>Time</th>
-                <th>Moderator</th>
+                <th>Time (legacy)</th>
+                <th>Literary Guardian</th>
                 <th>Status</th>
                 <th>Notes</th>
                 <th>Actions</th>
@@ -3130,7 +3152,7 @@
                   </td>
 
                   <td>${escapeHTML(schedule.notes || "Not provided")}</td>
-                  <td><button class="btn btn-secondary" onclick="editSchedule('${'${escapeHTML(schedule.id)}'}')">Edit Schedule</button></td>
+                  <td><button class="btn btn-secondary" disabled>Edit Schedule</button></td>
                 </tr>
               `).join("")}
 
@@ -4224,6 +4246,113 @@ async function openAttachment(id) {
       ]);
     }
 
+
+    /* MATERIALS REVIEW */
+    let materialSubmissionsCache=[];
+    async function loadMaterialsReview(){
+      const node=$("materialsReviewTable"); if(!node)return;
+      node.innerHTML='<div class="empty">Loading material submissions…</div>';
+      const {data,error}=await supabaseClient.from("book_material_submissions")
+        .select("id,book_id,submitted_by,flipper_file_path,flipper_file_type,status,created_at,reviewed_at,review_notes")
+        .order("created_at",{ascending:false});
+      if(error){renderError("materialsReviewTable",error.message+" — check Curator RLS access for book_material_submissions.");return;}
+      materialSubmissionsCache=data||[];
+      if(!materialSubmissionsCache.length){renderEmpty("materialsReviewTable","No materials submitted yet.");return;}
+      const ids=[...new Set(materialSubmissionsCache.map(x=>x.book_id).filter(Boolean))];
+      const {data:books}=await supabaseClient.from("books").select("id,title,author_id").in("id",ids);
+      const names=new Map((books||[]).map(x=>[x.id,x.title]));
+      node.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Book</th><th>File</th><th>Submitted</th><th>Status</th><th>Review Notes</th><th>Actions</th></tr></thead><tbody>${materialSubmissionsCache.map(m=>`<tr>
+        <td class="title-cell">${escapeHTML(names.get(m.book_id)||m.book_id)}</td>
+        <td>${escapeHTML((m.flipper_file_type||"File").toUpperCase())}<br><button class="btn btn-light" onclick="openSubmittedMaterial('${m.id}')">Open Material</button></td>
+        <td>${escapeHTML(formatDate(m.created_at))}</td><td>${statusBadge(m.status)}</td>
+        <td>${escapeHTML(m.review_notes||"—")}</td>
+        <td><div class="button-row"><button class="btn btn-success" onclick="reviewSubmittedMaterial('${m.id}','approved')" ${m.status!=='pending'?'disabled':''}>Approve</button><button class="btn btn-danger" onclick="reviewSubmittedMaterial('${m.id}','rejected')" ${m.status!=='pending'?'disabled':''}>Request Changes</button></div></td></tr>`).join("")}</tbody></table></div>`;
+    }
+    async function openSubmittedMaterial(id){
+      const row=materialSubmissionsCache.find(x=>x.id===id);if(!row?.flipper_file_path)return showToast("No material file path found.",true);
+      // Match the author's private materials bucket; never expose storage paths as public URLs.
+      const bucket="flipper-guides";
+      const {data,error}=await supabaseClient.storage.from(bucket).createSignedUrl(row.flipper_file_path,120);
+      if(error||!data?.signedUrl){showToast("Could not open the private file. Check the storage bucket and Curator access: "+(error?.message||""),true);return;}
+      window.open(data.signedUrl,"_blank","noopener,noreferrer");
+    }
+    async function reviewSubmittedMaterial(id,status){
+      const row=materialSubmissionsCache.find(x=>x.id===id);if(!row||row.status!=="pending")return showToast("Only pending submissions can be reviewed here.",true);
+      const notes=window.prompt(status==="rejected"?"Explain what the author should change (required):":"Optional approval feedback:","");
+      if(notes===null)return;
+      if(status==="rejected"&&!notes.trim())return showToast("Please give a reason for requesting changes.",true);
+      const {error}=await supabaseClient.from("book_material_submissions")
+        .update({status,review_notes:notes.trim()||null,reviewed_at:new Date().toISOString()}).eq("id",id).eq("status","pending");
+      if(error)return showToast(error.message,true);
+      showToast("Material review saved. The author can see the review status.");await loadMaterialsReview();
+    }
+    async function saveCuratorProfile(){
+      const display_name=$("curatorDisplayName").value.trim();
+      if(!display_name)return showToast("Enter a display name.",true);
+      const {error}=await supabaseClient.from("profiles").update({display_name}).eq("id",currentUser.id);
+      if(error)return showToast(error.message,true);
+      currentProfile.display_name=display_name;showToast("Curator profile updated.");
+    }
+    /* SPOTLIGHT PROPOSALS: approvals and manual publishing */
+    let spotlightProposalsCache=[];
+    let spotlightDatesCache=[];
+    async function loadSpotlightProposals(){
+      const el=$("spotlightProposalTable");if(!el)return;
+      const [proposals,dates]=await Promise.all([
+        supabaseClient.from("spotlight_proposals").select("id,book_id,proposed_by,proposal_reason,status,rejection_reason,created_at,reviewed_at").order("created_at",{ascending:false}),
+        supabaseClient.from("curator_spotlight_dates").select("id,proposal_id,book_id,spotlight_date,created_at").order("spotlight_date",{ascending:false})
+      ]);
+      if(proposals.error){renderError("spotlightProposalTable",proposals.error.message);return;}
+      spotlightProposalsCache=proposals.data||[];
+      spotlightDatesCache=dates.error?[]:(dates.data||[]);
+      const ids=[...new Set(spotlightProposalsCache.map(x=>x.book_id).filter(Boolean))];
+      const {data:books}=ids.length?await supabaseClient.from("books").select("id,title").in("id",ids):{data:[]};
+      const names=new Map((books||[]).map(b=>[b.id,b.title]));
+      if(!spotlightProposalsCache.length){renderEmpty("spotlightProposalTable","No Spotlight proposals yet.");renderConfirmedSpotlightDates(names);return;}
+      el.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Book</th><th>Reason</th><th>Status</th><th>Spotlight Date</th><th>Action</th></tr></thead><tbody>${spotlightProposalsCache.map(p=>{
+        const d=spotlightDatesCache.find(x=>x.proposal_id===p.id);
+        return `<tr><td class="title-cell">${escapeHTML(names.get(p.book_id)||p.book_id)}</td><td>${escapeHTML(p.proposal_reason)}</td><td>${statusBadge(p.status)}${p.rejection_reason?`<div class="sub-cell">${escapeHTML(p.rejection_reason)}</div>`:""}</td><td>${d?escapeHTML(formatDateOnly(d.spotlight_date)):'Not set'}</td><td><div class="button-row">${p.status==='pending'?`<button class="btn btn-success" onclick="reviewSpotlightProposal('${p.id}','approved')">Approve</button><button class="btn btn-danger" onclick="reviewSpotlightProposal('${p.id}','rejected')">Reject</button>`:''}${p.status==='approved'?`<button class="btn btn-secondary" onclick="setCuratorSpotlightDate('${p.id}')">${d?'Change Date':'Set Date'}</button>${d?`<button class="btn btn-primary" onclick="publishApprovedSpotlight('${p.id}')">Add to Spotlight</button>`:''}`:''}</div></td></tr>`;
+      }).join('')}</tbody></table></div>`;
+      renderConfirmedSpotlightDates(names);
+      if(dates.error)showToast("Spotlight dates table not ready: run the supplied SQL migration.",true);
+    }
+    function renderConfirmedSpotlightDates(names){
+      const el=$("confirmedSpotlightDates");if(!el)return;
+      el.innerHTML='<h3>Confirmed Spotlight Dates</h3>'+(spotlightDatesCache.length?`<div class="table-wrap"><table><thead><tr><th>Book</th><th>Date</th><th>Publication</th></tr></thead><tbody>${spotlightDatesCache.map(d=>`<tr><td>${escapeHTML(names.get(d.book_id)||d.book_id)}</td><td>${escapeHTML(formatDateOnly(d.spotlight_date))}</td><td>Manual — The Curator</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No confirmed Spotlight dates yet.</div>');
+    }
+    async function reviewSpotlightProposal(id,status){
+      const reason=status==='rejected'?window.prompt('Why is this Spotlight proposal rejected? (required)'):'';
+      if(status==='rejected'&&!reason?.trim())return showToast('A rejection reason is required.',true);
+      if(!window.confirm(status==='approved'?'Approve this Spotlight proposal?':'Reject this Spotlight proposal?'))return;
+      const {error}=await supabaseClient.from('spotlight_proposals').update({status,rejection_reason:status==='rejected'?reason.trim():null}).eq('id',id).eq('status','pending');
+      if(error)return showToast(error.message,true);showToast('Proposal '+status+'.');await loadSpotlightProposals();
+    }
+    async function setCuratorSpotlightDate(id){
+      const p=spotlightProposalsCache.find(x=>x.id===id);if(!p||p.status!=='approved')return showToast('Approve the proposal first.',true);
+      const old=spotlightDatesCache.find(x=>x.proposal_id===id);
+      const date=window.prompt('Spotlight date (YYYY-MM-DD). Date only — no time.',old?.spotlight_date||'');
+      if(date===null)return;
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||Number.isNaN(Date.parse(date)))return showToast('Use a valid date in YYYY-MM-DD format.',true);
+      const {error}=await supabaseClient.from('curator_spotlight_dates').upsert({proposal_id:id,book_id:p.book_id,spotlight_date:date},{onConflict:'proposal_id'});
+      if(error)return showToast(error.message,true);showToast('Spotlight date confirmed. Publication remains manual.');await loadSpotlightProposals();
+    }
+    async function publishApprovedSpotlight(id){
+      const p=spotlightProposalsCache.find(x=>x.id===id);const d=spotlightDatesCache.find(x=>x.proposal_id===id);
+      if(!p||p.status!=='approved'||!d)return showToast('Approve the proposal and set its date first.',true);
+      const today=new Date();const localToday=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
+      if(d.spotlight_date>localToday)return showToast('The scheduled date has not arrived yet.',true);
+      const trailer=await supabaseClient.from('book_trailers').select('id').eq('book_id',p.book_id).eq('show_on_homepage',true).limit(1);
+      if(trailer.error)return showToast(trailer.error.message,true);
+      if(!trailer.data?.length)return showToast('Publish this book’s trailer first.',true);
+      if(!window.confirm('Manually add this approved book to the public Spotlight now?'))return;
+      const existing=await supabaseClient.from('homepage_featured_books').select('id').eq('book_id',p.book_id).limit(1);
+      if(existing.error)return showToast(existing.error.message,true);
+      if(existing.data?.length)return showToast('This book is already in Spotlight.',true);
+      const {error}=await supabaseClient.from('homepage_featured_books').insert({book_id:p.book_id,selected_by:currentUser.id,selected_at:new Date().toISOString()});
+      if(error)return showToast(error.message,true);
+      showToast('Book added to Spotlight.');await Promise.all([loadFeatured(),loadSpotlightProposals(),loadOverview()]);
+    }
+
     /* MASTER REFRESH */
 
     async function refreshAll(){
@@ -4234,6 +4363,8 @@ async function openAttachment(id) {
         loadAuthors(),
         loadBooks(),
         loadFeatured(),
+        loadSpotlightProposals(),
+        loadMaterialsReview(),
         loadTrailers(),
         loadSchedules(),
         loadReaders(),
@@ -4267,6 +4398,8 @@ async function openAttachment(id) {
         loadAuthors(),
         loadBooks(),
         loadFeatured(),
+        loadSpotlightProposals(),
+        loadMaterialsReview(),
         loadTrailers(),
         loadSchedules(),
         loadReaders(),

@@ -1,11 +1,10 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reader Reach | The Curator</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -902,7 +901,7 @@
         <button data-target="readingRooms">Ongoing Reading Rooms</button>
         <button data-target="visitorSupport">Visitor Support</button>
         <button data-target="notifications">Notifications</button>
-        <button data-target="moderators">Moderators</button>
+        <button data-target="moderators">The Literary Guardians</button>
         <button data-target="settings">Settings</button>
       </nav>
 
@@ -969,7 +968,7 @@
             </div>
 
             <div class="stat">
-              <div class="stat-label">Active Moderators</div>
+              <div class="stat-label">Active Literary Guardians</div>
               <div id="statModerators" class="stat-value">—</div>
             </div>
 
@@ -1145,7 +1144,7 @@
           <div class="section-heading">
             <div>
               <h2>Book Trailers</h2>
-              <p>Review existing book trailers and control whether they appear on the homepage.</p>
+              <p>Publish trailers to the website. All published trailers remain visible, with the most recently shown at the top.</p>
             </div>
           </div>
 
@@ -1418,15 +1417,15 @@
 
           <div class="section-heading">
             <div>
-              <h2>Moderator Management</h2>
-              <p>View moderator accounts and activate or deactivate existing moderators.</p>
+              <h2>The Literary Guardians</h2>
+              <p>View Literary Guardian accounts and activate or deactivate existing Guardians.</p>
             </div>
           </div>
 
           <div class="card">
 
             <div class="card-head">
-              <h3>Moderators</h3>
+              <h3>The Literary Guardians</h3>
             </div>
 
             <div class="card-body">
@@ -2769,7 +2768,8 @@
           description,
           created_at,
           updated_at,
-          show_on_homepage
+          show_on_homepage,
+          published_at
         `)
         .order("created_at",{ascending:false});
 
@@ -2813,6 +2813,13 @@
         bookTitle:bookMap[item.book_id] || "Unknown book"
       }));
 
+      trailersCache.sort((a,b)=>{
+        if(Boolean(a.show_on_homepage) !== Boolean(b.show_on_homepage)) return a.show_on_homepage ? -1 : 1;
+        const aDate = a.show_on_homepage ? a.published_at : a.created_at;
+        const bDate = b.show_on_homepage ? b.published_at : b.created_at;
+        return new Date(bDate || 0) - new Date(aDate || 0);
+      });
+
       renderTrailers();
     }
 
@@ -2832,8 +2839,8 @@
                 <th>Trailer</th>
                 <th>Book</th>
                 <th>Title</th>
-                <th>Homepage</th>
-                <th>Created</th>
+                <th>Website</th>
+                <th>Published / Submitted</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -2887,7 +2894,7 @@
                     </td>
 
                     <td>
-                      ${escapeHTML(formatDate(trailer.created_at))}
+                      ${escapeHTML(formatDate(trailer.show_on_homepage ? trailer.published_at : trailer.created_at))}
                     </td>
 
                     <td>
@@ -2901,8 +2908,8 @@
                       >
                         ${
                           trailer.show_on_homepage
-                          ? "Hide"
-                          : "Show"
+                          ? "Hide from Website"
+                          : "Show on Website"
                         }
                       </button>
                     </td>
@@ -2925,6 +2932,7 @@
         .from("book_trailers")
         .update({
           show_on_homepage:show,
+          published_at:show ? new Date().toISOString() : null,
           updated_at:new Date().toISOString()
         })
         .eq("id",id);
@@ -2936,8 +2944,8 @@
 
       showToast(
         show
-        ? "Trailer will appear on the homepage."
-        : "Trailer hidden from the homepage."
+        ? "Trailer published to the website."
+        : "Trailer hidden from the website."
       );
 
       await loadTrailers();

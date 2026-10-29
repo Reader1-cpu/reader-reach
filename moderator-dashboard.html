@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -1766,7 +1768,41 @@ async function deleteMessage(id){
   const result=await supabaseClient.from('messages').delete().eq('id',id).eq('sender_profile_id',currentUser.id);if(result.error){showToast('Could not delete message: '+friendlyError(result.error));return;}await loadConversationMessages(selectedConversation.id);showToast('Message deleted.');
 }
 
-function startAuthorConversation(authorId){const candidate=conversations.find(c=>c.author_id===authorId);showSection('messages');if(candidate){selectedConversation=candidate;renderSelectedConversation();}else showToast('No conversation exists for this author yet.');}
+let startingAuthorConversation=false;
+async function startAuthorConversation(authorId){
+  if(startingAuthorConversation)return;
+  const author=approvedAuthors.find(a=>a.id===authorId&&a.status==='approved');
+  if(!author){showToast('Only approved authors can be contacted.');return;}
+  if(!currentModerator?.id){showToast('Your Literary Guardian account is not ready.');return;}
+  showSection('messages');
+  startingAuthorConversation=true;
+  try{
+    // Search Supabase directly; the sidebar cache may not include this author's conversation.
+    const lookup=await supabaseClient.from('conversations')
+      .select('id,author_id,moderator_id,book_id,created_at,updated_at')
+      .eq('author_id',authorId)
+      .or('moderator_id.eq.'+currentModerator.id+',moderator_id.is.null')
+      .order('updated_at',{ascending:false}).limit(1);
+    if(lookup.error)throw lookup.error;
+    let conversation=lookup.data?.[0];
+    if(!conversation){
+      const created=await supabaseClient.from('conversations')
+        .insert({author_id:authorId,moderator_id:currentModerator.id,book_id:null})
+        .select('id,author_id,moderator_id,book_id,created_at,updated_at').single();
+      if(created.error)throw created.error;
+      conversation=created.data;
+      showToast('Conversation created. You can now message '+(author.author_name||'this author')+'.');
+    }
+    await loadConversations(conversation.id);
+    if(!conversations.some(c=>c.id===conversation.id)){
+      // A missing conversation after creation indicates a SELECT/RLS policy problem.
+      showToast('Conversation saved but not visible. Check conversation read permissions.');
+    }
+  }catch(error){
+    console.error('Start author conversation failed:',error);
+    showToast('Could not start conversation: '+friendlyError(error));
+  }finally{startingAuthorConversation=false;}
+}
 
 function subscribeToNotifications(){if(realtimeNotificationsChannel)supabaseClient.removeChannel(realtimeNotificationsChannel);realtimeNotificationsChannel=supabaseClient.channel('moderator-notifications-'+currentUser.id).on('postgres_changes',{event:'*',schema:'public',table:'notifications',filter:'profile_id=eq.'+currentUser.id},()=>loadNotifications()).subscribe();}
 function subscribeToMessages(){if(realtimeMessagesChannel)supabaseClient.removeChannel(realtimeMessagesChannel);realtimeMessagesChannel=supabaseClient.channel('moderator-messages-'+currentUser.id).on('postgres_changes',{event:'*',schema:'public',table:'messages'},async payload=>{const newId=payload.new?.conversation_id,oldId=payload.old?.conversation_id;if(selectedConversation?.id===newId||selectedConversation?.id===oldId)await loadConversationMessages(selectedConversation.id);else await loadConversations(selectedConversation?.id);}).subscribe();}

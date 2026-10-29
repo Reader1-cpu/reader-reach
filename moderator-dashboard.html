@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -105,7 +106,7 @@ nav{
   display:block;
   margin-top:5px;
   color:var(--muted);
-  font-family:Inter,sans-serif;
+  font-family:Manrope,sans-serif;
   font-size:10px;
   font-weight:500;
   letter-spacing:.08em;
@@ -843,7 +844,7 @@ footer a{
 <div class="top">
   <div class="wrap">
     <span>Reader Reach • The Literary Guardian</span>
-    <span>Author Communication • Scheduling • Feature Calendar</span>
+    <span>Author Communication • Spotlight Proposals • Feature Calendar</span>
   </div>
 </div>
 
@@ -879,8 +880,8 @@ footer a{
   <h1>Keep authors, books and features moving.</h1>
 
   <p>
-    Communicate with approved authors, coordinate feature schedules,
-    manage the feature calendar, and stay informed when new books
+    Communicate with approved authors, recommend books for Spotlight,
+    view confirmed Spotlight dates, and stay informed when new books
     are approved.
   </p>
 
@@ -904,7 +905,7 @@ footer a{
   </div>
 
   <p class="muted">
-    Moderator permissions are separate from Admin permissions.
+    Literary Guardian permissions are separate from The Curator permissions.
     Approval and removal controls are not available here.
   </p>
 </div>
@@ -1007,7 +1008,7 @@ footer a{
         <div class="sectionHead">
 
           <div>
-            <h2 class="sectionTitle">Moderator Workspace</h2>
+            <h2 class="sectionTitle">Literary Guardian Workspace</h2>
 
             <p class="muted">
               Your main responsibilities are author communication,
@@ -1019,7 +1020,7 @@ footer a{
 
         <div class="notice">
           <strong>Permission boundary:</strong>
-          moderators do not approve, reject or remove authors or books.
+          Literary Guardians do not approve, reject or remove authors or books.
           Those actions remain under Admin control.
         </div>
 
@@ -1245,7 +1246,7 @@ footer a{
             <h2 class="sectionTitle">Feature Calendar</h2>
 
             <p class="muted">
-              Schedule approved books for Reader Reach features.
+              View existing feature schedules. Spotlight dates are controlled by The Curator.
             </p>
           </div>
 
@@ -1255,89 +1256,9 @@ footer a{
 
         </div>
 
-        <div class="grid2">
-
-          <div>
-
-            <div class="notice" style="margin-bottom:18px;">
-              Only approved books can be scheduled.
-              Admin remains responsible for book approval.
-            </div>
-
-            <div class="field">
-
-              <label for="scheduleBook">
-                Approved Book
-              </label>
-
-              <select id="scheduleBook">
-                <option value="">
-                  Select an approved book
-                </option>
-              </select>
-
-            </div>
-
-            <div class="field">
-
-              <label for="scheduleDate">
-                Feature Date
-              </label>
-
-              <input
-                id="scheduleDate"
-                type="date">
-
-            </div>
-
-            <div class="field">
-
-              <label for="scheduleTime">
-                Feature Time
-              </label>
-
-              <input
-                id="scheduleTime"
-                type="time">
-
-            </div>
-
-            <div class="field">
-
-              <label for="scheduleNotes">
-                Notes
-              </label>
-
-              <textarea
-                id="scheduleNotes"
-                placeholder="Optional scheduling notes"></textarea>
-
-            </div>
-
-            <button
-              class="btn primary"
-              id="scheduleBtn">
-              Schedule Feature
-            </button>
-
-          </div>
-
-          <div>
-
-            <h3 style="margin-top:0;color:var(--brown);">
-              Scheduled Features
-            </h3>
-
-            <div id="scheduleList" class="scheduleList">
-              <div class="empty">
-                Loading schedules...
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
+        <div class="notice" style="margin-bottom:18px">Spotlight dates are chosen by The Curator. This calendar displays existing feature schedules for reference; Literary Guardians cannot publish or schedule a Spotlight here.</div>
+        <h3 style="margin-top:0;color:var(--brown)">Existing Feature Schedules</h3>
+        <div id="scheduleList" class="scheduleList"><div class="empty">Loading schedules...</div></div>
       </div>
 
     </section>
@@ -1358,14 +1279,14 @@ footer a{
           <form id="spotlightProposalForm">
             <div class="field"><label for="spotlightBook">Approved Book</label><select id="spotlightBook" required><option value="">Select an approved book</option></select></div>
             <div class="field"><label for="spotlightReason">Why should this book be featured?</label><textarea id="spotlightReason" required maxlength="2000" placeholder="Explain why this book deserves a Spotlight..."></textarea></div>
-            <div class="field"><label for="spotlightProposedDate">Suggested Date (optional)</label><input id="spotlightProposedDate" type="date"></div>
+            
             <button class="btn primary" id="spotlightSubmitBtn" type="submit">Submit to The Curator</button>
           </form>
         </div>
         <div>
           <h3 style="color:var(--brown);margin-top:0">How Spotlight Works</h3>
-          <div class="notice">1. The Literary Guardian proposes an approved book.<br>2. The Curator approves or rejects it.<br>3. Rejected proposals include a reason.<br>4. Only approved proposals can be scheduled.</div>
-          <p class="muted" style="margin-top:15px">Spotlight scheduling is separate from the regular Feature Calendar.</p>
+          <div class="notice">1. The Literary Guardian proposes an approved book.<br>2. The Curator approves or rejects it.<br>3. Rejected proposals include a reason.<br>4. The Curator chooses the Spotlight date and publishes manually.</div>
+          <p class="muted" style="margin-top:15px">The Literary Guardian proposes books only; The Curator controls dates and publication.</p>
         </div>
       </div>
     </div></section>
@@ -1427,7 +1348,7 @@ footer a{
             <h2 class="sectionTitle">My Account</h2>
 
             <p class="muted">
-              Moderator account information.
+              Literary Guardian account information.
             </p>
           </div>
 
@@ -1495,12 +1416,12 @@ footer a{
     <h3>Reader Reach</h3>
 
     <p>
-      Every Book Has Its Readers.
+      Where Stories Find Their Readers.
     </p>
 
     <p>
-      Moderator workspace for author communication,
-      feature coordination and scheduling.
+      Literary Guardian workspace for author communication,
+      feature coordination and Spotlight proposals.
     </p>
   </div>
 
@@ -1587,7 +1508,7 @@ async function requireModerator(){
 }
 
 function loadAccount(){
-  $('accountName').textContent=currentProfile?.display_name||'Moderator';
+  $('accountName').textContent=currentProfile?.display_name||'The Literary Guardian';
   $('accountEmail').textContent=currentUser?.email||'—';
   $('accountRole').textContent='The Literary Guardian';
   $('accountCreated').textContent=formatDate(currentProfile?.created_at);
@@ -1614,7 +1535,7 @@ async function loadApprovedAuthors(){
 
 
 function renderBookItem(b,authorMap){
-  const bookUrl = (b.book_link || '').trim();
+  const bookUrl = b.id ? 'book.html?id='+encodeURIComponent(b.id) : '';
 
   return `<div class="item">
     <div class="itemTop">
@@ -1622,7 +1543,7 @@ function renderBookItem(b,authorMap){
         <div class="itemTitle">${escapeHtml(b.title || 'Untitled Book')}</div>
         <div class="itemMeta">
           Author: ${escapeHtml(authorMap.get(b.author_id) || 'Unknown author')}<br>
-          Genre: ${escapeHtml(b.genre_topic || '—')}
+          Genre: ${escapeHtml(b.genre || '—')}
         </div>
       </div>
       <span class="badge green">Approved</span>
@@ -1631,9 +1552,9 @@ function renderBookItem(b,authorMap){
       ${
         bookUrl
           ? `<a class="btn small" href="${escapeHtml(bookUrl)}" target="_blank" rel="noopener noreferrer">View Book</a>`
-          : `<span class="itemMeta">No external book link provided.</span>`
+          : `<span class="itemMeta">Book link unavailable.</span>`
       }
-      <button class="btn small" onclick="prepareSchedule('${escapeHtml(b.id)}')">Schedule</button>
+      <button class="btn small" onclick="showSection('spotlight');document.getElementById('spotlightBook').value='${escapeHtml(b.id)}'">Propose Spotlight</button>
     </div>
   </div>`;
 }
@@ -1642,9 +1563,9 @@ async function loadApprovedBooks(){
   const container=$('approvedBookList');if(!container)return;
   container.innerHTML='<div class="empty">Loading approved books...</div>';
   const {data,error}=await supabaseClient.from('books')
-.select('id,author_id,title,genre_topic,book_link,status,created_at').eq('status','approved').order('created_at',{ascending:false});
+.select('id,author_id,title,genre,cover_url,status,created_at').eq('status','approved').order('created_at',{ascending:false});
   if(error){console.error(error);container.innerHTML='<div class="empty">Unable to load approved books: '+escapeHtml(friendlyError(error))+'</div>';return;}
-  approvedBooks=data||[];$('approvedBooksCount').textContent=approvedBooks.length;populateBookSelect();populateSpotlightBookSelect();
+  approvedBooks=data||[];$('approvedBooksCount').textContent=approvedBooks.length;populateSpotlightBookSelect();
   const authorIds=[...new Set(approvedBooks.map(b=>b.author_id).filter(Boolean))];
   let authors=[];
   if(authorIds.length){const r=await supabaseClient.from('authors').select('id,author_name').in('id',authorIds);if(r.error)console.error(r.error);authors=r.data||[];}
@@ -1663,8 +1584,6 @@ function populateSpotlightBookSelect(){
   if(approvedBooks.some(b=>b.id===previous))select.value=previous;
 }
 
-function populateBookSelect(){const select=$('scheduleBook');if(!select)return;select.innerHTML='<option value="">Select an approved book</option>';approvedBooks.forEach(b=>{const o=document.createElement('option');o.value=b.id;o.textContent=b.title||'Untitled Book';select.appendChild(o);});}
-function prepareSchedule(bookId){showSection('calendar');$('scheduleBook').value=bookId;}
 
 function scheduleSortValue(s){return `${s.scheduled_date||''}T${s.scheduled_time||'00:00:00'}`;}
 
@@ -1697,18 +1616,6 @@ function renderUpcomingSchedules(list){
   });
 }
 
-async function createSchedule(){
-  const bookId=$('scheduleBook').value,date=$('scheduleDate').value,time=$('scheduleTime').value,notes=$('scheduleNotes').value.trim();
-  if(!bookId){showToast('Select an approved book.');return;}
-  if(!date){showToast('Select a feature date.');return;}
-  if(!time){showToast('Select a feature time.');return;}
-  const book=approvedBooks.find(x=>x.id===bookId);if(!book||book.status!=='approved'){showToast('Only approved books can be scheduled.');return;}
-  const duplicate=schedules.find(x=>x.status==='scheduled'&&x.scheduled_date===date&&x.scheduled_time===time);
-  if(duplicate){showToast('That date and time is already scheduled.');return;}
-  const {error}=await supabaseClient.from('feature_schedules').insert({book_id:bookId,moderator_id:currentModerator.id,scheduled_date:date,scheduled_time:time,status:'scheduled',notes:notes||null});
-  if(error){console.error(error);showToast('Could not create the schedule: '+friendlyError(error));return;}
-  $('scheduleDate').value='';$('scheduleTime').value='';$('scheduleNotes').value='';showToast('Feature scheduled.');await loadSchedules();
-}
 
 async function loadNotifications(){
   const container=$('notificationList');if(!container||!currentUser)return;
@@ -1883,33 +1790,22 @@ async function loadSpotlightProposals(){
   list.innerHTML=spotlightProposals.map(p=>{
     const status=p.status||'pending';
     const color=status==='approved'||status==='scheduled'?'green':status==='rejected'?'red':'gold';
-    const scheduling=status==='approved'?`<div class="itemActions" style="align-items:center"><label for="spotlightDate-${p.id}" class="itemMeta">Spotlight Date</label><input type="date" id="spotlightDate-${p.id}" min="${new Date().toLocaleDateString('en-CA')}" value="${escapeHtml(p.proposed_date||'')}" style="padding:8px;border:1px solid var(--line);border-radius:9px"><button class="btn small primary" onclick="scheduleSpotlight('${p.id}')">Schedule Approved Spotlight</button></div>`:'';
+    const scheduling='';
     return `<div class="item"><div class="itemTop"><div><div class="itemTitle">${escapeHtml(bookMap.get(p.book_id)||'Book')}</div><div class="itemMeta">Proposed ${escapeHtml(formatDate(p.created_at))}${p.proposed_date?' · Suggested '+escapeHtml(formatDate(p.proposed_date)):''}</div></div><span class="badge ${color}">${escapeHtml(status.charAt(0).toUpperCase()+status.slice(1))}</span></div><div class="itemMeta" style="white-space:pre-wrap">${escapeHtml(p.proposal_reason)}</div>${status==='rejected'?`<div class="notice" style="margin-top:12px;background:#faece9;border-color:#ead0cc;color:var(--red)"><strong>The Curator's rejection reason:</strong> ${escapeHtml(p.rejection_reason||'Not provided')}</div>`:''}${p.reviewed_at?`<div class="itemMeta">Reviewed: ${escapeHtml(formatDate(p.reviewed_at))}</div>`:''}${status==='scheduled'?`<div class="itemMeta"><strong>Spotlight scheduled:</strong> ${escapeHtml(formatDate(p.scheduled_date))}</div>`:''}${scheduling}</div>`;
   }).join('');
 }
 async function submitSpotlightProposal(event){
   event.preventDefault();if(spotlightLoading)return;
-  const bookId=$('spotlightBook').value,reason=$('spotlightReason').value.trim(),date=$('spotlightProposedDate').value;
+  const bookId=$('spotlightBook').value,reason=$('spotlightReason').value.trim();
   if(!approvedBooks.some(b=>b.id===bookId&&b.status==='approved')){showToast('Choose an approved book.');return;}
   if(!reason){showToast('Explain why the book deserves Spotlight.');return;}
   spotlightLoading=true;$('spotlightSubmitBtn').disabled=true;
   try{
-    const {error}=await supabaseClient.from('spotlight_proposals').insert({book_id:bookId,proposed_by:currentUser.id,proposal_reason:reason,proposed_date:date||null});
+    const {error}=await supabaseClient.from('spotlight_proposals').insert({book_id:bookId,proposed_by:currentUser.id,proposal_reason:reason});
     if(error)throw error;
     $('spotlightProposalForm').reset();showToast('Spotlight proposal submitted to The Curator.');await loadSpotlightProposals();
   }catch(error){console.error(error);showToast('Could not submit Spotlight proposal: '+friendlyError(error));}
   finally{spotlightLoading=false;$('spotlightSubmitBtn').disabled=false;}
-}
-async function scheduleSpotlight(id){
-  const proposal=spotlightProposals.find(p=>p.id===id);
-  if(!proposal||proposal.status!=='approved'){showToast('Only approved proposals can be scheduled.');return;}
-  const date=$('spotlightDate-'+id)?.value;
-  if(!date){showToast('Choose a Spotlight date.');return;}
-  if(date<new Date().toLocaleDateString('en-CA')){showToast('Choose today or a future date.');return;}
-  if(!window.confirm('Schedule this approved Spotlight for '+date+'?'))return;
-  const {error}=await supabaseClient.rpc('schedule_approved_spotlight',{p_proposal_id:id,p_scheduled_date:date});
-  if(error){console.error(error);showToast('Could not schedule Spotlight: '+friendlyError(error));return;}
-  showToast('Spotlight scheduled successfully.');await loadSpotlightProposals();
 }
 
 async function initialise(){
@@ -1918,7 +1814,7 @@ async function initialise(){
   subscribeToNotifications();subscribeToMessages();
 }
 
-$('scheduleBtn').addEventListener('click',createSchedule);
+
 $('spotlightProposalForm').addEventListener('submit',submitSpotlightProposal);
 $('signOutBtn').addEventListener('click',signOut);
 $('replyInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();sendReply();}});

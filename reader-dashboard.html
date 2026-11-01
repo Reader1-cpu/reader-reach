@@ -829,12 +829,36 @@
       color:var(--brown);
     }
 
+    .author-card .author-bio-preview{
+      display:-webkit-box;
+      -webkit-line-clamp:4;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+
     .author-card p{
       color:var(--muted);
       font-size:13px;
       line-height:1.65;
       margin:0 0 14px;
     }
+
+
+    .bio-view-more{border:0;background:none;color:var(--brown2);font-weight:800;
+      text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-size:12px;
+      padding:0;margin:0 0 14px;display:inline-block}
+    .bio-modal[hidden]{display:none!important}
+    .bio-modal{position:fixed;inset:0;z-index:150;background:rgba(35,23,17,.65);
+      display:flex;align-items:center;justify-content:center;padding:18px}
+    .bio-modal-card{background:var(--cream);border:1px solid var(--butter);
+      border-radius:20px;max-width:560px;width:100%;max-height:85vh;overflow:auto;
+      padding:27px;box-shadow:0 24px 70px rgba(0,0,0,.2)}
+    .bio-modal-top{display:flex;align-items:flex-start;justify-content:space-between;gap:15px}
+    .bio-modal-top h2{color:var(--brown);font-size:29px}
+    .bio-modal-close{border:1px solid var(--line);background:#fff;border-radius:9px;
+      padding:5px 12px;cursor:pointer;font-size:22px;color:var(--brown)}
+    .bio-modal-body{white-space:pre-wrap;overflow-wrap:anywhere;color:var(--text);
+      line-height:1.8;margin-top:16px;font-size:14px}
 
     .author-card-actions{
       display:flex;
@@ -1710,6 +1734,17 @@
   </a>
 
 
+  <div id="authorBioModal" class="bio-modal" role="dialog" aria-modal="true"
+       aria-labelledby="authorBioName" hidden>
+    <div class="bio-modal-card">
+      <div class="bio-modal-top">
+        <div><div class="section-kicker">Following Authors</div><h2 id="authorBioName"></h2></div>
+        <button type="button" id="closeAuthorBio" class="bio-modal-close" aria-label="Close biography">&times;</button>
+      </div>
+      <p id="authorBioFull" class="bio-modal-body"></p>
+    </div>
+  </div>
+
   <div id="toast" class="toast"></div>
 
 
@@ -2205,6 +2240,17 @@
       updateCount('completedSectionCount',completed);
     }
 
+    function openAuthorBio(author){
+      const modal=document.getElementById('authorBioModal');
+      document.getElementById('authorBioName').textContent=author.author_name || 'Reader Reach Author';
+      document.getElementById('authorBioFull').textContent=author.bio || 'No author bio is available yet.';
+      modal.hidden=false;
+      document.getElementById('closeAuthorBio').focus();
+    }
+    function closeAuthorBio(){
+      document.getElementById('authorBioModal').hidden=true;
+    }
+
     function renderFollowingAuthors(){
       const container=document.getElementById('followingAuthorsGrid');
       if(!container) return;
@@ -2222,13 +2268,21 @@
       container.innerHTML=followingAuthors.map(author=>`
         <article class="author-card">
           <h3>${escapeHtml(author.author_name || 'Reader Reach Author')}</h3>
-          <p>${escapeHtml(author.bio || 'No author bio is available yet.')}</p>
+          <p class="author-bio-preview">${escapeHtml(author.bio || 'No author bio is available yet.')}</p>
+          ${(author.bio || '').length > 180 ? `<button type="button" class="bio-view-more" data-author-id="${escapeHtml(author.id)}">View More</button>` : ''}
           <div class="author-card-actions">
             <a class="btn primary" href="author-profile.html?id=${encodeURIComponent(author.id)}">View Profile</a>
             <button class="btn danger unfollow-author-button" data-author-id="${escapeHtml(author.id)}">Unfollow</button>
           </div>
         </article>
       `).join('');
+
+      container.querySelectorAll('.bio-view-more').forEach(button=>{
+        button.addEventListener('click',()=>{
+          const author=followingAuthors.find(item=>String(item.id)===button.dataset.authorId);
+          if(author) openAuthorBio(author);
+        });
+      });
 
       container.querySelectorAll('.unfollow-author-button').forEach(button=>{
         button.addEventListener('click',async()=>{
@@ -2510,6 +2564,13 @@
 
     document.getElementById('saveReadingRoomPreference').addEventListener('click',saveReadingRoomPreference);
 
+    document.getElementById('closeAuthorBio').addEventListener('click',closeAuthorBio);
+    document.getElementById('authorBioModal').addEventListener('click',event=>{
+      if(event.target.id==='authorBioModal') closeAuthorBio();
+    });
+    document.addEventListener('keydown',event=>{
+      if(event.key==='Escape') closeAuthorBio();
+    });
     setupNavigation();
     initialize();
 

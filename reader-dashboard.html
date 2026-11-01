@@ -1528,18 +1528,22 @@
             <div>
               <div class="section-kicker">Your preferences</div>
               <h2 class="section-title">Settings</h2>
-              <p class="section-description">Choose which Reading Room updates arrive by email.</p>
+              <p class="section-description">Manage the updates you receive from Reader Reach.</p>
             </div>
           </div>
           <div class="card">
-            <h3 class="section-title" style="font-size:22px;margin-bottom:8px;">The Reading Room Notifications</h3>
-            <p class="section-description" style="margin-bottom:18px;">Email updates are optional. You'll only receive emails about new topics for books on your shelf.</p>
+            <h3 class="section-title" style="font-size:23px;margin-bottom:8px;">The Reading Room — Notification Preferences</h3>
+            <p class="section-description" style="margin-bottom:20px;">Choose how you would like to receive updates about books on your shelf.</p>
             <label class="reading-room-preference" for="readingRoomEmailOptIn">
               <input id="readingRoomEmailOptIn" type="checkbox" disabled>
-              <span><strong>Email me about new Reading Room topics</strong><small>Send me one email when an author publishes a new topic for a book on my shelf. You can unsubscribe here anytime.</small></span>
+              <span><strong>Email notifications</strong><small>Send me an email whenever an author opens a new Reading Room topic for a book on my shelf.</small></span>
             </label>
-            <div id="readingRoomPreferenceMessage" class="preference-message" role="status" aria-live="polite">Loading your preference…</div>
-            <button type="button" id="saveReadingRoomPreference" class="btn primary" disabled>Save Preference</button>
+            <label class="reading-room-preference" for="readingRoomInAppOptIn">
+              <input id="readingRoomInAppOptIn" type="checkbox" checked disabled>
+              <span><strong>In-app notifications</strong><small>Show Reading Room updates in my Reader Reach dashboard.</small></span>
+            </label>
+            <div id="readingRoomPreferenceMessage" class="preference-message" role="status" aria-live="polite">Loading your preferences…</div>
+            <button type="button" id="saveReadingRoomPreference" class="btn primary" disabled>Save Preferences</button>
           </div>
         </section>
 
@@ -2409,49 +2413,60 @@
 
 
     async function loadReadingRoomPreference(){
-      const checkbox=document.getElementById('readingRoomEmailOptIn');
+      const email=document.getElementById('readingRoomEmailOptIn');
+      const inApp=document.getElementById('readingRoomInAppOptIn');
       const save=document.getElementById('saveReadingRoomPreference');
       const message=document.getElementById('readingRoomPreferenceMessage');
-      checkbox.disabled=true;
+      email.disabled=true;
+      inApp.disabled=true;
       save.disabled=true;
       const {data,error}=await supabaseClient
         .from('reader_notification_preferences')
-        .select('reading_room_email_enabled')
+        .select('reading_room_email_enabled,reading_room_in_app_enabled')
         .eq('profile_id',currentUser.id)
         .maybeSingle();
       if(error){
-        console.error('Reading Room preference load error:',error);
-        message.textContent='Could not load your preference. Please refresh and try again.';
+        console.error('Reading Room preferences load error:',error);
+        message.textContent='Could not load your preferences. Please check that the database update has been applied.';
         return;
       }
-      checkbox.checked=data?.reading_room_email_enabled===true;
-      checkbox.disabled=false;
+      email.checked=data?.reading_room_email_enabled===true;
+      inApp.checked=data?.reading_room_in_app_enabled!==false;
+      email.disabled=false;
+      inApp.disabled=false;
       save.disabled=false;
-      message.textContent=checkbox.checked?'Email notifications are currently on.':'Email notifications are currently off.';
+      message.textContent='Choose your preferences, then select Save Preferences.';
     }
 
     async function saveReadingRoomPreference(){
-      const checkbox=document.getElementById('readingRoomEmailOptIn');
+      const email=document.getElementById('readingRoomEmailOptIn');
+      const inApp=document.getElementById('readingRoomInAppOptIn');
       const save=document.getElementById('saveReadingRoomPreference');
       const message=document.getElementById('readingRoomPreferenceMessage');
-      const enabled=checkbox.checked;
-      checkbox.disabled=true;
+      email.disabled=true;
+      inApp.disabled=true;
       save.disabled=true;
       save.textContent='Saving…';
       const {error}=await supabaseClient
         .from('reader_notification_preferences')
-        .upsert({profile_id:currentUser.id,reading_room_email_enabled:enabled,updated_at:new Date().toISOString()},{onConflict:'profile_id'});
+        .upsert({
+          profile_id:currentUser.id,
+          reading_room_email_enabled:email.checked,
+          reading_room_in_app_enabled:inApp.checked,
+          updated_at:new Date().toISOString()
+        },{onConflict:'profile_id'});
       if(error){
-        console.error('Reading Room preference save error:',error);
-        message.textContent='Could not save. Please try again.';
-        showToast('Your email preference could not be saved.');
+        console.error('Reading Room preferences save error:',error);
+        message.textContent='Could not save your preferences. Please try again.';
+        showToast('Your notification preferences could not be saved.');
       }else{
-        message.textContent=enabled?'Saved: Reading Room email notifications are on.':'Saved: Reading Room email notifications are off.';
-        showToast('Reading Room preference saved.');
+        message.textContent='Your notification preferences have been saved.';
+        showToast('Reading Room preferences saved.');
       }
-      checkbox.disabled=false;
+      email.disabled=false;
+      inApp.disabled=false;
       save.disabled=false;
-      save.textContent='Save Preference';
+      save.textContent='Save Preferences';
     }
 
     async function initialize(){

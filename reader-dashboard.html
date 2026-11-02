@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2364,37 +2365,54 @@
       const list=document.getElementById('notificationList');
       list.innerHTML='<div class="loading">Loading notifications...</div>';
 
-      const {data,error}=await supabaseClient
-        .from('notifications')
-        .select('id,profile_id,type,title,message,related_book_id,is_read,created_at')
-        .eq('profile_id',currentUser.id)
-        .order('created_at',{ascending:false})
-        .limit(50);
+      const [generalResult,roomResult]=await Promise.all([
+        supabaseClient.from('notifications')
+          .select('id,profile_id,type,title,message,related_book_id,is_read,created_at')
+          .eq('profile_id',currentUser.id)
+          .order('created_at',{ascending:false}).limit(50),
+        supabaseClient.from('reader_notifications')
+          .select('id,recipient_profile_id,topic_id,title,message,link,is_read,created_at')
+          .eq('recipient_profile_id',currentUser.id)
+          .order('created_at',{ascending:false}).limit(50)
+      ]);
 
-      if(error){
-        console.error('Notification error:',error);
-        list.innerHTML=`<div class="empty"><strong>Notifications unavailable</strong><div>Reader Reach could not load your notifications.</div></div>`;
+      if(generalResult.error) console.error('General notification error:',generalResult.error);
+      if(roomResult.error) console.error('Reading Room notification error:',roomResult.error);
+      if(generalResult.error && roomResult.error){
+        list.innerHTML='<div class="empty"><strong>Notifications unavailable</strong><div>Reader Reach could not load your notifications.</div></div>';
         updateCount('notificationCount',0);
         return;
       }
 
-      const notifications=data||[];
+      const notifications=[
+        ...(generalResult.data||[]).map(item=>({...item,source:'general'})),
+        ...(roomResult.data||[]).map(item=>({...item,source:'reading_room'}))
+      ].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
       updateCount('notificationCount',notifications.filter(item=>!item.is_read).length);
 
-      if(notifications.length===0){
-        list.innerHTML=`<div class="empty"><strong>No notifications yet</strong><div>Important Reader Reach account and book updates will appear here.</div></div>`;
+      if(!notifications.length){
+        list.innerHTML='<div class="empty"><strong>No notifications yet</strong><div>Important Reader Reach account and book updates will appear here.</div></div>';
         return;
       }
 
-      list.innerHTML=notifications.map(notification=>`
-        <article class="notification ${notification.is_read?'':'unread'}">
-          <div class="notification-main">
-            <div class="notification-title">${escapeHtml(notification.title || 'Reader Reach Notification')}</div>
-            <div class="notification-message">${escapeHtml(notification.message || '')}</div>
-          </div>
-          <div class="notification-time">${escapeHtml(formatRelativeDate(notification.created_at))}</div>
-        </article>
-      `).join('');
+      list.innerHTML=notifications.map(item=>{
+        // Only allow links to this site's Reading Room, never external URLs.
+        const validLink=item.source==='reading_room' &&
+          /^\/?(?:reader-reach\/)?reading-room\.html\?book_id=[0-9a-f-]{36}$/i.test(item.link||'');
+        const href=validLink ? 'reading-room.html?'+item.link.split('?')[1] : '';
+        return `
+          <article class="notification ${item.is_read?'':'unread'}">
+            <div class="notification-main">
+              <div class="notification-title">${escapeHtml(item.title||'Reader Reach Notification')}</div>
+              <div class="notification-message">${escapeHtml(item.message||'')}</div>
+              ${href?`<a class="btn" style="margin-top:10px" href="${escapeHtml(href)}">Open The Reading Room</a>`:''}
+            </div>
+            <div class="notification-time">${escapeHtml(formatRelativeDate(item.created_at))}</div>
+          </article>`;
+      }).join('');
+      if(generalResult.error || roomResult.error){
+        showToast('Some notifications could not be loaded.');
+      }
     }
 
     function updateCount(id,value){
@@ -2419,20 +2437,19 @@
     }
 
     async function markNotificationsRead(){
-      const {error}=await supabaseClient
-        .from('notifications')
-        .update({is_read:true})
-        .eq('profile_id',currentUser.id)
-        .eq('is_read',false);
-
-      if(error){
-        console.warn('Could not mark notifications read:',error);
-        showToast('Notifications could not be marked as read.');
-        return;
+      const results=await Promise.all([
+        supabaseClient.from('notifications').update({is_read:true})
+          .eq('profile_id',currentUser.id).eq('is_read',false),
+        supabaseClient.from('reader_notifications').update({is_read:true})
+          .eq('recipient_profile_id',currentUser.id).eq('is_read',false)
+      ]);
+      if(results.some(result=>result.error)){
+        results.forEach(result=>{if(result.error) console.error('Mark read error:',result.error);});
+        showToast('Some notifications could not be marked as read.');
+      }else{
+        showToast('Notifications marked as read.');
       }
-
       await loadNotifications();
-      showToast('Notifications marked as read.');
     }
 
     function setupNavigation(){
@@ -2454,17 +2471,21 @@
       notificationChannel=supabaseClient
         .channel('reader-notifications-'+currentUser.id)
         .on('postgres_changes',{
-          event:'*',
-          schema:'public',
-          table:'notifications',
+          event:'INSERT',schema:'public',table:'notifications',
           filter:'profile_id=eq.'+currentUser.id
         },async()=>{
           await loadNotifications();
           showToast('You have a new Reader Reach notification.');
         })
+        .on('postgres_changes',{
+          event:'INSERT',schema:'public',table:'reader_notifications',
+          filter:'recipient_profile_id=eq.'+currentUser.id
+        },async()=>{
+          await loadNotifications();
+          showToast('You have a new Reading Room notification.');
+        })
         .subscribe();
     }
-
 
     async function loadReadingRoomPreference(){
       const email=document.getElementById('readingRoomEmailOptIn');

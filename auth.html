@@ -1,10 +1,15 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reader Reach — Sign In / Sign Up</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -22,15 +27,17 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;font-family:Georgia,"Times New Roman",serif;background:var(--cream);color:var(--text)}
+body{margin:0;font-family:"Manrope",Arial,sans-serif;background:var(--cream);color:var(--text)}
 button,input{font:inherit}
+h1,h2,h3,h4{font-family:"EB Garamond",Georgia,serif}
 button{cursor:pointer}
 a{color:inherit;text-decoration:none}
 .wrap{width:min(1180px,92%);margin:auto}
 
 nav{position:sticky;top:0;z-index:100;background:rgba(255,253,248,.97);border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}
 .nav{min-height:82px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-.logo{color:var(--brown);font-weight:700;font-size:24px;line-height:1.05}
+.logo{color:var(--brown);font-weight:700;font-size:24px;line-height:1.05;display:inline-flex;flex-direction:column;align-items:flex-start}
+.logo img{display:block;width:185px;max-width:100%;height:auto;object-fit:contain}
 .logo small{display:block;margin-top:6px;color:var(--muted);font-size:11px;font-weight:400;letter-spacing:.08em;text-transform:uppercase}
 .links,.navActions{display:flex;align-items:center;gap:24px}
 .links{color:var(--muted);font-size:14px}
@@ -99,7 +106,7 @@ footer{padding:28px 0;border-top:1px solid var(--line);background:var(--soft)}
 }
 @media(max-width:600px){
   .nav{min-height:72px}
-  .logo{font-size:21px}
+  .logo img{width:155px}
   .logo small{display:none}
   .navActions .btn{display:none}
   .page{padding:40px 0 60px}
@@ -116,7 +123,7 @@ footer{padding:28px 0;border-top:1px solid var(--line);background:var(--soft)}
 <nav>
   <div class="wrap nav">
     <a class="logo" href="index.html">
-      Reader Reach
+      <img src="assets/Reader Reach Elegant Serif Wordmark.png" alt="Reader Reach">
       <small>Every Book Has Its Readers</small>
     </a>
     <div class="links">

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Author Access | Reader Reach</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -28,11 +33,13 @@
     }
 
     body{
-      font-family:Georgia,"Times New Roman",serif;
+      font-family:"Manrope",Arial,sans-serif;
       background:var(--cream);
       color:var(--brown);
       min-height:100vh;
     }
+
+    h1,h2,h3,h4,.brand{font-family:"EB Garamond",Georgia,serif;}
 
     button,
     input,
@@ -343,7 +350,6 @@
     <div class="nav-inner">
 
       <a href="index.html" class="brand">
-        <span class="brand-mark">R</span>
         <span>Reader Reach</span>
       </a>
 
@@ -363,7 +369,7 @@
 
       <p>
         Create your account and submit an Author access request.
-        Your Author access will remain pending until it is reviewed by an Admin.
+        Your Author access will remain pending until it is reviewed by The Curator.
       </p>
     </div>
 
@@ -375,7 +381,7 @@
 
         <p class="card-intro">
           Complete the form below. Your account will be created first,
-          then your Author access request will be sent for Admin review.
+          then your Author access request will be sent for The Curator’s review.
         </p>
 
         <form id="authorForm">
@@ -452,7 +458,7 @@
 
         <div class="security-note">
           Author access is not granted automatically.
-          Admin approval is required before an account can use Author features.
+          The Curator’s approval is required before an account can use Author features.
         </div>
 
       </div>
@@ -470,7 +476,7 @@
 
         <p>
           Your Reader Reach account has been created and your Author access
-          request is waiting for Admin review.
+          request is waiting for The Curator’s review.
         </p>
 
         <div class="links">
@@ -886,11 +892,11 @@
 
                 /*
                   A rejected request is left visible
-                  for Admin review history. We do not
+                  for The Curator’s review history. We do not
                   silently overwrite it.
                 */
                 showMessage(
-                  'An Author access request already exists for this account and was previously rejected. Please contact Reader Reach Admin for the next step.',
+                  'An Author access request already exists for this account and was previously rejected. Please contact The Curator for the next step.',
                   'error'
                 );
 
